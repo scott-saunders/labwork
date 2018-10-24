@@ -63,7 +63,7 @@ When you save the notebook, an HTML file containing the code and output will be 
 latex test
 ----------
 
-$$A=\\frac{B^2}{\\pi} $$
+$$A=\\frac{B^2}{\\pi}$$
 
 Tab test
 --------
