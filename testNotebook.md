@@ -1,8 +1,8 @@
 Test2 Notebook
 ================
 
-From desktop!
-=============
+\#From
+    desktop\!
 
 ``` r
 library(tidyverse)
@@ -10,7 +10,7 @@ library(tidyverse)
 
     ## Warning: package 'tidyverse' was built under R version 3.4.2
 
-    ## ── Attaching packages ────────────────────────────────── tidyverse 1.2.1 ──
+    ## ── Attaching packages ────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
 
     ## ✔ ggplot2 2.2.1     ✔ purrr   0.2.4
     ## ✔ tibble  1.4.2     ✔ dplyr   0.7.4
@@ -29,7 +29,7 @@ library(tidyverse)
 
     ## Warning: package 'forcats' was built under R version 3.4.3
 
-    ## ── Conflicts ───────────────────────────────────── tidyverse_conflicts() ──
+    ## ── Conflicts ───────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
     ## ✖ dplyr::filter() masks stats::filter()
     ## ✖ dplyr::lag()    masks stats::lag()
 
@@ -57,24 +57,24 @@ p <- ggplot(cars,aes(x=speed,y=dist))+geom_point()
 p
 ```
 
-![](testNotebook_files/figure-markdown_github/test-1.png)
+![](testNotebook_files/figure-gfm/test-1.png)<!-- -->
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or
+by pressing *Cmd+Option+I*.
 
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file).
+When you save the notebook, an HTML file containing the code and output
+will be saved alongside it (click the *Preview* button or press
+*Cmd+Shift+K* to preview the HTML file).
 
-latex test
-----------
+\#\#latex
+test
 
-$$A=\\frac{B^2}{\\pi}$$
+  
+![A=\\frac{B^2}{\\pi}](https://latex.codecogs.com/png.latex?A%3D%5Cfrac%7BB%5E2%7D%7B%5Cpi%7D
+"A=\\frac{B^2}{\\pi}")  
 
-Tab test
---------
+\#\#Tab test {.tabset}
 
-### Tab 1
+\#\#\#Tab 1 a;sldkfja;lsdkfj
 
-a;sldkfja;lsdkfj
-
-### Tab 2
-
-more words
+\#\#\#Tab 2 more words
