@@ -1,6 +1,9 @@
 Test2 Notebook
 ================
 
+From desktop!
+=============
+
 ``` r
 library(tidyverse)
 ```
@@ -9,22 +12,22 @@ library(tidyverse)
 
     ## ── Attaching packages ────────────────────────────────── tidyverse 1.2.1 ──
 
-    ## ✔ ggplot2 3.0.0     ✔ purrr   0.2.4
+    ## ✔ ggplot2 2.2.1     ✔ purrr   0.2.4
     ## ✔ tibble  1.4.2     ✔ dplyr   0.7.4
-    ## ✔ tidyr   0.7.2     ✔ stringr 1.3.1
-    ## ✔ readr   1.1.1     ✔ forcats 0.2.0
-
-    ## Warning: package 'ggplot2' was built under R version 3.4.4
+    ## ✔ tidyr   0.8.0     ✔ stringr 1.3.1
+    ## ✔ readr   1.1.1     ✔ forcats 0.3.0
 
     ## Warning: package 'tibble' was built under R version 3.4.3
 
-    ## Warning: package 'tidyr' was built under R version 3.4.2
+    ## Warning: package 'tidyr' was built under R version 3.4.3
 
     ## Warning: package 'purrr' was built under R version 3.4.2
 
     ## Warning: package 'dplyr' was built under R version 3.4.2
 
     ## Warning: package 'stringr' was built under R version 3.4.4
+
+    ## Warning: package 'forcats' was built under R version 3.4.3
 
     ## ── Conflicts ───────────────────────────────────── tidyverse_conflicts() ──
     ## ✖ dplyr::filter() masks stats::filter()
