@@ -64,17 +64,21 @@ by pressing *Cmd+Option+I*.
 
 When you save the notebook, an HTML file containing the code and output
 will be saved alongside it (click the *Preview* button or press
-*Cmd+Shift+K* to preview the HTML file).
+*Cmd+Shift+K* to preview the HTML
+file).
 
-\#\#latex
-test
+## latex test
 
   
 ![A=\\frac{B^2}{\\pi}](https://latex.codecogs.com/png.latex?A%3D%5Cfrac%7BB%5E2%7D%7B%5Cpi%7D
 "A=\\frac{B^2}{\\pi}")  
 
-\#\#Tab test {.tabset}
+## Tab test
 
-\#\#\#Tab 1 a;sldkfja;lsdkfj
+### Tab 1
 
-\#\#\#Tab 2 more words
+a;sldkfja;lsdkfj
+
+### Tab 2
+
+more words

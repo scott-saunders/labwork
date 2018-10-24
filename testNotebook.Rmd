@@ -18,14 +18,14 @@ Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by press
 
 When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file).
 
-##latex test
+## latex test
 
 $$A=\frac{B^2}{\pi}$$ 
 
-##Tab test {.tabset}
+## Tab test {.tabset}
 
-###Tab 1
+### Tab 1
 a;sldkfja;lsdkfj
 
-###Tab 2
+### Tab 2
 more words
