@@ -1,0 +1,106 @@
+---
+title: "Colony Biofilms (Inoculated 10/19/18)"
+fontsize: 12pt
+date: "10_19_18"
+output:
+  github_document: default
+  html_document: 
+    toc: true
+    code_folding: hide
+
+---
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+
+knitr::opts_knit$set(root.dir = '/Users/scottsaunders/git/labwork/HPLC/analysis/')
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, fig.align="center")
+
+theme_set(theme_bw())
+```
+
+Let's read in the data from a cleaned csv file and remove the blank and standard samples.
+
+```{r read data}
+df_wBlankStds <- read_csv('../data/2018_10_30_coloniesHPLCamounts.csv',comment = "#")
+
+head(df_wBlankStds)
+
+#Remove blanks and standards and calculate volume corrected concentration
+df_amounts <- df_wBlankStds %>% 
+  filter(strain != 'blank' & strain != 'PHZstd') %>% 
+  mutate(calcConc = ifelse(material=='cells',Amount*2*(860 / 60),Amount*2*(8/5)))
+
+```
+
+Now let's look at the dPHZstar experiment where we added different phenazines at different levels.
+
+```{r dPHZstar prep}
+df_dPHZstar <- df_amounts %>% 
+  filter(strain=='dPHZstar') %>% 
+  mutate(added_phz_int=as.integer(str_extract(amount_added,"^[0-9]+")))
+
+head(df_dPHZstar)
+```
+
+Cool, now let's plot some things.
+
+```{r dPHZstar plots 1}
+ggplot(df_dPHZstar,aes(x=added_phz_int,y=calcConc,color=material))+
+  geom_point()+
+  facet_grid(added_phenazine~measured_phenazine,scales='free')
+```
+
+So from this overview, we can see that we only detect significant levels of phenazine in the dPHZstar mutant when we add that specific phenazine - for example, PCA is only detected significantly when we add PCA. So let's just consider those samples. Also, we only have cell material for these samples, so we don't need to worry about agar.
+
+```{r dPHZstar plots 2}
+df_dPHZstar_match <- df_dPHZstar %>% 
+  filter(measured_phenazine==added_phenazine)
+
+ggplot(df_dPHZstar_match,aes(x=added_phz_int,y=calcConc,color=measured_phenazine))+
+  geom_point()+facet_wrap(~measured_phenazine,scales='free')
+
+ggplot(df_dPHZstar_match,aes(x=added_phz_int,y=calcConc,color=measured_phenazine,shape=factor(replicate)))+
+  geom_point()+geom_line()+geom_abline(slope=1)
+
+ggplot(df_dPHZstar_match,aes(x=added_phz_int,y=calcConc-added_phz_int,color=measured_phenazine,shape=factor(replicate)))+
+  geom_point()+geom_line()+geom_abline(slope=0)
+```
+You can see that there's one PCN sample (200uM rep1) that is unusually low. Apparently the RT drifted slightly earlier and the integration algorithm missed it. I manually looked at the peak and it seems to be about 7.7uM (uncorrected) which is right in line with the other replciates. Let's move on for now, before thinking about reprocessing the whole dataset.
+
+PCA being so low could either be due to the relevant volume actually being much less, for example, just the volume of the ECM not the whole biofilm. Or it could be that PCA actually has some affinity for the agar. Megan B.'s ideas. 
+
+Now let's look at the other mutants
+
+```{r parsek plots}
+df_parsek <- df_amounts %>% 
+  filter(strain %in% c('WTpar','dPel','pBadPel'))
+         
+ggplot(df_parsek %>% filter(strain!='pBadPel'),aes(x=strain,y=calcConc,color=measured_phenazine))+
+  geom_point()+
+  facet_grid(measured_phenazine~material,scales='free')+ylim(0,NA)+
+  theme(strip.background =element_rect(fill="white"))
+
+ggplot(df_parsek %>% filter(measured_phenazine=='PYO'),aes(x=strain,y=calcConc,color=measured_phenazine))+
+  geom_point()+
+  facet_wrap(~material,scales='free')+ylim(0,NA)+
+  theme(strip.background =element_rect(fill="white"))
+```
+
+Looks like maybe a real effect for PYO?
+
+```{r whitchurch plots}
+df_whit <- df_amounts %>% 
+  filter(strain %in% c('WTwhit','dLys'))
+
+ggplot(df_whit,aes(x=strain,y=calcConc,color=measured_phenazine))+
+  geom_jitter(width=0.1)+
+  facet_wrap(measured_phenazine~material,scales='free')+ylim(0,NA)+
+  theme(strip.background =element_rect(fill="white"))
+```
+
+The dLys strain looks like it causes phenazines to reach slightly higher levels in the agar and maybe also in the cells. This is not entirely consistent with the role for eDNA, but it's worth looking at the actual retention ratios. Also remember that we have no idea how much dLys is contributing to the eDNA in this biofilm - maybe we should measure to be sure.
