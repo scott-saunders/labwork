@@ -10,7 +10,7 @@ library(modelr)
 library(viridis)
 
 knitr::opts_knit$set(root.dir = '/Users/scottsaunders/git/labwork/HPLC/analysis/')
-knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, fig.align="center")
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center",cache=TRUE)
 
 theme_set(theme_bw())
 ```
@@ -21,23 +21,7 @@ standard samples.
 ``` r
 df_wBlankStds <- read_csv("../data/2018_10_30_coloniesHPLCamounts.csv", 
     comment = "#")
-```
 
-    ## Parsed with column specification:
-    ## cols(
-    ##   measured_phenazine = col_character(),
-    ##   strain = col_character(),
-    ##   amount_added = col_character(),
-    ##   added_phenazine = col_character(),
-    ##   material = col_character(),
-    ##   replicate = col_integer(),
-    ##   RT = col_double(),
-    ##   Area = col_integer(),
-    ##   `Channel Name` = col_character(),
-    ##   Amount = col_double()
-    ## )
-
-``` r
 head(df_wBlankStds)
 ```
 
