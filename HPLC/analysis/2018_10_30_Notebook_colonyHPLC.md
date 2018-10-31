@@ -10,7 +10,7 @@ library(modelr)
 library(viridis)
 
 knitr::opts_knit$set(root.dir = '/Users/scottsaunders/git/labwork/HPLC/analysis/')
-knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center",cache=TRUE)
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
 
 theme_set(theme_bw())
 ```
