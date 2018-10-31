@@ -1,0 +1,24 @@
+Name	SampleName	RT	Area	Channel Name	Amount
+PYO	0.1uM_PCA_cells_1	5.976	20	313.0nm	0.001
+PCA	0.1uM_PCA_cells_1	3.183	61	364.0nm	0.004
+PCN	0.1uM_PCA_cells_1	8.928	65	364.0nm	0.004
+Name	SampleName	RT	Area	Channel Name	Amount
+PYO	1uM_PCA_cells_1	6.056	44	313.0nm	0.001
+PCA	1uM_PCA_cells_1	3.400	62	364.0nm	0.004
+PCN	1uM_PCA_cells_1	8.795	82	364.0nm	0.005
+Name	SampleName	RT	Area	Channel Name	Amount
+PYO	10uM_PCA_cells_1	6.083	23	313.0nm	0.001
+PCA	10uM_PCA_cells_1	3.215	602	364.0nm	0.039
+PCN	10uM_PCA_cells_1	8.849	38	364.0nm	0.002
+Name	SampleName	RT	Area	Channel Name	Amount
+PYO	50uM_PCA_cells_1	5.963	21	313.0nm	0.001
+PCA	50uM_PCA_cells_1	3.212	5893	364.0nm	0.387
+PCN	50uM_PCA_cells_1	8.801	37	364.0nm	0.002
+Name	SampleName	RT	Area	Channel Name	Amount
+PYO	100uM_PCA_cells_1	6.008	22	313.0nm	0.001
+PCA	100uM_PCA_cells_1	3.203	11969	364.0nm	0.786
+PCN	100uM_PCA_cells_1	8.870	47	364.0nm	0.003
+Name	SampleName	RT	Area	Channel Name	Amount
+PYO	200uM_PCA_cells_1	6.027	42	313.0nm	0.001
+PCA	200uM_PCA_cells_1	3.185	22915	364.0nm	1.504
+PCN	200uM_PCA_cells_1	8.895	115	364.0nm	0.008

@@ -1,0 +1,101 @@
+Name	SampleName	RT	Area	Channel Name	Amount
+PCA	0.1uM_PYO_cells_1	3.365	66	364.0nm	0.004
+PCN	0.1uM_PYO_cells_1	8.845	382	364.0nm	0.025
+Name	SampleName	RT	Area	Channel Name	Amount
+PYO	1uM_PYO_cells_1	6.012	1991	313.0nm	0.061
+PCA	1uM_PYO_cells_1	3.398	52	364.0nm	0.003
+PCN	1uM_PYO_cells_1	8.880	32	364.0nm	0.002
+Name	SampleName	RT	Area	Channel Name	Amount
+PYO	10uM_PYO_cells_1	6.004	38908	313.0nm	1.197
+PCA	10uM_PYO_cells_1	3.206	80	364.0nm	0.005
+PCN	10uM_PYO_cells_1	8.762	48	364.0nm	0.003
+Name	SampleName	RT	Area	Channel Name	Amount
+PYO	50uM_PYO_cells_1	6.008	251039	313.0nm	7.722
+PCA	50uM_PYO_cells_1	2.959	114	364.0nm	0.007
+PCN	50uM_PYO_cells_1	8.768	116	364.0nm	0.008
+Name	SampleName	RT	Area	Channel Name	Amount
+PYO	100uM_PYO_cells_1	6.010	470878	313.0nm	14.484
+PCA	100uM_PYO_cells_1	3.206	79	364.0nm	0.005
+PCN	100uM_PYO_cells_1	8.875	56	364.0nm	0.004
+Name	SampleName	RT	Area	Channel Name	Amount
+PYO	200uM_PYO_cells_1	6.002	822507	313.0nm	25.301
+PCA	200uM_PYO_cells_1	3.142	81	364.0nm	0.005
+PCN	200uM_PYO_cells_1	8.803	106	364.0nm	0.007
+Name	SampleName	RT	Area	Channel Name	Amount
+PYO	blank	5.995	1191	313.0nm	0.037
+Name	SampleName	RT	Area	Channel Name	Amount
+PYO	0.1uM_PYO_cells_2	6.010	448	313.0nm	0.014
+PCA	0.1uM_PYO_cells_2	3.191	90	364.0nm	0.006
+PCN	0.1uM_PYO_cells_2	8.930	35	364.0nm	0.002
+Name	SampleName	RT	Area	Channel Name	Amount
+PYO	1uM_PYO_cells_2	6.004	2238	313.0nm	0.069
+PCA	1uM_PYO_cells_2	3.168	50	364.0nm	0.003
+PCN	1uM_PYO_cells_2	8.937	60	364.0nm	0.004
+Name	SampleName	RT	Area	Channel Name	Amount
+PYO	10uM_PYO_cells_2	6.012	44695	313.0nm	1.375
+PCA	10uM_PYO_cells_2	3.394	76	364.0nm	0.005
+PCN	10uM_PYO_cells_2	8.790	59	364.0nm	0.004
+Name	SampleName	RT	Area	Channel Name	Amount
+PYO	50uM_PYO_cells_2	6.000	307890	313.0nm	9.471
+PCA	50uM_PYO_cells_2	3.014	91	364.0nm	0.006
+PCN	50uM_PYO_cells_2	8.825	110	364.0nm	0.007
+Name	SampleName	RT	Area	Channel Name	Amount
+PYO	100uM_PYO_cells_2	6.010	402519	313.0nm	12.382
+PCA	100uM_PYO_cells_2	3.447	61	364.0nm	0.004
+PCN	100uM_PYO_cells_2	8.887	112	364.0nm	0.007
+Name	SampleName	RT	Area	Channel Name	Amount
+PYO	200uM_PYO_cells_2	5.997	809545	313.0nm	24.902
+PCA	200uM_PYO_cells_2	3.173	94	364.0nm	0.006
+PCN	200uM_PYO_cells_2	8.914	95	364.0nm	0.006
+Name	SampleName	RT	Area	Channel Name	Amount
+PYO	blank	5.973	1196	313.0nm	0.037
+Name	SampleName	RT	Area	Channel Name	Amount
+PYO	0.1uM_PYO_cells_3	6.006	471	313.0nm	0.014
+PCA	0.1uM_PYO_cells_3	3.344	50	364.0nm	0.003
+PCN	0.1uM_PYO_cells_3	8.932	84	364.0nm	0.006
+Name	SampleName	RT	Area	Channel Name	Amount
+PYO	1uM_PYO_cells_3	6.021	2294	313.0nm	0.071
+PCA	1uM_PYO_cells_3	3.004	115	364.0nm	0.008
+PCN	1uM_PYO_cells_3	8.947	71	364.0nm	0.005
+Name	SampleName	RT	Area	Channel Name	Amount
+PYO	10uM_PYO_cells_3	6.011	42861	313.0nm	1.318
+PCA	10uM_PYO_cells_3	3.267	38	364.0nm	0.002
+PCN	10uM_PYO_cells_3	8.819	70	364.0nm	0.005
+Name	SampleName	RT	Area	Channel Name	Amount
+PYO	50uM_PYO_cells_3	6.002	227059	313.0nm	6.984
+PCA	50uM_PYO_cells_3	3.192	71	364.0nm	0.005
+PCN	50uM_PYO_cells_3	8.782	46	364.0nm	0.003
+Name	SampleName	RT	Area	Channel Name	Amount
+PYO	100uM_PYO_cells_3	6.005	364574	313.0nm	11.214
+PCA	100uM_PYO_cells_3	2.987	95	364.0nm	0.006
+PCN	100uM_PYO_cells_3	8.836	86	364.0nm	0.006
+Name	SampleName	RT	Area	Channel Name	Amount
+PYO	200uM_PYO_cells_3	6.001	763048	313.0nm	23.472
+PCA	200uM_PYO_cells_3	3.392	78	364.0nm	0.005
+PCN	200uM_PYO_cells_3	8.937	89	364.0nm	0.006
+Name	SampleName	RT	Area	Channel Name	Amount
+PYO	blank	5.987	1053	313.0nm	0.032
+Name	SampleName	RT	Area	Channel Name	Amount
+PYO	parsekWT_cells_1	5.995	86700	313.0nm	2.667
+PCA	parsekWT_cells_1	3.234	10524	364.0nm	0.691
+PCN	parsekWT_cells_1	8.840	227724	364.0nm	15.021
+Name	SampleName	RT	Area	Channel Name	Amount
+PYO	parsekWT_cells_2	6.005	84758	313.0nm	2.607
+PCA	parsekWT_cells_2	3.222	11003	364.0nm	0.722
+PCN	parsekWT_cells_2	8.851	206671	364.0nm	13.632
+Name	SampleName	RT	Area	Channel Name	Amount
+PYO	parsekWT_cells_3	5.995	88787	313.0nm	2.731
+PCA	parsekWT_cells_3	3.178	5777	364.0nm	0.379
+PCN	parsekWT_cells_3	8.840	220629	364.0nm	14.553
+Name	SampleName	RT	Area	Channel Name	Amount
+PYO	dPel_cells_1	6.009	113480	313.0nm	3.491
+PCA	dPel_cells_1	3.181	8470	364.0nm	0.556
+PCN	dPel_cells_1	8.852	185244	364.0nm	12.219
+Name	SampleName	RT	Area	Channel Name	Amount
+PYO	dPel_cells_2	6.005	117862	313.0nm	3.625
+PCA	dPel_cells_2	3.186	10494	364.0nm	0.689
+PCN	dPel_cells_2	8.850	179462	364.0nm	11.838
+Name	SampleName	RT	Area	Channel Name	Amount
+PYO	dPel_cells_3	5.993	124770	313.0nm	3.838
+PCA	dPel_cells_3	3.197	11134	364.0nm	0.731
+PCN	dPel_cells_3	8.840	201283	364.0nm	13.277

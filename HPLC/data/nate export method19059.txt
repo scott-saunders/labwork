@@ -1,0 +1,2 @@
+Name	SampleName	RT	Area	Channel Name	Amount
+PCN	blank1	8.841	7805	364.0nm	0.518
