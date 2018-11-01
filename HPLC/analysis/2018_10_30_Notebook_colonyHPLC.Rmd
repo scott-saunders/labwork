@@ -11,6 +11,8 @@ output:
     code_folding: hide
 ---
 
+**Note** the YAML contains specifications for a github document and html. The best way to deal with this is to knit them separately from the knit menu. Otherwise the html has blurry plots and tends to delete the md cached plots unless you tell it to cache everything!
+
 ```{r setup, echo=T, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(cowplot)
@@ -89,6 +91,11 @@ ggplot(df_parsek %>% filter(strain!='pBadPel'),aes(x=strain,y=calcConc,color=mea
 ggplot(df_parsek %>% filter(measured_phenazine=='PYO'),aes(x=strain,y=calcConc,color=measured_phenazine))+
   geom_point()+
   facet_wrap(~material,scales='free')+ylim(0,NA)+
+  theme(strip.background =element_rect(fill="white"))
+
+ggplot(df_parsek %>% filter(strain!='pBadPel') %>% filter(material=='cells'),aes(x=strain,y=calcConc,color=measured_phenazine))+
+  geom_jitter(width=0.1)+
+  facet_grid(measured_phenazine~.,scales='free')+ylim(0,NA)+
   theme(strip.background =element_rect(fill="white"))
 ```
 
