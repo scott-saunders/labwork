@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Colony Biofilms (Inoculated 10/19/18)</title>
+
+<script src="2018_10_30_Notebook_colonyHPLC_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="2018_10_30_Notebook_colonyHPLC_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="2018_10_30_Notebook_colonyHPLC_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="2018_10_30_Notebook_colonyHPLC_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="2018_10_30_Notebook_colonyHPLC_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="2018_10_30_Notebook_colonyHPLC_files/navigation-1.1/tabsets.js"></script>
+<script src="2018_10_30_Notebook_colonyHPLC_files/navigation-1.1/codefolding.js"></script>
+<link href="2018_10_30_Notebook_colonyHPLC_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="2018_10_30_Notebook_colonyHPLC_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Colony Biofilms (Inoculated 10/19/18)</h1>
+<h4 class="date"><em>10_19_18</em></h4>
+
+</div>
+
+
+<p><strong>Note</strong> the YAML contains specifications for a github document and html. The best way to deal with this is to knit them separately from the knit menu. Otherwise the html has blurry plots and tends to delete the md cached plots unless you tell it to cache everything!</p>
+<pre class="r"><code>library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+
+knitr::opts_knit$set(root.dir = &#39;/Users/scottsaunders/git/labwork/HPLC/analysis/&#39;)
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)
+
+theme_set(theme_bw())</code></pre>
+<p>Let’s read in the data from a cleaned csv file and remove the blank and standard samples.</p>
+<pre class="r"><code>df_wBlankStds &lt;- read_csv(&quot;../data/2018_10_30_coloniesHPLCamounts.csv&quot;, 
+    comment = &quot;#&quot;)
+
+head(df_wBlankStds)</code></pre>
+<pre><code>## # A tibble: 6 x 10
+##   measured_phenaz… strain amount_added added_phenazine material replicate
+##   &lt;chr&gt;            &lt;chr&gt;  &lt;chr&gt;        &lt;chr&gt;           &lt;chr&gt;        &lt;int&gt;
+## 1 PCA              dPHZs… 0.1uM        PCA             cells            2
+## 2 PCA              dPHZs… 1uM          PCA             cells            2
+## 3 PCA              dPHZs… 10uM         PCA             cells            2
+## 4 PCA              dPHZs… 50uM         PCA             cells            2
+## 5 PCA              dPHZs… 100uM        PCA             cells            2
+## 6 PCA              dPHZs… 200uM        PCA             cells            2
+## # ... with 4 more variables: RT &lt;dbl&gt;, Area &lt;int&gt;, `Channel Name` &lt;chr&gt;,
+## #   Amount &lt;dbl&gt;</code></pre>
+<pre class="r"><code># Remove blanks and standards and calculate volume corrected
+# concentration
+df_amounts &lt;- df_wBlankStds %&gt;% filter(strain != &quot;blank&quot; &amp; strain != 
+    &quot;PHZstd&quot;) %&gt;% mutate(calcConc = ifelse(material == &quot;cells&quot;, 
+    Amount * 2 * (860/60), Amount * 2 * (8/5)))</code></pre>
+<p>Now let’s look at the dPHZstar experiment where we added different phenazines at different levels.</p>
+<pre class="r"><code>df_dPHZstar &lt;- df_amounts %&gt;% filter(strain == &quot;dPHZstar&quot;) %&gt;% 
+    mutate(added_phz_int = as.integer(str_extract(amount_added, 
+        &quot;^[0-9]+&quot;)))
+
+head(df_dPHZstar)</code></pre>
+<pre><code>## # A tibble: 6 x 12
+##   measured_phenaz… strain amount_added added_phenazine material replicate
+##   &lt;chr&gt;            &lt;chr&gt;  &lt;chr&gt;        &lt;chr&gt;           &lt;chr&gt;        &lt;int&gt;
+## 1 PCA              dPHZs… 0.1uM        PCA             cells            2
+## 2 PCA              dPHZs… 1uM          PCA             cells            2
+## 3 PCA              dPHZs… 10uM         PCA             cells            2
+## 4 PCA              dPHZs… 50uM         PCA             cells            2
+## 5 PCA              dPHZs… 100uM        PCA             cells            2
+## 6 PCA              dPHZs… 200uM        PCA             cells            2
+## # ... with 6 more variables: RT &lt;dbl&gt;, Area &lt;int&gt;, `Channel Name` &lt;chr&gt;,
+## #   Amount &lt;dbl&gt;, calcConc &lt;dbl&gt;, added_phz_int &lt;int&gt;</code></pre>
+<p>Cool, now let’s plot some things.</p>
+<pre class="r"><code>ggplot(df_dPHZstar, aes(x = added_phz_int, y = calcConc, color = material)) + 
+    geom_point() + facet_grid(added_phenazine ~ measured_phenazine, 
+    scales = &quot;free&quot;)</code></pre>
+<p><img src="2018_10_30_Notebook_colonyHPLC_files/figure-html/dPHZstar%20plots%201-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>So from this overview, we can see that we only detect significant levels of phenazine in the dPHZstar mutant when we add that specific phenazine - for example, PCA is only detected significantly when we add PCA. So let’s just consider those samples. Also, we only have cell material for these samples, so we don’t need to worry about agar.</p>
+<pre class="r"><code>df_dPHZstar_match &lt;- df_dPHZstar %&gt;% filter(measured_phenazine == 
+    added_phenazine)
+
+ggplot(df_dPHZstar_match, aes(x = added_phz_int, y = calcConc, 
+    color = measured_phenazine)) + geom_point() + facet_wrap(~measured_phenazine, 
+    scales = &quot;free&quot;)</code></pre>
+<p><img src="2018_10_30_Notebook_colonyHPLC_files/figure-html/dPHZstar%20plots%202-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(df_dPHZstar_match, aes(x = added_phz_int, y = calcConc, 
+    color = measured_phenazine, shape = factor(replicate))) + 
+    geom_point() + geom_line() + geom_abline(slope = 1)</code></pre>
+<p><img src="2018_10_30_Notebook_colonyHPLC_files/figure-html/dPHZstar%20plots%202-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(df_dPHZstar_match, aes(x = added_phz_int, y = calcConc - 
+    added_phz_int, color = measured_phenazine, shape = factor(replicate))) + 
+    geom_point() + geom_line() + geom_abline(slope = 0)</code></pre>
+<p><img src="2018_10_30_Notebook_colonyHPLC_files/figure-html/dPHZstar%20plots%202-3.png" width="672" style="display: block; margin: auto;" /> You can see that there’s one PCN sample (200uM rep1) that is unusually low. Apparently the RT drifted slightly earlier and the integration algorithm missed it. I manually looked at the peak and it seems to be about 7.7uM (uncorrected) which is right in line with the other replciates. Let’s move on for now, before thinking about reprocessing the whole dataset.</p>
+<p>PCA being so low could either be due to the relevant volume actually being much less, for example, just the volume of the ECM not the whole biofilm. Or it could be that PCA actually has some affinity for the agar. Megan B.’s ideas.</p>
+<p>Now let’s look at the other mutants</p>
+<pre class="r"><code>df_parsek &lt;- df_amounts %&gt;% filter(strain %in% c(&quot;WTpar&quot;, &quot;dPel&quot;, 
+    &quot;pBadPel&quot;))
+
+ggplot(df_parsek %&gt;% filter(strain != &quot;pBadPel&quot;), aes(x = strain, 
+    y = calcConc, color = measured_phenazine)) + geom_point() + 
+    facet_grid(measured_phenazine ~ material, scales = &quot;free&quot;) + 
+    ylim(0, NA) + theme(strip.background = element_rect(fill = &quot;white&quot;))</code></pre>
+<p><img src="2018_10_30_Notebook_colonyHPLC_files/figure-html/parsek%20plots-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(df_parsek %&gt;% filter(measured_phenazine == &quot;PYO&quot;), aes(x = strain, 
+    y = calcConc, color = measured_phenazine)) + geom_point() + 
+    facet_wrap(~material, scales = &quot;free&quot;) + ylim(0, NA) + theme(strip.background = element_rect(fill = &quot;white&quot;))</code></pre>
+<p><img src="2018_10_30_Notebook_colonyHPLC_files/figure-html/parsek%20plots-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(df_parsek %&gt;% filter(strain != &quot;pBadPel&quot;) %&gt;% filter(material == 
+    &quot;cells&quot;), aes(x = strain, y = calcConc, color = measured_phenazine)) + 
+    geom_jitter(width = 0.1) + facet_grid(measured_phenazine ~ 
+    ., scales = &quot;free&quot;) + ylim(0, NA) + theme(strip.background = element_rect(fill = &quot;white&quot;))</code></pre>
+<p><img src="2018_10_30_Notebook_colonyHPLC_files/figure-html/parsek%20plots-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Looks like maybe a real effect for PYO?</p>
+<pre class="r"><code>df_whit &lt;- df_amounts %&gt;% filter(strain %in% c(&quot;WTwhit&quot;, &quot;dLys&quot;))
+
+ggplot(df_whit, aes(x = strain, y = calcConc, color = measured_phenazine)) + 
+    geom_jitter(width = 0.1) + facet_wrap(measured_phenazine ~ 
+    material, scales = &quot;free&quot;) + ylim(0, NA) + theme(strip.background = element_rect(fill = &quot;white&quot;))</code></pre>
+<p><img src="2018_10_30_Notebook_colonyHPLC_files/figure-html/whitchurch%20plots-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The dLys strain looks like it causes phenazines to reach slightly higher levels in the agar and maybe also in the cells. This is not entirely consistent with the role for eDNA, but it’s worth looking at the actual retention ratios. Also remember that we have no idea how much dLys is contributing to the eDNA in this biofilm - maybe we should measure to be sure.</p>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -3,12 +3,12 @@ title: "Colony Biofilms (Inoculated 10/19/18)"
 fontsize: 12pt
 date: "10_19_18"
 output:
-  github_document:
-    pandoc_args: --webtex
   html_document:
     self_contained: false
     toc: true
     code_folding: hide
+  github_document:
+    pandoc_args: --webtex
 ---
 
 **Note** the YAML contains specifications for a github document and html. The best way to deal with this is to knit them separately from the knit menu. Otherwise the html has blurry plots and tends to delete the md cached plots unless you tell it to cache everything!
