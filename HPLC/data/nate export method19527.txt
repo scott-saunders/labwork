@@ -1,126 +1,126 @@
 Name	SampleName	RT	Area	Channel Name	Amount
-PYO	pBadPel_cells_1	6.001	89148	313.0nm	2.745
+PYO	pBadPel_cells_1	6.001	89148	313.0nm	2.742
+PCN	pBadPel_cells_1	8.853	240063	364.0nm	15.835
 PCA	pBadPel_cells_1	3.070	7214	364.0nm	0.474
-PCN	pBadPel_cells_1	8.853	240063	364.0nm	15.927
 Name	SampleName	RT	Area	Channel Name	Amount
-PYO	pBadPel_agar_1	6.003	20324	313.0nm	0.626
-PCA	pBadPel_agar_1	3.009	116975	364.0nm	7.682
-PCN	pBadPel_agar_1	8.853	356210	364.0nm	23.633
+PYO	pBadPel_agar_1	6.003	20324	313.0nm	0.625
+PCN	pBadPel_agar_1	8.853	356210	364.0nm	23.496
+PCA	pBadPel_agar_1	3.009	116975	364.0nm	7.679
 Name	SampleName	RT	Area	Channel Name	Amount
-PYO	WTwhit_agar_1	6.011	16108	313.0nm	0.496
-PCA	WTwhit_agar_1	3.023	69402	364.0nm	4.558
-PCN	WTwhit_agar_1	8.864	215002	364.0nm	14.264
+PYO	WTwhit_agar_1	6.011	16108	313.0nm	0.495
+PCN	WTwhit_agar_1	8.864	215002	364.0nm	14.182
+PCA	WTwhit_agar_1	3.023	69402	364.0nm	4.556
 Name	SampleName	RT	Area	Channel Name	Amount
 PYO	WTwhit_agar_2	6.011	26065	313.0nm	0.802
-PCA	WTwhit_agar_2	3.021	119815	364.0nm	7.868
-PCN	WTwhit_agar_2	8.860	301544	364.0nm	20.006
+PCN	WTwhit_agar_2	8.860	301544	364.0nm	19.890
+PCA	WTwhit_agar_2	3.021	119815	364.0nm	7.865
 Name	SampleName	RT	Area	Channel Name	Amount
-PYO	WTwhit_agar_3	6.005	23599	313.0nm	0.727
-PCA	WTwhit_agar_3	3.019	98508	364.0nm	6.469
-PCN	WTwhit_agar_3	8.853	300502	364.0nm	19.937
+PYO	WTwhit_agar_3	6.005	23599	313.0nm	0.726
+PCA	WTwhit_agar_3	3.019	98508	364.0nm	6.466
+PCN	WTwhit_agar_3	8.853	300502	364.0nm	19.822
 Name	SampleName	RT	Area	Channel Name	Amount
 PYO	dLys_agar_1	5.992	31523	313.0nm	0.970
-PCA	dLys_agar_1	3.027	137429	364.0nm	9.025
-PCN	dLys_agar_1	8.841	348883	364.0nm	23.147
+PCN	dLys_agar_1	8.841	348883	364.0nm	23.013
+PCA	dLys_agar_1	3.027	137429	364.0nm	9.021
 Name	SampleName	RT	Area	Channel Name	Amount
 PYO	dLys_agar_2	5.999	28760	313.0nm	0.885
-PCA	dLys_agar_2	3.029	140522	364.0nm	9.228
-PCN	dLys_agar_2	8.847	416640	364.0nm	27.642
+PCA	dLys_agar_2	3.029	140522	364.0nm	9.224
+PCN	dLys_agar_2	8.847	416640	364.0nm	27.482
 Name	SampleName	RT	Area	Channel Name	Amount
-PYO	dLys_agar_3	6.006	35914	313.0nm	1.106
-PCA	dLys_agar_3	3.029	168179	364.0nm	11.044
-PCN	dLys_agar_3	8.856	492483	364.0nm	32.674
+PYO	dLys_agar_3	6.006	35914	313.0nm	1.105
+PCA	dLys_agar_3	3.029	168179	364.0nm	11.040
+PCN	dLys_agar_3	8.856	492483	364.0nm	32.485
 Name	SampleName	RT	Area	Channel Name	Amount
 PYO	0.1uM_PCN_cells_1	6.050	20	313.0nm	0.001
 PCA	0.1uM_PCN_cells_1	2.972	56	364.0nm	0.004
-PCN	0.1uM_PCN_cells_1	8.869	385	364.0nm	0.026
+PCN	0.1uM_PCN_cells_1	8.696	880	364.0nm	0.058
 Name	SampleName	RT	Area	Channel Name	Amount
 PYO	1uM_PCN_cells_1	5.903	16	313.0nm	0.000
 PCA	1uM_PCN_cells_1	3.066	46	364.0nm	0.003
-PCN	1uM_PCN_cells_1	8.858	652	364.0nm	0.043
+PCN	1uM_PCN_cells_1	8.694	863	364.0nm	0.057
 Name	SampleName	RT	Area	Channel Name	Amount
 PYO	10uM_PCN_cells_1	6.010	33	313.0nm	0.001
 PCA	10uM_PCN_cells_1	3.450	69	364.0nm	0.005
-PCN	10uM_PCN_cells_1	8.858	6130	364.0nm	0.407
+PCN	10uM_PCN_cells_1	8.858	6130	364.0nm	0.404
 Name	SampleName	RT	Area	Channel Name	Amount
 PYO	50uM_PCN_cells_1	5.963	29	313.0nm	0.001
+PCN	50uM_PCN_cells_1	8.852	33228	364.0nm	2.192
 PCA	50uM_PCN_cells_1	3.444	191	364.0nm	0.013
-PCN	50uM_PCN_cells_1	8.852	33228	364.0nm	2.205
 Name	SampleName	RT	Area	Channel Name	Amount
 PYO	100uM_PCN_cells_1	5.962	23	313.0nm	0.001
 PCA	100uM_PCN_cells_1	3.434	167	364.0nm	0.011
-PCN	100uM_PCN_cells_1	8.856	55528	364.0nm	3.684
+PCN	100uM_PCN_cells_1	8.856	55528	364.0nm	3.663
 Name	SampleName	RT	Area	Channel Name	Amount
 PYO	200uM_PCN_cells_1	6.013	31	313.0nm	0.001
 PCA	200uM_PCN_cells_1	3.241	176	364.0nm	0.012
-PCN	200uM_PCN_cells_1	8.859	381	364.0nm	0.025
+PCN	200uM_PCN_cells_1	8.663	101344	364.0nm	6.685
 Name	SampleName	RT	Area	Channel Name	Amount
 PYO	0.1uM_PCN_cells_2	5.950	21	313.0nm	0.001
 PCA	0.1uM_PCN_cells_2	3.294	70	364.0nm	0.005
-PCN	0.1uM_PCN_cells_2	8.864	200	364.0nm	0.013
+PCN	0.1uM_PCN_cells_2	8.703	562	364.0nm	0.037
 Name	SampleName	RT	Area	Channel Name	Amount
 PYO	1uM_PCN_cells_2	5.985	24	313.0nm	0.001
 PCA	1uM_PCN_cells_2	2.998	72	364.0nm	0.005
-PCN	1uM_PCN_cells_2	8.868	649	364.0nm	0.043
+PCN	1uM_PCN_cells_2	8.703	845	364.0nm	0.056
 Name	SampleName	RT	Area	Channel Name	Amount
 PCA	10uM_PCN_cells_2	3.321	105	364.0nm	0.007
-PCN	10uM_PCN_cells_2	8.864	6627	364.0nm	0.440
+PCN	10uM_PCN_cells_2	8.864	6627	364.0nm	0.437
 Name	SampleName	RT	Area	Channel Name	Amount
 PYO	50uM_PCN_cells_2	5.907	32	313.0nm	0.001
+PCN	50uM_PCN_cells_2	8.853	34817	364.0nm	2.297
 PCA	50uM_PCN_cells_2	3.442	110	364.0nm	0.007
-PCN	50uM_PCN_cells_2	8.853	34817	364.0nm	2.310
 Name	SampleName	RT	Area	Channel Name	Amount
+PCN	100uM_PCN_cells_2	8.861	57086	364.0nm	3.766
 PCA	100uM_PCN_cells_2	3.445	162	364.0nm	0.011
-PCN	100uM_PCN_cells_2	8.861	57086	364.0nm	3.787
 Name	SampleName	RT	Area	Channel Name	Amount
 PYO	200uM_PCN_cells_2	5.946	20	313.0nm	0.001
 PCA	200uM_PCN_cells_2	3.137	113	364.0nm	0.007
-PCN	200uM_PCN_cells_2	8.857	95428	364.0nm	6.331
+PCN	200uM_PCN_cells_2	8.857	95428	364.0nm	6.295
 Name	SampleName	RT	Area	Channel Name	Amount
 PYO	0.1uM_PCN_cells_3	5.911	27	313.0nm	0.001
+PCN	0.1uM_PCN_cells_3	8.695	487	364.0nm	0.032
 PCA	0.1uM_PCN_cells_3	2.957	39	364.0nm	0.003
-PCN	0.1uM_PCN_cells_3	8.856	105	364.0nm	0.007
 Name	SampleName	RT	Area	Channel Name	Amount
 PYO	1uM_PCN_cells_3	6.048	44	313.0nm	0.001
-PCA	1uM_PCN_cells_3	3.066	69	364.0nm	0.005
+PCA	1uM_PCN_cells_3	3.066	69	364.0nm	0.004
 PCN	1uM_PCN_cells_3	8.853	653	364.0nm	0.043
 Name	SampleName	RT	Area	Channel Name	Amount
 PYO	10uM_PCN_cells_3	5.946	25	313.0nm	0.001
 PCA	10uM_PCN_cells_3	3.446	78	364.0nm	0.005
-PCN	10uM_PCN_cells_3	8.837	7021	364.0nm	0.466
+PCN	10uM_PCN_cells_3	8.837	7021	364.0nm	0.463
 Name	SampleName	RT	Area	Channel Name	Amount
 PYO	50uM_PCN_cells_3	6.071	27	313.0nm	0.001
+PCN	50uM_PCN_cells_3	8.856	32346	364.0nm	2.134
 PCA	50uM_PCN_cells_3	3.444	109	364.0nm	0.007
-PCN	50uM_PCN_cells_3	8.856	32346	364.0nm	2.146
 Name	SampleName	RT	Area	Channel Name	Amount
 PYO	100uM_PCN_cells_3	6.035	27	313.0nm	0.001
+PCN	100uM_PCN_cells_3	8.847	61182	364.0nm	4.036
 PCA	100uM_PCN_cells_3	3.153	69	364.0nm	0.005
-PCN	100uM_PCN_cells_3	8.847	61182	364.0nm	4.059
 Name	SampleName	RT	Area	Channel Name	Amount
 PYO	200uM_PCN_cells_3	6.067	26	313.0nm	0.001
+PCN	200uM_PCN_cells_3	8.866	120549	364.0nm	7.952
 PCA	200uM_PCN_cells_3	3.064	127	364.0nm	0.008
-PCN	200uM_PCN_cells_3	8.866	120549	364.0nm	7.998
 Name	SampleName	RT	Area	Channel Name	Amount
-PYO	WTpar_agar_1	6.008	25687	313.0nm	0.791
-PCA	WTpar_agar_1	3.056	124641	364.0nm	8.185
-PCN	WTpar_agar_1	8.855	393800	364.0nm	26.127
+PYO	WTpar_agar_1	6.008	25687	313.0nm	0.790
+PCN	WTpar_agar_1	8.855	393800	364.0nm	25.976
+PCA	WTpar_agar_1	3.056	124641	364.0nm	8.182
 Name	SampleName	RT	Area	Channel Name	Amount
-PYO	WTpar_agar_2	6.009	27091	313.0nm	0.834
-PCA	WTpar_agar_2	3.043	135302	364.0nm	8.885
-PCN	WTpar_agar_2	8.861	435638	364.0nm	28.902
+PYO	WTpar_agar_2	6.009	27091	313.0nm	0.833
+PCN	WTpar_agar_2	8.861	435638	364.0nm	28.736
+PCA	WTpar_agar_2	3.043	135302	364.0nm	8.882
 Name	SampleName	RT	Area	Channel Name	Amount
-PYO	WTpar_agar_3	6.003	24705	313.0nm	0.761
-PCA	WTpar_agar_3	3.040	122418	364.0nm	8.039
-PCN	WTpar_agar_3	8.854	387178	364.0nm	25.687
+PYO	WTpar_agar_3	6.003	24705	313.0nm	0.760
+PCA	WTpar_agar_3	3.040	122418	364.0nm	8.036
+PCN	WTpar_agar_3	8.854	387178	364.0nm	25.539
 Name	SampleName	RT	Area	Channel Name	Amount
-PYO	dPel_agar_1	6.007	24774	313.0nm	0.763
-PCA	dPel_agar_1	3.060	114063	364.0nm	7.490
-PCN	dPel_agar_1	8.858	303178	364.0nm	20.114
+PYO	dPel_agar_1	6.007	24774	313.0nm	0.762
+PCA	dPel_agar_1	3.060	114063	364.0nm	7.487
+PCN	dPel_agar_1	8.858	303178	364.0nm	19.998
 Name	SampleName	RT	Area	Channel Name	Amount
-PYO	dPel_agar_2	6.014	23647	313.0nm	0.728
-PCA	dPel_agar_2	3.056	99389	364.0nm	6.527
-PCN	dPel_agar_2	8.870	229828	364.0nm	15.248
+PYO	dPel_agar_2	6.014	23647	313.0nm	0.727
+PCN	dPel_agar_2	8.870	229828	364.0nm	15.160
+PCA	dPel_agar_2	3.056	99389	364.0nm	6.524
 Name	SampleName	RT	Area	Channel Name	Amount
-PYO	dPel_agar_3	6.005	25757	313.0nm	0.793
-PCA	dPel_agar_3	3.055	104913	364.0nm	6.890
-PCN	dPel_agar_3	8.861	217660	364.0nm	14.441
+PYO	dPel_agar_3	6.005	25757	313.0nm	0.792
+PCN	dPel_agar_3	8.861	217660	364.0nm	14.357
+PCA	dPel_agar_3	3.055	104913	364.0nm	6.887

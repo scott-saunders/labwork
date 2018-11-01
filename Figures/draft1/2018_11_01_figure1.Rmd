@@ -1,19 +1,63 @@
 ---
-title: "R Notebook"
-output: html_notebook
+title: "Figure 1 - PHZ eDNA Paper"
+fontsize: 12pt
+date: "11_01_18"
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+**Note** the YAML contains specifications for a github document and html. The best way to deal with this is to knit them separately from the knit menu. Otherwise the html has blurry plots and tends to delete the md cached plots unless you tell it to cache everything!
 
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
 
-```{r}
-plot(cars)
+knitr::opts_knit$set(root.dir = '/Users/scottsaunders/git/labwork/Figures/draft1/')
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+theme_1 <- function () { 
+    theme_bw() %+replace% 
+        theme(
+          axis.text = element_text( size=12),
+          axis.title=element_text(size=14),
+          strip.text.x = element_text(size = 14),
+          legend.title=element_text(size=14),
+          legend.text=element_text(size=12)
+        )
+}
+
+theme_set(theme_1())
 ```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+```{r}
+df <- read_csv('../data/2018_10_30_HPLC_concentrations_df.csv',comment = "#") 
 
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+df_dPHZstar <- df %>% 
+  filter(strain=='dPHZstar') %>% 
+  mutate(added_phz_int=as.integer(str_extract(amount_added,"^[0-9]+")))
 
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+df_dPHZstar_match <- df_dPHZstar %>% 
+  filter(measured_phenazine==added_phenazine) %>% 
+  group_by(measured_phenazine,amount_added) %>% 
+  mutate(mean = mean(calcConc))
+
+ggplot(df_dPHZstar_match,aes(x=added_phz_int,y=calcConc,shape=factor(replicate)))+
+  geom_line(size=1,aes(y=mean,color=measured_phenazine))+geom_point(shape=21,size=2,aes(fill=measured_phenazine))+
+  labs(x=expression('Phenazine added to agar ('~mu*"M)"),y=expression("Biofilm calculated concentration ("~mu*"M)" ))+
+  theme(legend.position = c(0.1, 0.9),
+        legend.title = element_blank(),
+        legend.background = element_rect(fill=NA))
+```
+
+
+
+
 

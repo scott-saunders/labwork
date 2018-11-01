@@ -1,19 +1,80 @@
 ---
-title: "R Notebook"
-output: html_notebook
+title: "Figure 2 - PHZ eDNA Paper"
+fontsize: 12pt
+date: "11_01_18"
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+**Note** the YAML contains specifications for a github document and html. The best way to deal with this is to knit them separately from the knit menu. Otherwise the html has blurry plots and tends to delete the md cached plots unless you tell it to cache everything!
 
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
 
-```{r}
-plot(cars)
+knitr::opts_knit$set(root.dir = '/Users/scottsaunders/git/labwork/Figures/draft1/')
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+theme_1 <- function () { 
+    theme_bw() %+replace% 
+        theme(
+          axis.text = element_text( size=12),
+          axis.title=element_text(size=14),
+          strip.text.x = element_text(size = 14),
+          legend.title=element_text(size=14),
+          legend.text=element_text(size=12)
+        )
+}
+
+theme_set(theme_1())
 ```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+Let's read in the data from a cleaned csv file and remove the blank and standard samples.
+```{r pel panel}
+df_pel <- read_csv('../data/2018_10_30_HPLC_concentrations_df.csv',comment = "#") 
 
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+pel_panel <- df_pel %>% 
+  filter(strain %in% c('WTpar','dPel')) %>% 
+  filter(material=='cells') %>% 
+  ggplot(aes(x=strain,y=calcConc,fill=measured_phenazine))+
+    geom_jitter(width=0.1,height=0,shape=21,size=2)+
+    facet_grid(measured_phenazine~.,scales='free')+ylim(0,NA)+
+    scale_x_discrete(breaks = c('dPel','WTpar'), labels=c(expression(Delta*"pel"),"WT")) +
+    labs(x='Strain',y=expression("Biofilm calculated concentration ("~mu*"M)" ))+
+    guides(fill=F)
+pel_panel
+```
 
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
 
+```{r DNase panel }
+df_dnase <- read_csv('../data/2018_10_08_HPLC_concentrations_df.csv',comment = "#") 
+
+dnase_panel <- df_dnase %>% 
+  filter(Strain=='WT' & Material=='cells') %>% 
+  ggplot(aes(x=Condition,y=calcConc,fill=Phenazine))+
+    geom_jitter(width=0.1,height=0,shape=21,size=2)+
+    facet_grid(Phenazine~.,scales='free')+ylim(0,NA)+
+    scale_x_discrete(breaks = c('DNase','none'), labels=c("+","-")) +
+    labs(x='DNase treatment',y=expression("Biofilm calculated concentration ("~mu*"M)" ))+
+    guides(fill=F)
+
+dnase_panel
+```
+
+```{r combine pel DNase}
+dnasePel <- plot_grid(pel_panel,dnase_panel,ncol=2,labels=c("A","B"),align='hv',axis='tblr')
+
+dnasePel
+
+ggsave('fig2ab.pdf',dnasePel, height = 8 , width = 6)
+
+
+```

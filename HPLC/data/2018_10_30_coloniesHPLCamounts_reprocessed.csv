@@ -1,3 +1,7 @@
+# This is cleaned data quantified from HPLC runs on 10/26 , 10/29 and 10/30/2018,,,,,,,,
+# measured phenazine is the phenazine identified in the chromatogram, strain is the colony biofilm strain, in some cases dPHZ strains were incubated with phenazines and that is indicated by added_phenazine and amount_added,,,,,,,
+# RT is retention time in the chromatogram, area is the area of the identified peak from a given absorbance (channel Name),,,,,,,,
+# Amount is the predicted amount identified in the peak based off a calibration curve from standards (in uM) - samples were diluted 0.5x and need to be corrected for extraction volumes,,,,,,,,,
 measured_phenazine,strain,amount_added,added_phenazine,material,replicate,RT,Area,Channel Name,Amount
 PCA,dPHZstar,0.1uM,PCA,cells,1,3.183,61,364.0nm,0.004
 PCN,dPHZstar,0.1uM,PCA,cells,1,8.693,653,364.0nm,0.043
