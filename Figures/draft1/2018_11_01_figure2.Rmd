@@ -24,13 +24,15 @@ knitr::opts_knit$set(root.dir = '/Users/scottsaunders/git/labwork/Figures/draft1
 knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
 
 theme_1 <- function () { 
-    theme_bw() %+replace% 
+    theme_classic() %+replace% 
         theme(
           axis.text = element_text( size=12),
           axis.title=element_text(size=14),
-          strip.text.x = element_text(size = 14),
+          strip.text = element_text(size = 14),
+          strip.background = element_rect(color='white'),
           legend.title=element_text(size=14),
-          legend.text=element_text(size=12)
+          legend.text=element_text(size=12),
+          panel.grid.major = element_line(color='grey',size=0.1)
         )
 }
 
@@ -46,7 +48,7 @@ pel_panel <- df_pel %>%
   filter(material=='cells') %>% 
   ggplot(aes(x=strain,y=calcConc,fill=measured_phenazine))+
     geom_jitter(width=0.1,height=0,shape=21,size=2)+
-    facet_grid(measured_phenazine~.,scales='free')+ylim(0,NA)+
+    facet_wrap(~measured_phenazine,scales='free',ncol=1,strip.position = 'right')+ylim(0,NA)+
     scale_x_discrete(breaks = c('dPel','WTpar'), labels=c(expression(Delta*"pel"),"WT")) +
     labs(x='Strain',y=expression("Biofilm calculated concentration ("~mu*"M)" ))+
     guides(fill=F)
@@ -61,7 +63,7 @@ dnase_panel <- df_dnase %>%
   filter(Strain=='WT' & Material=='cells') %>% 
   ggplot(aes(x=Condition,y=calcConc,fill=Phenazine))+
     geom_jitter(width=0.1,height=0,shape=21,size=2)+
-    facet_grid(Phenazine~.,scales='free')+ylim(0,NA)+
+    facet_wrap(Phenazine~.,scales='free',ncol=1,strip.position = 'right')+ylim(0,NA)+
     scale_x_discrete(breaks = c('DNase','none'), labels=c("+","-")) +
     labs(x='DNase treatment',y=expression("Biofilm calculated concentration ("~mu*"M)" ))+
     guides(fill=F)
@@ -70,11 +72,11 @@ dnase_panel
 ```
 
 ```{r combine pel DNase}
-dnasePel <- plot_grid(pel_panel,dnase_panel,ncol=2,labels=c("A","B"),align='hv',axis='tblr')
+dnasePel <- plot_grid(pel_panel,dnase_panel,ncol=2,labels=c("A","B"),align='hv',axis='tblr',scale=0.9)
 
 dnasePel
 
-ggsave('fig2ab.pdf',dnasePel, height = 8 , width = 6)
+#ggsave('fig2ab.pdf',dnasePel, height = 8 , width = 6)
 
 
 ```
