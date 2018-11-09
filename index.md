@@ -2,3 +2,5 @@
 [potential step](potentialStep_Dap_09_16_18.html)
 
 [diffusion layer math](ida/diffusionLayerTheory.html)
+
+![SEM image](sem.tif)
