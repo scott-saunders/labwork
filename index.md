@@ -7,5 +7,5 @@ I work on cool bacteria that look like this:
 ## Some Analyses
 [potential step](potentialStep_Dap_09_16_18.html)
 
-[diffusion layer math](ida/diffusionLayerTheory.html)
+[diffusion layer math](IDA/diffusionLayerTheory.html)
 
