@@ -7,6 +7,6 @@ Hello and welcome
 
 [diffusion layer math](ida/diffusionLayerTheory.html)
 
-![SEM image](IDA_cellDNAzoom_6.tiff)
+![SEM image](https://imgur.com/a/iXty93y)
 
 ![Image of Yaktocat](https://octodex.github.com/images/yaktocat.png)
