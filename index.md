@@ -1,12 +1,11 @@
-#Welcome
+## Welcome
+Hello and welcome to the website version of my github repository. My name is Scott Saunders and I am a graduate student in [Dianne Newman's lab](http://dknweb.caltech.edu/Newman_Lab.html) at Caltech.
 
-Hello and welcome 
+I work on cool bacteria that look like this:
+![SEM image](IDA_cellDNAzoom_6.png)
 
-## test links
+## Some Analyses
 [potential step](potentialStep_Dap_09_16_18.html)
 
 [diffusion layer math](ida/diffusionLayerTheory.html)
 
-![SEM image](IDA_cellDNAzoom_6.png)
-
-![Image of Yaktocat](https://octodex.github.com/images/yaktocat.png)
