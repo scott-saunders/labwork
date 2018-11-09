@@ -3,4 +3,4 @@
 
 [diffusion layer math](ida/diffusionLayerTheory.html)
 
-![SEM image](sem.tif)
+![SEM image](IDA_cellDNAzoom_6.tif)
