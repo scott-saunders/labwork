@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Generating and Decoding D_m from Echem data</title>
+
+<script src="generating_and_decoding_diffusion_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="generating_and_decoding_diffusion_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="generating_and_decoding_diffusion_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="generating_and_decoding_diffusion_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="generating_and_decoding_diffusion_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="generating_and_decoding_diffusion_files/navigation-1.1/tabsets.js"></script>
+<script src="generating_and_decoding_diffusion_files/navigation-1.1/codefolding.js"></script>
+<link href="generating_and_decoding_diffusion_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="generating_and_decoding_diffusion_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Generating and Decoding <span class="math inline">\(D_m\)</span> from Echem data</h1>
+<h4 class="date"><em>12_17_18</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#some-basic-theory">Some Basic Theory</a></li>
+<li><a href="#generate-some-data">Generate Some Data</a></li>
+<li><a href="#fit-the-generated-data">Fit the Generated Data</a><ul>
+<li><a href="#takeaway-1">Takeaway 1</a></li>
+</ul></li>
+<li><a href="#quick-repeat-with-different-params">Quick Repeat with Different Params</a></li>
+<li><a href="#final-takeaways">Final Takeaways</a><ul>
+<li><a href="#how-to-estimate-i_0">How to estimate <span class="math inline">\(I_0\)</span>?</a></li>
+</ul></li>
+</ul>
+</div>
+
+<p><strong>Note</strong> the YAML contains specifications for a github document and html. The best way to deal with this is to knit them separately from the knit menu. Otherwise the html has blurry plots and tends to delete the md cached plots unless you tell it to cache everything!</p>
+<pre class="r"><code>library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(knitr)
+
+#knitr::opts_knit$set(root.dir = &#39;/Users/scottsaunders/git/labwork/IDA/12_10_18&#39;)
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)
+
+theme_1 &lt;- function () { 
+    theme_classic() %+replace% 
+        theme(
+          axis.text = element_text( size=12),
+          axis.title=element_text(size=14),
+          strip.text = element_text(size = 14),
+          strip.background = element_rect(color=&#39;white&#39;),
+          legend.title=element_text(size=14),
+          legend.text=element_text(size=12),
+          legend.text.align=0,
+          panel.grid.major = element_line(color=&#39;grey&#39;,size=0.1)
+        )
+}
+theme_set(theme_1())
+
+#source(&quot;../../tools/echem_processing_tools.R&quot;)</code></pre>
+<p>I have been led down a path to create this notebook after seeing some very unintuitive things regarding the nonlinear fits of my SWV decays. As a reality/sanity check I want to generate some data from my known diffusion equation and use a nonlinear least squares to estimate a coefficient and calculate the original parameters. This should work. <strong>If this doesn’t work, then I don’t understand something important about this simple set of equations.</strong></p>
+<div id="some-basic-theory" class="section level2">
+<h2>Some Basic Theory</h2>
+<p>Recall that the current from SWV scans can be assumed to fit a 1D diffusion profile of the form:</p>
+<p><span class="math display">\[C(t)=\frac{2 M_0}{A \sqrt{4 \pi D_m t}}\]</span> Using the equation for square wave voltammetry current and subsituting for <span class="math inline">\(C\)</span> and <span class="math inline">\(M_0\)</span>, we get the following expression.</p>
+<p><span class="math display">\[I_{swv}=I_0 \frac{\sqrt{D_{ap} t_s}}{\sqrt{4 D_m t}}\]</span> With this expression we can calculate an <span class="math inline">\(I_{swv}\)</span> for a datapoint given the time, <span class="math inline">\(t\)</span> and the parameters <span class="math inline">\(I_0\)</span>,<span class="math inline">\(D_{ap}\)</span>, <span class="math inline">\(D_m\)</span>, and <span class="math inline">\(t_s\)</span>. <strong>We will use this to generate a test dataset.</strong></p>
+<p>Then if we are going to fit data from this expression, we can assume it is of the form</p>
+<p><span class="math display">\[y=m t^{-\frac{1}{2}}+b\]</span> If we fit for that coefficient, <span class="math inline">\(m\)</span>, then <span class="math inline">\(D_m\)</span> is the following <span class="math display">\[D_m=\frac{I_0^2 D_{ap} t_s}{4 m^2}\]</span> We will use this equation to decode our “fit” back into a <span class="math inline">\(D_m\)</span>, which should be close to the original value we generated the data with.</p>
+</div>
+<div id="generate-some-data" class="section level2">
+<h2>Generate Some Data</h2>
+<p>First, let’s write a function to generate a dataset with known parameters.</p>
+<pre class="r"><code>generate_Iswv &lt;- function(t, I0 = 1, D_ap = 1e-05, D_m = 1e-08, 
+    t_s = 0.1, noise = T, sd = 0.1) {
+    t = t
+    Iswv &lt;- I0 * (sqrt(D_ap * t_s)/sqrt(4 * D_m * t))
+    
+    if (noise) {
+        Iswv &lt;- rnorm(length(t), mean = Iswv, sd = sd)
+    }
+    
+    Iswv
+}</code></pre>
+<p>Ok, so if we give this function timepoints, and parameters <span class="math inline">\(I_0\)</span>, <span class="math inline">\(D_{ap}\)</span>, <span class="math inline">\(D_m\)</span> and <span class="math inline">\(t_s\)</span>, it will calculate what the measured <span class="math inline">\(I_{swv}\)</span> current will be. We can also tell the function if we want normally distributed noise.</p>
+<pre class="r"><code># Params
+I0 = 10
+D_ap = 1e-06
+D_m = 1e-07
+t_s = 0.1
+
+t = seq(1, 50, length = 100)
+
+gen_data &lt;- tibble(t, i = generate_Iswv(t, I0, D_ap, D_m, t_s, 
+    noise = T))
+
+kable(head(gen_data))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">t</th>
+<th align="right">i</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1.000000</td>
+<td align="right">5.168885</td>
+</tr>
+<tr class="even">
+<td align="right">1.494949</td>
+<td align="right">4.045879</td>
+</tr>
+<tr class="odd">
+<td align="right">1.989899</td>
+<td align="right">3.589754</td>
+</tr>
+<tr class="even">
+<td align="right">2.484849</td>
+<td align="right">3.107393</td>
+</tr>
+<tr class="odd">
+<td align="right">2.979798</td>
+<td align="right">2.784355</td>
+</tr>
+<tr class="even">
+<td align="right">3.474747</td>
+<td align="right">2.623979</td>
+</tr>
+</tbody>
+</table>
+<p>Ok, that seems to work well, let’s see what the current decay looks like. The <span class="math inline">\(I_0\)</span> is shown as a dashed line.</p>
+<pre class="r"><code>ggplot(gen_data, aes(x = t, y = i)) + geom_point() + geom_hline(yintercept = I0, 
+    linetype = 2)</code></pre>
+<p><img src="generating_and_decoding_diffusion_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="fit-the-generated-data" class="section level2">
+<h2>Fit the Generated Data</h2>
+<p>Beautiful, now let’s write a function that can take in that generated data and attempt to back calculate the correct <span class="math inline">\(D_m\)</span>.</p>
+<pre class="r"><code>calc_D_m &lt;- function(df, t = t, i = i, D_ap, t_s, i_0 = NA) {
+    if (is.na(i_0)) {
+        i_0 = max(df$i)
+    }
+    fit = nls(i ~ m * t^-0.5 + b, data = df, start = c(m = 0.1, 
+        b = 0))
+    
+    m = as.numeric(coef(fit)[1])
+    b = as.numeric(coef(fit)[2])
+    
+    D_m = (i_0^2 * D_ap * t_s)/(4 * m^2)
+    
+    c(D_m = D_m, i_0 = i_0, b = b)
+}</code></pre>
+<p>So, this function will take in our generated df. We will also provide it with a <span class="math inline">\(D_{ap}\)</span> and <span class="math inline">\(t_s\)</span>.</p>
+<pre class="r"><code>(estimates &lt;- calc_D_m(gen_data, D_ap = D_ap, t_s = t_s))</code></pre>
+<pre><code>##          D_m          i_0            b 
+## 2.634223e-08 5.168885e+00 3.565016e-03</code></pre>
+<p>Ok, so the function runs…<strong>but its estimate is about an order of magnitude off</strong>…not great for data that we just generated. Recall that <span class="math inline">\(I_0\)</span> was 10, it seems that could be an important problem if using the max point to estimate <span class="math inline">\(I_0\)</span> doesn’t work well. You can see that by reruning the calculation function, but providing the correct <span class="math inline">\(I_0\)</span> enables the fit to estimate <span class="math inline">\(D_m\)</span> very accurately.</p>
+<pre class="r"><code>calc_D_m(gen_data, D_ap = D_ap, t_s = t_s, i_0 = I0)</code></pre>
+<pre><code>##          D_m          i_0            b 
+## 9.859589e-08 1.000000e+01 3.565016e-03</code></pre>
+<p>Now, providing the correct <span class="math inline">\(I_0\)</span> yields a very good estimate for <span class="math inline">\(D_m\)</span>, recall that we originally set it to 10^{-7} cm^2/sec.</p>
+<p>Let’s look at a plot of the original data with data regenerated from the estimated fit parameters:</p>
+<pre class="r"><code># generate dataset from estimates
+calc_data &lt;- tibble(t, i = generate_Iswv(t, I0 = estimates[2], 
+    D_ap, D_m = estimates[1], t_s, noise = T))
+
+# plot with I0&#39;s
+ggplot(gen_data, aes(x = t, y = i)) + geom_point() + geom_hline(yintercept = I0, 
+    linetype = 2) + geom_point(data = calc_data, color = &quot;red&quot;) + 
+    geom_hline(yintercept = estimates[2], color = &quot;red&quot;, linetype = 2) + 
+    ylim(0, NA)</code></pre>
+<p><img src="generating_and_decoding_diffusion_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Here you can see that the original dataset in black is perfectly overlaid by our back calculated data. However, because we assumed that <span class="math inline">\(I_0\)</span> was equal to the max datapoint (red dotted line), we underestimated the true <span class="math inline">\(I_0\)</span> (black dotted line) by about half. The fit then calculated the <span class="math inline">\(D_m\)</span> to be much slower to make the data fit nicely…</p>
+<div id="takeaway-1" class="section level3">
+<h3>Takeaway 1</h3>
+<p>This brings up an important question that I thought I understood, but now I’m confused: “How can we accurately estimate <span class="math inline">\(I_0\)</span> from these SWV decays?” Up to this point I had just been using the first/max datapoint and normalizing by that. However, this notebook is showing me that this approach only gets you an order of magnitude accuracy (with these params).</p>
+</div>
+</div>
+<div id="quick-repeat-with-different-params" class="section level2">
+<h2>Quick Repeat with Different Params</h2>
+<p>This time, let’s look at a dataset over the course of an hour, with a realistic <span class="math inline">\(I_0\)</span> of 1uA, and <span class="math inline">\(D_m\)</span> of 1e-9 cm^2/sec.</p>
+<pre class="r"><code>I0_v2 = 1e-06
+D_m_v2 = 1e-09
+
+gen_data_100 &lt;- tibble(t = seq(10, 3600, by = 10), i = generate_Iswv(t = t, 
+    I0 = I0_v2, D_ap, D_m = D_m_v2, t_s, noise = T, sd = 2e-08))
+
+ggplot(gen_data_100, aes(x = t/60, y = i)) + geom_point()</code></pre>
+<p><img src="generating_and_decoding_diffusion_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Interestingly, when <span class="math inline">\(D_m\)</span> and <span class="math inline">\(t\)</span> are small enough, you can actually get signal larger than <span class="math inline">\(I_0\)</span>. Using the same metric of the max data point to estimate <span class="math inline">\(I_0\)</span> now yields an <strong>overestimate.</strong></p>
+<p>NLS estimates:</p>
+<pre class="r"><code>(estimates_100 &lt;- calc_D_m(gen_data_100, D_ap = D_ap, t_s = t_s))</code></pre>
+<pre><code>##           D_m           i_0             b 
+##  2.494532e-09  1.617001e-06 -4.597882e-09</code></pre>
+<p>Estimates when provided with correct <span class="math inline">\(I_0\)</span></p>
+<pre class="r"><code>calc_D_m(gen_data_100, D_ap = D_ap, t_s = t_s, i_0 = I0_v2)</code></pre>
+<pre><code>##           D_m           i_0             b 
+##  9.540443e-10  1.000000e-06 -4.597882e-09</code></pre>
+<p>Again, we see that the error in the <span class="math inline">\(I_0\)</span> estimate throws off the <span class="math inline">\(D_m\)</span> estimate by 2.5x. And the plot shows the same effect as before - incorrect <span class="math inline">\(I_0\)</span> estimates will force the fit to adjust the <span class="math inline">\(D_m\)</span>.</p>
+<pre class="r"><code>calc_data_100 &lt;- tibble(t = seq(10, 3600, by = 10), i = generate_Iswv(t = t, 
+    I0 = estimates_100[2], D_ap, D_m = estimates_100[1], t_s, 
+    noise = T, sd = 1e-08))
+
+ggplot(gen_data_100, aes(x = t, y = i)) + geom_point() + geom_hline(yintercept = I0_v2, 
+    linetype = 2) + geom_point(data = calc_data_100, color = &quot;red&quot;) + 
+    geom_hline(yintercept = estimates_100[2], color = &quot;red&quot;, 
+        linetype = 2) + ylim(0, NA)</code></pre>
+<p><img src="generating_and_decoding_diffusion_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Lastly, here’s a plot showing how the curve can shift drastically with <span class="math inline">\(D_m\)</span> or <span class="math inline">\(I_0\)</span>.</p>
+<pre class="r"><code>t = seq(0, 3600, by = 10)
+play_data_5_8 &lt;- tibble(t, i = generate_Iswv(t = t, I0 = 1e-05, 
+    D_ap = 1e-06, D_m = 1e-08, t_s, noise = F)) %&gt;% mutate(Dm = 1e-08, 
+    I_0 = 1e-05)
+play_data_5_10 &lt;- tibble(t, i = generate_Iswv(t = t, I0 = 1e-05, 
+    D_ap = 1e-06, D_m = 1e-10, t_s, noise = F)) %&gt;% mutate(Dm = 1e-10, 
+    I_0 = 1e-05)
+
+play_data_6_8 &lt;- tibble(t, i = generate_Iswv(t = t, I0 = 1e-06, 
+    D_ap = 1e-06, D_m = 1e-08, t_s, noise = F)) %&gt;% mutate(Dm = 1e-08, 
+    I_0 = 1e-06)
+
+play_data_4_8 &lt;- tibble(t, i = generate_Iswv(t = t, I0 = 1e-04, 
+    D_ap = 1e-06, D_m = 1e-08, t_s, noise = F)) %&gt;% mutate(Dm = 1e-08, 
+    I_0 = 1e-04)
+
+play_data &lt;- bind_rows(play_data_5_8, play_data_5_10, play_data_6_8, 
+    play_data_4_8) %&gt;% mutate(params = paste(&quot;D_m=&quot;, Dm, &quot; I0=&quot;, 
+    I_0))
+# calc_data &lt;- tibble(t,i=generate_Iswv(t, I0=I0, D_ap ,
+# D_m=estimates[1], t_s, noise=T))
+
+ggplot(play_data, aes(x = t/60, y = i, color = params)) + geom_jitter(width = 1)</code></pre>
+<p><img src="generating_and_decoding_diffusion_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /> You can actually see that wildly different combinations of <span class="math inline">\(D_m\)</span> and <span class="math inline">\(I_0\)</span> give identical decay curves…therefore estimating <span class="math inline">\(I_0\)</span> is important.</p>
+</div>
+<div id="final-takeaways" class="section level2">
+<h2>Final Takeaways</h2>
+<p>What I take away from this notebook, is when we underestimate <span class="math inline">\(I_0\)</span>, the fit simply underestimates <span class="math inline">\(D_m\)</span> to compensate. Because <span class="math inline">\(I_0\)</span> and <span class="math inline">\(D_m\)</span> are both in the slope term, they can be adjusted against each other to get pretty much any value. Therefore we cannot simply fit for <span class="math inline">\(I_0\)</span>, it will be unidentifiable from <span class="math inline">\(D_m\)</span>. Recall:</p>
+<p><span class="math display">\[I_{swv}=I_0 \frac{\sqrt{D_{ap} t_s}}{\sqrt{4 D_m t}}\]</span></p>
+<p>In this notebook, maybe the errors seemed tolerable, within an order of magnitude. However, imagine what happens when our sampling rate is much lower, as in our experiments. I would predict that with the current experimental design and analysis workflow, <strong>we are seriously underestimating</strong> <span class="math inline">\(I_0\)</span>. I do not know how much error we have, but I think it is safe to assume that it is larger than the artificial system that we have worked with in this notebook. <strong>Therefore, we need a reasonable way to estimate <span class="math inline">\(I_0\)</span></strong> or clarify that we are estimating it well, by using the first datapoint.</p>
+<div id="how-to-estimate-i_0" class="section level3">
+<h3>How to estimate <span class="math inline">\(I_0\)</span>?</h3>
+<ul>
+<li>Take first data point - underestimates significantly</li>
+<li>Transform data point by some metric - what metric?</li>
+<li>take SWV signal from soak before transfer - we usually wash before transfer, so I think this would overestimate. Maybe if we don’t wash, but then we will almost surely have multiple diffusion processes happening.</li>
+<li>Take last datapoint/asymptote - this should just be a measure of how much PYO the biofilm holds onto and how much accumulates in the media. I don’t see why this value would be connected to how much PYO was initially there.</li>
+</ul>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
