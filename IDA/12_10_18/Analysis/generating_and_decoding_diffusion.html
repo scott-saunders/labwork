@@ -230,27 +230,27 @@ kable(head(gen_data))</code></pre>
 <tbody>
 <tr class="odd">
 <td align="right">1.000000</td>
-<td align="right">5.168885</td>
+<td align="right">5.004122</td>
 </tr>
 <tr class="even">
 <td align="right">1.494949</td>
-<td align="right">4.045879</td>
+<td align="right">4.057905</td>
 </tr>
 <tr class="odd">
 <td align="right">1.989899</td>
-<td align="right">3.589754</td>
+<td align="right">3.640768</td>
 </tr>
 <tr class="even">
 <td align="right">2.484849</td>
-<td align="right">3.107393</td>
+<td align="right">3.257615</td>
 </tr>
 <tr class="odd">
 <td align="right">2.979798</td>
-<td align="right">2.784355</td>
+<td align="right">2.945868</td>
 </tr>
 <tr class="even">
 <td align="right">3.474747</td>
-<td align="right">2.623979</td>
+<td align="right">2.697552</td>
 </tr>
 </tbody>
 </table>
@@ -279,11 +279,11 @@ kable(head(gen_data))</code></pre>
 <p>So, this function will take in our generated df. We will also provide it with a <span class="math inline">\(D_{ap}\)</span> and <span class="math inline">\(t_s\)</span>.</p>
 <pre class="r"><code>(estimates &lt;- calc_D_m(gen_data, D_ap = D_ap, t_s = t_s))</code></pre>
 <pre><code>##          D_m          i_0            b 
-## 2.634223e-08 5.168885e+00 3.565016e-03</code></pre>
+## 2.508968e-08 5.004122e+00 5.974719e-03</code></pre>
 <p>Ok, so the function runs…<strong>but its estimate is about an order of magnitude off</strong>…not great for data that we just generated. Recall that <span class="math inline">\(I_0\)</span> was 10, it seems that could be an important problem if using the max point to estimate <span class="math inline">\(I_0\)</span> doesn’t work well. You can see that by reruning the calculation function, but providing the correct <span class="math inline">\(I_0\)</span> enables the fit to estimate <span class="math inline">\(D_m\)</span> very accurately.</p>
 <pre class="r"><code>calc_D_m(gen_data, D_ap = D_ap, t_s = t_s, i_0 = I0)</code></pre>
 <pre><code>##          D_m          i_0            b 
-## 9.859589e-08 1.000000e+01 3.565016e-03</code></pre>
+## 1.001935e-07 1.000000e+01 5.974719e-03</code></pre>
 <p>Now, providing the correct <span class="math inline">\(I_0\)</span> yields a very good estimate for <span class="math inline">\(D_m\)</span>, recall that we originally set it to 10^{-7} cm^2/sec.</p>
 <p>Let’s look at a plot of the original data with data regenerated from the estimated fit parameters:</p>
 <pre class="r"><code># generate dataset from estimates
@@ -311,17 +311,18 @@ D_m_v2 = 1e-09
 gen_data_100 &lt;- tibble(t = seq(10, 3600, by = 10), i = generate_Iswv(t = t, 
     I0 = I0_v2, D_ap, D_m = D_m_v2, t_s, noise = T, sd = 2e-08))
 
-ggplot(gen_data_100, aes(x = t/60, y = i)) + geom_point()</code></pre>
+ggplot(gen_data_100, aes(x = t/60, y = i)) + geom_point() + geom_hline(yintercept = I0_v2, 
+    linetype = 2)</code></pre>
 <p><img src="generating_and_decoding_diffusion_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Interestingly, when <span class="math inline">\(D_m\)</span> and <span class="math inline">\(t\)</span> are small enough, you can actually get signal larger than <span class="math inline">\(I_0\)</span>. Using the same metric of the max data point to estimate <span class="math inline">\(I_0\)</span> now yields an <strong>overestimate.</strong></p>
 <p>NLS estimates:</p>
 <pre class="r"><code>(estimates_100 &lt;- calc_D_m(gen_data_100, D_ap = D_ap, t_s = t_s))</code></pre>
 <pre><code>##           D_m           i_0             b 
-##  2.494532e-09  1.617001e-06 -4.597882e-09</code></pre>
+##  2.503184e-09  1.577650e-06 -1.132666e-09</code></pre>
 <p>Estimates when provided with correct <span class="math inline">\(I_0\)</span></p>
 <pre class="r"><code>calc_D_m(gen_data_100, D_ap = D_ap, t_s = t_s, i_0 = I0_v2)</code></pre>
 <pre><code>##           D_m           i_0             b 
-##  9.540443e-10  1.000000e-06 -4.597882e-09</code></pre>
+##  1.005707e-09  1.000000e-06 -1.132666e-09</code></pre>
 <p>Again, we see that the error in the <span class="math inline">\(I_0\)</span> estimate throws off the <span class="math inline">\(D_m\)</span> estimate by 2.5x. And the plot shows the same effect as before - incorrect <span class="math inline">\(I_0\)</span> estimates will force the fit to adjust the <span class="math inline">\(D_m\)</span>.</p>
 <pre class="r"><code>calc_data_100 &lt;- tibble(t = seq(10, 3600, by = 10), i = generate_Iswv(t = t, 
     I0 = estimates_100[2], D_ap, D_m = estimates_100[1], t_s, 

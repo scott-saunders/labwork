@@ -169,7 +169,7 @@ D_m_v2 = 1e-9
 gen_data_100 <- tibble(t=seq(10,3600,by=10),
                        i=generate_Iswv(t=t, I0=I0_v2, D_ap , D_m = D_m_v2, t_s, noise=T,sd=2e-8))
 
-ggplot(gen_data_100,aes(x=t/60,y=i))+geom_point()
+ggplot(gen_data_100,aes(x=t/60,y=i))+geom_point()+geom_hline(yintercept = I0_v2,linetype=2)
 
 ```
 
