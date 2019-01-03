@@ -6,7 +6,7 @@ Each notebook entry below will discuss the approach, the problems with that appr
 
 ### V1: Titration I~gc~ vs. [PYO]
 
-### V2: Titration I<sub>gc</sub> vs. I<sub>swv</sub>
+### V2: Titration I~gc vs. I<sub>swv</sub>
 
 ### V1: Decays I<sub>gc</sub> vs.  I<sub>swv</sub>
 
