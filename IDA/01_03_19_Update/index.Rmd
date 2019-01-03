@@ -16,7 +16,7 @@ Each notebook entry below will discuss the approach, the problems with that appr
 
 ## Measuring $D_{ap}$
 
-### V1: Titration $I_{gc}$ vs. [PYO]
+### [V1: Titration $I_{gc}$ vs. [PYO]](https://scott-saunders.github.io/labwork/IDA/01_03_19_Update/test.html)
 
 ### V2: Titration $I_{gc}$ vs. $I_{swv}$
 
