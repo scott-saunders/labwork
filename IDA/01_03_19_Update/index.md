@@ -4,7 +4,7 @@ Each notebook entry below will discuss the approach, the problems with that appr
 
 ## Measuring D<sub>ap</sub>
 
-### V1: Titration I<sub>gc</sub> vs. [PYO]
+### V1: Titration I~gc~ vs. [PYO]
 
 ### V2: Titration I<sub>gc</sub> vs. I<sub>swv</sub>
 
