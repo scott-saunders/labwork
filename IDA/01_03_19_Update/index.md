@@ -16,4 +16,4 @@ Each notebook entry below will discuss the approach, the problems with that appr
 
 ### SWV decay simulation
 
-### V2: SWV decays, constrain I<sub>0</sub>
+V2: SWV decays, constrain I<sub>0</sub>
