@@ -2,4 +2,4 @@
 
 Each notebook entry below will discuss the approach, the problems with that approach and potential solutions. This leads into the next version of the analysis. 
 
-## Measuring \mu
+## Measuring $D_{ap}$
