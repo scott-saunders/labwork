@@ -1,0 +1,31 @@
+---
+title: "Test"
+fontsize: 12pt
+date: "1_03_19"
+output:
+  html_document:
+    self_contained: false
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
+---
+
+# Constraining electron transfer in *P. aeruginosa* biofilms: Past, Present, and Future
+
+Each notebook entry below will discuss the approach, the problems with that approach and potential solutions. This leads into the next version of the analysis. 
+
+## Measuring $D_{ap}$
+
+### V1: Titration $I_{gc}$ vs. [PYO]
+
+### V2: Titration $I_{gc}$ vs. $I_{swv}$
+
+### V1: Decays $I_{gc}$ vs. $I_{swv}$
+
+## Measuring $D_m$
+
+### V1: SWV decays - $P_1$ = $I_0$
+
+### SWV decay simulation
+
+### V2: SWV decays, constrain $I_0$

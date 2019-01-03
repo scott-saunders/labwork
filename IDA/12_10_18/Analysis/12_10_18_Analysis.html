@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Analysis</title>
+
+<script src="12_10_18_Analysis_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="12_10_18_Analysis_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="12_10_18_Analysis_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="12_10_18_Analysis_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="12_10_18_Analysis_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="12_10_18_Analysis_files/navigation-1.1/tabsets.js"></script>
+<script src="12_10_18_Analysis_files/navigation-1.1/codefolding.js"></script>
+<link href="12_10_18_Analysis_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="12_10_18_Analysis_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Analysis</h1>
+<h4 class="date"><em>12_10_18</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#estimating-d_ap-from-gcswv">Estimating <span class="math inline">\(D_{ap}\)</span> from GC/SWV</a></li>
+<li><a href="#estimating-d_m-from-swv-decays">Estimating <span class="math inline">\(D_m\)</span> from SWV decays</a></li>
+<li><a href="#discussion">Discussion</a></li>
+</ul>
+</div>
+
+<p><strong>Note</strong> the YAML contains specifications for a github document and html. The best way to deal with this is to knit them separately from the knit menu. Otherwise the html has blurry plots and tends to delete the md cached plots unless you tell it to cache everything!</p>
+<pre class="r"><code>library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+
+#knitr::opts_knit$set(root.dir = &#39;/Users/scottsaunders/git/labwork/IDA/12_10_18&#39;)
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)
+
+theme_1 &lt;- function () { 
+    theme_classic() %+replace% 
+        theme(
+          axis.text = element_text( size=12),
+          axis.title=element_text(size=14),
+          strip.text = element_text(size = 14),
+          strip.background = element_rect(color=&#39;white&#39;),
+          legend.title=element_text(size=14),
+          legend.text=element_text(size=12),
+          legend.text.align=0,
+          panel.grid.major = element_line(color=&#39;grey&#39;,size=0.1)
+        )
+}
+theme_set(theme_1())
+
+source(&quot;../../tools/echem_processing_tools.R&quot;)</code></pre>
+<p>Summary here.</p>
+<p>First, let’s read in the processed data file for the GCs and SWVs from reactor A.</p>
+<pre class="r"><code>gc_swv_df &lt;- read_csv(&quot;../Processing/12_10_18_processed_reactor_A_GC_SWV.csv&quot;)
+
+# head(gc_swv_df)</code></pre>
+<div id="estimating-d_ap-from-gcswv" class="section level2">
+<h2>Estimating <span class="math inline">\(D_{ap}\)</span> from GC/SWV</h2>
+<p>Let’s just plot all of the SWV signals vs. the GC signals. As we move forward, there may be reasons to use one subset of the data over others, but let’s start here.</p>
+<pre class="r"><code>ggplot(gc_swv_df, aes(x = signal_from_swv, y = signal_from_gc, 
+    color = PHZadded)) + geom_point()</code></pre>
+<p><img src="12_10_18_Analysis_files/figure-html/gc%20vs%20swv%201-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>This plot actually looks pretty linear, so across the different concentrations we soaked the biofilm in we might have actually gotten a pretty consistent measurement.</p>
+<p>The 200uM data points make it a little harder to look at the rest of the data, so let’s ignore them for a different look.</p>
+<pre class="r"><code>ggplot(gc_swv_df %&gt;% filter(PHZaddedInt &lt; 200), aes(x = signal_from_swv, 
+    y = signal_from_gc, color = PHZadded)) + geom_point()</code></pre>
+<p><img src="12_10_18_Analysis_files/figure-html/gc%20vs%20swv%202-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Ok, this plot still looks reasonably consistent. There still seems to be a strong linear increase in GC signal as SWV signal increases. There’s likely some noise in how we quantified the data at the lowest signals, especially for the 10uM level. I think that we could go back to the data and try to loess smooth to get more accurate quantification, but for now, let’s also ignore the 10uM level and fit a linear model to see how it looks.</p>
+<pre class="r"><code>ggplot(gc_swv_df %&gt;% filter(PHZaddedInt &lt; 200 &amp; PHZaddedInt &gt; 
+    10), aes(x = signal_from_swv, y = signal_from_gc)) + geom_point(aes(color = PHZadded)) + 
+    geom_smooth(method = &quot;lm&quot;)</code></pre>
+<p><img src="12_10_18_Analysis_files/figure-html/gc%20vs%20swv%20fit%201-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Again, the linear fit isn’t perfect, but it seems like a reasonable approximation. Let’s grab the slope coefficient from the linear fit, so that we can estimate a <span class="math inline">\(D_{ap}\)</span></p>
+<pre class="r"><code>gc_swv_linear_fit1 &lt;- lm(signal_from_gc ~ signal_from_swv, gc_swv_df %&gt;% 
+    filter(PHZaddedInt &lt; 200 &amp; PHZaddedInt &gt; 10))
+
+coef(summary(gc_swv_linear_fit1))</code></pre>
+<pre><code>##                      Estimate  Std. Error   t value     Pr(&gt;|t|)
+## (Intercept)     -1.748189e-08 1.51598e-09 -11.53174 1.007475e-11
+## signal_from_swv  1.811346e-01 1.02817e-02  17.61718 5.656763e-16</code></pre>
+<p>So this linear fit is telling us that the slope, <span class="math inline">\(m\)</span> of the best fit line is about 0.18 +/- 0.01. That’s a pretty confident estimate, and the small p value is telling us that the slope is definitely not zero.</p>
+<p>Recall that <span class="math inline">\(D_{ap}\)</span> is</p>
+<p><span class="math display">\[ D_{ap} = \frac{(m A \psi)^2 }{S^2 \pi t_p }\]</span></p>
+<p>Therefore, for this data with the following parameters yields the following <span class="math inline">\(D_{ap}\)</span>:</p>
+<pre class="r"><code>m &lt;- 0.18
+
+psi &lt;- 0.91
+t_p &lt;- 1/300  # frequency is 300 hz (sec)
+A &lt;- 0.025  #cm^2
+S &lt;- 18.4  #cm
+D_ap &lt;- (m * A * psi)^2/(S^2 * pi * t_p)
+
+paste(&quot;D_ap =&quot;, D_ap, &quot;cm^2 / sec&quot;)</code></pre>
+<pre><code>## [1] &quot;D_ap = 4.72980839954201e-06 cm^2 / sec&quot;</code></pre>
+<p>So the estimate from this data is that <span class="math inline">\(D_{ap}\)</span> is around 4.7 x 10^-6 cm^2 / sec, which is similar to the estimates we obtained before!</p>
+<p>We could estimate this parameter individually for each level of the titration, but the points look like they will have pretty similar slopes. However, note that small variations in m affect Dap in a nonlinear (squared) manner. For example m=0.1 yields D_ap=1.5e-6. That said, I think the point stands, that we expect D_ap to fall within this order of magnitude.</p>
+</div>
+<div id="estimating-d_m-from-swv-decays" class="section level2">
+<h2>Estimating <span class="math inline">\(D_m\)</span> from SWV decays</h2>
+<p>Let’s read in the data from the SWVs from all the titration points. Remember, 5 swvs were taken, then a GC then 5 more swvs etc.</p>
+<pre class="r"><code>swv_decays &lt;- read_csv(&quot;../Processing/12_10_18_processed_reactor_A_swv_decays.csv&quot;)</code></pre>
+<p>In order to fit the nonlinear decay to these plots let’s normalize to the highest signal, and consider it as the initial signal.</p>
+<pre class="r"><code>swv_decays_norm &lt;- swv_decays %&gt;% group_by(PHZadded) %&gt;% mutate(I0 = max(signal)) %&gt;% 
+    mutate(norm_signal = signal/I0)</code></pre>
+<p>Now we can fit the remaining datapoints (just not the first one).</p>
+<pre class="r"><code>ggplot(swv_decays_norm %&gt;% filter(rep != 0 | sub_rep != 1), aes(x = norm_time, 
+    y = norm_signal)) + geom_point() + geom_smooth(method = &quot;nls&quot;, 
+    formula = y ~ b * (x)^-0.5 + a, method.args = list(start = c(b = 0.1, 
+        a = 0)), se = F, fullrange = TRUE) + facet_wrap(~PHZadded, 
+    scales = &quot;free&quot;) + ylim(0, 1)</code></pre>
+<p><img src="12_10_18_Analysis_files/figure-html/swv%20facet%20plot-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The decays actually look pretty similar between the different titration points. Let’s overlay all of them.</p>
+<pre class="r"><code>ggplot(swv_decays_norm %&gt;% filter(rep != 0 | sub_rep != 1), aes(x = norm_time, 
+    y = norm_signal)) + geom_point(aes(color = PHZadded)) + geom_smooth(method = &quot;nls&quot;, 
+    formula = y ~ b * (x)^-0.5 + a, method.args = list(start = c(b = 0.1, 
+        a = 0)), se = F) + ylim(0, 1)</code></pre>
+<p><img src="12_10_18_Analysis_files/figure-html/swv%20overlay-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>If we grab the coefficients from this fit they look like this:</p>
+<pre class="r"><code>swv_nls_fit &lt;- nls(data = swv_decays_norm %&gt;% filter(rep != 0 | 
+    sub_rep != 1), formula = norm_signal ~ m * (norm_time)^-(1/2) + 
+    a, start = list(a = 0, m = 0.1))
+
+summary(swv_nls_fit)</code></pre>
+<pre><code>## 
+## Formula: norm_signal ~ m * (norm_time)^-(1/2) + a
+## 
+## Parameters:
+##   Estimate Std. Error t value Pr(&gt;|t|)    
+## a -0.02333    0.00611  -3.818  0.00018 ***
+## m  0.47534    0.02036  23.343  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.04889 on 199 degrees of freedom
+## 
+## Number of iterations to convergence: 1 
+## Achieved convergence tolerance: 8.44e-09</code></pre>
+<p>Ok with the nonlinear <span class="math inline">\(m\)</span> coefficient in hand we can compute <span class="math inline">\(D_m\)</span>:</p>
+<p><span class="math display">\[D_m = \frac{D_{ap } t_s}{4 m^2}\]</span> With the following parameters, let’s now look at <span class="math inline">\(D_m\)</span> and <span class="math inline">\(D_{ap}\)</span> for this biofilm.</p>
+<pre class="r"><code>t_s = 0.1  #not sure, total scan time is 2sec, and peak occurs at 1 sec so t_s must be &lt;1sec
+nls_m = 0.475
+D_m = (D_ap * t_s)/(4 * nls_m^2)
+
+paste(&quot;D_m =&quot;, D_m, &quot;D_ap = &quot;, D_ap)</code></pre>
+<pre><code>## [1] &quot;D_m = 5.24078493024045e-07 D_ap =  4.72980839954201e-06&quot;</code></pre>
+<p>Ok, so we see about an order of magnitude difference between the estimated molecular diffusion coefficient, <span class="math inline">\(D_m\)</span>, and the estimated apparent electrochemical diffusion constant, <span class="math inline">\(D_{ap}\)</span>.</p>
+</div>
+<div id="discussion" class="section level2">
+<h2>Discussion</h2>
+<p>Overall, I feel reasonably good about this analysis. The reason I re-did this experiment this way, was because I was concerned that the “equilibrium” PYO signal we saw was just background signal from the solution. By monitoring PYO as it decays out of the biofilm, we can be confident that the signal is coming from PYO in the actual biofilm.</p>
+<p>That said, I would like to go back to the dataset from this experiment and try to background subtract the final GC to get a similar measure to the past experiments.</p>
+<p>Most importantly, it seems to me that the SWV decays occur significantly more rapidly in this experiment than those from the past. This may be due to the use of the SWVfast, but I think it is most likely that it is caused by the repeated GC scans. By that I mean, that it’s possible that the large amount of PYO reduction that occurs during a GC scan actually influences the system, driving PYO out of the biofilm, since reduced PYO doesn’t bind DNA tightly.</p>
+<p>If that is the case, we could just compare the <span class="math inline">\(D_{ap}\)</span> from the GCs taken during the equilibration process to an uninterrupted SWV decay on the same biofilm?? However, I worry that this could be a bigger problem for our echem approach: When we estimate <span class="math inline">\(D_{ap}\)</span> we assume that the <span class="math inline">\(D_{gc}\)</span> is equivalent to <span class="math inline">\(D_{swv}\)</span>. Then because the two methods depend on <span class="math inline">\(D\)</span> differently we can use that different dependence to estimate that parameter over a range of concentrations. What I worry is that in fact <span class="math inline">\(D_{gc} \approx D_{pyo_{red}}\)</span> and that <span class="math inline">\(D_{swv} \approx D_{pyo_{ox}}\)</span>. That would be because SWV simply reduces the oxidized PYO near the electrode to generate a peak. Further, that reduction should be quick and hopefully doesn’t affect the whole pool of biofilm associated PYO? However, during GC, we typically quantify the collector current, which is poised at an oxidizing potential, therefore on some level it depends on <span class="math inline">\(PYO_{red}\)</span> diffusing from the generator to the collector. We think that oxidized PYO is bound to DNA and its diffusion is slowed by it, but reduced PYO probably isn’t bound. If this is true and <span class="math inline">\(D_{pyo_{red}}\)</span> is very different from <span class="math inline">\(D_{pyo_{ox}}\)</span>, then I think our measurements would be dominated by that. Therefore the difference between <span class="math inline">\(D_{ap}\)</span> and <span class="math inline">\(D_m\)</span> would be called into question, and our ability to estimate <span class="math inline">\(D_{ap}\)</span> in the first place is questionable…</p>
+<p>I’m not sure how to deal with this yet. This feels like yet another rabbit hole.</p>
+<p>—–Edit——-</p>
+<p>I believe that <span class="math inline">\(D_{gc}\)</span> actually depends on both <span class="math inline">\(D_{pyo_{red}}\)</span> and <span class="math inline">\(D_{pyo_{ox}}\)</span>. Let’s work backward from the collector electrode. The current at the collector electrode directly depends on <span class="math inline">\(D_{pyo_{red}}\)</span>. However, the <span class="math inline">\(PYO_{red}\)</span> is actually produced at the generator electrode. The amount of <span class="math inline">\(PYO_{red}\)</span> produced will depend on <span class="math inline">\(PYO_{ox}\)</span> diffusing to the generator, aka <span class="math inline">\(D_{pyo_{ox}}\)</span>. Therefore, I think that <span class="math inline">\(D_{gc}\)</span> directly depends on <span class="math inline">\(D_{pyo_{red}}\)</span>, but also indirectly depends on <span class="math inline">\(D_{pyo_{ox}}\)</span>. It would be ideal for us to assume that <span class="math inline">\(D_{pyo_{ox}} \approx D_{pyo_{red}}\)</span>, but that is probably not true in a biofilm full of eDNA. We don’t know how much slower <span class="math inline">\(D_{pyo_{ox}}\)</span> may be, but if we believe that it is signficantly slower than <span class="math inline">\(D_{pyo_{red}}\)</span> then the diffusion of <span class="math inline">\(PYO_{ox}\)</span> to the generator electrode would become rate limiting. Therefore the measured GC current would still reflect <span class="math inline">\(D_{pyo_{ox}}\)</span>.</p>
+<p>So, it may be true that the GCs are driving PYO out of the biofilm by reducing it, but I don’t actually think our approach is fundamentally flawed, because the GC probably mostly depends on <span class="math inline">\(D_{pyo_{ox}}\)</span>. Therefore we should compare these GCs with the pure SWV decays from other experiments.</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,165 @@
+---
+title: "Psoralen Biofilm Processing"
+fontsize: 12pt
+date: "12_04_18"
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
+---
+
+**Note** the YAML contains specifications for a github document and html. The best way to deal with this is to knit them separately from the knit menu. Otherwise the html has blurry plots and tends to delete the md cached plots unless you tell it to cache everything!
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+
+#knitr::opts_knit$set(root.dir = '/Users/scottsaunders/git/labwork/IDA/12_10_18')
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+theme_1 <- function () { 
+    theme_classic() %+replace% 
+        theme(
+          axis.text = element_text( size=12),
+          axis.title=element_text(size=14),
+          strip.text = element_text(size = 14),
+          strip.background = element_rect(color='white'),
+          legend.title=element_text(size=14),
+          legend.text=element_text(size=12),
+          legend.text.align=0,
+          panel.grid.major = element_line(color='grey',size=0.1)
+        )
+}
+theme_set(theme_1())
+
+source("../../tools/echem_processing_tools.R")
+```
+
+```{r}
+data_path = '../Data/SWV/'
+#divide swv into rep and subrep and then subtract 1 from rep to match with GC
+swv_all_files <-  dir(path=data_path,pattern = "[SWV]+.+[txt]$")
+
+file_paths <- paste(data_path,swv_all_files,sep='')
+
+data_cols <-  c('E','i1','i2')
+
+filename_cols = c('condition','PHZadded','molecule','transfer','echem','rep')
+
+skip_rows=18
+
+swv_all_files_df <- data_frame(filename = swv_all_files) %>% 
+  mutate(minutes = map(file_paths,~extract_minutes(.))) %>% 
+  mutate(file_contents = map(file_paths, ~ read_csv(.,col_names=data_cols, skip = skip_rows ))) 
+  
+swv_all_data_df <- swv_all_files_df %>% 
+  unnest(minutes) %>% 
+  unnest(file_contents)%>% 
+  separate(filename, filename_cols, sep='_') %>%
+  mutate(PHZaddedInt=as.integer(str_extract(PHZadded,"^[0-9]+"))) %>% 
+  mutate(rep=as.integer(str_extract(rep,"^[0-9]+"))) %>%
+  gather(key=electrode,value=current,i1,i2)
+
+ggplot(swv_all_data_df %>% filter(electrode=='i1'),aes(x=E,y=current,color=condition))+
+  geom_point()+
+  facet_wrap(~PHZadded,scales='free')+
+  scale_x_reverse()
+```
+
+```{r}
+unique_id_cols <- c('rep','echem','molecule','PHZadded','condition','transfer','PHZaddedInt','electrode','minutes')
+swv_all_signal <- echem_signal(swv_all_data_df,
+                               unique_id_cols,
+                               max_interval = c(-0.2,-0.3),
+                               min_interval =c(0,-0.2)) 
+
+ggplot(data=swv_all_data_df,aes(E,current,color=condition))+
+  geom_point()+
+  geom_point(data=swv_all_signal ,aes(x=E_from_mins,y=min_current),color='red')+
+  geom_point(data=swv_all_signal ,aes(x=E_from_maxs,y=max_current),color='green')+
+  facet_wrap(~PHZadded,scales='free')+
+  scale_x_reverse()
+
+ggplot(swv_all_signal,aes(x=PHZaddedInt,y=signal,color=condition,shape=electrode))+
+  geom_point()+
+  xlim(0,NA)
+```
+
+```{r}
+data_path = '../Data/GC/'
+#divide swv into rep and subrep and then subtract 1 from rep to match with GC
+gc_all_files <-  dir(path=data_path,pattern = "[GC]+.+[txt]$")
+
+file_paths <- paste(data_path,gc_all_files,sep='')
+
+data_cols <-  c('E','i1','i2','t')
+
+filename_cols = c('condition','PHZadded','molecule','transfer','echem')
+
+skip_rows=21
+
+gc_all_files_df <- data_frame(filename = gc_all_files) %>% 
+  mutate(minutes = map(file_paths,~extract_minutes(.))) %>% 
+  mutate(file_contents = map(file_paths, ~ read_csv(.,col_names=data_cols, skip = skip_rows ))) 
+  
+gc_all_data_df <- gc_all_files_df %>% 
+  unnest(minutes) %>% 
+  unnest(file_contents)%>% 
+  separate(filename, filename_cols, sep='_') %>%
+  mutate(PHZaddedInt=as.integer(str_extract(PHZadded,"^[0-9]+"))) %>% 
+  gather(key=electrode,value=current,i1,i2)
+
+ggplot(gc_all_data_df %>% filter(electrode=='i2'),aes(x=E,y=current,color=condition))+
+  geom_point()+
+  facet_wrap(~PHZadded,scales='free')+
+  scale_x_reverse()
+```
+
+```{r}
+gc_all_data_df_i2 <- gc_all_data_df %>% 
+  mutate(segment=ifelse(t<200.33,1,2)) %>% 
+  filter(electrode=='i2') %>% 
+  mutate(current=abs(current))
+
+ggplot(gc_all_data_df_i2 ,aes(x=E,y=current,color=segment))+
+  geom_point()+
+  facet_wrap(~PHZadded,scales='free')+
+  scale_x_reverse()
+```
+
+```{r}
+unique_id_cols <- c('segment','echem','molecule','PHZadded','condition','transfer','PHZaddedInt','electrode','minutes')
+gc_all_signal <- echem_signal(gc_all_data_df_i2,
+                               unique_id_cols,
+                               max_interval = c(-0.25,-0.5),
+                               min_interval =c(0,-0.3)) 
+
+ggplot(data=gc_all_data_df_i2,aes(E,current,color=condition))+
+  geom_point(size=0.5)+
+  geom_point(data=gc_all_signal ,aes(x=E_from_mins,y=min_current),color='red')+
+  geom_point(data=gc_all_signal ,aes(x=E_from_maxs,y=max_current),color='green')+
+  facet_wrap(~PHZadded,scales='free')+
+  scale_x_reverse()+
+  ylim(0,1.5e-8)
+
+ggplot(gc_all_signal,aes(x=PHZaddedInt,y=signal,color=condition,shape=factor(segment)))+
+  geom_point()+
+  xlim(0,NA)
+```
+
+```{r}
+gc_swv_data <- left_join(gc_all_signal,swv_all_signal %>% filter(electrode=='i1'),by=c('condition','PHZadded','PHZaddedInt','molecule'),suffix=c('_from_gc','_from_swv'))
+
+ggplot(gc_swv_data,aes(x=signal_from_swv,y=signal_from_gc,color=condition))+
+  geom_point()+
+  geom_smooth(method='lm',se=T)+
+  facet_wrap(~segment,scales='free')+
+  ylim(0,1.2e-8)
+```
