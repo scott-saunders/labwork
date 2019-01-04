@@ -1,5 +1,5 @@
 ---
-title: "Constraining electron transfer in *P. aeruginosa* biofilms: Past, Present, and Future"
+title: "Biofilm Echem Analysis: Past, Present, and Future"
 fontsize: 12pt
 date: "01_03_19"
 output:
@@ -20,7 +20,7 @@ We set out to measure the $D_{ap}$ for PYO in the IDA grown biofilm based on a s
 
 Originally, we were just soaking a biofilm in a concentration of PYO and looking at how current increased. Recall, the main goal was to see if the relationship was linear or nonlinear. However, we realized that most of the signal is coming from the solution phase PYO, not necessarily PYO associated with the biofilm.
 
-#### V2: Transfer equilibrium titration $I_{gc}$ vs. $I_{swv}$
+#### [V2: Transfer equilibrium titration $I_{gc}$ vs. $I_{swv}$](https://scott-saunders.github.io/labwork/IDA/01_03_19_Update/Dap_V2.html)
 
 We decided to transfer the biofilm to a fresh reactor after soaking, so that we would be measuring biofilm associated PYO. In the course of monitoring the PYO equilibrate out of the biofilm into the fresh media, we realized it might be possible to measure $D_m$. We no longer knew the concentration of PYO at the electrode, so we then adopted the SWV vs. GC measurement. 
 

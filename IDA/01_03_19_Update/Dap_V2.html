@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Measuring D_{ap} Version 2</title>
+
+<script src="Dap_V2_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="Dap_V2_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="Dap_V2_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="Dap_V2_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="Dap_V2_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="Dap_V2_files/navigation-1.1/tabsets.js"></script>
+<script src="Dap_V2_files/navigation-1.1/codefolding.js"></script>
+<link href="Dap_V2_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="Dap_V2_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Measuring <span class="math inline">\(D_{ap}\)</span> Version 2</h1>
+<h3 class="subtitle"><em>Transfer equilibrium titration <span class="math inline">\(I_{gc}\)</span> vs. [PYO]</em></h3>
+<h4 class="date"><em>1_04_19</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#approach">Approach</a><ul>
+<li><a href="#derivation-for-d_ap-from-i_gc-vs.-i_swv">Derivation for <span class="math inline">\(D_{ap}\)</span> from <span class="math inline">\(I_{gc}\)</span> vs. <span class="math inline">\(I_{swv}\)</span></a></li>
+<li><a href="#protocol">Protocol</a></li>
+</ul></li>
+<li><a href="#fatal-flaw">Fatal Flaw</a></li>
+<li><a href="#conclusions">Conclusions</a></li>
+</ul>
+</div>
+
+<pre class="r"><code>library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(knitr)
+
+#knitr::opts_knit$set(root.dir = &#39;/Users/scottsaunders/git/labwork/IDA/12_10_18&#39;)
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)
+
+theme_1 &lt;- function () { 
+    theme_classic() %+replace% 
+        theme(
+          axis.text = element_text( size=12),
+          axis.title=element_text(size=14),
+          strip.text = element_text(size = 14),
+          strip.background = element_rect(color=&#39;white&#39;),
+          legend.title=element_text(size=14),
+          legend.text=element_text(size=12),
+          legend.text.align=0,
+          panel.grid.major = element_line(color=&#39;grey&#39;,size=0.1)
+        )
+}
+theme_set(theme_1())
+
+#source(&quot;../../tools/echem_processing_tools.R&quot;)</code></pre>
+<p>Notebooks that used Version 2 analysis: * <a href="https://scott-saunders.github.io/labwork/IDA/09_11_18_DapEstimation.html">09_11_18 - Estimating <span class="math inline">\(D_{ap}\)</span> in triplicate</a></p>
+<div id="approach" class="section level1">
+<h1>Approach</h1>
+<p>The next approach I took to measuring <span class="math inline">\(D_{ap}\)</span> was to soak <span class="math inline">\(\Delta phz\)</span> biofilms with PYO in one reactor and then transfer the biofilms to a second reactor with fresh medium. The echem measurements were then taken in the “transfer” reactor, so that we could be more confident the signal was coming from biofilm associated PYO, not the solution PYO.</p>
+<p>In order to do this, I needed a way to estimate the concentration of PYO left in the biofilm when making the measurements. What we settled on is to take a single electrode square wave voltammetry (SWV) scan after taking each generator collector (GC) scan. What we realized was that plotting <span class="math inline">\(I_{gc}\)</span> vs. <span class="math inline">\(I_{swv}\)</span> actually yielded a line that depends on <span class="math inline">\(D_{ap}\)</span>, which was what we sought in V1 for the <span class="math inline">\(I_{gc}\)</span> vs. <span class="math inline">\(C\)</span> plots.</p>
+<div id="derivation-for-d_ap-from-i_gc-vs.-i_swv" class="section level2">
+<h2>Derivation for <span class="math inline">\(D_{ap}\)</span> from <span class="math inline">\(I_{gc}\)</span> vs. <span class="math inline">\(I_{swv}\)</span></h2>
+<p><span class="math inline">\(I_{gc}\)</span> and <span class="math inline">\(I_{swv}\)</span> depend on <span class="math inline">\(D_{ap}\)</span> differently, because the currents arise through different processes. <span class="math inline">\(I_{gc}\)</span> is an equilibrium flux that depends on a diffusion coefficient and concentration gradient similar to fick’s law. <span class="math inline">\(I_{swv}\)</span> depends on non equilibrium diffusion (fick’s second law) as described by the cottrell equation - while the electrode is poised it constantly changes the concentration gradient.</p>
+<p>Slope of the linear fit of GC vs. SWV titration plot: <span class="math display">\[slope = m = \frac{\Delta I_{gc}}{\Delta I_{swv}} \tag{eq. 1}\]</span> Generator collector peak current: <span class="math display">\[I_{gc} = nFSCD_{ap} \tag{eq. 2}\]</span></p>
+<p>Square Wave peak current: <span class="math display">\[I_{swv} = \frac{nFACD_{ap}^{1/2}}{\pi^{1/2}t_p^{1/2}} \psi \tag{eq. 3}\]</span> Substituting into eq. 1: <span class="math display">\[m = \frac{I_{gc}}{I_{swv}} = \frac{nFSCD_{ap}}{\frac{nFACD_{ap}^{1/2}}{\pi^{1/2}t_p^{1/2}} \psi} \tag{eq. 4}\]</span> Assuming that <span class="math inline">\(D_{ap}\)</span> and <span class="math inline">\(C\)</span> are the same for GC and SWV we can simplify: <span class="math display">\[m = \frac{S\pi^{1/2}t_p^{1/2}D_{ap}^{1/2}}{A\psi} \tag{eq. 5}\]</span></p>
+<p>Rearranged for <span class="math inline">\(D_{ap}\)</span>: <span class="math display">\[D_{ap} = \frac{m^2 A^2 \psi^2}{S^2\pi t_p} \tag{eq. 7}\]</span></p>
+<p>Therefore, with this dataset in hand, we should be able to estimate <span class="math inline">\(D_{ap}\)</span> for the biofilm associated PYO, by measuring in the transfer reactor.</p>
+</div>
+<div id="protocol" class="section level2">
+<h2>Protocol</h2>
+<p>In V1, we were already using a titration approach to vary <span class="math inline">\(C\)</span>, so we continued this approach by soaking the <span class="math inline">\(\Delta phz\)</span> biofilm in increasing concentrations of synthetic PYO. After each soak, I briefly washed the biofilm and then transferred it to another reactor with fresh medium.</p>
+<p>We had reasonably decided to take measurements at a timepoint where the system had reached equilibrium. For various reasons, we assumed that at equilibrium we would only be measuring PYO stably associated with the biofilm, and that the solution concentration was negligible. Two reasons we made these assumptions were that we could transfer the biofilm repeatedly into fresh solution and always detect PYO signal and that measurements on the LC-MS suggested that the solution concentration of PYO was in the nM range, which I thought was below the detection limit of the electrode.</p>
+<p>I implemented this protocol by taking successive SWV scans as the biofilm equilibrated in the transfer reactor over the course of ~1 hour. Once the peak SWV current stopped noticeably decreasing, I took a GC and SWV scan. Then I soaked the biofilm in the next higher PYO concentration and repeated for 5-7 concentrations total.</p>
+<p>PLOT of SWVs and peak current decay</p>
+<p>Note that this was quite a long experiment with few datapoints, since each equilibrium datapoint took at least 1.5 hrs and required a potentiostat to monitor the reactor during the entire process.</p>
+</div>
+</div>
+<div id="fatal-flaw" class="section level1">
+<h1>Fatal Flaw</h1>
+<p>In general, V2 titrations looked linear. That said the slope of these <span class="math inline">\(I_{gc}\)</span> vs. <span class="math inline">\(I_{swv}\)</span> plots was significantly less for the transfer measurements than measurements taken in the soak reactor (with a biofilm or blank IDA).</p>
+<p>PLOT HERE OF PSORALEN CONTROL TITRATION</p>
+<p>After doing these experiments for a while thinking things were fine, I finally decided to explicitly measure background signal in the transfer reactor (Lenny had suggested this long ago). Below is a plot of the transfer reactor measured “at equilibrium” after an hour with a biofilm coated IDA, followed by a blank IDA.</p>
+<p>PLOT HERE OF PSORALEN GC + BACKGROUND</p>
+<p>It is clear that the amount of background signal from PYO in solution is significant in these measurements. It is unclear if all of the observed biofilm signal is due to the solution or not. One approach might be to try to background subtract the signal from the blank electrode from the biofilm electrode, however, this assumes <span class="math inline">\(I_{gc} = I_{biofilm} + I_{solution}\)</span>. We know that this is not true in the soak phase, because the biofilm electrode actually shows less signal than the blank electrode. Therefore any attempt to background subtract would get impractically complicated (you probably need to know fraction of electrode exposed to solution, <span class="math inline">\(D_{ap}\)</span> for each phase, and concentrations).</p>
+</div>
+<div id="conclusions" class="section level1">
+<h1>Conclusions</h1>
+<p>Bad 1. The electrode was more sensitive than I realized, and therefore the background signal from the PYO in solution was much higher than I expected.</p>
+<p>Good 1. The derivation</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

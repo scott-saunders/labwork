@@ -110,6 +110,9 @@ Beautiful, now let's write a function that can take in that generated data and a
 ```{r}
 
 calc_D_m <- function(df,t=t,i=i,D_ap,t_s,i_0=NA){
+  
+  #need to add tidy eval here
+  
   if(is.na(i_0)){
     i_0 = max(df$i)
   }
@@ -235,4 +238,75 @@ In this notebook, maybe the errors seemed tolerable, within an order of magnitud
 * take SWV signal from soak before transfer - we usually wash before transfer, so I think this would overestimate. Maybe if we don't wash, but then we will almost surely have multiple diffusion processes happening. 
 * Take last datapoint/asymptote - this should just be a measure of how much PYO the biofilm holds onto and how much accumulates in the media. I don't see why this value would be connected to how much PYO was initially there. 
 
+**Individually, none of these work.** Perhaps one type of answer could be to bound $I_0$. I believe we can confidently say that $I_0$ should lie betweent the peak current during soak, and the peak current of the first transfer scan. Then, we would fit the raw peak currents at the time they were taken relative to transfer. We will fit for a slope, $m$, and then give an upper and lower bound of $D_m$. This is worth a try although I worry that the soak and transfer currents will be so far apart that the uncertainty will be enormous...but I guess the uncertainty is already enormous. 
 
+For the psoralen control biofilm (12_04_18), the difference between soak_SWV_10 and transfer_SWV_1 is about 10x. One strategy to close this gap is to take the SWV as soon as possible and use SWV_fast settings (scan time ~2sec instead of 40sec). If the 10x difference cannot be improved, then the difference betweent the two estimates of $I_0$ will be 100x...That's more useful than not having a believable estimate, so I think we'll have to live with it, unless some other idea comes along.
+
+Another constraint to tell how bad the soak SWV $I_0$ estimate is, would be that as far as I know $D_m \leq D_{ap}$. So if the $D_m$ estimate for the soak SWV is greater than $D_{ap}$, then it significantly overestimates $I_0$.
+
+## Use Point 1 as $I_0$ and $t_0$
+
+```{r}
+#Params
+I0=10
+D_ap=1e-6
+D_m=1e-6
+t_s=0.1
+
+t = seq(1, 3600, length = 60)
+
+gen_data <- tibble(t,i=generate_Iswv(t, I0, D_ap , D_m, t_s, noise=F))
+
+head(gen_data_daps)
+
+gen_data_shift <- gen_data %>% 
+  mutate(Dap_6 = generate_Iswv(t, I0, D_ap , D_m=1e-6, t_s, noise=T,sd=0.01)) %>% 
+  mutate(Dap_7 = generate_Iswv(t, I0, D_ap , D_m=1e-7, t_s, noise=T,sd=0.01)) %>% 
+  mutate(Dap_8 = generate_Iswv(t, I0, D_ap , D_m=1e-8, t_s, noise=T,sd=0.01)) %>% 
+  mutate(Dap_9 = generate_Iswv(t, I0, D_ap , D_m=1e-9, t_s, noise=T,sd=0.01)) %>% 
+  gather(key=Dap,value=current,Dap_6,Dap_7,Dap_8,Dap_9)
+
+gen_data_daps <- gen_data_shift %>% 
+  filter(t>1) %>% 
+  group_by(Dap) %>% 
+  mutate(i0=max(current)) %>% 
+  mutate(mins = min(current)) %>% 
+  mutate(norm_current=current/i0)
+
+ggplot(gen_data_shift %>% filter(t>1),aes(x=t,y=i))+geom_point()+
+  geom_point(aes(x=t_shift,y=i),color='red')
+
+ggplot(gen_data_daps,aes(x=t,y=current/I0,color=Dap))+geom_point()
+
+mins <- gen_data_daps %>% group_by(Dap) %>% summarise(min=min(current))
+
+df_mins = mins %>% add_column(Dm=c(6,7,8,9)) %>% add_column(Dm_eval=c(10^-6,10^-7,10^-8,10^-9))
+
+ggplot(df_mins,aes(x=Dm,y=min))+geom_point()
+
+ggplot(gen_data_daps,aes(x=t,y=norm_current,color=Dap))+geom_point()
+
+calc_D_m(gen_data_shift %>% filter(t>0),t = t,i=i,D_ap=D_ap,t_s=t_s,i_0=max(gen_data$i))
+
+calc_D_m(gen_data %>% filter(t>0),t = t,i=i,D_ap=D_ap,t_s=t_s,i_0 = I0)
+
+calc_D_m(gen_data_daps %>% filter(Dap=='Dap_9'),t = t,i=current,D_ap=D_ap,t_s=t_s,i_0 = I0)
+
+ggplot(gen_data_daps %>% filter(Dap=='Dap_9'),aes(x=t,y=current))+geom_point()+
+  geom_smooth(method='nls',formula=y~b*(x)^-0.5+a,method.args=list(start=c(b=0.1,a=0)),se=F,fullrange=TRUE)
+
+```
+
+
+```{r}
+ggplot(gen_data_daps,aes(x=t,y=current,color=Dap))+geom_point()+
+  geom_smooth(method='nls',formula=y~(b*(x)^-0.5)+a,method.args=list(start=c(b=0.1,a=0)),se=F,fullrange=TRUE)
+
+
+gen_data_nls <- gen_data_daps %>% 
+  group_by(Dap) %>% 
+  do(tidy(nls(data=.,formula=current~(m*(t)^-(1/2))+a,start=list(a=0,m=0.1))))
+
+ggplot(gen_data_nls,aes(x=Dap,y=estimate))+geom_point()+
+  facet_wrap(~term,scales='free')
+```

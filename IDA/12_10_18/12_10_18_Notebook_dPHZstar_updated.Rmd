@@ -1,0 +1,259 @@
+---
+title: "dPHZ* PYO Titration Updated"
+fontsize: 12pt
+date: "12_10_18"
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
+---
+
+**Note** the YAML contains specifications for a github document and html. The best way to deal with this is to knit them separately from the knit menu. Otherwise the html has blurry plots and tends to delete the md cached plots unless you tell it to cache everything!
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+
+#knitr::opts_knit$set(root.dir = '/Users/scottsaunders/git/labwork/IDA/12_10_18')
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+theme_1 <- function () { 
+    theme_classic() %+replace% 
+        theme(
+          axis.text = element_text( size=12),
+          axis.title=element_text(size=14),
+          strip.text = element_text(size = 14),
+          strip.background = element_rect(color='white'),
+          legend.title=element_text(size=14),
+          legend.text=element_text(size=12),
+          legend.text.align=0,
+          panel.grid.major = element_line(color='grey',size=0.1)
+        )
+}
+theme_set(theme_1())
+
+source("../tools/echem_processing_tools.R")
+```
+
+
+```{r}
+data_path = './Data/SWV/'
+#divide swv into rep and subrep and then subtract 1 from rep to match with GC
+swv_all_files <-  dir(path=data_path,pattern = "[SWV]+.+[txt]$")
+
+file_paths <- paste(data_path,swv_all_files,sep='')
+
+data_cols <-  c('E','i1','i2')
+
+filename_cols = c('reactor','PHZadded','molecule','echem','rep','sub_rep')
+
+skip_rows=18
+
+swv_all_files_df <- data_frame(filename = swv_all_files) %>% 
+  mutate(minutes = map(file_paths,~extract_minutes(.))) %>% 
+  mutate(file_contents = map(file_paths, ~ read_csv(.,col_names=data_cols, skip = skip_rows ))) 
+  
+swv_all_data_df <- swv_all_files_df %>% 
+  unnest(minutes) %>% 
+  unnest(file_contents)%>% 
+  separate(filename, filename_cols, sep='_') %>%
+  mutate(PHZaddedInt=as.integer(str_extract(PHZadded,"^[0-9]+"))) %>% 
+  mutate(sub_rep=as.integer(str_extract(sub_rep,"^[0-9]+"))) %>%
+  mutate(rep=as.numeric(rep)-1) %>% 
+  gather(key=electrode,value=current,i1,i2)
+
+ggplot(swv_all_data_df %>% filter(electrode=='i1'),aes(x=E,y=current,color=rep))+
+  geom_point()+
+  facet_wrap(~PHZadded,scales='free')+
+  scale_x_reverse()
+
+```
+
+Data looks pretty good except for that one line for 50uM
+
+```{r}
+ggplot(swv_all_data_df %>% filter(electrode=='i1') %>% filter(PHZaddedInt==50 & rep>0),aes(x=E,y=current,color=rep))+geom_point()+scale_x_reverse()
+
+swv_all_data_df %>% 
+  filter(electrode=='i1') %>% 
+  filter(PHZaddedInt==50) %>% 
+  filter(current<1e-6)
+
+ggplot(swv_all_data_df %>% filter(PHZaddedInt==50 & rep==5 & sub_rep==4),
+       aes(x=E,y=current,color=electrode))+
+  geom_point()+scale_x_reverse()     
+
+#let's remove this sub_rep, not sure why it's so different.And let's focus on i1
+swv_all_data_df_i1 <- swv_all_data_df %>% 
+  filter(electrode=='i1') %>% 
+  filter(PHZaddedInt!=50 | rep!=5 | sub_rep!=4)
+
+ggplot(swv_all_data_df_i1,aes(x=E,y=current,color=rep))+
+  geom_point()+
+  facet_wrap(~PHZadded,scales='free')+
+  scale_x_reverse()
+```
+
+```{r}
+unique_id_cols <- c('sub_rep','rep','echem','molecule','PHZadded','reactor','PHZaddedInt','electrode','minutes')
+swv_all_signal <- echem_signal(swv_all_data_df_i1,
+                               unique_id_cols,
+                               max_interval = c(-0.2,-0.4),
+                               min_interval =c(0,-0.2)) 
+
+swv_all_signal_time <- swv_all_signal %>% 
+  group_by(PHZadded,PHZaddedInt,reactor,electrode,molecule) %>% 
+  mutate(min_time=min(minutes)) %>% 
+  mutate(norm_time=minutes-min_time)
+
+ggplot(data=swv_all_data_df_i1 %>% filter(rep>0),aes(E,current,color=rep))+
+  geom_point()+
+  geom_point(data=swv_all_signal %>% filter(rep>0),aes(x=E_from_mins,y=min_current),color='red')+
+  geom_point(data=swv_all_signal %>% filter(rep>0),aes(x=E_from_maxs,y=max_current),color='green')+
+  facet_wrap(~PHZadded,scales='free')+
+  scale_x_reverse()
+
+ggplot(swv_all_signal_time %>% filter(rep>0),aes(x=norm_time,y=signal))+
+  geom_point()+
+  facet_wrap(~PHZadded,scales='free')
+```
+
+```{r gc import}
+data_path = './Data/GC/'
+#divide swv into rep and subrep and then subtract 1 from rep to match with GC
+gc_all_files <-  dir(path=data_path,pattern = "[GC]+.+[txt]$")
+
+file_paths <- paste(data_path,gc_all_files,sep='')
+
+data_cols <-  c('E','i1','i2','t')
+
+filename_cols = c('reactor','PHZadded','molecule','echem','rep')
+
+skip_rows=21
+
+gc_all_files_df <- data_frame(filename = gc_all_files) %>% 
+  mutate(minutes = map(file_paths,~extract_minutes(.))) %>% 
+  mutate(file_contents = map(file_paths, ~ read_csv(.,col_names=data_cols, skip = skip_rows ))) 
+  
+gc_all_data_df <- gc_all_files_df %>% 
+  unnest(minutes) %>% 
+  unnest(file_contents)%>% 
+  separate(filename, filename_cols, sep='_') %>%
+  mutate(PHZaddedInt=as.integer(str_extract(PHZadded,"^[0-9]+"))) %>% 
+  mutate(rep=as.integer(str_extract(rep,"^[0-9]+"))) %>%
+  gather(key=electrode,value=current,i1,i2)
+
+ggplot(gc_all_data_df,aes(x=E,y=current,color=rep))+
+  geom_point()+
+  facet_wrap(~PHZadded,scales='free')+
+  scale_x_reverse()
+
+
+
+#grab just i2 and s1 and make current positive
+gc_all_data_df_i2 <- gc_all_data_df %>% 
+  filter(electrode=='i2') %>% 
+  filter(t<=200.333) %>% 
+  mutate(current=abs(current))
+
+ggplot(gc_all_data_df_i2,aes(x=E,y=current,color=rep))+
+  geom_point()+
+  facet_wrap(~PHZadded,scales='free')+
+  scale_x_reverse()
+```
+
+```{r gc processing}
+unique_id_cols <- c('rep','echem','molecule','PHZadded','reactor','PHZaddedInt','electrode','minutes')
+gc_all_signal <- echem_signal(gc_all_data_df_i2,
+                               unique_id_cols,
+                               max_interval = c(-0.48,-0.5)) 
+
+
+#to make swv and GC times match, need to do this group operation after swv and gc are combined
+gc_all_signal_time <- gc_all_signal %>% 
+  group_by(PHZadded,PHZaddedInt,reactor,electrode,molecule) %>% 
+  mutate(min_time=min(minutes)) %>% 
+  mutate(norm_time=minutes-min_time)
+
+ggplot(data=gc_all_data_df_i2 ,aes(E,current,color=rep))+
+  geom_point()+
+  geom_point(data=gc_all_signal ,aes(x=E_from_mins,y=min_current),color='red')+
+  geom_point(data=gc_all_signal ,aes(x=E_from_maxs,y=max_current),color='green')+
+  facet_wrap(~PHZadded,scales='free')+
+  scale_x_reverse()
+
+ggplot(gc_all_signal_time ,aes(x=norm_time,y=signal))+
+  geom_point()+
+  facet_wrap(~PHZadded,scales='free')
+
+```
+
+```{r gc swv analysis}
+swv_all_signal_1 <- swv_all_signal %>% 
+  filter(sub_rep==1)
+
+gc_swv_data <- left_join(gc_all_signal,swv_all_signal_1,by=c('rep','PHZadded','PHZaddedInt','reactor','molecule'),suffix=c('_from_gc','_from_swv'))
+
+write_csv(gc_swv_data,path = )
+
+ggplot(gc_swv_data,aes(x=signal_from_swv,y=signal_from_gc))+
+  geom_point()+
+  facet_wrap(~PHZadded)
+
+ggplot(gc_swv_data %>% filter(rep==1),aes(x=signal_from_swv,y=signal_from_gc))+
+  geom_point()+
+  geom_smooth(method='lm')
+
+lm(signal_from_gc~signal_from_swv,gc_swv_data %>% filter(rep==1))
+
+ggplot(gc_swv_data %>% filter(rep>1),aes(x=signal_from_swv,y=signal_from_gc))+
+  geom_point()+
+  geom_smooth(method='lm')
+
+summary(lm(signal_from_gc~signal_from_swv,gc_swv_data %>% filter(rep>1) ))
+
+
+ggplot(gc_swv_data %>% filter(rep==6),aes(x=signal_from_swv,y=signal_from_gc))+
+  geom_point()+
+  geom_smooth(method='lm')
+
+lm(signal_from_gc~signal_from_swv,gc_swv_data %>% filter(rep==6))
+```
+
+```{r Dap calculation}
+psi = 0.91
+t_p = 1/300 # frequency is 300 hz (sec)
+A = 0.025 #cm^2
+S = 18.4 #cm
+
+m=0.1
+
+Dap=(m*A*psi)^2 / (pi*t_p*S^2) #cm^2 /sec
+Dap
+
+c(1.9e-1+2*6.48e-3,1.9e-1-2*6.48e-3)
+```
+
+```{r}
+ggplot(swv_all_signal_time %>% filter(PHZaddedInt==100 & rep>0),aes(x=norm_time-5,y=signal))+
+  geom_point()+ylim(0,NA)+
+  geom_smooth(method='nls',se=FALSE,color='black',method.args=list(formula=y~b*(x)^-(1/2)+a,start=list(a=0,b=1)))
+
+ggplot(swv_all_signal_time %>% filter(PHZaddedInt<200 & rep>0 & rep<5),aes(x=norm_time^(-1/2),y=signal,,color=PHZadded))+
+  geom_point()+geom_smooth(method='lm')
+  
+ggplot(swv_all_signal_time %>% filter(PHZaddedInt<200 & rep>=0),aes(x=norm_time^(-1/2),y=signal,,color=PHZadded))+
+  geom_point()+geom_smooth(method='lm')+ylim(0,1e-6)
+
+summary(nls(formula=signal/4e-06~b*(norm_time+0.2)^-(1/2)+a,swv_all_signal_time %>% filter(PHZaddedInt==200),start=list(a=0,b=1)))
+
+a=0.45
+```
+

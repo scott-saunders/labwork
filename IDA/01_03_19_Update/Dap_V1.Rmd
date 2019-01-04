@@ -1,6 +1,6 @@
 ---
 title: "Measuring $D_{ap}$ Version 1"
-subtitle: "Titration $I_{gc}$ vs. [PYO]"
+subtitle: "Soak titration $I_{gc}$ vs. [PYO]"
 fontsize: 12pt
 date: "1_03_19"
 output:

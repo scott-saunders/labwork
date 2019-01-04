@@ -1,0 +1,276 @@
+---
+title: "Analysis"
+fontsize: 12pt
+date: "12_10_18"
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
+---
+
+**Note** the YAML contains specifications for a github document and html. The best way to deal with this is to knit them separately from the knit menu. Otherwise the html has blurry plots and tends to delete the md cached plots unless you tell it to cache everything!
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+
+#knitr::opts_knit$set(root.dir = '/Users/scottsaunders/git/labwork/IDA/12_10_18')
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+theme_1 <- function () { 
+    theme_classic() %+replace% 
+        theme(
+          axis.text = element_text( size=12),
+          axis.title=element_text(size=14),
+          strip.text = element_text(size = 14),
+          strip.background = element_rect(color='white'),
+          legend.title=element_text(size=14),
+          legend.text=element_text(size=12),
+          legend.text.align=0,
+          panel.grid.major = element_line(color='grey',size=0.1)
+        )
+}
+theme_set(theme_1())
+
+source("../../tools/echem_processing_tools.R")
+```
+
+Summary here.
+
+First, let's read in the processed data file for the GCs and SWVs from reactor A.
+
+```{r import}
+gc_swv_df <- read_csv("../Processing/12_10_18_processed_reactor_A_GC_SWV.csv")
+
+#head(gc_swv_df)
+```
+
+## Estimating $D_{ap}$ from GC/SWV
+
+Let's just plot all of the SWV signals vs. the GC signals. As we move forward, there may be reasons to use one subset of the data over others, but let's start here. 
+```{r gc vs swv 1}
+ggplot(gc_swv_df, aes(x=signal_from_swv, y=signal_from_gc, color=PHZadded))+
+  geom_point()
+```
+
+This plot actually looks pretty linear, so across the different concentrations we soaked the biofilm in we might have actually gotten a pretty consistent measurement. 
+
+The 200uM data points make it a little harder to look at the rest of the data, so let's ignore them for a different look. 
+
+```{r gc vs swv 2}
+ggplot(gc_swv_df %>% filter(PHZaddedInt<200), aes(x=signal_from_swv, y=signal_from_gc, color=PHZadded))+
+  geom_point()
+```
+
+Ok, this plot still looks reasonably consistent. There still seems to be a strong linear increase in GC signal as SWV signal increases. There's likely some noise in how we quantified the data at the lowest signals, especially for the 10uM level. I think that we could go back to the data and try to loess smooth to get more accurate quantification, but for now, let's also ignore the 10uM level and fit a linear model to see how it looks.
+
+```{r gc vs swv fit 1}
+ggplot(gc_swv_df %>% filter(PHZaddedInt<200 & PHZaddedInt>10), 
+       aes(x=signal_from_swv, y=signal_from_gc))+
+  geom_point(aes(color=PHZadded))+
+  geom_smooth(method='lm')
+```
+
+Again, the linear fit isn't perfect, but it seems like a reasonable approximation. Let's grab the slope coefficient from the linear fit, so that we can estimate a $D_{ap}$
+
+```{r gc vs swv fit 2}
+gc_swv_linear_fit1 <- lm(signal_from_gc~signal_from_swv,gc_swv_df %>% filter(PHZaddedInt<200 & PHZaddedInt>10))
+
+coef(summary(gc_swv_linear_fit1))
+```
+
+So this linear fit is telling us that the slope, $m$ of the best fit line is about 0.18 +/- 0.01. That's a pretty confident estimate, and the small p value is telling us that the slope is definitely not zero.
+
+Recall that $D_{ap}$ is 
+
+$$ D_{ap} = \frac{(m A \psi)^2 }{S^2 \pi t_p }$$
+
+Therefore, for this data with the following parameters yields the following $D_{ap}$:
+
+```{r D_ap parameters}
+m <- 0.18
+
+psi <-  0.91
+t_p <-  1/300 # frequency is 300 hz (sec)
+A <-  0.025 #cm^2
+S <-  18.4 #cm
+D_ap <- (m*A*psi)^2 / (S^2 * pi * t_p)
+
+paste("D_ap =",D_ap, "cm^2 / sec")
+```
+
+So the estimate from this data is that $D_{ap}$ is around 4.7 x 10^-6 cm^2 / sec, which is similar to the estimates we obtained before!
+
+We could estimate this parameter individually for each level of the titration, but the points look like they will have pretty similar slopes. However, note that small variations in m affect Dap in a nonlinear (squared) manner. For example m=0.1 yields D_ap=1.5e-6. That said, I think the point stands, that we expect D_ap to fall within this order of magnitude.
+
+## Estimating $D_m$ from SWV decays
+
+Let's read in the data from the SWVs from all the titration points. Remember, 5 swvs were taken, then a GC then 5 more swvs etc. 
+```{r swv decays overview}
+swv_decays <- read_csv('../Processing/12_10_18_processed_reactor_A_swv_decays.csv')
+```
+
+In order to fit the nonlinear decay to these plots let's normalize to the highest signal, and consider it as the initial signal. 
+
+```{r swv normalize}
+swv_decays_norm <- swv_decays %>% 
+  group_by(PHZadded) %>% 
+  mutate(I0=max(signal)) %>% 
+  mutate(norm_signal=signal/I0)
+
+swv_decays_norm_rep1 <- swv_decays %>% 
+  filter(rep>0) %>% 
+  group_by(PHZadded) %>% 
+  mutate(I0=max(signal)) %>% 
+  mutate(norm_signal=signal/I0)
+```
+
+Let's look at all the decays, with their respective fits. I added 30 seconds to the "normalized time", because the fitting function doesn't like time=0. Also that seems realistic, it probably takes about 30 seconds to connect the electrodes, check the open circuit potential and start the run for the first measurement...
+```{r swv facet plot}
+
+ggplot(swv_decays_norm ,aes(x=norm_time+0.5,y=norm_signal))+
+  geom_point()+
+  geom_smooth(method='nls',formula=y~b*(x)^-0.5+a,method.args=list(start=c(b=0.1,a=0)),se=F,fullrange=TRUE)+
+  facet_wrap(~PHZadded,scales='free')+
+  ylim(0,1)
+```
+
+When I first saw these decay curves, I thought "wow those seem really sharp decays. You can see that by 20 minutes it looks like the system has hit baseline...but in the course of doing these experiments I settled on waiting an hour, because I was still seeing changes. After analyzing the dataset as is, it occurred to me that we are taking much faster scans 2 sec at 1 min interval compared to 40 sec scans at 1 min interval. In the past I have seen that some decays look like they are multiple processes, so let's replot our decays against $time^{-\frac{1}{2}}$. With this X axis, single diffusion processes should look linear. Different processes should have different slopes.
+
+```{r}
+
+ggplot(swv_decays_norm,aes(x=(norm_time+0.5)^-0.5,y=norm_signal))+
+  geom_point()+
+  facet_wrap(~PHZadded,scales='free')
+
+```
+
+Ok, it looks like the first set of points for each decay might have a higher slope than the others. Let's fit linear models to rep #0 and the rest of the dataset to compare.
+
+```{r}
+ggplot(swv_decays_norm,aes(x=(norm_time+0.5)^-0.5,y=norm_signal))+
+  geom_point()+
+  geom_smooth(data=swv_decays_norm %>% filter(rep==0),method='lm',se=F,fullrange=T)+
+  geom_smooth(data=swv_decays_norm %>% filter(rep>0),method='lm',se=F,fullrange=T,color='red')+
+  facet_wrap(~PHZadded,scales='free')
+
+ggplot(swv_decays,aes(x=(norm_time+0.5)^-0.5,y=signal))+
+  geom_point()+
+  geom_smooth(data=swv_decays %>% filter(rep==0),method='lm',se=F,fullrange=T)+
+  geom_smooth(data=swv_decays %>% filter(rep>0),method='lm',se=F,fullrange=T,color='red')+
+  facet_wrap(~PHZadded,scales='free')
+```
+Ok! That's pretty striking. It looks like in every single case, those scans taken over the first 5 minutes represent a much faster diffusion process than the remaining data. Let's see how well the remaining dataset is fit by that line - in other words - after the first five minutes is there mainly one diffusion process?
+
+```{r}
+
+ggplot(data=swv_decays_norm %>% filter(rep>0),aes(x=(norm_time+0.5)^-0.5,y=norm_signal))+
+  geom_point()+
+  geom_smooth(data=swv_decays_norm %>% filter(rep>0),method='lm',se=F,fullrange=T,color='red')+
+  facet_wrap(~PHZadded,scales='free')
+
+ggplot(data=swv_decays %>% filter(rep>0),aes(x=(norm_time+0.5)^-0.5,y=signal))+
+  geom_point()+
+  geom_smooth(data=swv_decays %>% filter(rep>0),method='lm',se=F,fullrange=T,color='red')+
+  facet_wrap(~PHZadded,scales='free')
+```
+Overall, it looks like this subset of the data is fit pretty well by a single line! At the 200uM level it seems like there's still multiple processes happening, and maybe we would want to ignore rep #1 as well. However, let's proceed for now. 
+
+```{r}
+
+ggplot(swv_decays_norm_rep1 %>% filter(rep!=1 | sub_rep!=1),aes(x=norm_time,y=norm_signal))+
+  geom_point()+
+  geom_smooth(method='nls',formula=y~b*(x)^-0.5+a,method.args=list(start=c(b=0.1,a=0)),se=F,fullrange=TRUE)+
+  facet_wrap(~PHZadded,scales='free')+
+  ylim(0,1)
+
+ggplot(swv_decays_norm %>% filter(rep>0),aes(x=norm_time,y=norm_signal))+
+  geom_point()+
+  geom_smooth(method='nls',formula=y~b*(x)^-0.5+a,method.args=list(start=c(b=0.1,a=0)),se=F,fullrange=TRUE)+
+  facet_wrap(~PHZadded,scales='free')+
+  xlim(0,NA)
+```
+
+The decays actually look pretty similar between the different titration points. Let's overlay all of them.
+```{r swv overlay}
+ggplot(swv_decays_norm %>% filter(rep!=0 | sub_rep!=1),aes(x=norm_time,y=norm_signal))+
+  geom_point(aes(color=PHZadded))+
+  geom_smooth(method='nls',formula=y~b*(x)^-0.5+a,method.args=list(start=c(b=0.1,a=0)),se=F)+
+  ylim(0,1)
+
+ggplot(swv_decays_norm %>% filter(rep>0),aes(x=norm_time,y=norm_signal))+
+  geom_point(aes(color=PHZadded))+
+  geom_smooth(method='nls',formula=y~b*(x)^-0.5+a,method.args=list(start=c(b=0.1,a=0)),se=F,fullrange=T)+
+  xlim(0,NA)
+```
+
+If we grab the coefficients from this fit they look like this:
+```{r swv nls}
+swv_nls_fit <- nls(data=swv_decays_norm %>% filter(rep>0 & PHZaddedInt==25),
+                   formula=norm_signal~m*(norm_time)^-(1/2)+a,start=list(a=0,m=0.1))
+
+swv_nls_fit <- nls(data=swv_decays_norm_rep1 %>% filter(rep!=1 | sub_rep!=1) %>% filter(PHZaddedInt==200),
+                   formula=norm_signal~m*(norm_time)^-(1/2)+a,start=list(a=0,m=0.1))
+
+# swv_nls_fit <-   nls(data=swv_decays_norm_rep1 %>% filter(rep!=1 | sub_rep!=1) %>% filter(PHZaddedInt==200),
+#                    formula=norm_signal~m*(norm_time)^-(1/2)+a,start=list(a=0,m=0.1))
+
+ggplot(swv_decays_norm_rep1,aes(x=norm_time^-0.5,y=norm_signal))+geom_point()+
+  geom_point(data=swv_decays_norm,color='red')+
+  facet_wrap(~PHZadded,scales='free')
+
+summary(swv_nls_fit)
+```
+
+```{r}
+swv_decays_norm_t0.5_rep1 <- swv_decays_norm %>% 
+  filter(rep>0) %>% 
+  mutate(tHalf=norm_time^-0.5)
+
+swv_lm_fit <- lm(norm_signal~tHalf,data=swv_decays_norm_t0.5_rep1 %>% filter(PHZaddedInt==100))
+
+summary(swv_lm_fit)
+
+```
+
+Ok with the nonlinear $m$ coefficient in hand we can compute $D_m$:
+
+$$D_m = \frac{D_{ap } t_s}{4 m^2}$$
+With the following parameters, let's now look at $D_m$ and $D_{ap}$ for this biofilm.
+```{r swv D_m}
+t_s = 0.1 #not sure, total scan time is 2sec, and peak occurs at 1 sec so t_s must be <1sec
+nls_m = 0.475
+#nls_m = 3.1
+D_m = (D_ap*t_s) / (4*nls_m^2)
+
+paste("D_m =" ,D_m, 'D_ap = ',D_ap)
+```
+
+Ok, so we see about an order of magnitude difference between the estimated molecular diffusion coefficient, $D_m$, and the estimated apparent electrochemical diffusion constant, $D_{ap}$.
+
+## Discussion
+
+Overall, I feel reasonably good about this analysis. The reason I re-did this experiment this way, was because I was concerned that the "equilibrium" PYO signal we saw was just background signal from the solution. By monitoring PYO as it decays out of the biofilm, we can be confident that the signal is coming from PYO in the actual biofilm. 
+
+That said, I would like to go back to the dataset from this experiment and try to background subtract the final GC to get a similar measure to the past experiments. 
+
+Most importantly, it seems to me that the SWV decays occur significantly more rapidly in this experiment than those from the past. This may be due to the use of the SWVfast, but I think it is most likely that it is caused by the repeated GC scans. By that I mean, that it's possible that the large amount of PYO reduction that occurs during a GC scan actually influences the system, driving PYO out of the biofilm, since reduced PYO doesn't bind DNA tightly. 
+
+If that is the case, we could just compare the $D_{ap}$ from the GCs taken during the equilibration process to an uninterrupted SWV decay on the same biofilm?? However, I worry that this could be a bigger problem for our echem approach: When we estimate $D_{ap}$ we assume that the $D_{gc}$ is equivalent to $D_{swv}$. Then because the two methods depend on $D$ differently we can use that different dependence to estimate that parameter over a range of concentrations. What I worry is that in fact $D_{gc} \approx D_{pyo_{red}}$ and that $D_{swv} \approx D_{pyo_{ox}}$. That would be because SWV simply reduces the oxidized PYO near the electrode to generate a peak. Further, that reduction should be quick and hopefully doesn't affect the whole pool of biofilm associated PYO? However, during GC, we typically quantify the collector current, which is poised at an oxidizing potential, therefore on some level it depends on $PYO_{red}$ diffusing from the generator to the collector. We think that oxidized PYO is bound to DNA and its diffusion is slowed by it, but reduced PYO probably isn't bound. If this is true and $D_{pyo_{red}}$ is very different from $D_{pyo_{ox}}$, then I think our measurements would be dominated by that. Therefore the difference between $D_{ap}$ and $D_m$ would be called into question, and our ability to estimate $D_{ap}$ in the first place is questionable...
+
+I'm not sure how to deal with this yet. This feels like yet another rabbit hole. 
+
+-----Edit-------
+
+I believe that $D_{gc}$ actually depends on both $D_{pyo_{red}}$ and $D_{pyo_{ox}}$. Let's work backward from the collector electrode. The current at the collector electrode directly depends on $D_{pyo_{red}}$. However, the $PYO_{red}$ is actually produced at the generator electrode. The amount of $PYO_{red}$ produced will depend on $PYO_{ox}$ diffusing to the generator, aka $D_{pyo_{ox}}$. Therefore, I think that $D_{gc}$ directly depends on $D_{pyo_{red}}$, but also indirectly depends on $D_{pyo_{ox}}$. It would be ideal for us to assume that $D_{pyo_{ox}} \approx D_{pyo_{red}}$, but that is probably not true in a biofilm full of eDNA. We don't know how much slower $D_{pyo_{ox}}$ may be, but if we believe that it is signficantly slower than $D_{pyo_{red}}$ then the diffusion of 
+$PYO_{ox}$ to the generator electrode would become rate limiting. Therefore the measured GC current would still reflect $D_{pyo_{ox}}$. 
+
+So, it may be true that the GCs are driving PYO out of the biofilm by reducing it, but I don't actually think our approach is fundamentally flawed, because the GC probably mostly depends on $D_{pyo_{ox}}$. Therefore we should compare these GCs with the pure SWV decays from other experiments. 
+
