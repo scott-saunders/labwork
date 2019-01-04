@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Measuring D_{ap} Version 1</title>
+
+<script src="Dap_V1_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="Dap_V1_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="Dap_V1_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="Dap_V1_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="Dap_V1_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="Dap_V1_files/navigation-1.1/tabsets.js"></script>
+<script src="Dap_V1_files/navigation-1.1/codefolding.js"></script>
+<link href="Dap_V1_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="Dap_V1_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Measuring <span class="math inline">\(D_{ap}\)</span> Version 1</h1>
+<h3 class="subtitle"><em>Titration <span class="math inline">\(I_{gc}\)</span> vs. [PYO]</em></h3>
+<h4 class="date"><em>1_03_19</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#approach">Approach</a></li>
+<li><a href="#data">Data</a></li>
+<li><a href="#problems">Problems</a></li>
+<li><a href="#conclusions">Conclusions</a></li>
+</ul>
+</div>
+
+<pre class="r"><code>library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(knitr)
+
+#knitr::opts_knit$set(root.dir = &#39;/Users/scottsaunders/git/labwork/IDA/12_10_18&#39;)
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)
+
+theme_1 &lt;- function () { 
+    theme_classic() %+replace% 
+        theme(
+          axis.text = element_text( size=12),
+          axis.title=element_text(size=14),
+          strip.text = element_text(size = 14),
+          strip.background = element_rect(color=&#39;white&#39;),
+          legend.title=element_text(size=14),
+          legend.text=element_text(size=12),
+          legend.text.align=0,
+          panel.grid.major = element_line(color=&#39;grey&#39;,size=0.1)
+        )
+}
+theme_set(theme_1())
+
+#source(&quot;../../tools/echem_processing_tools.R&quot;)</code></pre>
+<div id="approach" class="section level1">
+<h1>Approach</h1>
+<p>Our goal is to understand something about how PYO moves electrons through the biofilm. One way to think abou this electron transfer is how fast PYO effectively transports electrons through the biofilm. This concept can be expressed as the apparent diffusion coefficient. For the IDA, the peak current between the two electrodes is described by eq. 1.</p>
+<p><span class="math display">\[I_{gc} = nFSCD_{ap} \tag{eq. 1}\]</span> <span class="math inline">\(n,F,\text{and } S\)</span> are constants (# of electrons per reaction, Faraday’s constant, and a geometric factor for the IDA). <span class="math inline">\(C\)</span> is concentration and <span class="math inline">\(D_{ap}\)</span> is the apparent diffusion coefficient.</p>
+<p>Eq. 1 is equivalent to fick’s first law (eq. 2), describing an equilibrium flux driven by a concentration gradient. In this case the concentration gradient is between the two IDA electrodes, where we assume that (at peak current) all of the PYO is instantly reduced at the generator and oxidized at the collector.</p>
+<p><span class="math display">\[J = -D \frac{dC}{dx} \tag{eq. 2}\]</span> So, if we want to learn about <span class="math inline">\(D_{ap}\)</span> it makes sense to vary concentration and monitor current, <span class="math inline">\(I_{gc}\)</span>. Lenny’s original idea was that if PYO mediated electron transfer was an “electron hopping” type mechanism as described for fixed redox molecules, then <span class="math inline">\(D_{ap}\)</span> would not be a constant, but instead it would vary with concentration. If we were to plot <span class="math inline">\(I_{gc}\)</span> vs. <span class="math inline">\(C\)</span> we would expect a curved relationship if <span class="math inline">\(D_{ap}\)</span> varied.</p>
+<pre class="r"><code>example_data &lt;- tibble(concentrations = seq(0, 100, 10)) %&gt;% 
+    mutate(constant = concentrations * 2) %&gt;% mutate(electron_hopping = concentrations * 
+    0.04 * concentrations) %&gt;% gather(key = model, value = I_gc, 
+    constant, electron_hopping)
+
+ggplot(example_data, aes(x = concentrations, y = I_gc, color = model)) + 
+    geom_point() + geom_line() + labs(title = &quot;Mock Data&quot;)</code></pre>
+<p><img src="Dap_V1_files/figure-html/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /> So we tried to do the actual experiment by incubating an IDA biofilm with increasing concentrations of PYO. The earliest attempt at this was done by Matt with a WT biofilm. We switched to using a <span class="math inline">\(\Delta phz\)</span> strain to get rid of any residual phenazine signal.</p>
+</div>
+<div id="data" class="section level1">
+<h1>Data</h1>
+<ul>
+<li><p>raw GC curves at different concentrations, with min max points</p></li>
+<li><p>plot of soak vs concentration</p></li>
+<li><p>plot of soak and blank vs concentration</p></li>
+</ul>
+</div>
+<div id="problems" class="section level1">
+<h1>Problems</h1>
+<p>It became clear that we had no idea if the signal was coming from the biofilm or the solution.</p>
+</div>
+<div id="conclusions" class="section level1">
+<h1>Conclusions</h1>
+<p>We can run these experiments, and quantify GC curves, but we need to try transferring the biofilm to a fresh reactor to be confident we are measuring biofilm associated PYO.</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
