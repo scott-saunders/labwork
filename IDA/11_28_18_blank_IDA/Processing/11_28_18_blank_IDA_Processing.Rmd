@@ -1,0 +1,354 @@
+---
+title: "Blank IDA Processing"
+fontsize: 12pt
+date: "11_28_18"
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
+---
+
+**Note** the YAML contains specifications for a github document and html. The best way to deal with this is to knit them separately from the knit menu. Otherwise the html has blurry plots and tends to delete the md cached plots unless you tell it to cache everything!
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(knitr)
+
+#knitr::opts_knit$set(root.dir = '/Users/scottsaunders/git/labwork/IDA/12_10_18')
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+theme_1 <- function () { 
+    theme_classic() %+replace% 
+        theme(
+          axis.text = element_text( size=12),
+          axis.title=element_text(size=14),
+          strip.text = element_text(size = 14),
+          strip.background = element_rect(color='white'),
+          legend.title=element_text(size=14),
+          legend.text=element_text(size=12),
+          legend.text.align=0,
+          panel.grid.major = element_line(color='grey',size=0.1)
+        )
+}
+theme_set(theme_1())
+
+source("../../tools/echem_processing_tools.R")
+```
+
+# Soak Data
+
+## GCs
+
+```{r}
+soak_data_path = '../Data/soak/'
+#divide swv into rep and subrep and then subtract 1 from rep to match with GC
+soak_gc_files <-  dir(path=soak_data_path,pattern = "[GC]+.+[txt]$")
+
+file_paths <- paste(soak_data_path,soak_gc_files,sep='')
+
+data_cols <-  c('E','i1','i2','t')
+
+filename_cols = c('PHZadded','molecule','reactor','echem')
+
+skip_rows=21
+
+soak_gc_data <- echem_import_to_df(soak_gc_files,file_paths,data_cols,skip_rows,filename_cols)
+
+ggplot(soak_gc_data, aes(x=E,y=current,color=PHZadded))+
+  geom_point()+
+  scale_x_reverse()
+```
+
+```{r}
+unique_cols <- c('PHZadded','molecule','reactor','echem','minutes','PHZaddedInt','electrode')
+
+soak_gc_signal <- echem_signal(soak_gc_data,
+                               unique_cols) 
+
+ggplot(soak_gc_data,aes(x=E,y=current,color=PHZadded)) + geom_point() +
+  geom_point(data=soak_gc_signal, aes(x = E_from_mins, y = min_current),color='blue')+
+  geom_point(data=soak_gc_signal, aes(x = E_from_maxs, y = max_current),color='red')+
+  scale_x_reverse()
+
+ggplot(soak_gc_signal,aes(x=PHZaddedInt,y=signal,color=electrode))+geom_point()
+```
+
+```{r}
+
+soak_data_path = '../Data/soak/'
+#divide swv into rep and subrep and then subtract 1 from rep to match with GC
+soak_swv_files <-  dir(path=soak_data_path,pattern = "[SWV]+.+[txt]$")
+
+swv_file_paths <- paste(soak_data_path,soak_swv_files,sep='')
+
+data_cols <-  c('E','i1','i2')
+
+filename_cols = c('PHZadded','molecule','reactor','echem')
+
+skip_rows=18
+
+soak_swv_data <- echem_import_to_df(soak_swv_files,swv_file_paths,data_cols,skip_rows,filename_cols)
+
+ggplot(soak_swv_data, aes(x=E,y=current,color=PHZadded))+
+  geom_point()+
+  facet_wrap(echem~electrode,scales='free')+
+  scale_x_reverse()
+
+soak_swv_slow_data <- soak_swv_data %>% 
+  filter(echem=='SWV.txt')
+
+soak_swv_fast_data <- soak_swv_data %>% 
+  filter(echem=='SWVfast.txt')
+
+```
+
+```{r}
+unique_cols <- c('PHZadded','molecule','reactor','echem','minutes','PHZaddedInt','electrode')
+
+soak_swv_slow_signal <- echem_signal(soak_swv_slow_data,
+                                     unique_cols,
+                                     max_interval = c(-0.2,-0.4),
+                                     min_interval=c(0.1,-0.2)) 
+
+ggplot(soak_swv_slow_data,aes(x=E,y=current,color=PHZadded)) + geom_point() +
+  geom_point(data=soak_swv_slow_signal, aes(x = E_from_mins, y = min_current),color='blue')+
+  geom_point(data=soak_swv_slow_signal, aes(x = E_from_maxs, y = max_current),color='red')+
+  scale_x_reverse()+
+  facet_wrap(~electrode)
+
+ggplot(soak_swv_slow_signal,aes(x=PHZaddedInt,y=signal,color=electrode))+
+  geom_point()+xlim(0,NA)+ylim(0,NA)
+
+swv_gc_soak_data <- left_join(soak_swv_slow_signal,soak_gc_signal,
+                              by=c('PHZadded','PHZaddedInt','molecule','reactor'),
+                              suffix=c('_from_swv','_from_gc'))
+
+write_csv(swv_gc_soak_data,'./11_28_18_swv_gc_soak_processed.csv')
+
+ggplot(swv_gc_soak_data %>% filter(electrode_from_gc=='i2' & electrode_from_swv=='i1'),aes(x=signal_from_swv,y=signal_from_gc))+geom_point()
+
+```
+
+```{r}
+unique_cols <- c('PHZadded','molecule','reactor','echem','minutes','PHZaddedInt','electrode')
+
+soak_swv_fast_signal <- echem_signal(soak_swv_fast_data,
+                               unique_cols,                                     
+                               max_interval = c(-0.2,-0.4),
+                               min_interval=c(0.1,-0.2)) 
+
+ggplot(soak_swv_fast_data,aes(x=E,y=current,color=PHZadded)) + geom_point() +
+  geom_point(data=soak_swv_fast_signal, aes(x = E_from_mins, y = min_current),color='blue')+
+  geom_point(data=soak_swv_fast_signal, aes(x = E_from_maxs, y = max_current),color='red')+
+  scale_x_reverse()+
+  facet_wrap(~electrode)
+
+ggplot(soak_swv_fast_signal,aes(x=PHZaddedInt,y=signal,color=electrode))+
+  geom_point()+xlim(0,NA)+ylim(0,NA)
+```
+
+```{r}
+transfer_data_path = '../Data/transfers/'
+
+transfer_swv_files <-  dir(path=transfer_data_path,pattern = "[SWV]+.+[txt]$")
+
+transfer_file_paths <- paste(transfer_data_path,transfer_swv_files,sep='')
+
+data_cols <-  c('E','i1','i2')
+
+filename_cols = c('PHZadded','molecule','reactor','echem','rep')
+
+skip_rows=18
+
+transfer_swv_data <- echem_import_to_df(transfer_swv_files,transfer_file_paths,data_cols,skip_rows,filename_cols,rep=T)
+
+ggplot(transfer_swv_data %>% filter(PHZaddedInt==100), aes(x=E,y=current,color=rep))+
+  geom_point()+
+  facet_wrap(PHZadded~electrode,scales='free')+
+  scale_x_reverse()+
+  scale_color_viridis()
+```
+
+```{r}
+unique_cols <- c('PHZadded','molecule','reactor','echem','minutes','PHZaddedInt','electrode','rep')
+
+transfer_swv_signal <- echem_signal(transfer_swv_data,
+                               unique_cols,                                     
+                               max_interval = c(-0.2,-0.3),
+                               min_interval=c(0.1,-0.2)) 
+
+ggplot(transfer_swv_data %>% filter(PHZaddedInt==100),aes(x=E,y=current,color=rep)) + geom_point() +
+  geom_point(data=transfer_swv_signal %>% filter(PHZaddedInt==100), aes(x = E_from_mins, y = min_current),color='blue')+
+  geom_point(data=transfer_swv_signal%>% filter(PHZaddedInt==100), aes(x = E_from_maxs, y = max_current),color='red')+
+  scale_x_reverse()+
+  facet_wrap(~electrode)
+
+ggplot(transfer_swv_data %>% filter(PHZaddedInt==25 ),aes(x=E,y=current,color=rep)) + geom_point(alpha=0.2) +
+  geom_point(data=transfer_swv_signal %>% filter(PHZaddedInt==25), aes(x = E_from_mins, y = min_current),color='blue')+
+  geom_point(data=transfer_swv_signal%>% filter(PHZaddedInt==25 ), aes(x = E_from_maxs, y = max_current),color='red')+
+  scale_x_reverse()+
+  facet_wrap(~electrode)+
+  scale_color_viridis()
+
+ggplot(transfer_swv_signal, aes(x=minutes, y=signal, color=PHZadded,shape=electrode))+
+  geom_point()+geom_line()+
+  facet_wrap(~PHZadded,scales='free')
+
+
+ggplot(transfer_swv_signal %>% filter(PHZaddedInt==100), aes(x=(minutes-197)^-0.5, y=signal, color=electrode))+
+  geom_point()+geom_line()+
+  facet_wrap(~PHZadded,scales='free')+
+  geom_smooth(data=transfer_swv_signal %>% filter(PHZaddedInt==100 & rep>5),method='lm',fullrange=T)
+
+ggplot(transfer_swv_signal %>% filter(PHZaddedInt==100 & rep>5), aes(x=(minutes-197)^-0.5, y=signal, color=electrode))+
+  geom_point()+geom_line()+
+  facet_wrap(~PHZadded,scales='free')+
+  geom_smooth(method='lm',fullrange=T)+
+  ylim(0,NA)
+```
+
+```{r}
+transfer_swv_signal_time <- transfer_swv_signal %>% 
+  group_by(PHZadded,electrode) %>% 
+  mutate(min_time = min(minutes)) %>% 
+  mutate(norm_time = (minutes-min_time)+0.2)
+
+ggplot(transfer_swv_signal_time %>% filter(PHZaddedInt>10), aes(x=norm_time, y=signal, color=PHZadded,shape=electrode))+
+  geom_point()+geom_line()+
+  facet_wrap(~PHZadded,scales='free')
+
+ggplot(transfer_swv_signal_time %>% filter(PHZaddedInt>10), aes(x=norm_time^-0.5, y=signal, color=PHZadded,shape=electrode))+
+  geom_point()+geom_line()+
+  facet_wrap(~PHZadded,scales='free')
+
+ggplot(transfer_swv_signal_time %>% filter(PHZaddedInt>10 & electrode=='i1'), aes(x=norm_time^-0.5, y=signal, color=PHZadded,shape=electrode))+
+  geom_point()+geom_line()
+
+```
+
+```{r}
+
+swv_decays_i0 <- left_join(transfer_swv_signal_time %>% filter(electrode=='i1'),
+                           soak_swv_fast_signal %>% filter(electrode=='i1'),
+                           by=c('PHZadded','PHZaddedInt','molecule','electrode'),
+                           suffix=c('_from_transfer','_from_soak')) %>% 
+  group_by(PHZadded) %>% 
+  mutate(i0=signal_from_soak) %>% 
+  mutate(norm_signal=signal_from_transfer/i0)
+  
+
+write_csv(swv_decays_i0,"./11_28_18_swv_decays_Processed.csv")
+
+ggplot(swv_decays_i0 %>% filter(PHZaddedInt>10),aes(x=norm_time,y=signal_from_transfer,color=PHZadded))+geom_point()+geom_line()+
+  geom_line(aes(y=i0),linetype=2)
+
+ggplot(swv_decays_i0 %>% filter(PHZaddedInt>10),aes(x=norm_time,y=norm_signal,color=PHZadded))+geom_point()+geom_line()
+
+
+
+```
+
+```{r}
+ggplot(swv_decays_i0 %>% filter(PHZaddedInt>10),aes(x=norm_time^-0.5,y=norm_signal,color=PHZadded))+
+  geom_point()+geom_line()+
+  geom_smooth(data=swv_decays_i0 %>% filter(PHZaddedInt>10 & rep<=7),method='lm',se=F)
+
+ggplot(swv_decays_i0 %>% filter(PHZaddedInt>10),aes(x=norm_time^-1,y=signal_from_transfer,color=PHZadded))+
+  geom_point()+geom_line()+
+  geom_smooth(data=swv_decays_i0 %>% filter(PHZaddedInt>10 ),method='lm',se=F)
+
+norm_decays_lm <- swv_decays_i0 %>% filter(PHZaddedInt>10 & rep<=7) %>% 
+  mutate(t0.5 = norm_time^-0.5) %>% 
+  group_by(PHZadded) %>% 
+  do(tidy(lm(norm_signal ~ t0.5, .)))
+
+norm_decays_lm
+```
+
+```{r}
+library(scales)
+neg_half <- trans_new('neg_half',
+                      transform=function(x) x^-0.5,
+                      inverse = function(x) x^-2)
+
+ggplot(swv_decays_i0 %>% filter(PHZaddedInt==100),aes(x=norm_time^-0.5,y=signal_from_transfer,color=PHZadded))+
+  geom_point()+geom_line()+
+  geom_point(data=swv_decays_i0 %>% filter(PHZaddedInt==100),aes(x=(norm_time^-0.5)-0.1^-0.5,y=signal_from_transfer))+geom_line()
+
+ggplot(data=swv_decays_i0 %>% filter(PHZaddedInt==100) , 
+       aes(x=(norm_time^-0.5)-0.032^-0.5, y=signal_from_transfer))+geom_point()+
+  geom_smooth(data=swv_decays_i0 %>% filter(PHZaddedInt==100 & rep<10),method='lm',se=F,fullrange=T)+
+  geom_hline(yintercept = swv_decays_firsts$i0[1],linetype=2 )+
+  xlim(NA,0)
+
+ggplot(data=swv_decays_i0 %>% filter(PHZaddedInt==100),aes(x=norm_time+0.3, y=signal_from_transfer))+
+  geom_point()+
+  geom_smooth(data=swv_decays_i0 %>% filter(PHZaddedInt==100 & rep<7),method='lm',se=F,fullrange=T)+
+  geom_hline(yintercept = swv_decays_firsts$i0[1],linetype=2 )+
+  scale_x_continuous(trans=neg_half, breaks=c(0.1,0.2,0.5,1), limits=c(60,0.1))
+
+ggplot(swv_decays_i0 %>% filter(PHZaddedInt==100),aes(x=norm_time,y=signal_from_transfer,color=PHZadded))+
+  geom_point()+geom_line()+
+  geom_point(data=swv_decays_i0 %>% filter(PHZaddedInt==100),aes(x=norm_time-0.05^-0.5,y=signal_from_transfer))+geom_line()
+```
+
+
+```{r}
+thalf_decay <- function(m,b=0,x) {
+  y=m*(x^-0.5) + b
+  y
+}
+
+x = seq(1,100,1)
+
+df = tibble(x=x) %>% 
+  mutate(y_1=thalf_decay(1,0,x)) %>% 
+  mutate(y_5=thalf_decay(5,0,x)) %>% 
+  mutate(y_0.1=thalf_decay(0.1,0,x)) 
+
+ggplot(df,aes(x^-0.5,y_0.1+y_5))+geom_point()+geom_point(aes(y=y_0.1),color='red')
+```
+
+```{r}
+df= tibble(x=rep(0.1,4),y=swv_decays_firsts$i0)
+
+ggplot(data=swv_decays_i0 %>% filter(PHZaddedInt>10), 
+       aes(x=norm_time+0.3, y=signal_from_transfer,color=PHZadded))+
+  geom_point()+
+  geom_smooth(data=swv_decays_i0 %>% filter(PHZaddedInt>10 & rep<7),method='lm',se=T,fullrange=T)+
+  geom_smooth(aes(y = i0) ,linetype=2,se=F,method='lm',fullrange=T)+
+  scale_x_continuous(trans=neg_half, breaks=c(0.1,0.2,0.5,1), limits=c(60,0.1))
+
+swv_lm_df <- swv_decays_i0 %>% 
+  filter(PHZaddedInt>10) %>% 
+  mutate(tHalf = (norm_time)^-0.5) %>% 
+  mutate(tHalf_shift = tHalf-6)
+
+ggplot(swv_lm_df,aes(x=tHalf,y=signal_from_transfer,color=PHZadded))+
+  geom_point()+
+  geom_smooth(data=swv_lm_df %>% filter(rep<7),method='lm',fullrange=T)+
+  geom_smooth(aes(y = i0) ,linetype=2,se=F,method='lm',fullrange=T)#+
+  xlim(NA,0)
+
+ggplot(swv_lm_df,aes(x=tHalf_shift,y=signal_from_transfer,color=PHZadded))+
+  geom_point()+
+  geom_smooth(data=swv_lm_df %>% filter(rep<7),method='lm',fullrange=T)+
+  geom_smooth(aes(y = i0) ,linetype=2,se=F,method='lm',fullrange=T)+
+  xlim(NA,0)
+
+swv_shift_lms <- swv_lm_df %>%
+  filter(rep<7) %>% 
+  group_by(PHZadded) %>% 
+  do(tidy(lm(signal_from_transfer~tHalf_shift,.)))
+
+swv_shift_lms
+
+```
