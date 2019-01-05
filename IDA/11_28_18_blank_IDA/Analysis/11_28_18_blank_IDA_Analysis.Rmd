@@ -99,7 +99,7 @@ D_ap <- (m*A*psi)^2 / (S^2 * pi * t_p)
 paste("D_ap =",D_ap, "cm^2 / sec")
 ```
 
-Ok, well that's a little two fast...but let's roll with it for now.
+Ok, well that's a little too fast...but let's roll with it for now.
 
 # $D_m$ Estimation
 

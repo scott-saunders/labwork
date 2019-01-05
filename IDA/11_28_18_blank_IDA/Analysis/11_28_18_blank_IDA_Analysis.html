@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Blank IDA Analysis</title>
+
+<script src="11_28_18_blank_IDA_Analysis_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="11_28_18_blank_IDA_Analysis_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="11_28_18_blank_IDA_Analysis_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="11_28_18_blank_IDA_Analysis_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="11_28_18_blank_IDA_Analysis_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="11_28_18_blank_IDA_Analysis_files/navigation-1.1/tabsets.js"></script>
+<script src="11_28_18_blank_IDA_Analysis_files/navigation-1.1/codefolding.js"></script>
+<link href="11_28_18_blank_IDA_Analysis_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="11_28_18_blank_IDA_Analysis_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Blank IDA Analysis</h1>
+<h4 class="date"><em>11_28_18</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#d_ap-estimation"><span class="math inline">\(D_{ap}\)</span> Estimation</a></li>
+<li><a href="#d_m-estimation"><span class="math inline">\(D_m\)</span> Estimation</a></li>
+</ul>
+</div>
+
+<p><strong>Note</strong> the YAML contains specifications for a github document and html. The best way to deal with this is to knit them separately from the knit menu. Otherwise the html has blurry plots and tends to delete the md cached plots unless you tell it to cache everything!</p>
+<pre class="r"><code>library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(knitr)
+
+#knitr::opts_knit$set(root.dir = &#39;/Users/scottsaunders/git/labwork/IDA/12_10_18&#39;)
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)
+
+theme_1 &lt;- function () { 
+    theme_classic() %+replace% 
+        theme(
+          axis.text = element_text( size=12),
+          axis.title=element_text(size=14),
+          strip.text = element_text(size = 14),
+          strip.background = element_rect(color=&#39;white&#39;),
+          legend.title=element_text(size=14),
+          legend.text=element_text(size=12),
+          legend.text.align=0,
+          panel.grid.major = element_line(color=&#39;grey&#39;,size=0.1)
+        )
+}
+theme_set(theme_1())
+
+source(&quot;../../tools/echem_processing_tools.R&quot;)</code></pre>
+<div id="d_ap-estimation" class="section level1">
+<h1><span class="math inline">\(D_{ap}\)</span> Estimation</h1>
+<p>First, let’s look at all the processed data from the soak phase. These are all of the traces comparing the data collected at different electrodes.</p>
+<pre class="r"><code>swv_gc_soak_data &lt;- read_csv(&quot;../Processing/11_28_18_swv_gc_soak_processed.csv&quot;)
+
+ggplot(swv_gc_soak_data, aes(x = signal_from_swv, y = signal_from_gc, 
+    color = electrode_from_swv, shape = electrode_from_gc)) + 
+    geom_point() + geom_line()</code></pre>
+<p><img src="11_28_18_blank_IDA_Analysis_files/figure-html/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Nice, they all look pretty similar and very linear, but for convention, let’s just look at the collector from GC (i2) and the i1 from SWV.</p>
+<pre class="r"><code>swv_gc_soak_data %&gt;% filter(electrode_from_gc == &quot;i2&quot;) %&gt;% filter(electrode_from_swv == 
+    &quot;i1&quot;) %&gt;% ggplot(aes(x = signal_from_swv, y = signal_from_gc, 
+    color = electrode_from_swv, shape = electrode_from_gc)) + 
+    geom_point() + geom_line()</code></pre>
+<p><img src="11_28_18_blank_IDA_Analysis_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Let’s extract a slope and estimate <span class="math inline">\(D_{ap}\)</span>.</p>
+<pre class="r"><code>swv_gc_soak_combined &lt;- swv_gc_soak_data %&gt;% filter(electrode_from_gc == 
+    &quot;i2&quot;) %&gt;% group_by(PHZadded) %&gt;% mutate(swv_combined = sum(signal_from_swv)) %&gt;% 
+    filter(electrode_from_swv == &quot;i1&quot;)
+
+ggplot(swv_gc_soak_combined, aes(x = swv_combined, y = signal_from_gc, 
+    color = electrode_from_swv)) + geom_point()</code></pre>
+<p><img src="11_28_18_blank_IDA_Analysis_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>fit1 &lt;- swv_gc_soak_data %&gt;% filter(electrode_from_gc == &quot;i2&quot;) %&gt;% 
+    filter(electrode_from_swv == &quot;i1&quot;) %&gt;% lm(signal_from_gc ~ 
+    signal_from_swv, .)
+
+# fit1 &lt;- swv_gc_soak_combined %&gt;%
+# lm(signal_from_gc~swv_combined,.)
+
+coef(summary(fit1))</code></pre>
+<pre><code>##                      Estimate   Std. Error    t value     Pr(&gt;|t|)
+## (Intercept)     -1.100943e-08 7.067344e-09  -1.557789 1.632422e-01
+## signal_from_swv  5.440039e-01 3.723728e-03 146.091185 1.857651e-13</code></pre>
+<pre class="r"><code>m &lt;- coef(summary(fit1))[2]
+
+psi &lt;- 0.91
+t_p &lt;- 1/300  # frequency is 300 hz (sec)
+A &lt;- 0.025  #cm^2
+# A &lt;- 0.05
+S &lt;- 18.4  #cm
+D_ap &lt;- (m * A * psi)^2/(S^2 * pi * t_p)
+
+paste(&quot;D_ap =&quot;, D_ap, &quot;cm^2 / sec&quot;)</code></pre>
+<pre><code>## [1] &quot;D_ap = 4.32018640169872e-05 cm^2 / sec&quot;</code></pre>
+<p>Ok, well that’s a little too fast…but let’s roll with it for now.</p>
+</div>
+<div id="d_m-estimation" class="section level1">
+<h1><span class="math inline">\(D_m\)</span> Estimation</h1>
+<pre class="r"><code># from swv i1 note that 0.2min were added to norm time
+swv_decays &lt;- read_csv(&quot;../Processing/11_28_18_swv_decays_Processed.csv&quot;)
+
+head(swv_decays)</code></pre>
+<pre><code>## # A tibble: 6 x 29
+##   PHZadded molecule reactor_from_tr… echem_from_tran…   rep
+##   &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;            &lt;chr&gt;            &lt;int&gt;
+## 1 100uM    PYO      transfer         SWV                  1
+## 2 100uM    PYO      transfer         SWV                 10
+## 3 100uM    PYO      transfer         SWV                 11
+## 4 100uM    PYO      transfer         SWV                 12
+## 5 100uM    PYO      transfer         SWV                 13
+## 6 100uM    PYO      transfer         SWV                 14
+## # ... with 24 more variables: minutes_from_transfer &lt;dbl&gt;,
+## #   E_from_maxs_from_transfer &lt;dbl&gt;, PHZaddedInt &lt;int&gt;, electrode &lt;chr&gt;,
+## #   current_from_maxs_from_transfer &lt;dbl&gt;,
+## #   max_current_from_transfer &lt;dbl&gt;, E_from_mins_from_transfer &lt;dbl&gt;,
+## #   current_from_mins_from_transfer &lt;dbl&gt;,
+## #   min_current_from_transfer &lt;dbl&gt;, signal_from_transfer &lt;dbl&gt;,
+## #   min_time &lt;dbl&gt;, norm_time &lt;dbl&gt;, reactor_from_soak &lt;chr&gt;,
+## #   echem_from_soak &lt;chr&gt;, minutes_from_soak &lt;dbl&gt;,
+## #   E_from_maxs_from_soak &lt;dbl&gt;, current_from_maxs_from_soak &lt;dbl&gt;,
+## #   max_current_from_soak &lt;dbl&gt;, E_from_mins_from_soak &lt;dbl&gt;,
+## #   current_from_mins_from_soak &lt;dbl&gt;, min_current_from_soak &lt;dbl&gt;,
+## #   signal_from_soak &lt;dbl&gt;, i0 &lt;dbl&gt;, norm_signal &lt;dbl&gt;</code></pre>
+<pre class="r"><code>ggplot(swv_decays, aes(x = norm_time, y = signal_from_transfer, 
+    color = PHZadded)) + geom_point()</code></pre>
+<p><img src="11_28_18_blank_IDA_Analysis_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>So this looks pretty good, although let’s ignore the 10uM level, since that one was weird. While we’re here, let’s look at these curves compared to their true <span class="math inline">\(I_0\)</span>, which in this case we can assume is the same scan taken in the “soak” step.</p>
+<pre class="r"><code>ggplot(swv_decays %&gt;% filter(PHZaddedInt &gt; 10), aes(x = norm_time, 
+    y = signal_from_transfer, color = PHZadded)) + geom_point() + 
+    geom_line(aes(y = i0), linetype = 2)</code></pre>
+<p><img src="11_28_18_blank_IDA_Analysis_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Wow, when we look at it like this, it is clear that the first datapoint is not a reasonable estimate for <span class="math inline">\(I_0\)</span> at all. Let’s estimate the <span class="math inline">\(D_m\)</span> given the ‘true’ <span class="math inline">\(I_0\)</span> from the soak step, and compare to the original approach of estimating <span class="math inline">\(I_0\)</span> with the first datapoint.</p>
+<pre class="r"><code>ggplot(swv_decays %&gt;% filter(PHZaddedInt &gt; 10), aes(x = norm_time, 
+    y = signal_from_transfer)) + geom_point() + geom_smooth(data = swv_decays %&gt;% 
+    filter(PHZaddedInt &gt; 10 &amp; rep &lt; 10), method = &quot;nls&quot;, formula = y ~ 
+    b * (x)^-0.5 + a, method.args = list(start = c(b = 0.1, a = 0)), 
+    se = F, fullrange = TRUE) + facet_wrap(~PHZadded, scales = &quot;free&quot;)</code></pre>
+<p><img src="11_28_18_blank_IDA_Analysis_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>nls_fit &lt;- swv_decays %&gt;% filter(PHZaddedInt &gt; 10 &amp; rep &lt; 10) %&gt;% 
+    group_by(PHZadded) %&gt;% do(tidy(nls(., formula = signal_from_transfer ~ 
+    m * (norm_time^-0.5) + b, start = list(m = 0.1, b = 0))))
+
+# nls_fit &lt;- swv_decays %&gt;% filter(PHZaddedInt&gt;10) %&gt;%
+# group_by(PHZadded) %&gt;%
+# do(tidy(nls(.,formula=signal_from_transfer~m*(norm_time^-0.5)+b,
+# start = list(m=0.1,b=0))))
+
+nls_fit %&gt;% filter(term == &quot;m&quot;)</code></pre>
+<pre><code>## # A tibble: 4 x 6
+## # Groups:   PHZadded [4]
+##   PHZadded term     estimate    std.error statistic  p.value
+##   &lt;chr&gt;    &lt;chr&gt;       &lt;dbl&gt;        &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 100uM    m     0.00000234  0.0000000818      28.6 1.64e- 8
+## 2 25uM     m     0.000000484 0.0000000446      10.9 1.24e- 5
+## 3 50uM     m     0.00000133  0.0000000641      20.7 1.52e- 7
+## 4 75uM     m     0.00000125  0.0000000256      48.9 3.91e-10</code></pre>
+<pre class="r"><code>slope_to_Dm &lt;- function(m, D_ap, i0, t_s = 0.1) {
+    D_m = (i0^2 * D_ap * t_s)/(4 * m^2)
+    D_m
+}
+
+swv_decays_firsts &lt;- swv_decays %&gt;% filter(PHZaddedInt &gt; 10) %&gt;% 
+    group_by(PHZadded) %&gt;% mutate(first_point = max(signal_from_transfer)) %&gt;% 
+    filter(signal_from_transfer == first_point) %&gt;% select(PHZadded, 
+    PHZaddedInt, i0, first_point)
+
+ggplot(swv_decays_firsts, aes(x = PHZaddedInt)) + geom_point(aes(y = first_point), 
+    color = &quot;red&quot;) + geom_point(aes(y = i0), color = &quot;blue&quot;)</code></pre>
+<p><img src="11_28_18_blank_IDA_Analysis_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>Dm_df &lt;- left_join(nls_fit %&gt;% filter(term == &quot;m&quot;), swv_decays_firsts, 
+    by = c(&quot;PHZadded&quot;)) %&gt;% mutate(Dm_true_i0 = slope_to_Dm(estimate, 
+    D_ap = D_ap, i0 = i0)) %&gt;% mutate(Dm_first_i0 = slope_to_Dm(estimate, 
+    D_ap = D_ap, i0 = first_point)) %&gt;% gather(key = i0_cat, 
+    value = Dm_value, Dm_true_i0, Dm_first_i0)
+
+ggplot(Dm_df, aes(x = PHZaddedInt, y = Dm_value, color = i0_cat)) + 
+    geom_point() + geom_hline(yintercept = D_ap, linetype = 2) + 
+    scale_y_log10()</code></pre>
+<p><img src="11_28_18_blank_IDA_Analysis_files/figure-html/unnamed-chunk-9-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Well, this is reassuring on some level. If you provide the model with the correct <span class="math inline">\(I_0\)</span>, it shows that the <span class="math inline">\(D_m\)</span> blue dots are pretty close to the estimated <span class="math inline">\(D_{ap}\)</span>. However, if you underestimate by using the first datapoint, you underestimate <span class="math inline">\(D_m\)</span> by about an order of magnitude, which I consistently saw in my previous estimates. So what now??</p>
+<p>Could we actually get a good estimate of <span class="math inline">\(I_0\)</span> by fitting the lm/nls in a certain way??</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
