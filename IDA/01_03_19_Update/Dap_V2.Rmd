@@ -42,8 +42,9 @@ theme_set(theme_1())
 #source("../../tools/echem_processing_tools.R")
 ```
 
-Notebooks that used Version 2 analysis: 
-* [09_11_18 - Estimating $D_{ap}$ in triplicate](https://scott-saunders.github.io/labwork/IDA/09_11_18_DapEstimation.html)
+Notebooks that used Version 2 analysis:
+
+* [09_11_18 - Estimating $D_{ap}$ in triplicate](https://scott-saunders.github.io/labwork/IDA/09_11_18_DapEstimation.html) 
 * [11_28_18 - Estimating $D_{ap}$ for PYO in solution with blank IDA](https://scott-saunders.github.io/labwork/IDA/11_28_18_blank_IDA/Analysis/11_28_18_blank_IDA_Analysis.html)
 
 # Approach
