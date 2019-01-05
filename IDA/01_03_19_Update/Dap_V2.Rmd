@@ -42,8 +42,9 @@ theme_set(theme_1())
 #source("../../tools/echem_processing_tools.R")
 ```
 
-Notebooks that used Version 2 analysis:
+Notebooks that used Version 2 analysis: 
 * [09_11_18 - Estimating $D_{ap}$ in triplicate](https://scott-saunders.github.io/labwork/IDA/09_11_18_DapEstimation.html)
+* [11_28_18 - Estimating $D_{ap}$ for PYO in solution with blank IDA](https://scott-saunders.github.io/labwork/IDA/11_28_18_blank_IDA/Analysis/11_28_18_blank_IDA_Analysis.html)
 
 # Approach
 
@@ -81,26 +82,42 @@ We had reasonably decided to take measurements at a timepoint where the system h
 
 I implemented this protocol by taking successive SWV scans as the biofilm equilibrated in the transfer reactor over the course of ~1 hour. Once the peak SWV current stopped noticeably decreasing, I took a GC and SWV scan. Then I soaked the biofilm in the next higher PYO concentration and repeated for 5-7 concentrations total.
 
-PLOT of SWVs and peak current decay
-
 Note that this was quite a long experiment with few datapoints, since each equilibrium datapoint took at least 1.5 hrs and required a potentiostat to monitor the reactor during the entire process. 
 
 # Fatal Flaw
 
 In general, V2 titrations looked linear. That said the slope of these $I_{gc}$ vs. $I_{swv}$ plots was significantly less for the transfer measurements than measurements taken in the soak reactor (with a biofilm or blank IDA). 
 
-PLOT HERE OF PSORALEN CONTROL TITRATION
+```{r}
+gc_swv_equil <- read_csv("../12_04_18_psoralen_biofilm/Processing/12_04_18_processed_gc_swv_equil.csv")
+
+ggplot(gc_swv_equil %>% filter(segment=='1' & condition=='control'),aes(x=signal_from_swv,y=signal_from_gc))+
+  geom_point()+geom_line()
+```
 
 After doing these experiments for a while thinking things were fine, I finally decided to explicitly measure background signal in the transfer reactor (Lenny had suggested this long ago). Below is a plot of the transfer reactor measured "at equilibrium" after an hour with a biofilm coated IDA, followed by a blank IDA. 
 
-PLOT HERE OF PSORALEN GC + BACKGROUND
+```{r}
+blank_GC_scans <- read_csv("../12_04_18_psoralen_biofilm/Processing/12_04_18_processed_blank_GC_scans.csv")
+
+ggplot(blank_GC_scans %>% filter(E<0 & condition=='control'),aes(x=E,y=current,color=blank))+geom_path(size=1)+
+  facet_wrap(~PHZadded,scales = "free")+ylim(0,1.5e-8)+
+  scale_x_reverse()
+```
 
 It is clear that the amount of background signal from PYO in solution is significant in these measurements. It is unclear if all of the observed biofilm signal is due to the solution or not. One approach might be to try to background subtract the signal from the blank electrode from the biofilm electrode, however, this assumes $I_{gc} = I_{biofilm} + I_{solution}$. We know that this is not true in the soak phase, because the biofilm electrode actually shows less signal than the blank electrode. Therefore any attempt to background subtract would get impractically complicated (you probably need to know fraction of electrode exposed to solution, $D_{ap}$ for each phase, and concentrations). 
 
 # Conclusions
 
-Bad
+## Good 
+1. The derivation for $D_{ap}$ from $I_{gc}$ vs. $I_{swv}$ is still valid. It produces a reasonable value for $D_{ap}$ of solution PYO at a blank IDA. 
+2. The process of using SWV to monitor the PYO equilibration out of the biofilm led to the idea of measuring $D_m$.
+
+## Bad 
 1. The electrode was more sensitive than I realized, and therefore the background signal from the PYO in solution was much higher than I expected.
 
-Good
-1. The derivation 
+## Solutions 
+1. Make GC/SWV measurements during equilibration, before solution/background is relatively significant.
+2. Reduce PYO carryover by soaking only IDA working surface
+3. Explicitly measure background in transfer reactor with blank IDA. 
+

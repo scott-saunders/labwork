@@ -150,7 +150,11 @@ $(document).ready(function () {
 <li><a href="#protocol">Protocol</a></li>
 </ul></li>
 <li><a href="#fatal-flaw">Fatal Flaw</a></li>
-<li><a href="#conclusions">Conclusions</a></li>
+<li><a href="#conclusions">Conclusions</a><ul>
+<li><a href="#good">Good</a></li>
+<li><a href="#bad">Bad</a></li>
+<li><a href="#solutions">Solutions</a></li>
+</ul></li>
 </ul>
 </div>
 
@@ -181,7 +185,7 @@ theme_1 &lt;- function () {
 theme_set(theme_1())
 
 #source(&quot;../../tools/echem_processing_tools.R&quot;)</code></pre>
-<p>Notebooks that used Version 2 analysis: * <a href="https://scott-saunders.github.io/labwork/IDA/09_11_18_DapEstimation.html">09_11_18 - Estimating <span class="math inline">\(D_{ap}\)</span> in triplicate</a></p>
+<p>Notebooks that used Version 2 analysis: * <a href="https://scott-saunders.github.io/labwork/IDA/09_11_18_DapEstimation.html">09_11_18 - Estimating <span class="math inline">\(D_{ap}\)</span> in triplicate</a> * <a href="https://scott-saunders.github.io/labwork/IDA/11_28_18_blank_IDA/Analysis/11_28_18_blank_IDA_Analysis.html">11_28_18 - Estimating <span class="math inline">\(D_{ap}\)</span> for PYO in solution with blank IDA</a></p>
 <div id="approach" class="section level1">
 <h1>Approach</h1>
 <p>The next approach I took to measuring <span class="math inline">\(D_{ap}\)</span> was to soak <span class="math inline">\(\Delta phz\)</span> biofilms with PYO in one reactor and then transfer the biofilms to a second reactor with fresh medium. The echem measurements were then taken in the “transfer” reactor, so that we could be more confident the signal was coming from biofilm associated PYO, not the solution PYO.</p>
@@ -199,22 +203,51 @@ theme_set(theme_1())
 <p>In V1, we were already using a titration approach to vary <span class="math inline">\(C\)</span>, so we continued this approach by soaking the <span class="math inline">\(\Delta phz\)</span> biofilm in increasing concentrations of synthetic PYO. After each soak, I briefly washed the biofilm and then transferred it to another reactor with fresh medium.</p>
 <p>We had reasonably decided to take measurements at a timepoint where the system had reached equilibrium. For various reasons, we assumed that at equilibrium we would only be measuring PYO stably associated with the biofilm, and that the solution concentration was negligible. Two reasons we made these assumptions were that we could transfer the biofilm repeatedly into fresh solution and always detect PYO signal and that measurements on the LC-MS suggested that the solution concentration of PYO was in the nM range, which I thought was below the detection limit of the electrode.</p>
 <p>I implemented this protocol by taking successive SWV scans as the biofilm equilibrated in the transfer reactor over the course of ~1 hour. Once the peak SWV current stopped noticeably decreasing, I took a GC and SWV scan. Then I soaked the biofilm in the next higher PYO concentration and repeated for 5-7 concentrations total.</p>
-<p>PLOT of SWVs and peak current decay</p>
 <p>Note that this was quite a long experiment with few datapoints, since each equilibrium datapoint took at least 1.5 hrs and required a potentiostat to monitor the reactor during the entire process.</p>
 </div>
 </div>
 <div id="fatal-flaw" class="section level1">
 <h1>Fatal Flaw</h1>
 <p>In general, V2 titrations looked linear. That said the slope of these <span class="math inline">\(I_{gc}\)</span> vs. <span class="math inline">\(I_{swv}\)</span> plots was significantly less for the transfer measurements than measurements taken in the soak reactor (with a biofilm or blank IDA).</p>
-<p>PLOT HERE OF PSORALEN CONTROL TITRATION</p>
+<pre class="r"><code>gc_swv_equil &lt;- read_csv(&quot;../12_04_18_psoralen_biofilm/Processing/12_04_18_processed_gc_swv_equil.csv&quot;)
+
+ggplot(gc_swv_equil %&gt;% filter(segment == &quot;1&quot; &amp; condition == 
+    &quot;control&quot;), aes(x = signal_from_swv, y = signal_from_gc)) + 
+    geom_point() + geom_line()</code></pre>
+<p><img src="Dap_V2_files/figure-html/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>After doing these experiments for a while thinking things were fine, I finally decided to explicitly measure background signal in the transfer reactor (Lenny had suggested this long ago). Below is a plot of the transfer reactor measured “at equilibrium” after an hour with a biofilm coated IDA, followed by a blank IDA.</p>
-<p>PLOT HERE OF PSORALEN GC + BACKGROUND</p>
+<pre class="r"><code>blank_GC_scans &lt;- read_csv(&quot;../12_04_18_psoralen_biofilm/Processing/12_04_18_processed_blank_GC_scans.csv&quot;)
+
+ggplot(blank_GC_scans %&gt;% filter(E &lt; 0 &amp; condition == &quot;control&quot;), 
+    aes(x = E, y = current, color = blank)) + geom_path(size = 1) + 
+    facet_wrap(~PHZadded, scales = &quot;free&quot;) + ylim(0, 1.5e-08) + 
+    scale_x_reverse()</code></pre>
+<p><img src="Dap_V2_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>It is clear that the amount of background signal from PYO in solution is significant in these measurements. It is unclear if all of the observed biofilm signal is due to the solution or not. One approach might be to try to background subtract the signal from the blank electrode from the biofilm electrode, however, this assumes <span class="math inline">\(I_{gc} = I_{biofilm} + I_{solution}\)</span>. We know that this is not true in the soak phase, because the biofilm electrode actually shows less signal than the blank electrode. Therefore any attempt to background subtract would get impractically complicated (you probably need to know fraction of electrode exposed to solution, <span class="math inline">\(D_{ap}\)</span> for each phase, and concentrations).</p>
 </div>
 <div id="conclusions" class="section level1">
 <h1>Conclusions</h1>
-<p>Bad 1. The electrode was more sensitive than I realized, and therefore the background signal from the PYO in solution was much higher than I expected.</p>
-<p>Good 1. The derivation</p>
+<div id="good" class="section level2">
+<h2>Good</h2>
+<ol style="list-style-type: decimal">
+<li>The derivation for <span class="math inline">\(D_{ap}\)</span> from <span class="math inline">\(I_{gc}\)</span> vs. <span class="math inline">\(I_{swv}\)</span> is still valid. It produces a reasonable value for <span class="math inline">\(D_{ap}\)</span> of solution PYO at a blank IDA.</li>
+<li>The process of using SWV to monitor the PYO equilibration out of the biofilm led to the idea of measuring <span class="math inline">\(D_m\)</span>.</li>
+</ol>
+</div>
+<div id="bad" class="section level2">
+<h2>Bad</h2>
+<ol style="list-style-type: decimal">
+<li>The electrode was more sensitive than I realized, and therefore the background signal from the PYO in solution was much higher than I expected.</li>
+</ol>
+</div>
+<div id="solutions" class="section level2">
+<h2>Solutions</h2>
+<ol style="list-style-type: decimal">
+<li>Make GC/SWV measurements during equilibration, before solution/background is relatively significant.</li>
+<li>Reduce PYO carryover by soaking only IDA working surface</li>
+<li>Explicitly measure background in transfer reactor with blank IDA.</li>
+</ol>
+</div>
 </div>
 
 
