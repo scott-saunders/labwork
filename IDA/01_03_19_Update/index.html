@@ -144,27 +144,27 @@ $(document).ready(function () {
 
 
 <p>Each notebook entry below will discuss the approach, the problems with that approach and potential solutions. This leads into the next version of the analysis.</p>
-<div id="measuring-d_ap" class="section level3">
-<h3>Measuring <span class="math inline">\(D_{ap}\)</span></h3>
+<div id="measuring-d_ap" class="section level2">
+<h2>Measuring <span class="math inline">\(D_{ap}\)</span></h2>
 <p>We set out to measure the <span class="math inline">\(D_{ap}\)</span> for PYO in the IDA grown biofilm based on a sensitive generator/collector (gc) measurement.</p>
-<div id="v1-soak-titration-i_gc-vs.-pyo" class="section level4">
-<h4><a href="https://scott-saunders.github.io/labwork/IDA/01_03_19_Update/Dap_V1.html">V1: Soak titration <span class="math inline">\(I_{gc}\)</span> vs. [PYO]</a></h4>
+<div id="v1-soak-titration-i_gc-vs.-pyo" class="section level3">
+<h3><a href="https://scott-saunders.github.io/labwork/IDA/01_03_19_Update/Dap_V1.html">V1: Soak titration <span class="math inline">\(I_{gc}\)</span> vs. [PYO]</a></h3>
 <ul>
 <li><p><strong>Approach:</strong> Originally, we were just soaking a biofilm in a concentration of PYO and looking at how current increased. Recall, the main goal was to see if the relationship was linear or nonlinear.</p></li>
 <li><p><strong>Problem:</strong> We realized that most of the signal is coming from the solution phase PYO, not necessarily PYO associated with the biofilm.</p></li>
 <li><p><strong>Solution:</strong> Try to transfer the biofilm to fresh media.</p></li>
 </ul>
 </div>
-<div id="v2-transfer-equilibrium-titration-i_gc-vs.-i_swv" class="section level4">
-<h4><a href="https://scott-saunders.github.io/labwork/IDA/01_03_19_Update/Dap_V2.html">V2: Transfer equilibrium titration <span class="math inline">\(I_{gc}\)</span> vs. <span class="math inline">\(I_{swv}\)</span></a></h4>
+<div id="v2-transfer-equilibrium-titration-i_gc-vs.-i_swv" class="section level3">
+<h3><a href="https://scott-saunders.github.io/labwork/IDA/01_03_19_Update/Dap_V2.html">V2: Transfer equilibrium titration <span class="math inline">\(I_{gc}\)</span> vs. <span class="math inline">\(I_{swv}\)</span></a></h3>
 <ul>
 <li><p><strong>Approach:</strong> We decided to transfer the biofilm to a fresh reactor after soaking, so that we would be measuring biofilm associated PYO. In the course of monitoring the PYO equilibrate out of the biofilm into the fresh media, we realized it might be possible to measure <span class="math inline">\(D_m\)</span>. We no longer knew the concentration of PYO at the electrode, so we then adopted the SWV vs. GC measurement. Typically, we waited for the PYO to equilibrate between the biofilm and the fresh solution.</p></li>
 <li><p><strong>Problem:</strong> At “equilibrium,” , the solution concentration of PYO was no longer negligible, presenting the same problem as in V1 above. This was seen by measuring the solution with a blank IDA after the biofilm IDA measurements.</p></li>
 <li><p><strong>Solution:</strong> Measure in the transfer reactor before equilbrium when we can be confident PYO is associated with the biofilm. Also, try to carry over less PYO into the transfer reactor and explicitly measure the background solution PYO with a blank IDA.</p></li>
 </ul>
 </div>
-<div id="v3-transfer-non-equilibrium-titration-i_gc-vs.-i_swv" class="section level4">
-<h4><a href="https://scott-saunders.github.io/labwork/IDA/01_03_19_Update/Dap_V3.html">V3: Transfer non-equilibrium titration <span class="math inline">\(I_{gc}\)</span> vs. <span class="math inline">\(I_{swv}\)</span></a></h4>
+<div id="v3-transfer-non-equilibrium-titration-i_gc-vs.-i_swv" class="section level3">
+<h3><a href="https://scott-saunders.github.io/labwork/IDA/01_03_19_Update/Dap_V3.html">V3: Transfer non-equilibrium titration <span class="math inline">\(I_{gc}\)</span> vs. <span class="math inline">\(I_{swv}\)</span></a></h3>
 <ul>
 <li><p><strong>Approach:</strong> Measure while PYO is equilibrating with the transfer solution, by taking a 1 segment GC scan (~3min) immediately followed by a ~2sec SWV scan. By measuring before equilibrium, we can be confident that we are measuring biofilm associated PYO, and not solution phase PYO. Also, because we can get multiple datapoints following soak in one PYO concentration, we can gather more datapoints in less time.</p></li>
 <li><p><strong>Potential problem:</strong> Multiple GC measurements during equilibration may effectively drive PYO out of the biofilm, disrupting the measurement of <span class="math inline">\(D_m\)</span>.</p></li>
@@ -172,18 +172,27 @@ $(document).ready(function () {
 </ul>
 </div>
 </div>
-<div id="measuring-d_m" class="section level3">
-<h3>Measuring <span class="math inline">\(D_m\)</span></h3>
+<div id="measuring-d_m" class="section level2">
+<h2>Measuring <span class="math inline">\(D_m\)</span></h2>
 <p>From monitoring PYO equilibration for <span class="math inline">\(D_{ap}\)</span> V2, it seemed possible to measure the physical diffusion coefficient of PYO <span class="math inline">\(D_m\)</span> from the consecutive SWVs taken to monitor the equilibration.</p>
-<div id="v1-swv-decays---p_1-i_0" class="section level4">
-<h4>V1: SWV decays - <span class="math inline">\(p_1\)</span> = <span class="math inline">\(I_0\)</span></h4>
-<p>In order to estimate <span class="math inline">\(D_m\)</span> we needed to have an estimate of the initial current, <span class="math inline">\(I_0\)</span>. I assumed that the first point, would be a reasonable estimate. It is now clear that <span class="math inline">\(p_1\)</span> is not a good estimate of <span class="math inline">\(I_0\)</span> and that dramatically influences the <span class="math inline">\(D_m\)</span> estimate.</p>
+<div id="v1-swv-decays---p_1-i_0" class="section level3">
+<h3>V1: SWV decays - <span class="math inline">\(P_1\)</span> = <span class="math inline">\(I_0\)</span></h3>
+<ul>
+<li><p><strong>Approach:</strong> Monitor equilibration with successive SWV scans (slow - 40sec each). Estimate the initial current, <span class="math inline">\(I_0\)</span>, with the first datapoint, <span class="math inline">\(P_1\)</span>.</p></li>
+<li><p><strong>Problem:</strong> The first datapoint, <span class="math inline">\(P_1\)</span>, is not at all a reasonable estimate of initial current, <span class="math inline">\(I_0\)</span>. This throws off the estimate of <span class="math inline">\(D_m\)</span> by orders of magnitude. This became clear by analyzing a blank IDA where the soak SWV is known to be <span class="math inline">\(I_0\)</span>. <a href="https://scott-saunders.github.io/labwork/IDA/11_28_18_blank_IDA/Analysis/11_28_18_blank_IDA_Analysis.html">blank IDA analysis notebook</a></p></li>
+<li><p><strong>Solution:</strong> We can accept that we may never know the true <span class="math inline">\(I_0\)</span>, but we should be able to bound our estimates by assuming that <span class="math inline">\(I_0\)</span> lies between the SWV signal from the soak (preceding transfer) and <span class="math inline">\(P_1\)</span>.</p></li>
+</ul>
 </div>
-<div id="swv-decay-simulation" class="section level4">
-<h4>SWV decay simulation</h4>
+<div id="swv-decay-simulation" class="section level3">
+<h3><a href="https://scott-saunders.github.io/labwork/IDA/12_10_18/Analysis/generating_and_decoding_diffusion.html">SWV decay simulation</a></h3>
+<p>Simulating these SWV decay curves from our diffusion equation further convinces me that we cannot estimate <span class="math inline">\(I_0\)</span> from any type of analysis of the transfer SWVs.</p>
 </div>
-<div id="v2-swv-decays-constrain-i_0" class="section level4">
-<h4>V2: SWV decays, constrain <span class="math inline">\(I_0\)</span></h4>
+<div id="v2-swv-decays-constrain-i_0" class="section level3">
+<h3>V2: SWV decays, constrain <span class="math inline">\(I_0\)</span></h3>
+<ul>
+<li><strong>Approach:</strong> From the solution described in V1, attempt to constrain an estimate of <span class="math inline">\(I_0\)</span> between the soak SWV and first datapoint. To do this well, we should use fast SWVs (2sec duration) and try to start the scans as quickly as possible following transfer. Also, it is important to time how long it takes between first the moment the biofilm touches the transfer reactor till the first SWV is actually acquired. I think there will be advantages and disadvantages to washing the biofilm before transfer.</li>
+</ul>
+<p>This experiment has not been attempted yet.</p>
 </div>
 </div>
 
