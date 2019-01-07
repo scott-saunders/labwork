@@ -65,16 +65,7 @@ ggplot(example_data,aes(x=concentrations,y=I_gc,color=model))+geom_point()+geom_
 ```
 So we tried to do the actual experiment by incubating an IDA biofilm with increasing concentrations of PYO. The earliest attempt at this was done by Matt with a WT biofilm. We switched to using a $\Delta phz$ strain to get rid of any residual phenazine signal. 
 
-# Data
-
-* raw GC curves at different concentrations, with min max points
-
-* plot of soak vs concentration
-
-* plot of soak and blank vs concentration
-
-
-# Problems
+# Problem
 
 It became clear that we had no idea if the signal was coming from the biofilm or the solution. 
 

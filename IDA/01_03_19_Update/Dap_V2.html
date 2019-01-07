@@ -149,7 +149,7 @@ $(document).ready(function () {
 <li><a href="#derivation-for-d_ap-from-i_gc-vs.-i_swv">Derivation for <span class="math inline">\(D_{ap}\)</span> from <span class="math inline">\(I_{gc}\)</span> vs. <span class="math inline">\(I_{swv}\)</span></a></li>
 <li><a href="#protocol">Protocol</a></li>
 </ul></li>
-<li><a href="#fatal-flaw">Fatal Flaw</a></li>
+<li><a href="#problem">Problem</a></li>
 <li><a href="#conclusions">Conclusions</a><ul>
 <li><a href="#good">Good</a></li>
 <li><a href="#bad">Bad</a></li>
@@ -204,14 +204,21 @@ theme_set(theme_1())
 </div>
 <div id="protocol" class="section level2">
 <h2>Protocol</h2>
+<ol style="list-style-type: decimal">
+<li>Soak biofilm in PYO solution and take GC/SWV.</li>
+<li>Rinse biofilm and transfer to fresh medium reactor.</li>
+<li>Monitor equilibration with successive SWV scans (scan every 2 min).</li>
+<li>At equilibrium take GC scan and final SWV scan.</li>
+<li>Repeat from step 1 with increasing PYO concentrations.</li>
+</ol>
 <p>In V1, we were already using a titration approach to vary <span class="math inline">\(C\)</span>, so we continued this approach by soaking the <span class="math inline">\(\Delta phz\)</span> biofilm in increasing concentrations of synthetic PYO. After each soak, I briefly washed the biofilm and then transferred it to another reactor with fresh medium.</p>
 <p>We had reasonably decided to take measurements at a timepoint where the system had reached equilibrium. For various reasons, we assumed that at equilibrium we would only be measuring PYO stably associated with the biofilm, and that the solution concentration was negligible. Two reasons we made these assumptions were that we could transfer the biofilm repeatedly into fresh solution and always detect PYO signal and that measurements on the LC-MS suggested that the solution concentration of PYO was in the nM range, which I thought was below the detection limit of the electrode.</p>
 <p>I implemented this protocol by taking successive SWV scans as the biofilm equilibrated in the transfer reactor over the course of ~1 hour. Once the peak SWV current stopped noticeably decreasing, I took a GC and SWV scan. Then I soaked the biofilm in the next higher PYO concentration and repeated for 5-7 concentrations total.</p>
 <p>Note that this was quite a long experiment with few datapoints, since each equilibrium datapoint took at least 1.5 hrs and required a potentiostat to monitor the reactor during the entire process.</p>
 </div>
 </div>
-<div id="fatal-flaw" class="section level1">
-<h1>Fatal Flaw</h1>
+<div id="problem" class="section level1">
+<h1>Problem</h1>
 <p>In general, V2 titrations looked linear. That said the slope of these <span class="math inline">\(I_{gc}\)</span> vs. <span class="math inline">\(I_{swv}\)</span> plots was significantly less for the transfer measurements than measurements taken in the soak reactor (with a biofilm or blank IDA).</p>
 <pre class="r"><code>gc_swv_equil &lt;- read_csv(&quot;../12_04_18_psoralen_biofilm/Processing/12_04_18_processed_gc_swv_equil.csv&quot;)
 

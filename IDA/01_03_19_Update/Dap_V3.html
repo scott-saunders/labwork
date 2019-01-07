@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Measuring D_{ap} Version 3</title>
+
+<script src="Dap_V3_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="Dap_V3_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="Dap_V3_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="Dap_V3_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="Dap_V3_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="Dap_V3_files/navigation-1.1/tabsets.js"></script>
+<script src="Dap_V3_files/navigation-1.1/codefolding.js"></script>
+<link href="Dap_V3_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="Dap_V3_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Measuring <span class="math inline">\(D_{ap}\)</span> Version 3</h1>
+<h3 class="subtitle"><em>Transfer non-equilibrium titration <span class="math inline">\(I_{gc}\)</span> vs. [PYO]</em></h3>
+<h4 class="date"><em>1_04_19</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#approach">Approach</a><ul>
+<li><a href="#protocol">Protocol</a></li>
+</ul></li>
+<li><a href="#data">Data</a><ul>
+<li><a href="#potential-problem">Potential Problem</a></li>
+<li><a href="#potential-solution">Potential Solution</a></li>
+</ul></li>
+<li><a href="#conclusions">Conclusions</a></li>
+</ul>
+</div>
+
+<pre class="r"><code>library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(knitr)
+
+#knitr::opts_knit$set(root.dir = &#39;/Users/scottsaunders/git/labwork/IDA/12_10_18&#39;)
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)
+
+theme_1 &lt;- function () { 
+    theme_classic() %+replace% 
+        theme(
+          axis.text = element_text( size=12),
+          axis.title=element_text(size=14),
+          strip.text = element_text(size = 14),
+          strip.background = element_rect(color=&#39;white&#39;),
+          legend.title=element_text(size=14),
+          legend.text=element_text(size=12),
+          legend.text.align=0,
+          panel.grid.major = element_line(color=&#39;grey&#39;,size=0.1)
+        )
+}
+theme_set(theme_1())
+
+#source(&quot;../../tools/echem_processing_tools.R&quot;)</code></pre>
+<div id="approach" class="section level1">
+<h1>Approach</h1>
+<p>I decided to try all three solutions suggested in V2:</p>
+<ol style="list-style-type: decimal">
+<li>Make GC/SWV measurements during equilibration, before solution/background is relatively significant.</li>
+<li>Reduce PYO carryover by soaking only IDA working surface</li>
+<li>Explicitly measure background in transfer reactor with blank IDA.</li>
+</ol>
+<p>The main idea is to measure during the transfer step, but instead of waiting for equilibrium, to measure repeatedly before the system reaches equilibrium. At this point, the PYO should be associated with the electrode/biofilm and the solution/background PYO should be lower.</p>
+<p>The unknown going into this was whether the ever decreasing PYO concentration would be so fast that it would cause poor GC measurements (peak current needs to reach equilibrium) and change the PYO concentration before an SWV scan could be paired with the GC.</p>
+<div id="protocol" class="section level2">
+<h2>Protocol</h2>
+<ol style="list-style-type: decimal">
+<li>Soak only IDA working surface in PYO solution.</li>
+<li>Rinse and transfer to fresh medium reactor.</li>
+<li>Monitor equilibration with successive SWV scans (every minute).</li>
+<li>Every 5 minutes, take a one segment GC scan (3 min).</li>
+<li>Immediately restart SWV scans for 5min following GC. Continue ~1hr until equilibrium reached.</li>
+<li>Remove biofilm IDA, and measure solution with blank IDA.</li>
+<li>Repeat for different concentrations from step 1.</li>
+</ol>
+</div>
+</div>
+<div id="data" class="section level1">
+<h1>Data</h1>
+<p>First, let’s see what GC curves look like when taken under non-equilibrium conditions. Normally the curves flatten out as the generator reaches very reducing (negative) potentials.</p>
+<pre class="r"><code>gc_curves_df &lt;- read_csv(&quot;../12_10_18/Processing/12_10_18_reactor_A_processed_GC_i2_curves.csv&quot;)
+
+ggplot(gc_curves_df %&gt;% filter(PHZaddedInt == 200), aes(x = E, 
+    y = current)) + geom_point(aes(color = rep)) + scale_x_reverse() + 
+    ggtitle(&quot;200uM Collector currents&quot;)</code></pre>
+<p><img src="Dap_V3_files/figure-html/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /> This plot shows the collector currents taken during the equilibration following a 200uM PYO soak. In total 7 gc’s were taken during this ~1 hr long equilibration, and the first rep was the only one that showed a deviation from the flat/equilibrium flux at the negative potentials. This is likely because the concentration was changing very fast at that point in the equilibration. Note, that 200uM, rep 1 was the only curve to show this behavior.</p>
+<p>Following the end of each reductive sweep SWV scans (2 sec duration) were immediately restarted, hopefully providing a reasonably close paired measurement.</p>
+<p>Let’s now look at the quantified GC vs. SWV scans for 4 different soak concentrations. You can see that each concentration has multiple datapoints that were taken during each equilibration.</p>
+<pre class="r"><code>gc_swv_df &lt;- read_csv(&quot;../12_10_18/Processing/12_10_18_processed_reactor_A_GC_SWV.csv&quot;)
+
+ggplot(gc_swv_df %&gt;% filter(PHZaddedInt &lt; 200 &amp; PHZaddedInt &gt; 
+    10), aes(x = signal_from_swv, y = signal_from_gc)) + geom_point(aes(color = PHZadded)) + 
+    geom_smooth(method = &quot;lm&quot;)</code></pre>
+<p><img src="Dap_V3_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The relationship, still looks pretty linear. We could estimate linear slopes for each subset of the data, but for now let’s just look at the best fit line of the whole dataset above. Also note that more datapoints at the higher values would be better.</p>
+<p>The linear model yields the following coefficients:</p>
+<pre class="r"><code>gc_swv_linear_fit1 &lt;- lm(signal_from_gc ~ signal_from_swv, gc_swv_df %&gt;% 
+    filter(PHZaddedInt &lt; 200 &amp; PHZaddedInt &gt; 10))
+
+coef(summary(gc_swv_linear_fit1))</code></pre>
+<pre><code>##                      Estimate  Std. Error   t value     Pr(&gt;|t|)
+## (Intercept)     -1.748189e-08 1.51598e-09 -11.53174 1.007475e-11
+## signal_from_swv  1.811346e-01 1.02817e-02  17.61718 5.656763e-16</code></pre>
+<p>With a slope, <span class="math inline">\(m\)</span> of about 0.18, we can calculate a <span class="math inline">\(D_{ap}\)</span> value.</p>
+<pre class="r"><code>m &lt;- coef(summary(gc_swv_linear_fit1))[2]  #about 0.18
+
+psi &lt;- 0.91
+t_p &lt;- 1/300  # frequency is 300 hz (sec)
+A &lt;- 0.025  #cm^2
+S &lt;- 18.4  #cm
+D_ap &lt;- (m * A * psi)^2/(S^2 * pi * t_p)
+
+paste(&quot;D_ap =&quot;, D_ap, &quot;cm^2 / sec&quot;)</code></pre>
+<pre><code>## [1] &quot;D_ap = 4.78962153286365e-06 cm^2 / sec&quot;</code></pre>
+<p>This <span class="math inline">\(D_{ap}\)</span> value seems pretty reasonable. In the future we should compare it to replicates and also to a blank IDA subjected to the same analysis.</p>
+<div id="potential-problem" class="section level2">
+<h2>Potential Problem</h2>
+<p>I don’t see a problem with the <span class="math inline">\(D_{ap}\)</span> estimation, but it is worth noting that there may be a problem trying to calculate <span class="math inline">\(D_m\)</span> from the same equilibration as <span class="math inline">\(D_{ap}\)</span>.</p>
+<p>The SWV peak current decay is shown below. You can see that 5 SWVs were taken 1 min apart, followed by a gap. Those gaps are when the GCs were taken.</p>
+<pre class="r"><code>swv_decays &lt;- read_csv(&quot;../12_10_18/Processing/12_10_18_processed_reactor_A_swv_decays.csv&quot;)
+
+ggplot(swv_decays %&gt;% filter(PHZaddedInt == &quot;75&quot;), aes(x = norm_time, 
+    y = signal)) + geom_point() + facet_wrap(~PHZadded, scales = &quot;free&quot;) + 
+    ylab(&quot;SWV signal&quot;) + xlab(&quot;Time (min)&quot;)</code></pre>
+<p><img src="Dap_V3_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /> Note that this decay was also taken with fast SWVs (2 sec duration), and therefore it may be hard to visually compare to the V2 method with slow SWVs (40 sec duration). That said, it seems like the decay was quite rapid, compared to what I was used to seeing. This could just be caused by the different scan settings, but it may also be influenced by the repeated GC scans during this time period. Inevitably, a GC scan will reduce much of the biofilm PYO, and most of it will not be captured by the collector electrode. If <span class="math inline">\(PYO_{red}\)</span> is more easily able to diffuse out of the biofilm, due to its lower affinity for DNA, these GC scans may be driving PYO out of the biofilm faster than the typical equilibration we want to observe.</p>
+</div>
+<div id="potential-solution" class="section level2">
+<h2>Potential Solution</h2>
+<p>One solution is that we can use one equilibration to take as many GC scans (coupled to 1 SWV scan) to measure <span class="math inline">\(D_{ap}\)</span>. Then we can take another equilibration with just intermittent SWV scans to measure <span class="math inline">\(D_m\)</span>.</p>
+</div>
+</div>
+<div id="conclusions" class="section level1">
+<h1>Conclusions</h1>
+<ol style="list-style-type: decimal">
+<li>Taking GCs at non-equilibrium seems reasonably effective.</li>
+<li>With this new approach, it is probably worth acquiring as many GC datapoints as possible during a single equilibration.</li>
+<li>With #2, try running a separate equilibration with only SWVs to measure <span class="math inline">\(D_m\)</span> since GCs may throw off this process.</li>
+</ol>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

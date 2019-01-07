@@ -75,7 +75,13 @@ $$D_{ap} = \frac{m^2 A^2 \psi^2}{S^2\pi t_p} \tag{eq. 7}$$
 
 Therefore, with this dataset in hand, we should be able to estimate $D_{ap}$ for the biofilm associated PYO, by measuring in the transfer reactor. 
 
-## Protocol
+## Protocol 
+
+1. Soak biofilm in PYO solution and take GC/SWV.
+2. Rinse biofilm and transfer to fresh medium reactor.
+3. Monitor equilibration with successive SWV scans (scan every 2 min).
+4. At equilibrium take GC scan and final SWV scan.
+5. Repeat from step 1 with increasing PYO concentrations.
 
 In V1, we were already using a titration approach to vary $C$, so we continued this approach by soaking the $\Delta phz$ biofilm in increasing concentrations of synthetic PYO. After each soak, I briefly washed the biofilm and then transferred it to another reactor with fresh medium. 
 
@@ -85,7 +91,7 @@ I implemented this protocol by taking successive SWV scans as the biofilm equili
 
 Note that this was quite a long experiment with few datapoints, since each equilibrium datapoint took at least 1.5 hrs and required a potentiostat to monitor the reactor during the entire process. 
 
-# Fatal Flaw
+# Problem
 
 In general, V2 titrations looked linear. That said the slope of these $I_{gc}$ vs. $I_{swv}$ plots was significantly less for the transfer measurements than measurements taken in the soak reactor (with a biofilm or blank IDA). 
 

@@ -16,19 +16,29 @@ Each notebook entry below will discuss the approach, the problems with that appr
 
 We set out to measure the $D_{ap}$ for PYO in the IDA grown biofilm based on a sensitive generator/collector (gc) measurement. 
 
-#### [V1: Soak titration $I_{gc}$ vs. [PYO]](https://scott-saunders.github.io/labwork/IDA/01_03_19_Update/Dap_V1.html)
+#### [V1: Soak titration $I_{gc}$ vs. [PYO]](https://scott-saunders.github.io/labwork/IDA/01_03_19_Update/Dap_V1.html) 
 
-Originally, we were just soaking a biofilm in a concentration of PYO and looking at how current increased. Recall, the main goal was to see if the relationship was linear or nonlinear. However, we realized that most of the signal is coming from the solution phase PYO, not necessarily PYO associated with the biofilm.
+* **Approach:** Originally, we were just soaking a biofilm in a concentration of PYO and looking at how current increased. Recall, the main goal was to see if the relationship was linear or nonlinear. 
 
-#### [V2: Transfer equilibrium titration $I_{gc}$ vs. $I_{swv}$](https://scott-saunders.github.io/labwork/IDA/01_03_19_Update/Dap_V2.html)
+* **Problem:** We realized that most of the signal is coming from the solution phase PYO, not necessarily PYO associated with the biofilm.
 
-We decided to transfer the biofilm to a fresh reactor after soaking, so that we would be measuring biofilm associated PYO. In the course of monitoring the PYO equilibrate out of the biofilm into the fresh media, we realized it might be possible to measure $D_m$. We no longer knew the concentration of PYO at the electrode, so we then adopted the SWV vs. GC measurement. 
+* **Solution:** Try to transfer the biofilm to fresh media.
 
-Typically, we waited for the PYO to equilibrate between the biofilm and the fresh solution. However, at this point, the solution concentration of PYO was no longer negligible, presenting the same problem as in V1 above.
+#### [V2: Transfer equilibrium titration $I_{gc}$ vs. $I_{swv}$](https://scott-saunders.github.io/labwork/IDA/01_03_19_Update/Dap_V2.html) 
 
-#### V3: Transfer non-equilibrium titration $I_{gc}$ vs. $I_{swv}$
+* **Approach:** We decided to transfer the biofilm to a fresh reactor after soaking, so that we would be measuring biofilm associated PYO. In the course of monitoring the PYO equilibrate out of the biofilm into the fresh media, we realized it might be possible to measure $D_m$. We no longer knew the concentration of PYO at the electrode, so we then adopted the SWV vs. GC measurement. Typically, we waited for the PYO to equilibrate between the biofilm and the fresh solution. 
 
-Currently, the approach is to measure while PYO is equilibrating with the solution. By measuring before equilibrium, we can be confident that we are measuring biofilm associated PYO, and not solution phase PYO. 
+* **Problem:** At "equilibrium," , the solution concentration of PYO was no longer negligible, presenting the same problem as in V1 above. This was seen by measuring the solution with a blank IDA after the biofilm IDA measurements. 
+
+* **Solution:** Measure in the transfer reactor before equilbrium when we can be confident PYO is associated with the biofilm. Also, try to carry over less PYO into the transfer reactor and explicitly measure the background solution PYO with a blank IDA.
+
+#### [V3: Transfer non-equilibrium titration $I_{gc}$ vs. $I_{swv}$](https://scott-saunders.github.io/labwork/IDA/01_03_19_Update/Dap_V3.html) 
+
+* **Approach:** Measure while PYO is equilibrating with the transfer solution, by taking a 1 segment GC scan (~3min) immediately followed by a ~2sec SWV scan. By measuring before equilibrium, we can be confident that we are measuring biofilm associated PYO, and not solution phase PYO. Also, because we can get multiple datapoints following soak in one PYO concentration, we can gather more datapoints in less time. 
+
+* **Potential problem:** Multiple GC measurements during equilibration may effectively drive PYO out of the biofilm, disrupting the measurement of $D_m$. 
+
+* **Potential solution:** Make separate measurement of $D_m$ by monitoring a separate equilibration with only intermittent SWV (as in V2).
 
 ### Measuring $D_m$
 

@@ -149,16 +149,27 @@ $(document).ready(function () {
 <p>We set out to measure the <span class="math inline">\(D_{ap}\)</span> for PYO in the IDA grown biofilm based on a sensitive generator/collector (gc) measurement.</p>
 <div id="v1-soak-titration-i_gc-vs.-pyo" class="section level4">
 <h4><a href="https://scott-saunders.github.io/labwork/IDA/01_03_19_Update/Dap_V1.html">V1: Soak titration <span class="math inline">\(I_{gc}\)</span> vs. [PYO]</a></h4>
-<p>Originally, we were just soaking a biofilm in a concentration of PYO and looking at how current increased. Recall, the main goal was to see if the relationship was linear or nonlinear. However, we realized that most of the signal is coming from the solution phase PYO, not necessarily PYO associated with the biofilm.</p>
+<ul>
+<li><p><strong>Approach:</strong> Originally, we were just soaking a biofilm in a concentration of PYO and looking at how current increased. Recall, the main goal was to see if the relationship was linear or nonlinear.</p></li>
+<li><p><strong>Problem:</strong> We realized that most of the signal is coming from the solution phase PYO, not necessarily PYO associated with the biofilm.</p></li>
+<li><p><strong>Solution:</strong> Try to transfer the biofilm to fresh media.</p></li>
+</ul>
 </div>
 <div id="v2-transfer-equilibrium-titration-i_gc-vs.-i_swv" class="section level4">
 <h4><a href="https://scott-saunders.github.io/labwork/IDA/01_03_19_Update/Dap_V2.html">V2: Transfer equilibrium titration <span class="math inline">\(I_{gc}\)</span> vs. <span class="math inline">\(I_{swv}\)</span></a></h4>
-<p>We decided to transfer the biofilm to a fresh reactor after soaking, so that we would be measuring biofilm associated PYO. In the course of monitoring the PYO equilibrate out of the biofilm into the fresh media, we realized it might be possible to measure <span class="math inline">\(D_m\)</span>. We no longer knew the concentration of PYO at the electrode, so we then adopted the SWV vs. GC measurement.</p>
-<p>Typically, we waited for the PYO to equilibrate between the biofilm and the fresh solution. However, at this point, the solution concentration of PYO was no longer negligible, presenting the same problem as in V1 above.</p>
+<ul>
+<li><p><strong>Approach:</strong> We decided to transfer the biofilm to a fresh reactor after soaking, so that we would be measuring biofilm associated PYO. In the course of monitoring the PYO equilibrate out of the biofilm into the fresh media, we realized it might be possible to measure <span class="math inline">\(D_m\)</span>. We no longer knew the concentration of PYO at the electrode, so we then adopted the SWV vs. GC measurement. Typically, we waited for the PYO to equilibrate between the biofilm and the fresh solution.</p></li>
+<li><p><strong>Problem:</strong> At “equilibrium,” , the solution concentration of PYO was no longer negligible, presenting the same problem as in V1 above. This was seen by measuring the solution with a blank IDA after the biofilm IDA measurements.</p></li>
+<li><p><strong>Solution:</strong> Measure in the transfer reactor before equilbrium when we can be confident PYO is associated with the biofilm. Also, try to carry over less PYO into the transfer reactor and explicitly measure the background solution PYO with a blank IDA.</p></li>
+</ul>
 </div>
 <div id="v3-transfer-non-equilibrium-titration-i_gc-vs.-i_swv" class="section level4">
-<h4>V3: Transfer non-equilibrium titration <span class="math inline">\(I_{gc}\)</span> vs. <span class="math inline">\(I_{swv}\)</span></h4>
-<p>Currently, the approach is to measure while PYO is equilibrating with the solution. By measuring before equilibrium, we can be confident that we are measuring biofilm associated PYO, and not solution phase PYO.</p>
+<h4><a href="https://scott-saunders.github.io/labwork/IDA/01_03_19_Update/Dap_V3.html">V3: Transfer non-equilibrium titration <span class="math inline">\(I_{gc}\)</span> vs. <span class="math inline">\(I_{swv}\)</span></a></h4>
+<ul>
+<li><p><strong>Approach:</strong> Measure while PYO is equilibrating with the transfer solution, by taking a 1 segment GC scan (~3min) immediately followed by a ~2sec SWV scan. By measuring before equilibrium, we can be confident that we are measuring biofilm associated PYO, and not solution phase PYO. Also, because we can get multiple datapoints following soak in one PYO concentration, we can gather more datapoints in less time.</p></li>
+<li><p><strong>Potential problem:</strong> Multiple GC measurements during equilibration may effectively drive PYO out of the biofilm, disrupting the measurement of <span class="math inline">\(D_m\)</span>.</p></li>
+<li><p><strong>Potential solution:</strong> Make separate measurement of <span class="math inline">\(D_m\)</span> by monitoring a separate equilibration with only intermittent SWV (as in V2).</p></li>
+</ul>
 </div>
 </div>
 <div id="measuring-d_m" class="section level3">
