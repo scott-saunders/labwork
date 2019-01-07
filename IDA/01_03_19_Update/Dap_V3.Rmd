@@ -41,6 +41,10 @@ theme_set(theme_1())
 
 #source("../../tools/echem_processing_tools.R")
 ```
+Notebooks that use version 3 analysis: 
+
+* [$\Delta phz$ biofilm - non-equilibrium measurements](https://scott-saunders.github.io/labwork/IDA/12_10_18/Analysis/12_10_18_Analysis.html)
+
 
 # Approach
 
