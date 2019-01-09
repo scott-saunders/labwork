@@ -157,9 +157,104 @@ ggplot(gc_all_signal,aes(x=PHZaddedInt,y=signal,color=condition,shape=factor(seg
 ```{r}
 gc_swv_data <- left_join(gc_all_signal,swv_all_signal %>% filter(electrode=='i1'),by=c('condition','PHZadded','PHZaddedInt','molecule'),suffix=c('_from_gc','_from_swv'))
 
+write_csv(gc_swv_data,"../Processing/12_04_18_processed_gc_swv_equil.csv")
+
 ggplot(gc_swv_data,aes(x=signal_from_swv,y=signal_from_gc,color=condition))+
   geom_point()+
   geom_smooth(method='lm',se=T)+
   facet_wrap(~segment,scales='free')+
   ylim(0,1.2e-8)
+```
+
+```{r}
+data_path = '../Data/Blank_GC/'
+#divide swv into rep and subrep and then subtract 1 from rep to match with GC
+blank_gc_all_files <-  dir(path=data_path,pattern = "[GC]+.+[txt]$")
+
+file_paths <- paste(data_path,blank_gc_all_files,sep='')
+
+data_cols <-  c('E','i1','i2','t')
+
+filename_cols = c('blank','condition','PHZadded','molecule','transfer','pre_post','echem')
+
+skip_rows=21
+
+blank_gc_all_files_df <- data_frame(filename = blank_gc_all_files) %>% 
+  mutate(minutes = map(file_paths,~extract_minutes(.))) %>% 
+  mutate(file_contents = map(file_paths, ~ read_csv(.,col_names=data_cols, skip = skip_rows ))) 
+  
+blank_gc_all_data_df <- blank_gc_all_files_df %>% 
+  unnest(minutes) %>% 
+  unnest(file_contents)%>% 
+  separate(filename, filename_cols, sep='_') %>%
+  mutate(PHZaddedInt=as.integer(str_extract(PHZadded,"^[0-9]+"))) %>% 
+  gather(key=electrode,value=current,i1,i2)
+
+ggplot(blank_gc_all_data_df %>% filter(electrode=='i2'),aes(x=E,y=current,color=condition))+
+  geom_point()+
+  facet_wrap(~PHZadded,scales='free')+
+  scale_x_reverse()
+```
+
+```{r}
+blank_gc_all_data_df_i2 <- blank_gc_all_data_df %>% 
+  filter(electrode=='i2') %>% 
+  mutate(current=abs(current)) %>% 
+  mutate(segment=ifelse(t<200.33,1,2)) 
+
+
+blank_GC_combine <- bind_rows(gc_all_data_df_i2 %>% mutate(blank="biofilm"),blank_gc_all_data_df_i2 %>% filter(pre_post=='post')) %>% 
+  filter(PHZaddedInt>=100) 
+
+write_csv(blank_GC_combine,"./12_04_18_processed_blank_GC_scans.csv")
+
+unique_id_cols <- c('pre_post','segment','echem','molecule','PHZadded','condition','transfer','PHZaddedInt','electrode','minutes')
+blank_gc_all_signal <- echem_signal(blank_gc_all_data_df_i2,
+                               unique_id_cols,
+                               max_interval = c(-0.25,-0.5),
+                               min_interval =c(0,-0.3)) 
+
+
+
+ggplot(data=blank_gc_all_data_df_i2,aes(E,current,color=condition))+
+  geom_point(size=0.5)+
+  geom_point(data=blank_gc_all_signal ,aes(x=E_from_mins,y=min_current),color='red')+
+  geom_point(data=blank_gc_all_signal ,aes(x=E_from_maxs,y=max_current),color='green')+
+  facet_wrap(~PHZadded,scales='free')+
+  scale_x_reverse()+
+  ylim(0,1.5e-8)
+
+ggplot(blank_gc_all_signal,aes(x=PHZaddedInt,y=signal,color=condition,shape=factor(segment)))+
+  geom_point()+
+  xlim(0,NA)
+```
+
+```{r,eval=F}
+gc_bg <- left_join(blank_gc_all_signal %>% filter(pre_post=='post'),gc_all_signal,by=c('PHZadded','PHZaddedInt','segment','molecule','condition'),suffix=c('_from_blank','_from_biofilm'))
+
+ggplot(gc_bg,aes(x=PHZaddedInt,shape=condition))+
+  geom_point(aes(y=signal_from_biofilm),color='blue')+
+  geom_point(aes(y=signal_from_blank),color='red')+
+  facet_wrap(~condition,scales='free')
+
+gc_bg_sub <- gc_bg %>% 
+  group_by(condition,PHZadded,PHZaddedInt,segment,molecule) %>% 
+  mutate(bg_signal=signal_from_biofilm-signal_from_blank)
+
+ggplot(gc_bg_sub,aes(x=PHZaddedInt,bg_signal,color=condition,shape=factor(segment)))+
+  geom_point()+
+  geom_line()
+
+```
+
+```{r,eval=F}
+gc_bg_swv_data <- left_join(gc_bg_sub,swv_all_signal %>% filter(electrode=='i1'),by=c('condition','PHZadded','PHZaddedInt','molecule'),suffix=c('_from_gc','_from_swv'))
+
+write_csv(gc_bg_swv_data,"./12_04_18_processed_gc_swv_bgsub.csv")
+
+ggplot(gc_bg_swv_data,aes(x=signal,bg_signal,color=condition,shape=factor(segment)))+
+  geom_point()+
+  geom_line()
+
+
 ```

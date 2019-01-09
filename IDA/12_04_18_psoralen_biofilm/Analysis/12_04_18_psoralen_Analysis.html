@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Psoralen Biofilm Analysis</title>
+
+<script src="12_04_18_psoralen_Analysis_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="12_04_18_psoralen_Analysis_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="12_04_18_psoralen_Analysis_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="12_04_18_psoralen_Analysis_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="12_04_18_psoralen_Analysis_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="12_04_18_psoralen_Analysis_files/navigation-1.1/tabsets.js"></script>
+<script src="12_04_18_psoralen_Analysis_files/navigation-1.1/codefolding.js"></script>
+<link href="12_04_18_psoralen_Analysis_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="12_04_18_psoralen_Analysis_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Psoralen Biofilm Analysis</h1>
+<h4 class="date"><em>12_04_18</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#comparing-sloped_ap">Comparing slope/<span class="math inline">\(D_{ap}\)</span></a></li>
+<li><a href="#measuring-pyo_solution-with-a-blank-ida">Measuring <span class="math inline">\(PYO_{solution}\)</span> with a blank IDA</a><ul>
+<li><a href="#attempting-background-subtraction---probably-dangerous">Attempting background subtraction - <em>Probably Dangerous</em></a></li>
+</ul></li>
+<li><a href="#takeaway">Takeaway</a></li>
+</ul>
+</div>
+
+<p><strong>Note</strong> the YAML contains specifications for a github document and html. The best way to deal with this is to knit them separately from the knit menu. Otherwise the html has blurry plots and tends to delete the md cached plots unless you tell it to cache everything!</p>
+<pre class="r"><code>library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(knitr)
+
+#knitr::opts_knit$set(root.dir = &#39;/Users/scottsaunders/git/labwork/IDA/12_10_18&#39;)
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)
+
+theme_1 &lt;- function () { 
+    theme_classic() %+replace% 
+        theme(
+          axis.text = element_text( size=12),
+          axis.title=element_text(size=14),
+          strip.text = element_text(size = 14),
+          strip.background = element_rect(color=&#39;white&#39;),
+          legend.title=element_text(size=14),
+          legend.text=element_text(size=12),
+          legend.text.align=0,
+          panel.grid.major = element_line(color=&#39;grey&#39;,size=0.1)
+        )
+}
+theme_set(theme_1())
+
+source(&quot;../../tools/echem_processing_tools.R&quot;)</code></pre>
+<p>I finally tried the experiment that Jackie has been encouraging me to do for a while. The idea was to treat an IDA biofilm with psoralen (a DNA crosslinker) in an attempt to disrupt DNA CT. If PYO participates in DNA CT in the biofilm, we would expect that psoralen treatment affects the measured <span class="math inline">\(D_{ap}\)</span>.</p>
+<div id="comparing-sloped_ap" class="section level1">
+<h1>Comparing slope/<span class="math inline">\(D_{ap}\)</span></h1>
+<p>First let’s just look at the plot of swv signal vs. gc signal. The slope of these lines is proportional to <span class="math inline">\(D_{ap}\)</span> (<span class="math inline">\(m\sim \sqrt{D_{ap}}\)</span>).</p>
+<pre class="r"><code>gc_swv_equil &lt;- read_csv(&quot;../Processing/12_04_18_processed_gc_swv_equil.csv&quot;)
+
+ggplot(gc_swv_equil, aes(x = signal_from_swv, y = signal_from_gc, 
+    color = condition)) + geom_point() + geom_line() + facet_wrap(~segment, 
+    scales = &quot;free&quot;) + ylim(0, 1.2e-08)</code></pre>
+<p><img src="12_04_18_psoralen_Analysis_files/figure-html/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>This plot is showing how GC collector current scales with SWV current for 5 different concentrations of PYO soaks (25,50,75,100,200uM), and that data has been quantified for segments 1 and 2 of the GC scan. The GC data is being compared to i1 from the SWV.</p>
+<p>You can see that the control curves look pretty similar between the segments and look relatively linear. In contrast, the psoralen biofilms look a little different depending on which segment is quantified and it appears like the slope might be less than the control.</p>
+<p>Fitting linear models to this plot verifies our intuition, but remember it’s only fitting 5 datapoints…</p>
+<pre class="r"><code>ggplot(gc_swv_equil, aes(x = signal_from_swv, y = signal_from_gc, 
+    color = condition)) + geom_point() + geom_smooth(method = &quot;lm&quot;) + 
+    facet_wrap(~segment, scales = &quot;free&quot;) + ylim(0, 1.2e-08)</code></pre>
+<p><img src="12_04_18_psoralen_Analysis_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>So, the question is: “Is this difference in slope actually meaningful?”</p>
+<pre class="r"><code>equil_lm &lt;- gc_swv_equil %&gt;% group_by(condition, segment) %&gt;% 
+    do(tidy(lm(signal_from_gc ~ signal_from_swv, .)))
+
+knitr::kable(equil_lm %&gt;% filter(term == &quot;signal_from_swv&quot;))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">condition</th>
+<th align="right">segment</th>
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">control</td>
+<td align="right">1</td>
+<td align="left">signal_from_swv</td>
+<td align="right">0.2415593</td>
+<td align="right">0.0105240</td>
+<td align="right">22.953187</td>
+<td align="right">0.0001811</td>
+</tr>
+<tr class="even">
+<td align="left">control</td>
+<td align="right">2</td>
+<td align="left">signal_from_swv</td>
+<td align="right">0.2558664</td>
+<td align="right">0.0155098</td>
+<td align="right">16.497120</td>
+<td align="right">0.0004848</td>
+</tr>
+<tr class="odd">
+<td align="left">psoralen</td>
+<td align="right">1</td>
+<td align="left">signal_from_swv</td>
+<td align="right">0.1137052</td>
+<td align="right">0.0247621</td>
+<td align="right">4.591910</td>
+<td align="right">0.0194044</td>
+</tr>
+<tr class="even">
+<td align="left">psoralen</td>
+<td align="right">2</td>
+<td align="left">signal_from_swv</td>
+<td align="right">0.1335914</td>
+<td align="right">0.0340230</td>
+<td align="right">3.926509</td>
+<td align="right">0.0293980</td>
+</tr>
+</tbody>
+</table>
+<p>Based on this linear model the two slopes are actually different. So the experiment worked! Right?? Not necessarily.</p>
+</div>
+<div id="measuring-pyo_solution-with-a-blank-ida" class="section level1">
+<h1>Measuring <span class="math inline">\(PYO_{solution}\)</span> with a blank IDA</h1>
+<p>I decided to explicitly measure the background signal in the solution on a blank electrode. I expected that there would be very little signal…but I was wrong. Here’s a plot of GCs from the biofilms compared to the respective blank scans.</p>
+<pre class="r"><code>blank_GC_scans &lt;- read_csv(&quot;../Processing//12_04_18_processed_blank_GC_scans.csv&quot;)
+
+ggplot(blank_GC_scans %&gt;% filter(E &lt; 0), aes(x = E, y = current, 
+    color = blank)) + geom_point() + facet_wrap(PHZadded ~ condition, 
+    scales = &quot;free&quot;) + scale_x_reverse()</code></pre>
+<p><img src="12_04_18_psoralen_Analysis_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /> Therefore, the solution phase PYO is likely significant enough to affect the measured biofilm “equilibrium” current.</p>
+<p>One option could be to background subtract the biofilm GC curve from the blank. However this assumes <span class="math display">\[I_{gc} = I_{biofilm}+I_{solution}\]</span></p>
+<p>This may be a reasonable assumption, but we know during the biofilm soak step, that it seems like biofilm coated electrodes actually show less signal than bare electrodes. Remember that <span class="math inline">\(I_{gc}\)</span> depends on concentration, but also on <span class="math inline">\(D_{ap}\)</span>. So even if the biofilm does sequester a high concentration of PYO near the electrode, if it is diffusing slowly it will not contribute in the same way as the solution PYO.</p>
+<p><strong>Therefore, it seems dangerous to background subtract and draw conclusions from that data</strong>, but just for fun let’s do exactly that.</p>
+<div id="attempting-background-subtraction---probably-dangerous" class="section level2">
+<h2>Attempting background subtraction - <em>Probably Dangerous</em></h2>
+<p>From quantifying the curves in the above plot, we can now plot the background subtracted GC signal vs. added soak [PYO]. Ideally we would use the background subtract the SWV signal, but the signal isn’t that easy to work with, and isn’t worth it right now. Also unfortunately, we only have background signals from the blank electrode for two datapoints from each condition…so we’re just going to connect two points with a line.</p>
+<pre class="r"><code>gc_bgsub_swv &lt;- read_csv(&quot;../Processing/12_04_18_processed_gc_swv_bgsub.csv&quot;)
+
+ggplot(gc_bgsub_swv, aes(x = PHZaddedInt, bg_signal, color = condition, 
+    shape = factor(segment))) + geom_point() + geom_line()</code></pre>
+<p><img src="12_04_18_psoralen_Analysis_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Obviously, this is pretty sparse data, but it does show that the control biofilm shows a positive slope with increasing PYO for segments 1 and 2, while the psoralen treated biofilm shows zero or negative slope. If this were an accurate reflection of the biofilm GC signal, it would suggest that the control has a measureable <span class="math inline">\(D_{ap}\)</span>, while the psoralen treated biofilm doesn’t really have a slope at all and therefore <span class="math inline">\(D_{ap}\)</span> is significantly reduced.</p>
+</div>
+</div>
+<div id="takeaway" class="section level1">
+<h1>Takeaway</h1>
+<p>This is definitely thought provoking, but <strong>it will require further experiments to make any legitimate point.</strong></p>
+<p>Thankfully, due to my paranoia about this experiment, I did the 12_10_18 experiment. This experiment seemed to indicate that we can actually take GC measurements during the 1 hour equilibration to get measurements at multiple concentrations. Taking the same approach with psoralen biofilms will make it easier to get quality data.</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
