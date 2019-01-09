@@ -1,0 +1,42 @@
+---
+title: "Psoralen treatment - Non equilibrium #1"
+fontsize: 12pt
+date: "01_08_19 "
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
+---
+
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+theme_1 <- function () { 
+    theme_classic() %+replace% 
+        theme(
+          axis.text = element_text( size=12),
+          axis.title=element_text(size=14),
+          strip.text = element_text(size = 14),
+          strip.background = element_rect(color='white'),
+          legend.title=element_text(size=14),
+          legend.text=element_text(size=12),
+          legend.text.align=0,
+          panel.grid.major = element_line(color='grey',size=0.1)
+        )
+}
+theme_set(theme_1())
+
+source("../../tools/echem_processing_tools.R")
+```
+
