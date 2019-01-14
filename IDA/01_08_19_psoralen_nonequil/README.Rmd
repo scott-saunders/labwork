@@ -4,13 +4,20 @@ subtitle: "Overview"
 fontsize: 12pt
 date: "01_08_19 "
 output:
+  github_document:
+    pandoc_args: --webtex
   html_document:
     self_contained: false
     toc: true
     code_folding: hide
-  github_document:
-    pandoc_args: --webtex
 ---
+
+Notebooks: 
+
+* [$D_{ap}$ Processing](https://scott-saunders.github.io/labwork/IDA/01_08_19_psoralen_nonequil/Processing/01_08_19_psoralen_nonequil_processing.html) 
+* [$D_{ap}$ Analysis](https://scott-saunders.github.io/labwork/IDA/01_08_19_psoralen_nonequil/Processing/01_08_19_psoralen_nonequil_Dap_analysis.html) 
+* [$D_m$ Processing](https://scott-saunders.github.io/labwork/IDA/01_08_19_psoralen_nonequil/Processing/01_08_19_psoralen_nonequil_Dm_processing.html) 
+* [$D_m$ Analysis](https://scott-saunders.github.io/labwork/IDA/01_08_19_psoralen_nonequil/Processing/01_08_19_psoralen_nonequil_Dm_analysis.html) 
 
 ## Purpose
 

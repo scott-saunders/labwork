@@ -39,12 +39,12 @@ theme_1 <- function () {
 }
 theme_set(theme_1())
 
-source("../tools/echem_processing_tools.R")
+source("../../tools/echem_processing_tools.R")
 ```
 
 
 ```{r}
-data_path = './Data/SWV/'
+data_path = '../Data/SWV/'
 #divide swv into rep and subrep and then subtract 1 from rep to match with GC
 swv_all_files <-  dir(path=data_path,pattern = "[SWV]+.+[txt]$")
 
@@ -74,6 +74,10 @@ ggplot(swv_all_data_df %>% filter(electrode=='i1'),aes(x=E,y=current,color=rep))
   facet_wrap(~PHZadded,scales='free')+
   scale_x_reverse()
 
+ggplot(swv_all_data_df %>% filter( PHZaddedInt==75),aes(x=E,y=current,color=rep))+
+  geom_point()+
+  facet_wrap(~electrode,scales='free')+
+  scale_x_reverse()
 ```
 
 Data looks pretty good except for that one line for 50uM
@@ -128,7 +132,7 @@ ggplot(swv_all_signal_time %>% filter(rep>0),aes(x=norm_time,y=signal))+
 ```
 
 ```{r gc import}
-data_path = './Data/GC/'
+data_path = '../Data/GC/'
 #divide swv into rep and subrep and then subtract 1 from rep to match with GC
 gc_all_files <-  dir(path=data_path,pattern = "[GC]+.+[txt]$")
 
@@ -169,6 +173,8 @@ ggplot(gc_all_data_df_i2,aes(x=E,y=current,color=rep))+
   geom_point()+
   facet_wrap(~PHZadded,scales='free')+
   scale_x_reverse()
+
+write_csv(gc_all_data_df_i2,"12_10_18_reactor_A_processed_GC_i2_curves.csv")
 ```
 
 ```{r gc processing}

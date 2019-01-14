@@ -2,6 +2,19 @@ Psoralen treatment - Non equilibrium \#1
 ================
 01\_08\_19
 
+Notebooks:
+
+  - [![D\_{ap}](https://latex.codecogs.com/png.latex?D_%7Bap%7D
+    "D_{ap}")
+    Processing](https://scott-saunders.github.io/labwork/IDA/01_08_19_psoralen_nonequil/Processing/01_08_19_psoralen_nonequil_processing.html)
+  - [![D\_{ap}](https://latex.codecogs.com/png.latex?D_%7Bap%7D
+    "D_{ap}")
+    Analysis](https://scott-saunders.github.io/labwork/IDA/01_08_19_psoralen_nonequil/Processing/01_08_19_psoralen_nonequil_Dap_analysis.html)
+  - [![D\_m](https://latex.codecogs.com/png.latex?D_m "D_m")
+    Processing](https://scott-saunders.github.io/labwork/IDA/01_08_19_psoralen_nonequil/Processing/01_08_19_psoralen_nonequil_Dm_processing.html)
+  - [![D\_m](https://latex.codecogs.com/png.latex?D_m "D_m")
+    Analysis](https://scott-saunders.github.io/labwork/IDA/01_08_19_psoralen_nonequil/Processing/01_08_19_psoralen_nonequil_Dm_analysis.html)
+
 ## Purpose
 
 As discussed previously, the purpose of Psoralen treating the biofilms
@@ -101,3 +114,18 @@ The last two were the attempts to measure
 the “transfer” measurements there are the corresponding “soak”
 measurements taken before each transfer (numbered in the same way).
 Hopefully the rest of the file naming is obvious.
+
+### Imaging
+
+The control biofilm did seem to be less biomass than the psoralen
+treated one. I do not know why, I hope that it did not dissolve when put
+in the fresh medium during the psoralen treatment…it was likely aerobic
+and not stressful. That said, I think it looked like there was less
+biomass on it from the beginning. Also, the last time I treated with
+psoralen in the same why and the biofilms looked similar during imaging.
+
+Unfortunately, when I went to image the biofilms, I couldn’t get the
+confocal (HHMI 880) to work, although I could locate my samples using
+the epifluorescence module. I tried to get it to work for 40 min, but
+there was nothing but noise, I have no idea why, but it means that I
+don’t have images for these samples.
