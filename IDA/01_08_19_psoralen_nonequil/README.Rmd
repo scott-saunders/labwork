@@ -4,12 +4,12 @@ subtitle: "Overview"
 fontsize: 12pt
 date: "01_08_19 "
 output:
-  github_document:
-    pandoc_args: --webtex
   html_document:
     self_contained: false
     toc: true
     code_folding: hide
+  github_document:
+    pandoc_args: --webtex
 ---
 
 ## Purpose
@@ -40,3 +40,9 @@ Note that I had two potentiostats running. There were three chambers total, 1 so
 ## Data
 
 In total 5 transfers were performed for each biofilm. The first 3 were data acquisitions to try to measure $D_{ap}$ with the paired GC/SWV measurements taken as the biofilm equilibrated. The last two were the attempts to measure $D_m$. In addition to the "transfer" measurements there are the corresponding "soak" measurements taken before each transfer (numbered in the same way). Hopefully the rest of the file naming is obvious.
+
+### Imaging
+
+The control biofilm did seem to be less biomass than the psoralen treated one. I do not know why, I hope that it did not dissolve when put in the fresh medium during the psoralen treatment...it was likely aerobic and not stressful. That said, I think it looked like there was less biomass on it from the beginning. Also, the last time I treated with psoralen in the same why and the biofilms looked similar during imaging.
+
+Unfortunately, when I went to image the biofilms, I couldn't get the confocal (HHMI 880) to work, although I could locate my samples using the epifluorescence module. I tried to get it to work for 40 min, but there was nothing but noise, I have no idea why, but it means that I don't have images for these samples. 

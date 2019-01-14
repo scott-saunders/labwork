@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Psoralen treatment - Non equilibrium #1</title>
+
+<script src="01_08_19_psoralen_nonequil_processing_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="01_08_19_psoralen_nonequil_processing_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="01_08_19_psoralen_nonequil_processing_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="01_08_19_psoralen_nonequil_processing_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="01_08_19_psoralen_nonequil_processing_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="01_08_19_psoralen_nonequil_processing_files/navigation-1.1/tabsets.js"></script>
+<script src="01_08_19_psoralen_nonequil_processing_files/navigation-1.1/codefolding.js"></script>
+<link href="01_08_19_psoralen_nonequil_processing_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="01_08_19_psoralen_nonequil_processing_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Psoralen treatment - Non equilibrium #1</h1>
+<h3 class="subtitle"><em>Processing</em></h3>
+<h4 class="date"><em>01_08_19</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#import">Import</a></li>
+<li><a href="#quantification">Quantification</a></li>
+<li><a href="#join-swv-and-gc">Join SWV and GC</a></li>
+</ul>
+</div>
+
+<pre class="r"><code>library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)
+
+source(&quot;../../tools/echem_processing_tools.R&quot;)
+source(&quot;../../tools/plotting_tools.R&quot;)
+
+theme_set(theme_1())</code></pre>
+<div id="import" class="section level2">
+<h2>Import</h2>
+<p>First let’s import the control <span class="math inline">\(D_{ap}\)</span> data. SWV data first.</p>
+<pre class="r"><code>control_data_path = &#39;../Data/Control_Dap/&#39;
+#divide swv into rep and subrep and then subtract 1 from rep to match with GC
+SWV_control_filenames &lt;-  dir(path=control_data_path,pattern = &quot;[SWV]+.+[txt]$&quot;)
+
+SWV_control_file_paths &lt;- paste(control_data_path,SWV_control_filenames,sep=&#39;&#39;)
+
+swv_data_cols &lt;-  c(&#39;E&#39;,&#39;i1&#39;,&#39;i2&#39;)
+
+filename_cols = c(&#39;PHZadded&#39;,&#39;treatment&#39;,&#39;reactor&#39;,&#39;run&#39;,&#39;echem&#39;,&#39;rep&#39;)
+
+swv_skip_rows=18
+  
+
+swv_control_data &lt;- echem_import_to_df(filenames = SWV_control_filenames, 
+                                       file_paths = SWV_control_file_paths, 
+                                       data_cols = swv_data_cols, 
+                                       skip_rows = swv_skip_rows,
+                                       filename_cols = filename_cols,
+                                       rep = T)
+
+ggplot(swv_control_data, aes(x=E, y=current,color=rep))+geom_path()+
+  facet_wrap(electrode~run)+
+  scale_color_viridis()</code></pre>
+<p><img src="01_08_19_psoralen_nonequil_processing_files/figure-html/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Ok, we knew that the i2 of the SWVs looked weird, but other than that, nothing seems obviously wrong. Next time try only scanning i1 to see if that changes anything?</p>
+<p>Now Let’s import the control GC data.</p>
+<pre class="r"><code>control_data_path = &#39;../Data/Control_Dap/&#39;
+#divide swv into rep and subrep and then subtract 1 from rep to match with GC
+gc_control_filenames &lt;-  dir(path=control_data_path,pattern = &quot;[GC]+.+[txt]$&quot;)
+
+gc_control_file_paths &lt;- paste(control_data_path,gc_control_filenames,sep=&#39;&#39;)
+
+gc_data_cols &lt;-  c(&#39;E&#39;,&#39;i1&#39;,&#39;i2&#39;,&#39;t&#39;)
+
+filename_cols = c(&#39;PHZadded&#39;,&#39;treatment&#39;,&#39;reactor&#39;,&#39;run&#39;,&#39;echem&#39;,&#39;rep&#39;)
+
+gc_skip_rows=21
+  
+
+gc_control_data &lt;- echem_import_to_df(filenames = gc_control_filenames, 
+                                       file_paths = gc_control_file_paths, 
+                                       data_cols = gc_data_cols, 
+                                       skip_rows = gc_skip_rows,
+                                       filename_cols = filename_cols,
+                                       rep = T)
+
+ggplot(gc_control_data, aes(x=E, y=current,color=rep,shape=electrode))+geom_point()+
+  facet_wrap(reactor~run,scales=&#39;free&#39;)+
+  scale_color_viridis()+
+  scale_x_reverse()</code></pre>
+<p><img src="01_08_19_psoralen_nonequil_processing_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Ok, the GC’s look reasonable as expected.</p>
+<p>Let’s now repeat for the psoralen treated biofilm. SWVs:</p>
+<pre class="r"><code>psoralen_data_path = &#39;../Data/Psoralen_Dap/&#39;
+#divide swv into rep and subrep and then subtract 1 from rep to match with GC
+SWV_psoralen_filenames &lt;-  dir(path=psoralen_data_path,pattern = &quot;[SWV]+.+[txt]$&quot;)
+
+SWV_psoralen_file_paths &lt;- paste(psoralen_data_path,SWV_psoralen_filenames,sep=&#39;&#39;)
+
+swv_data_cols &lt;-  c(&#39;E&#39;,&#39;i1&#39;,&#39;i2&#39;)
+
+filename_cols = c(&#39;PHZadded&#39;,&#39;treatment&#39;,&#39;reactor&#39;,&#39;run&#39;,&#39;echem&#39;,&#39;rep&#39;)
+
+swv_skip_rows=18
+  
+
+swv_psoralen_data &lt;- echem_import_to_df(filenames = SWV_psoralen_filenames, 
+                                       file_paths = SWV_psoralen_file_paths, 
+                                       data_cols = swv_data_cols, 
+                                       skip_rows = swv_skip_rows,
+                                       filename_cols = filename_cols,
+                                       rep = T)
+
+ggplot(swv_psoralen_data, aes(x=E, y=current,color=rep))+geom_path()+
+  facet_wrap(electrode~run)+
+  scale_color_viridis()</code></pre>
+<p><img src="01_08_19_psoralen_nonequil_processing_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>and GCs:</p>
+<pre class="r"><code>psoralen_data_path = &#39;../Data/Psoralen_Dap/&#39;
+#divide swv into rep and subrep and then subtract 1 from rep to match with GC
+gc_psoralen_filenames &lt;-  dir(path=psoralen_data_path,pattern = &quot;[GC]+.+[txt]$&quot;)
+
+gc_psoralen_file_paths &lt;- paste(psoralen_data_path,gc_psoralen_filenames,sep=&#39;&#39;)
+
+gc_data_cols &lt;-  c(&#39;E&#39;,&#39;i1&#39;,&#39;i2&#39;,&#39;t&#39;)
+
+filename_cols = c(&#39;PHZadded&#39;,&#39;treatment&#39;,&#39;reactor&#39;,&#39;run&#39;,&#39;echem&#39;,&#39;rep&#39;)
+
+gc_skip_rows=21
+  
+
+gc_psoralen_data &lt;- echem_import_to_df(filenames = gc_psoralen_filenames, 
+                                       file_paths = gc_psoralen_file_paths, 
+                                       data_cols = gc_data_cols, 
+                                       skip_rows = gc_skip_rows,
+                                       filename_cols = filename_cols,
+                                       rep = T)
+
+ggplot(gc_psoralen_data, aes(x=E, y=current,color=rep,shape=electrode))+geom_point()+
+  facet_wrap(reactor~run,scales=&#39;free&#39;)+
+  scale_color_viridis()+
+  scale_x_reverse()</code></pre>
+<p><img src="01_08_19_psoralen_nonequil_processing_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="quantification" class="section level2">
+<h2>Quantification</h2>
+<p>Great! Now that we have all the data imported, let’s combine the SWVs and GCs and quantify them.</p>
+<pre class="r"><code>#combine dfs
+
+swv_all_data &lt;- rbind(swv_control_data,swv_psoralen_data) %&gt;% 
+  mutate(rep=rep-1)
+
+
+#quantify
+
+unique_id_cols = c(&#39;PHZadded&#39;,&#39;treatment&#39;,&#39;reactor&#39;,&#39;run&#39;,&#39;echem&#39;,&#39;rep&#39;,&#39;minutes&#39;,&#39;PHZaddedInt&#39;,&#39;electrode&#39;)
+
+swv_signals &lt;- echem_signal(df = swv_all_data, 
+                            unique_id_cols = unique_id_cols,
+                            max_interval = c(0.0,-0.4), 
+                            min_interval = c(0.0,-0.4)) </code></pre>
+<pre class="r"><code>ggplot(swv_all_data %&gt;% filter(reactor==&#39;transfer&#39; &amp; treatment==&#39;control&#39;), aes(x=E,y=current,group=run,color=rep))+geom_point(size=0.2)+
+  geom_point(data=swv_signals %&gt;% filter(reactor==&#39;transfer&#39; &amp; treatment==&#39;control&#39;), aes(x=E_from_maxs,y=current_from_maxs),color=&#39;red&#39;) +
+  geom_point(data=swv_signals %&gt;% filter(reactor==&#39;transfer&#39; &amp; treatment==&#39;control&#39;), aes(x=E_from_mins,y=current_from_mins),color=&#39;blue&#39;)+
+  facet_wrap(run~electrode,scales=&#39;free&#39;)+
+  scale_x_reverse()</code></pre>
+<p><img src="01_08_19_psoralen_nonequil_processing_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(swv_all_data %&gt;% filter(reactor==&#39;transfer&#39; &amp; treatment==&#39;psoralen&#39;), aes(x=E,y=current,group=run,color=rep))+geom_point(size=0.2)+
+  geom_point(data=swv_signals %&gt;% filter(reactor==&#39;transfer&#39; &amp; treatment==&#39;psoralen&#39;), aes(x=E_from_maxs,y=current_from_maxs),color=&#39;red&#39;) +
+  geom_point(data=swv_signals %&gt;% filter(reactor==&#39;transfer&#39; &amp; treatment==&#39;psoralen&#39;), aes(x=E_from_mins,y=current_from_mins),color=&#39;blue&#39;)+
+  facet_wrap(run~electrode,scales=&#39;free&#39;)+
+  scale_x_reverse()</code></pre>
+<p><img src="01_08_19_psoralen_nonequil_processing_files/figure-html/unnamed-chunk-6-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(swv_signals %&gt;% filter(reactor==&#39;transfer&#39;), aes(x=rep,y=signal,color=run))+geom_point()+
+  geom_line()+
+  facet_wrap(treatment~electrode,scales=&#39;free&#39;)</code></pre>
+<p><img src="01_08_19_psoralen_nonequil_processing_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Now for GCs</p>
+<pre class="r"><code>gc_all_data &lt;- rbind(gc_control_data,gc_psoralen_data)
+
+gc_i2_data &lt;- gc_all_data %&gt;% 
+  filter(electrode==&#39;i2&#39;) %&gt;% 
+  mutate(current=-current)
+
+gc_signals &lt;- echem_signal(df = gc_i2_data, unique_id_cols = unique_id_cols, max_interval = c(-0.39,-0.41), min_interval = c(-0.1,-0.4))</code></pre>
+<pre class="r"><code>ggplot(gc_i2_data %&gt;% filter(reactor==&#39;transfer&#39; &amp; treatment==&#39;control&#39;), aes(x=E,y=current,group=run,color=rep))+geom_point(size=0.2)+
+  geom_point(data=gc_signals %&gt;% filter(reactor==&#39;transfer&#39; &amp; treatment==&#39;control&#39;), aes(x=E_from_maxs,y=current_from_maxs),color=&#39;red&#39;) +
+  geom_point(data=gc_signals %&gt;% filter(reactor==&#39;transfer&#39; &amp; treatment==&#39;control&#39;), aes(x=E_from_mins,y=current_from_mins),color=&#39;blue&#39;)+
+  facet_wrap(run~electrode,scales=&#39;free&#39;)+
+  scale_x_reverse()</code></pre>
+<p><img src="01_08_19_psoralen_nonequil_processing_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(gc_i2_data %&gt;% filter(reactor==&#39;transfer&#39; &amp; treatment==&#39;psoralen&#39;), aes(x=E,y=current,group=run,color=rep))+geom_point(size=0.2)+
+  geom_point(data=gc_signals %&gt;% filter(reactor==&#39;transfer&#39; &amp; treatment==&#39;psoralen&#39;), aes(x=E_from_maxs,y=current_from_maxs),color=&#39;red&#39;) +
+  geom_point(data=gc_signals %&gt;% filter(reactor==&#39;transfer&#39; &amp; treatment==&#39;psoralen&#39;), aes(x=E_from_mins,y=current_from_mins),color=&#39;blue&#39;)+
+  facet_wrap(run~electrode,scales=&#39;free&#39;)+
+  scale_x_reverse()</code></pre>
+<p><img src="01_08_19_psoralen_nonequil_processing_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Quantification looks okay right now, although you can see that the max data point on the GC’s should ideally just be the last datapoint, but I’m not going to worry about it right now.</p>
+</div>
+<div id="join-swv-and-gc" class="section level2">
+<h2>Join SWV and GC</h2>
+<pre class="r"><code>swv_gc_signals &lt;- left_join(swv_signals, gc_signals, 
+                            by=c(&#39;PHZadded&#39;,&quot;PHZaddedInt&quot;,&quot;treatment&quot;,&quot;reactor&quot;,&quot;run&quot;,&quot;rep&quot;), 
+                            suffix=c(&quot;_from_swv&quot;,&quot;_from_gc&quot;))
+
+ggplot(swv_gc_signals %&gt;% filter(electrode_from_swv==&#39;i1&#39;), aes(x=signal_from_swv, y=signal_from_gc,color=treatment,shape=reactor))+geom_point()+
+  geom_smooth(method=&#39;lm&#39;)+
+  facet_grid(run~., scales=&#39;free&#39;)+xlim(0,2e-06)</code></pre>
+<p><img src="01_08_19_psoralen_nonequil_processing_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(swv_gc_signals %&gt;% filter(electrode_from_swv==&#39;i2&#39;), aes(x=signal_from_swv, y=signal_from_gc,color=treatment))+geom_point()+
+  geom_smooth(method=&#39;lm&#39;)+
+  facet_grid(run~., scales=&#39;free&#39;)+xlim(0,NA)</code></pre>
+<p><img src="01_08_19_psoralen_nonequil_processing_files/figure-html/unnamed-chunk-11-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>swv_gc_lms &lt;- swv_gc_signals %&gt;% 
+  filter(reactor==&#39;transfer&#39; &amp; rep&gt;0) %&gt;%
+  group_by(run,treatment,electrode_from_swv) %&gt;% 
+  do(tidy(lm(signal_from_gc~signal_from_swv,.)))
+
+swv_gc_lms %&gt;% filter(electrode_from_swv==&#39;i1&#39; &amp; term ==&#39;signal_from_swv&#39;) %&gt;% 
+  ggplot(.,aes(x=treatment,y=estimate,color=run))+geom_jitter()+
+  geom_hline(yintercept = 0.18)+
+  ylim(0,NA)</code></pre>
+<p><img src="01_08_19_psoralen_nonequil_processing_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>swv_gc_lms %&gt;% filter(electrode_from_swv==&#39;i2&#39; &amp; term ==&#39;signal_from_swv&#39;) %&gt;% 
+  ggplot(.,aes(x=treatment,y=estimate,color=run))+geom_jitter()+
+  geom_hline(yintercept = 0.18)+
+  ylim(0,NA)</code></pre>
+<p><img src="01_08_19_psoralen_nonequil_processing_files/figure-html/unnamed-chunk-12-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
