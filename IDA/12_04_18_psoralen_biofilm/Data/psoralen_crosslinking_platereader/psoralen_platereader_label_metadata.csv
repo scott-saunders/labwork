@@ -1,0 +1,23 @@
+label,molecule,DNA,light_time
+8MOP  0,8mop,minus,0
+8MOP 1,8mop,minus,1
+8MOP 5,8mop,minus,5
+8MOP 15,8mop,minus,15
+8MOP 30,8mop,minus,30
+8MOP + DNA 0,8mop,plus,0
+8MOP + DNA 1,8mop,plus,1
+8MOP + DNA 5,8mop,plus,5
+8MOP + DNA 15,8mop,plus,15
+8MOP + DNA 30,8mop,plus,30
+TMP  0,tmp,minus,0
+TMP  1,tmp,minus,1
+TMP 5,tmp,minus,5
+TMP 15,tmp,minus,15
+TMP 30,tmp,minus,30
+TMP 60,tmp,minus,60
+TMP + DNA 0,tmp,plus,0
+TMP + DNA 1,tmp,plus,1
+TMP + DNA 5,tmp,plus,5
+TMP + DNA 15,tmp,plus,15
+TMP + DNA 30,tmp,plus,30
+TMP + DNA 60,tmp,plus,60
