@@ -1,0 +1,45 @@
+---
+title: "Psoralen Crosslinking In Vitro"
+subtitle: "Plate Reader Data"
+fontsize: 12pt
+date: "11_29_18 "
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
+---
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+source("../../tools/echem_processing_tools.R")
+source("../../tools/plotting_tools.R")
+
+theme_set(theme_1())
+```
+
+```{r}
+
+df <- read_csv("../Data/psoralen_crosslinking_platereader/10uM_TMP_8MOP_DNA_UVA_Timecourse.csv", skip = 13) %>% 
+  gather(key=label,value = intensity, -Wavelength)
+
+labels <- read_csv(("../Data/psoralen_crosslinking_platereader/psoralen_platereader_label_metadata.csv"))
+
+pr_data <- left_join(df,labels,by='label')
+```
+
+```{r}
+ggplot(pr_data,aes(x=Wavelength,y=intensity,color=light_time,shape=DNA))+geom_point()+geom_path()+
+  facet_wrap(~molecule)
+```

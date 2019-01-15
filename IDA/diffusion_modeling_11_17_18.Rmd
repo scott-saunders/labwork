@@ -1,0 +1,277 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+c_x_t <- function(x,t){
+  m_0=1
+  A=0.05
+  D=10^-5
+  
+  return( (m_0/(A*sqrt(4*pi*D*t)))*exp(-(x^2)/(4*D*t)) )
+}
+
+cmax_t <- function(t){
+  m_0=10
+  A=1
+  D=10^-5
+  return(2*m_0/(A*sqrt(4*pi*D*t)))
+}
+```
+
+
+```{r}
+grid <- expand.grid(
+  x = seq(-0.1,0.1,length=101),
+  t = seq(0, 100, length = 101)
+  )
+
+grid_data <- grid %>% 
+  mutate(c=c_x_t(x,t))
+
+ggplot(grid_data,aes(x*10000,c,color=t))+geom_path(aes(group=t))+scale_color_viridis()
+
+ggplot(grid_data %>% filter(x==0),aes(t,c,color=t))+geom_point()+scale_color_viridis()
+```
+
+```{r}
+c_x_t_noFlux <- function(x,t){
+  m_0=10
+  A=1
+  D=10^-5
+  
+  return( (m_0/(A*sqrt(4*pi*D*t)))*(exp(-(x^2)/(4*D*t))+exp(-((x)^2)/(4*D*t)) )  )
+}
+
+grid_data2 <- grid %>% 
+  mutate(c=c_x_t_noFlux(x,t))
+
+ggplot(grid_data2,aes(x*10000,c,color=t))+geom_path(aes(group=t))+scale_color_viridis()
+
+ggplot(grid_data2 %>% filter(x==0),aes(t,c,color=t))+geom_point()+scale_color_viridis()
+```
+
+```{r}
+ggplot(grid_data %>% filter(x==0),aes(t,c,color=t))+geom_point()+
+  geom_point(data=grid_data2 %>% filter(x==0),aes(t,c,color=t))+
+  scale_color_viridis()
+
+```
+
+```{r}
+max_data <- tibble(t = seq(0, 100, length = 101)) %>% 
+  mutate(c=cmax_t(t))
+
+ggplot(grid_data %>% filter(x==0),aes(t,c,color=t))+geom_point()+
+  geom_point(data=grid_data2 %>% filter(x==0),aes(t,c,color=t))+
+  geom_point(data=max_data,aes(t,c),color='black',shape=21)+
+  scale_color_viridis()
+```
+
+```{r}
+c_x_t_abs <- function(x,t){
+  m_0=10
+  A=1
+  D=10^-5
+  L=0.01
+  return( (m_0/(A*sqrt(4*pi*D*t)))*(exp(-(x^2)/(4*D*t))-exp(-((x+2*L)^2)/(4*D*t)) )  )
+}
+
+grid_data3 <- grid %>% 
+  mutate(c=c_x_t_abs(x,t))
+
+ggplot(grid_data3,aes(x*10000,c,color=t))+geom_path(aes(group=t))+scale_color_viridis()
+```
+
+```{r}
+c_x_t_noFluxabs <- function(x,t){
+  m_0=10
+  A=1
+  D=10^-5
+  L=0.01
+  return( (m_0/(A*sqrt(4*pi*D*t)))*(exp(-(x^2)/(4*D*t))-exp(-((x+2*L)^2)/(4*D*t))+exp(-((x)^2)/(4*D*t)))  )
+}
+
+grid_data4 <- grid %>% 
+  mutate(c=c_x_t_noFluxabs(x,t))
+
+ggplot(grid_data3,aes(x*10000,c,color=t))+geom_path(aes(group=t))+scale_color_viridis()
+
+ggplot(grid_data %>% filter(x==0),aes(t,c,color=t))+geom_point()+
+  geom_point(data=grid_data2 %>% filter(x==0),aes(t,c,color=t))+
+  geom_point(data=grid_data4 %>% filter(x==0),aes(t,c),color='black',shape=21)+
+  scale_color_viridis()
+```
+
+```{r}
+c_x_t_finite <- function(x,t){
+  m_0=10
+  A=1
+  D=10^-5
+  L=0.1
+  return( (m_0/(A*sqrt(4*pi*D*t)))*(exp(-(x^2)/(4*D*t))+exp(-((x+2*L)^2)/(4*D*t))+exp(-((x)^2)/(4*D*t)))  )
+}
+
+grid_data_finite <- grid %>% 
+  mutate(c=c_x_t_finite(x,t))
+
+ggplot(grid_data_finite %>% filter(x==0),aes(t,c,color=t))+geom_point()+
+  geom_point(data=grid_data4 %>% filter(x==0),aes(t,c),color='black',shape=21)+
+  scale_color_viridis()+
+  ylim(0,NA)
+```
+
+
+```{r}
+c_x_t_noFlux <- function(x,t,D=10^-5){
+  m_0=1
+  A=1
+  D=D
+  
+  return( (m_0/(A*sqrt(4*pi*D*t)))*(exp(-(x^2)/(4*D*t))+exp(-((x)^2)/(4*D*t)) )  )
+}
+
+cmax_t <- function(t,D=10^-5){
+  m_0=1
+  A=1
+  D=D
+  return(2*m_0/(A*sqrt(4*pi*D*t)))
+}
+
+multi_D <- grid %>% 
+  mutate(cfast=c_x_t_noFlux(x,t,D=10^-6)) %>% 
+  mutate(cslow=c_x_t_noFlux(x,t,D=10^-7))
+
+ggplot(multi_D %>% filter(x==0),aes(x=t,color=t))+
+  geom_point(aes(y=cfast),color='red')+
+  geom_point(aes(y=cslow),color='blue')
+
+ggplot(multi_D %>% filter(x==0),aes(x=t^-0.5,color=t))+
+  geom_point(aes(y=cfast),color='red')+
+  geom_point(aes(y=cslow),color='blue')+
+  geom_smooth(aes(y=cfast),method='lm',se=F,color='red',linetype=2)+
+  geom_smooth(aes(y=cslow),method='lm',se=F,color='blue',linetype=2)
+
+multi_D_norm <- multi_D %>% 
+  filter(x==0 & t>0) %>% 
+  mutate(max_fast=max(cfast)) %>% 
+  mutate(max_slow=max(cslow)) %>% 
+  mutate(fast_norm=cfast/max_fast) %>% 
+  mutate(slow_norm=cslow/max_slow)
+
+ggplot(multi_D_norm %>% filter(x==0),aes(x=t^-0.5,color=t))+
+  geom_point(aes(y=fast_norm),color='red',size=3)+
+  geom_point(aes(y=slow_norm),color='blue')
+```
+
+```{r}
+cmax_t <- function(t,m0=1,D=10^-5){
+  m0=m0
+  A=1
+  D=D
+  return(2*m_0/(A*sqrt(4*pi*D*t)))
+}
+
+multi_D <- grid %>% 
+  filter(x==0) %>% 
+  filter(t>0) %>% 
+  mutate(cfast=cmax_t(t,m0=1,D=10^-6)) %>% 
+  mutate(cfast_high=cmax_t(t,m0=10,D=10^-6)) %>% 
+  mutate(cslow=cmax_t(t,m0=1,D=10^-7)) %>% 
+  mutate(max_fast=max(cfast)) %>% 
+  mutate(max_slow=max(cslow)) %>% 
+  mutate(max_fast_high=max(cfast_high)) %>% 
+  mutate(fast_norm=cfast/max_fast) %>% 
+  mutate(slow_norm=cslow/max_slow) %>% 
+  mutate(fast_high_norm=cfast_high/max_fast_high)
+
+multi_D_lm <- multi_D %>% 
+  mutate(tHalf=t^-0.5)
+
+ggplot(multi_D,aes(x=t))+
+  geom_point(aes(y=cfast),color='red',size=3)+
+  geom_point(aes(y=cfast_high),color='green')+
+  geom_point(aes(y=cslow),color='blue')
+
+ggplot(multi_D_lm,aes(x=tHalf))+
+  geom_point(aes(y=cfast),color='red',size=3)+
+  geom_point(aes(y=cfast_high),color='green')+
+  geom_point(aes(y=cslow),color='blue')
+
+ggplot(multi_D,aes(x=t))+
+  geom_point(aes(y=fast_norm),color='red',size=3)+
+  geom_point(aes(y=fast_high_norm),color='green')+
+  geom_point(aes(y=slow_norm),color='blue',size=0.5)
+
+lm_fast <- lm(cfast~tHalf,data=multi_D_lm)
+summary(lm_fast)
+
+D=1/(pi*coef(lm_fast)[2]^2)
+D
+
+
+
+cmax_t(D=10^-6)
+
+lm_fast <- lm(slow_norm~tHalf,data=multi_D_lm)
+summary(lm_fast)
+```
+
+```{r}
+generate_Iswv <- function(t,I0,D_ap,D_m,t_s){
+  Iswv <- I0*(sqrt(D_ap*t_s)/sqrt(4*D_m*t))
+  Iswv
+}
+
+calc_D_m <- function(df,t=t,i1_noise=i1_noise,D_ap,t_s,i_0=NA){
+  if(is.na(i_0)){
+    i_0 = min(df$i1_noise)
+  }
+  fit = nls(i1_noise~m*t^-0.5+b,data=df,start=c(m=0.1,b=0))
+  m=coef(fit)[1]
+  D_m=(i_0^2 * D_ap * t_s) / (4*m^2)
+  c(D_m,i_0,coef(fit)[2])
+}
+
+#generate_Iswv(1,I0=1,1e-5,1e-9,0.1)
+
+gen_Iswv <- grid %>% 
+  filter(x==0) %>% 
+  filter(t>0) %>% 
+  mutate(i1=generate_Iswv(t,I0=10,D_ap=1e-5,D_m=1e-9,t_s=0.1)) %>% 
+  mutate(i1_noise = rnorm(length(gen_Iswv$t),mean=i1,sd=0.1))
+
+ggplot(gen_Iswv,aes(x=t,y=i1))+geom_point()+
+  geom_hline(yintercept = 10)
+
+ggplot(gen_Iswv,aes(x=t,y=i1_noise))+geom_point()       
+       
+fit <- nls(i1_noise~b+(m*t^-0.5),data = gen_Iswv,start=c(m=0.1,b=0))
+coef(fit)
+
+
+D_m_2 = calc_D_m(df=gen_Iswv,t=t,i1_noise=i1_noise,D_ap=1e-5,t_s=0.1)
+D_m_2 = calc_D_m(df=gen_Iswv,t=t,i1_noise=i1_noise,D_ap=1e-5,t_s=0.1,i_0 = 1)
+
+gen_Iswv_2 <- grid %>% 
+  filter(x==0) %>% 
+  filter(t>0) %>% 
+  mutate(i1=generate_Iswv(t,I0=D_m_2[2],D_ap=1e-5,D_m=D_m_2[1],t_s=0.1)) %>% 
+  mutate(i1_noise = rnorm(length(gen_Iswv$t),mean=i1,sd=0.1))
+
+ggplot(gen_Iswv,aes(x=t,y=i1_noise))+geom_point()+
+  geom_point(data=gen_Iswv_2,color='red')+geom_hline(yintercept = 10)+
+  geom_smooth(method='nls',formula=y~b*(x)^-0.5+a,method.args=list(start=c(b=0.1,a=0)),se=F,fullrange=T)
+
+  #i_0=max(gen_Iswv)
+#fit=nls(i1_noise~m*t^-0.5+b,data=gen_Iswv,start=c(m=0.1,b=0))
+#m=coef(fit)[1]
+#D_m=(i_0^2 * D_ap * t_s) / (4*m^2)
+#  D_m
+
+```

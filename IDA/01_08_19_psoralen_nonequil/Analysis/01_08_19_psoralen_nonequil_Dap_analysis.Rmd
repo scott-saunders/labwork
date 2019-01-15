@@ -1,6 +1,6 @@
 ---
 title: "Psoralen treatment - Non equilibrium #1"
-subtitle: "$D_{ap}$ Processing"
+subtitle: "$D_{ap}$ Analysis"
 fontsize: 12pt
 date: "01_08_19 "
 output:
@@ -29,3 +29,22 @@ source("../../tools/plotting_tools.R")
 
 theme_set(theme_1())
 ```
+
+
+add updated data quantified from end of GC
+```{r}
+swv_gc_signals <- read_csv("../Processing/01_08_19_processed_swv_gc_signals.csv")
+
+  
+swv_gc_signals %>% 
+  filter(reactor=='transfer' & rep>=1) %>% 
+  filter(electrode_from_swv=='i1') %>% 
+  ggplot(., aes(x=signal_from_swv, y=signal_from_gc,color=rep,shape=factor(run)))+
+  geom_point()+geom_line()+
+  facet_wrap(~treatment,scales='free')+
+  scale_color_viridis()
+```
+
+Why might this plot be curved?
+
+Could it be that the higher values are skewed by the way we sampled? It's possible, since smaller SWV values for the same GC value would raise the slope. It would be interesting to see how long the gaps are between the GC and SWV scans and compare that to how fast the concentrations seem to be decaying.
