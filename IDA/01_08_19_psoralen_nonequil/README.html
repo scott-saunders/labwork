@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Psoralen treatment - Non equilibrium #1</title>
+
+<script src="README_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="README_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="README_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="README_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="README_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="README_files/navigation-1.1/tabsets.js"></script>
+<script src="README_files/navigation-1.1/codefolding.js"></script>
+<link href="README_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="README_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Psoralen treatment - Non equilibrium #1</h1>
+<h3 class="subtitle"><em>Overview</em></h3>
+<h4 class="date"><em>01_08_19</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#purpose">Purpose</a></li>
+<li><a href="#protocol">Protocol</a></li>
+<li><a href="#data">Data</a><ul>
+<li><a href="#imaging">Imaging</a></li>
+</ul></li>
+</ul>
+</div>
+
+<p>Notebooks:</p>
+<ul>
+<li><a href="https://scott-saunders.github.io/labwork/IDA/01_08_19_psoralen_nonequil/Processing/01_08_19_psoralen_nonequil_processing.html"><span class="math inline">\(D_{ap}\)</span> Processing</a></li>
+<li><a href="https://scott-saunders.github.io/labwork/IDA/01_08_19_psoralen_nonequil/Processing/01_08_19_psoralen_nonequil_Dap_analysis.html"><span class="math inline">\(D_{ap}\)</span> Analysis</a></li>
+<li><a href="https://scott-saunders.github.io/labwork/IDA/01_08_19_psoralen_nonequil/Processing/01_08_19_psoralen_nonequil_Dm_processing.html"><span class="math inline">\(D_m\)</span> Processing</a></li>
+<li><a href="https://scott-saunders.github.io/labwork/IDA/01_08_19_psoralen_nonequil/Processing/01_08_19_psoralen_nonequil_Dm_analysis.html"><span class="math inline">\(D_m\)</span> Analysis</a></li>
+</ul>
+<div id="purpose" class="section level2">
+<h2>Purpose</h2>
+<p>As discussed previously, the purpose of Psoralen treating the biofilms is to look for an effect of DNA CT in the biofilm. Psoralens form mono and diadduct crosslinks within dsDNA when exposed to UVA light, and those crosslinks should disrupt the pi orbitals of the crosslinked bases, which should inhibit DNA charge transfer. Recently, I confirmed that trioxsalen (a psoralen derivative), does seem to react with DNA with 365nm light (monitored by fluorescence shift (monoadduct) and then decay (diadduct)).</p>
+<p>I have previously tried one other psoralen experiment using the “equilibrium” protocol. However, during that experiment, I discovered that there was significant solution/background PYO in the transfer reactor, that was likely confounding our GC/SWV signals. I came up with a modified protocol to try to probe biofilm associated PYO specifically, and I first attempted this on 12_10_18. This is the second version of what I call the “non-equilibrium” protocol that makes measurements while the biofilm is equilibrating with the transfer solution (therefore we can be confident that the measured PYO is biofilm associated).</p>
+<p>Therefore, the primary purpose of this experiment was to try to measure <span class="math inline">\(D_{ap}\)</span> for biofilms treated with and without trioxsalen. A secondary purpose is to try to measure <span class="math inline">\(D_m\)</span> using a slightly modified analysis too.</p>
+</div>
+<div id="protocol" class="section level2">
+<h2>Protocol</h2>
+<ol style="list-style-type: decimal">
+<li>Biofilms were grown in reactors with minimal succinate medium for 4 days, at ~30 degrees C, as usual.</li>
+<li>Before any echem, one biofilm was submerged in a 10uM trioxsalen solution in a petri dish (from 2mM EtOH stock) and exposed to 365nm light from a handheld lamp placed directly above it. The other biofilm was submerged in MM succ with an ethanol control.</li>
+<li>After an hour of treatment, the biofilms were moved to 125mL erlenmyer flasks for intermediate storage, since only one biofilm could soak at one time.</li>
+<li>I then used a non-equilibrium type protocol, similar to the one first attempted on 12_10_18.</li>
+<li>To measure <span class="math inline">\(D_{ap}\)</span> I performed the following echem:</li>
+</ol>
+<ul>
+<li>Soak only working electrode part of IDA (100mL liquid in reactor) in 75uM PYO in MM succ medium for at least 10 min. Take SWV fast scan in soak reactor. During soak, make sure that transfer reactor has 180mL fresh MM succ medium and that it is stirring with N2 bubbling to make anaerobic and equilibrate temperature.</li>
+<li>Hook up counter and reference in transfer reactor. Remove the biofilm from the soak reactor, dip once in a MM succ wash, and then transfer to other reactor. Connect working electrodes and check open circuit potential (OCP). Take first SWV fast scan. Try to time the seconds between immersing the biofilm in the transfer reactor and starting the first scan.</li>
+<li>Run a 1 segment GC (e.g. +0.2 to -0.5 V only ~3min), and then immediately run an SWV fast to pair the data. Repeat for ~30min when the signals start to level off. In the first transfer 3 min GCs were used, so 10 scans were taken. In the second and third transfer, 2 min GCs (0.0 to -0.4 V) were used, so 15 scans were taken.</li>
+</ul>
+<ol start="6" style="list-style-type: decimal">
+<li>To measure <span class="math inline">\(D_{m}\)</span> I performed the following echem:</li>
+</ol>
+<ul>
+<li>The first step was the exact same as the first bullet point for <span class="math inline">\(D_{ap}\)</span>.</li>
+<li>Prepare a SWV fast repetitive run in the software (56 sec gap, repeat 60 times).</li>
+<li>Hook up counter and reference in transfer reactor. Remove the biofilm from the soak reactor, dip once in a MM succ wash, and then transfer to other reactor. Connect working electrodes and check open circuit potential (OCP). Start the repetitive run. Try to time the seconds between immersing the biofilm in the transfer reactor and starting the first scan.</li>
+</ul>
+<p>Note that I had two potentiostats running. There were three chambers total, 1 soak and 2 transfers, so only one biofilm could soak at one time, but two transfers could be monitored simultaneously. I kept the biofilms staggered, first control, then psoralen, but I made sure that much of the transfer time overlapped to try to make it efficient.</p>
+</div>
+<div id="data" class="section level2">
+<h2>Data</h2>
+<p>In total 5 transfers were performed for each biofilm. The first 3 were data acquisitions to try to measure <span class="math inline">\(D_{ap}\)</span> with the paired GC/SWV measurements taken as the biofilm equilibrated. The last two were the attempts to measure <span class="math inline">\(D_m\)</span>. In addition to the “transfer” measurements there are the corresponding “soak” measurements taken before each transfer (numbered in the same way). Hopefully the rest of the file naming is obvious.</p>
+<div id="imaging" class="section level3">
+<h3>Imaging</h3>
+<p>The control biofilm did seem to be less biomass than the psoralen treated one. I do not know why, I hope that it did not dissolve when put in the fresh medium during the psoralen treatment…it was likely aerobic and not stressful. That said, I think it looked like there was less biomass on it from the beginning. Also, the last time I treated with psoralen in the same why and the biofilms looked similar during imaging.</p>
+<p>Unfortunately, when I went to image the biofilms, I couldn’t get the confocal (HHMI 880) to work, although I could locate my samples using the epifluorescence module. I tried to get it to work for 40 min, but there was nothing but noise, I have no idea why, but it means that I don’t have images for these samples.</p>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

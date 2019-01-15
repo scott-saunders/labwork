@@ -4,12 +4,12 @@ subtitle: "Overview"
 fontsize: 12pt
 date: "01_08_19 "
 output:
-  github_document:
-    pandoc_args: --webtex
   html_document:
     self_contained: false
     toc: true
     code_folding: hide
+  github_document:
+    pandoc_args: --webtex
 ---
 
 Notebooks: 
