@@ -4,16 +4,26 @@ Psoralen treatment - Non equilibrium \#1
 
 Notebooks:
 
-  - [![D\_{ap}](https://latex.codecogs.com/png.latex?D_%7Bap%7D
-    "D_{ap}")
-    Processing](https://scott-saunders.github.io/labwork/IDA/01_08_19_psoralen_nonequil/Processing/01_08_19_psoralen_nonequil_processing.html)
-  - [![D\_{ap}](https://latex.codecogs.com/png.latex?D_%7Bap%7D
-    "D_{ap}")
-    Analysis](https://scott-saunders.github.io/labwork/IDA/01_08_19_psoralen_nonequil/Processing/01_08_19_psoralen_nonequil_Dap_analysis.html)
-  - [![D\_m](https://latex.codecogs.com/png.latex?D_m "D_m")
-    Processing](https://scott-saunders.github.io/labwork/IDA/01_08_19_psoralen_nonequil/Processing/01_08_19_psoralen_nonequil_Dm_processing.html)
-  - [![D\_m](https://latex.codecogs.com/png.latex?D_m "D_m")
-    Analysis](https://scott-saunders.github.io/labwork/IDA/01_08_19_psoralen_nonequil/Processing/01_08_19_psoralen_nonequil_Dm_analysis.html)
+``` r
+library(htmltools)
+
+base_path="https://scott-saunders.github.io/labwork/IDA/01_08_19_psoralen_nonequil/"
+
+files <- dir(path=".", pattern = "*\\.html$",include.dirs = T,recursive = T)
+
+for(link in files){
+  print(
+    tags$a(href = paste(base_path, link, sep=''), link)
+    )
+  writeLines("")
+}
+```
+
+<a href="https://scott-saunders.github.io/labwork/IDA/01_08_19_psoralen_nonequil/Analysis/01_08_19_psoralen_nonequil_Dap_analysis.html">Analysis/01\_08\_19\_psoralen\_nonequil\_Dap\_analysis.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/IDA/01_08_19_psoralen_nonequil/Processing/01_08_19_psoralen_nonequil_processing.html">Processing/01\_08\_19\_psoralen\_nonequil\_processing.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/IDA/01_08_19_psoralen_nonequil/README.html">README.html</a>
 
 ## Purpose
 

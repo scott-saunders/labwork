@@ -14,10 +14,20 @@ output:
 
 Notebooks: 
 
-* [$D_{ap}$ Processing](https://scott-saunders.github.io/labwork/IDA/01_08_19_psoralen_nonequil/Processing/01_08_19_psoralen_nonequil_processing.html) 
-* [$D_{ap}$ Analysis](https://scott-saunders.github.io/labwork/IDA/01_08_19_psoralen_nonequil/Processing/01_08_19_psoralen_nonequil_Dap_analysis.html) 
-* [$D_m$ Processing](https://scott-saunders.github.io/labwork/IDA/01_08_19_psoralen_nonequil/Processing/01_08_19_psoralen_nonequil_Dm_processing.html) 
-* [$D_m$ Analysis](https://scott-saunders.github.io/labwork/IDA/01_08_19_psoralen_nonequil/Processing/01_08_19_psoralen_nonequil_Dm_analysis.html) 
+```{r, results='asis'}
+library(htmltools)
+
+base_path="https://scott-saunders.github.io/labwork/IDA/01_08_19_psoralen_nonequil/"
+
+files <- dir(path=".", pattern = "*\\.html$",include.dirs = T,recursive = T)
+
+for(link in files){
+  print(
+    tags$a(href = paste(base_path, link, sep=''), link)
+    )
+  writeLines("")
+}
+```
 
 ## Purpose
 
