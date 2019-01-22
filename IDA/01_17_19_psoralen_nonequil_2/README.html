@@ -217,12 +217,20 @@ $(document).ready(function () {
 </div>
 
 <p>Notebooks:</p>
-<ul>
-<li><a href=""><span class="math inline">\(D_{ap}\)</span> Processing</a></li>
-<li><a href=""><span class="math inline">\(D_{ap}\)</span> Analysis</a></li>
-<li><a href=""><span class="math inline">\(D_m\)</span> Processing</a></li>
-<li><a href=""><span class="math inline">\(D_m\)</span> Analysis</a></li>
-</ul>
+<pre class="r"><code>library(htmltools)
+
+base_path=&quot;https://scott-saunders.github.io/labwork/IDA/01_17_19_psoralen_nonequil_2/&quot;
+
+files &lt;- dir(path=&quot;.&quot;, pattern = &quot;*\\.html$&quot;,include.dirs = T,recursive = T)
+
+for(link in files){
+  print(
+    tags$a(href = paste(base_path, link, sep=&#39;&#39;), link)
+    )
+  writeLines(&quot;&quot;)
+}</code></pre>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/01_17_19_psoralen_nonequil_2/Analysis/01_17_19_psoralen_nonequil_2_Dap_analysis.html">Analysis/01_17_19_psoralen_nonequil_2_Dap_analysis.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/01_17_19_psoralen_nonequil_2/Processing/01_17_19_psoralen_nonequil_2_Dap_processing.html">Processing/01_17_19_psoralen_nonequil_2_Dap_processing.html</a></p>
 <div id="purpose" class="section level2">
 <h2>Purpose</h2>
 <p>This is the second replicate of the psoralen experiment using the non-equilibrium measurements. As discussed previously, the purpose is to test the effect of DNA CT in the biofilm echem signal, since psoralen + 365nm light introduces interstand crosslinks into DNA. The first replicate seemed to work ok, although the control sample showed some weird behavior that may have been caused by an uncharacteristically thin biofilm. I made no major changes, the purpose of this experiment was to repeat in the hopes that it would clarify the first replicate data as well.</p>
@@ -261,7 +269,7 @@ $(document).ready(function () {
 <div id="imaging" class="section level3">
 <h3>Imaging</h3>
 <p>Immediately following the final data acquisition, the IDA/biofilms were sliced off the epoxy holder and mounted on slides with 2uM TOTO-1 and 10uM Syto60 to stain for eDNA/all DNA. There was clearly biomass on both electrodes, although this time the control biofilm actually had much more biomass coming off the electrode surface. It is unclear if this difference in biomass was due to psoralen treatment or not.</p>
-<p>The folder should be 01_17_19_psoralen-2 and the filenames are:</p>
+<p>Tilescan/zstacks were taken of the entire IDA working surface at 10x. The folder should be 01_17_19_psoralen-2 and the filenames are:</p>
 <ul>
 <li>control_biofilm_dPHZstar_10x_tile_zstack_syto60_toto1.czi</li>
 <li>psoralen_biofilm_dPHZstar_10x_tile_zstack_syto60_toto1.czi</li>

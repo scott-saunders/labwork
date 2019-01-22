@@ -21,6 +21,8 @@ base_path="https://scott-saunders.github.io/labwork/IDA/01_08_19_psoralen_nonequ
 
 files <- dir(path=".", pattern = "*\\.html$",include.dirs = T,recursive = T)
 
+#directories <- list.dirs(path=".",recursive = F)
+
 for(link in files){
   print(
     tags$a(href = paste(base_path, link, sep=''), link)

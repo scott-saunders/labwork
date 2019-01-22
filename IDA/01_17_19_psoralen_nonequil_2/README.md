@@ -1,0 +1,137 @@
+Psoralen treatment - Non equilibrium \#2
+================
+01\_17\_19
+
+Notebooks:
+
+``` r
+library(htmltools)
+
+base_path="https://scott-saunders.github.io/labwork/IDA/01_17_19_psoralen_nonequil_2/"
+
+files <- dir(path=".", pattern = "*\\.html$",include.dirs = T,recursive = T)
+
+for(link in files){
+  print(
+    tags$a(href = paste(base_path, link, sep=''), link)
+    )
+  writeLines("")
+}
+```
+
+<a href="https://scott-saunders.github.io/labwork/IDA/01_17_19_psoralen_nonequil_2/Analysis/01_17_19_psoralen_nonequil_2_Dap_analysis.html">Analysis/01\_17\_19\_psoralen\_nonequil\_2\_Dap\_analysis.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/IDA/01_17_19_psoralen_nonequil_2/Processing/01_17_19_psoralen_nonequil_2_Dap_processing.html">Processing/01\_17\_19\_psoralen\_nonequil\_2\_Dap\_processing.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/IDA/01_17_19_psoralen_nonequil_2/README.html">README.html</a>
+
+## Purpose
+
+This is the second replicate of the psoralen experiment using the
+non-equilibrium measurements. As discussed previously, the purpose is to
+test the effect of DNA CT in the biofilm echem signal, since psoralen +
+365nm light introduces interstand crosslinks into DNA. The first
+replicate seemed to work ok, although the control sample showed some
+weird behavior that may have been caused by an uncharacteristically thin
+biofilm. I made no major changes, the purpose of this experiment was to
+repeat in the hopes that it would clarify the first replicate data as
+well.
+
+## Protocol
+
+Essentially the same protocol was used as 1/08/19:
+
+1.  Biofilms were grown in reactors with minimal succinate medium for 4
+    days, at ~30 degrees C, as usual.
+2.  Before any echem, one biofilm was submerged in a 10uM trioxsalen
+    solution in a petri dish (from 2mM EtOH stock) and exposed to 365nm
+    light from a handheld lamp placed directly above it. The other
+    biofilm was submerged in MM succ with an ethanol control.
+3.  After an hour of treatment, the biofilms were briefly left in the
+    petri dishes, but the UVA light was turned off.
+4.  I then used a non-equilibrium type protocol, similar to the one
+    first attempted on 12\_10\_18.
+5.  To measure
+    ![D\_{ap}](https://latex.codecogs.com/png.latex?D_%7Bap%7D "D_{ap}")
+    I performed the following echem:
+
+<!-- end list -->
+
+  - Soak only working electrode part of IDA (100mL liquid in reactor) in
+    75uM PYO in MM succ medium for at least 10 min. Take SWV fast scan
+    in soak reactor. During soak, make sure that transfer reactor has
+    180mL fresh MM succ medium and that it is stirring with N2 bubbling
+    to make anaerobic and equilibrate temperature.
+  - Hook up counter and reference in transfer reactor. Remove the
+    biofilm from the soak reactor, dip once in a MM succ wash, and then
+    transfer to other reactor. Connect working electrodes and check open
+    circuit potential (OCP). Take first SWV fast scan. Try to time the
+    seconds between immersing the biofilm in the transfer reactor and
+    starting the first scan.
+  - Run a 1 segment GC ( +0.2 to -0.4 V only ~2min), and then
+    immediately run an SWV fast\* to pair the data. Repeat for ~30min
+    when the signals start to level off.  
+
+<!-- end list -->
+
+6.  To measure ![D\_{m}](https://latex.codecogs.com/png.latex?D_%7Bm%7D
+    "D_{m}") I performed the following echem:
+
+<!-- end list -->
+
+  - The first step was the exact same as the first bullet point for
+    ![D\_{ap}](https://latex.codecogs.com/png.latex?D_%7Bap%7D
+    "D_{ap}").
+  - Prepare a SWV fast repetitive run in the software (56 sec gap,
+    repeat 60 times).
+  - Hook up counter and reference in transfer reactor. Remove the
+    biofilm from the soak reactor, dip once in a MM succ wash, and then
+    transfer to other reactor. Connect working electrodes and check open
+    circuit potential (OCP). Start the repetitive run. Try to time the
+    seconds between immersing the biofilm in the transfer reactor and
+    starting the first scan.
+
+\*SWV slow was run several times for the psoralen biofilms because of
+high background current.
+
+Note that I had two potentiostats running. There were three chambers
+total, 1 soak and 2 transfers, so only one biofilm could soak at one
+time, but two transfers could be monitored simultaneously. I kept the
+biofilms staggered, first control, then psoralen, but I made sure that
+much of the transfer time overlapped to try to make it efficient.
+
+## Data
+
+In total 5 transfers were performed for each biofilm. **For the control
+biofilm** the first 3 were data acquisitions to try to measure
+![D\_{ap}](https://latex.codecogs.com/png.latex?D_%7Bap%7D "D_{ap}")
+with the paired GC/SWV measurements taken as the biofilm equilibrated.
+The last two were the attempts to measure
+![D\_m](https://latex.codecogs.com/png.latex?D_m "D_m"). **For the
+psoralen biofilm** the first 3 transfers were taken using the SWV fast
+settings as with the control and the 1/8/19 experiment, however, there
+was a high background current that looked like it would be difficult to
+quantify. Therefore, for the final two transfers I repeated the
+![D\_{ap}](https://latex.codecogs.com/png.latex?D_%7Bap%7D "D_{ap}")
+estimate, but I used a short SWV slow (~20sec), which made the PYO peak
+more easily identifiable. This changed scan rate will change the slope
+of the titration and should be corrected accordingly in the analysis.
+
+In addition to the “transfer” measurements there are the corresponding
+“soak” measurements taken before each transfer (numbered in the same
+way). Hopefully the rest of the file naming is obvious.
+
+### Imaging
+
+Immediately following the final data acquisition, the IDA/biofilms were
+sliced off the epoxy holder and mounted on slides with 2uM TOTO-1 and
+10uM Syto60 to stain for eDNA/all DNA. There was clearly biomass on both
+electrodes, although this time the control biofilm actually had much
+more biomass coming off the electrode surface. It is unclear if this
+difference in biomass was due to psoralen treatment or not.
+
+Tilescan/zstacks were taken of the entire IDA working surface at 10x.
+The folder should be 01\_17\_19\_psoralen-2 and the filenames are:
+
+  - control\_biofilm\_dPHZstar\_10x\_tile\_zstack\_syto60\_toto1.czi
+  - psoralen\_biofilm\_dPHZstar\_10x\_tile\_zstack\_syto60\_toto1.czi
