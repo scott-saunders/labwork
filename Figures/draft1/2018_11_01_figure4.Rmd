@@ -1,19 +1,102 @@
 ---
-title: "R Notebook"
-output: html_notebook
+title: "Figure 4 - PHZ eDNA Paper"
+fontsize: 12pt
+date: "11_05_18"
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+**Note** the YAML contains specifications for a github document and html. The best way to deal with this is to knit them separately from the knit menu. Otherwise the html has blurry plots and tends to delete the md cached plots unless you tell it to cache everything!
 
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
 
-```{r}
-plot(cars)
+knitr::opts_knit$set(root.dir = '/Users/scottsaunders/git/labwork/Figures/draft1/')
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+theme_1 <- function () { 
+    theme_classic() %+replace% 
+        theme(
+          axis.text = element_text( size=12),
+          axis.title=element_text(size=14),
+          strip.text = element_text(size = 14),
+          strip.background = element_rect(color='white'),
+          legend.title=element_text(size=14),
+          legend.text=element_text(size=12),
+          panel.grid.major = element_line(color='grey',size=0.1)
+        )
+}
+
+theme_set(theme_1())
 ```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
 
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+The SWV decay and Dap estimation figure is stored in DapEstimation notebook and the dPHZ vs. blank IDA notebook. Need to work on adapt everything for reproducing here. 
 
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+```{r estimated Dap}
 
+df_dap <- tibble(material=c('blank','biofilm','blank','biofilm'),
+       Dap=c(1e-5,1e-6,2.8e-6,1.8e-8),
+       Dcat=c('electron','electron','PYO','PYO'))
+ggplot(df_dap,aes(x=Dcat,y=Dap,color=Dcat))+
+  geom_point()+facet_wrap(~material,scales='free')+
+  scale_y_log10(limits=c(1e-9,1e-5))+
+  guides(color=F)
+```
+
+
+```{r DNACT no O2}
+df_noO2 <- read_csv('../data/DNA_modified_electrode_noO2.csv',comment = "#") %>% 
+  mutate(Construct=fct_relevel(Construct,'wm','mm'))
+
+dnaCT_noO2 <- ggplot(df_noO2,aes(x=E,y=Current,color=Construct))+
+  geom_path(size=1.5,lineend = 'round')+
+  scale_x_reverse()+
+  scale_color_viridis_d(breaks = c('wm','mm'), labels=c("Well matched DNA","Mismatched DNA")) +
+  labs(x='E (V vs. Ag/AgCl)',y='Current (Amps)')+
+  theme(legend.position = c(0.3, 0.8),
+        legend.title = element_blank(),
+        legend.background = element_rect(fill=NA))
+
+dnaCT_noO2
+```
+
+```{r DNACT w O2}
+df_wO2 <- read_csv('../data/DNA_modified_electrode_wO2.csv',comment = "#") %>% 
+  mutate(Condition=paste(Construct,Aerobic,PCN,sep='_')) %>% 
+  mutate(Condition=fct_relevel(Condition,"wm_TRUE_TRUE","mm_TRUE_TRUE","wm_TRUE_FALSE"))
+
+
+dnaCT_wO2 <- ggplot(df_wO2 %>% filter(Aerobic==T),aes(x=E,y=Current,color=Condition))+
+  geom_path(size=1.5,lineend = 'round')+
+  scale_x_reverse()+
+  scale_color_viridis_d(
+    breaks = c('wm_TRUE_TRUE','mm_TRUE_TRUE','wm_TRUE_FALSE'), 
+    labels=c(expression("wmDNA"+"PCN"+O[2]),expression("mmDNA"+"PCN"+O[2]),expression("wmDNA"-"PCN"+O[2]))
+    ) +
+  labs(x='E (V vs. Ag/AgCl)',y='Current (Amps)')+
+  theme(
+    legend.position = c(0.3, 0.8),
+    legend.title = element_blank(),
+    legend.background = element_rect(fill=NA))
+
+dnaCT_wO2
+```
+
+```{r}
+dnaCT <- plot_grid(dnaCT_noO2,dnaCT_wO2,ncol=2,labels=c("E","F"),align='hv',axis='tblr',scale=0.9)
+
+dnaCT
+
+ggsave('fig4ef_dnaCT.pdf',dnaCT,height = 4 , width = 10)
+
+```

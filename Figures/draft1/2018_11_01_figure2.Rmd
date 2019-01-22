@@ -50,7 +50,7 @@ pel_panel <- df_pel %>%
     geom_jitter(width=0.1,height=0,shape=21,size=2)+
     facet_wrap(~measured_phenazine,scales='free',ncol=1,strip.position = 'right')+ylim(0,NA)+
     scale_x_discrete(breaks = c('dPel','WTpar'), labels=c(expression(Delta*"pel"),"WT")) +
-    labs(x='Strain',y=expression("Biofilm calculated concentration ("~mu*"M)" ))+
+    labs(x='Strain',y=expression("Biofilm concentration ("~mu*"M)" ))+
     guides(fill=F)
 pel_panel
 ```
@@ -65,7 +65,7 @@ dnase_panel <- df_dnase %>%
     geom_jitter(width=0.1,height=0,shape=21,size=2)+
     facet_wrap(Phenazine~.,scales='free',ncol=1,strip.position = 'right')+ylim(0,NA)+
     scale_x_discrete(breaks = c('DNase','none'), labels=c("+","-")) +
-    labs(x='DNase treatment',y=expression("Biofilm calculated concentration ("~mu*"M)" ))+
+    labs(x='DNase treatment',y=expression("Biofilm concentration ("~mu*"M)" ))+
     guides(fill=F)
 
 dnase_panel

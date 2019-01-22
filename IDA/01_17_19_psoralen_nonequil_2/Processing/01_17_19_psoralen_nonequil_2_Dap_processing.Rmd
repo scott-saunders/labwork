@@ -66,6 +66,7 @@ ggplot(swv_data %>% filter(electrode=='i1' & reactor=='transfer'), aes(x=E, y=cu
   scale_color_viridis()
 ```
 Ok, this is the data I expected.  
+
 * First, the panel on the far right incorrectly labeled "SWV" is actually the background scan with 0uM PYO, but I'm not going to worry about that now. 
 * Next, we can see that there's a big difference between the first 3 psoralen runs and the last 2 (4 & 5). For some reason SWV fast produced signals with very high background, starting at the beginning of the experiment. It might still be possible to background subtract them and make use of them, but they look bad...they don't change very much over the time course. 
 * After the first 3 attempts, I switched to a modified SWV slow for the final 2 psoralen runs, and the high background signal went away.
@@ -78,6 +79,7 @@ ggplot(swv_data %>% filter(electrode=='i2' & reactor=='transfer'), aes(x=E, y=cu
   scale_color_viridis()
 ```
 This is also the data I expected, although I admit it is not ideal: 
+
 * Runs 4 and 5 from the control and psoralen look acceptable, there are clear peaks that diminish. 
 * Unfortunately for runs 1-3 the peaks do not decay, but instead shift and stay relatively constant. Previously, I interpreted this to mean that there is some buildup/reaction that occurs at the collector electrode during GC. Performing the SWV scan immediately after the reductive GC sweep reveals this unexpected product. It is unclear if this is PYO that has built up and for some reason has a shifted peak, or some other side reaction. I do not know how to deal with this, other than hope that it does not affect the reasonable signal measured at electrode 1...
 
@@ -124,7 +126,8 @@ ggplot(gc_data %>% filter(reactor=='transfer'), aes(x=E, y=current,color=rep,gro
   scale_x_reverse() + 
   scale_color_viridis(discrete = F)
 ```
-Ok, this dataset looks pretty much as expected. 
+Ok, this dataset looks pretty much as expected.
+
 * The psoralen generators (top i1 lines) look a  little funky, as we have seen in the past... 
 * The first rep from each run goes down around -0.4V instead of leveling off, as we expect during the initial period of diminishing PYO concentrations. However, later on (in the control particularly) the GCs seem very symmetrical and do level off (ideal behavior).
 
@@ -169,6 +172,7 @@ ggplot(swv_control_data %>% filter(electrode=='i1'),
   scale_color_viridis()
 ```
 The quantification looks pretty clean overall: 
+
 * There are 2 datapoints in run 5 that appear to have max points not in the main redox peak, but let's ignore those for now. 
 * Interestingly, notice the differences between the soak scan and the first transfer scan (top circle/triangle). In all cases, the scans are pretty close in magnitude. For runs 1 and 4 the transfer peaks are actually slightly higher than the soak...
 

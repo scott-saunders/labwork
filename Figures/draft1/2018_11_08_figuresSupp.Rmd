@@ -1,0 +1,204 @@
+---
+title: "Figure Supplemental - PHZ eDNA Paper"
+fontsize: 12pt
+date: "11_08_18"
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
+---
+
+**Note** the YAML contains specifications for a github document and html. The best way to deal with this is to knit them separately from the knit menu. Otherwise the html has blurry plots and tends to delete the md cached plots unless you tell it to cache everything!
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+
+knitr::opts_knit$set(root.dir = '/Users/scottsaunders/git/labwork/Figures/draft1/')
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+theme_1 <- function () { 
+    theme_classic() %+replace% 
+        theme(
+          axis.text = element_text( size=12),
+          axis.title=element_text(size=14),
+          strip.text = element_text(size = 14),
+          strip.background = element_rect(color='white'),
+          legend.title=element_text(size=14),
+          legend.text=element_text(size=12),
+          legend.text.align=0,
+          panel.grid.major = element_line(color='grey',size=0.1)
+        )
+}
+theme_set(theme_1())
+```
+
+```{r}
+df <- read_csv('../data/blankVsBiofilm_swvDecay.csv',comment = "#") 
+
+df
+
+ggplot(df %>% filter(electrode=='i1' & PHZadded=='50uM') , 
+       aes(x=time / 60 , y=swvPYOsignalBg/I0 , color=strain))+
+  geom_line(size=1)+geom_point(shape=21,color='black',size=2)+
+  scale_color_viridis_d(breaks=c('blank2','dPHZstar'),labels=c('blank',expression(Delta*"phz biofilm")))+
+#  scale_fill_viridis_d(guide=F)+
+  theme(legend.title = element_blank(),legend.position = c(0.8, 0.8))+
+  labs(x='Time (min)',y='Normalized [PYO]')
+
+ggsave('swv_decay_curve.pdf',width=5,height=3)
+```
+
+```{r}
+df <- read_csv('../data/gc_data_for_diagram.csv',comment = "#") %>% 
+  gather(key=Scan,value=Current,Generator,Collector) %>% 
+  mutate(Current=Current/10^-9) %>% 
+  mutate(E=E*1000) %>% 
+  mutate(Strain='WT')%>% 
+  mutate(Strain_scan=paste(Strain,Scan))
+
+head(df)
+
+ggplot(df,aes(x=E,y=Current,color=Scan))+
+  geom_path(size=1)+
+  scale_x_reverse()+
+  labs(x='Electrode Potential (mV)',y='Current (nA)')+
+  scale_color_manual(values=c('#5E9CD3','#EB7D3C'))+
+  theme(legend.position = c(0.3, 0.8),
+        legend.title = element_blank(),
+        legend.background = element_rect(fill=NA))
+
+ggsave('gc_diagram.pdf',width=5,height=3)
+```
+
+```{r}
+df2 <- read_csv('../data/dPHZ_GC_data_forDiagram.csv',comment = "#") %>% 
+  gather(key=Scan,value=Current,Generator,Collector) %>% 
+  mutate(Current=Current/10^-9) %>% 
+  mutate(E=E*1000) %>% 
+  mutate(Strain='dPHZ') %>% 
+  mutate(Strain_scan=paste(Strain,Scan))
+
+head(df2)
+
+dfs <- bind_rows(df,df2)
+
+ggplot(dfs,aes(x=E,y=Current,color=Scan))+
+  geom_path(size=1,aes(linetype=Strain))+
+  scale_x_reverse()+
+  labs(x='Electrode Potential (mV)',y='Current (nA)')+
+  scale_color_manual(values=c('#5E9CD3','#EB7D3C'))+
+  scale_linetype_manual(values=c(2,1),guide=F)+
+  theme(legend.position = c(0.3, 0.8),
+        legend.title = element_blank(),
+        legend.background = element_rect(fill=NA))
+
+ggsave('dPHZ_gc_diagram.pdf',width=5,height=3)
+```
+
+
+```{r}
+ggplot(gcI2s2Bg %>% 
+         filter(condition=='transfer' & reactor=='B') %>%
+         filter(PHZaddedInt>0 & E<0 & E >=-0.4),aes(x=E*1000,y=bgCurrent/10^-9,color=factor(PHZaddedInt)))+
+  geom_line()+
+  geom_point(data=PYOmaxBgS2 %>% 
+               filter(PHZaddedInt>0 & condition=='transfer' & reactor=='B'),aes(x=E*1000,y=PYOmaxGC/10^-9))+
+  geom_point(data=PYOminBgS2 %>% 
+               filter(PHZaddedInt>0 & condition=='transfer' & reactor=='B'),aes(x=E*1000,y=PYOmin/10^-9))+
+  scale_x_reverse()+
+  scale_color_viridis_d()+
+  labs(x="Electrode potential (mV)",y="Current (nA)")+
+  guides(color=guide_legend(title=expression(Delta*"phz + PYO ("*mu*"M)")))
+
+ggsave('dPHZ_titration_diagram.pdf',width=6,height=3)
+```
+
+```{r}
+D_e <- tibble(D_e=c(4.011e-6,6.714e-7,5.241e-6),
+       reactor=c('A','B','C'))
+
+D_e <- tibble(D_e=c(1.002e-6,1.678e-7,1.31e-6),
+       reactor=c('A','B','C'))
+
+#A=0.054
+
+lmMulti %>% 
+  filter(term=='t0.5') %>% 
+  ggplot(aes(x=reactor,y=estimate,color=PHZaddedInt))+geom_point()
+  
+decayEstimate <- lmMulti %>% 
+  filter(term=='t0.5') %>% 
+  group_by(reactor) %>% 
+  summarise(meanEstimate=mean(estimate))
+
+ggplot(decayEstimate,aes(x=reactor,y=meanEstimate))+geom_point()
+
+D_calc <- left_join(decayEstimate,D_e,by="reactor")
+
+D_calc <- D_calc %>% 
+  mutate(D_pyo=(D_e*10) / (4*meanEstimate^2)) %>% 
+  mutate(Sample = 'dPHZ') %>% 
+  gather(key=D_cat,value=Estimate,D_e,D_pyo) %>% 
+  select(-meanEstimate)
+  
+
+ggplot(D_calc,aes(x=D_cat,y=Estimate,color=reactor))+geom_point()+scale_y_log10()
+
+blank <- tibble(D_cat=c('D_e','D_pyo'),
+       Estimate=c(9.86e-6,2.852e-6),
+       reactor=c('A','A'),
+       Sample=c('blank','blank'))
+
+D_calc_blankDphz <- bind_rows(D_calc,blank)
+
+
+#D_calc_blankDphz$Sample = factor(D_calc_blankDphz$Sample)
+#levels(D_calc_blankDphz$Sample) <- c("'Blank IDA'", expression(Delta*"phz Biofilm IDA"))
+
+ggplot(D_calc_blankDphz,aes(x=D_cat,y=Estimate,color=D_cat,shape=reactor))+
+  geom_point(size=2.5)+facet_wrap(~Sample,labeller = label_parsed,scales='free')+
+  scale_y_log10(limits=c(1e-8,1e-5))+
+  labs(y=expression("Estimated Diffusion Coefficient (cm"^{2} *"/s)"),x='')+
+  scale_x_discrete(breaks=c("D_e","D_pyo"),labels=c(expression("D"["electron"]),expression("D"["pyo"])))+
+  scale_color_manual(values = c('black','#6699FF'))+
+  theme(legend.position = 'none',axis.title=element_text(size=12),axis.text.x=element_text(size=14),strip.text.x = element_text(size = 14))
+
+ggplot(D_calc_blankDphz ,aes(x=D_cat,y=Estimate,color=D_cat,shape=reactor))+
+  geom_point(size=2.5)+facet_wrap(~Sample,labeller = label_parsed,scales='free')+
+  scale_y_log10(limits=c(1e-8,1e-5))+
+  labs(y=expression("Estimated Diffusion Coefficient (cm"^{2} *"/s)"),x='')+
+  scale_x_discrete(breaks=c("D_e","D_pyo"),labels=c(expression("D"["electron"]),expression("D"["pyo"])))+
+  scale_color_manual(values = c('black','#6699FF'))+
+  theme(legend.position = 'none',axis.title=element_text(size=12),axis.text.x=element_text(size=14),strip.text.x = element_text(size = 14))
+
+ggsave('D_calc_both_finalPlot.pdf',width=3,height=3)
+
+ggplot(D_calc_blankDphz %>% filter(Sample=='dPHZ') ,aes(x=D_cat,y=Estimate,color=D_cat,shape=reactor))+
+  geom_point(size=2.5)+
+  scale_y_log10(limits=c(1e-9,1e-5))+
+  labs(y=expression("Estimated Diffusion Coefficient (cm"^{2} *"/s)"),x='')+
+  scale_x_discrete(breaks=c("D_e","D_pyo"),labels=c(expression("D"["electron"]),expression("D"["pyo"])))+
+  scale_color_manual(values = c('black','#6699FF'))+
+  theme(legend.position = 'none',axis.title=element_text(size=12),axis.text.x=element_text(size=14),strip.text.x = element_text(size = 14))
+
+
+ggsave('D_calc_biofilm_finalPlot.pdf',width=4,height=4)
+```
+
+```{r}
+p1 <- ggplot(compareDap,aes(x=Dcat,y=Dap,fill=Dcat))+geom_jitter(width = 0.1,shape=21,color='black',size=2)+
+  scale_y_log10()+
+  facet_grid(~strain,labeller = label_parsed)+
+  labs(y=expression("Estimated D"["ap"]* " (cm"^{2} *"/s)"),x='')+
+  scale_fill_manual(values = c('#FFFF00','#6699FF'))+
+  scale_x_discrete(breaks=c("Dap","Dphys"),labels=c(expression("D"["electron"]),expression("D"["pyo"])))+
+  theme(axis.text.x = element_text(face="bold", size=14),axis.text.y = element_text( size=12),axis.title=element_text(size=14,face="bold"),strip.text.x = element_text(size = 14),legend.position = 'none')
+```
+
