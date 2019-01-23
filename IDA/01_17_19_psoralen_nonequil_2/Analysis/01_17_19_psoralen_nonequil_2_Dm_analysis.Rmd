@@ -1,0 +1,142 @@
+---
+title: "Psoralen treatment - Non equilibrium #2"
+subtitle: "$D_m$ Analysis"
+fontsize: 12pt
+date: "01_17_19 "
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
+---
+
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+source("../../tools/echem_processing_tools.R")
+source("../../tools/plotting_tools.R")
+
+theme_set(theme_1())
+```
+
+```{r}
+dm_data <- read_csv("../Processing/01_17_19_swv_control_dm_processed.csv")
+
+ggplot(dm_data, aes(x = rep, y = signal, color=factor(run), shape = reactor)) + 
+  geom_line() + geom_point()+
+  facet_wrap(~electrode)+
+  scale_color_viridis(discrete = T)
+```
+
+```{r}
+e=exp(1)
+
+dm_data_norm <- dm_data %>% 
+  group_by(run,electrode,reactor) %>% 
+  mutate(min_time = min(minutes)) %>% 
+  mutate(norm_time = minutes - min_time + 0.6)
+
+ggplot(dm_data_norm %>% filter(reactor=='transfer'), aes(x = norm_time, y = signal, color=factor(run), shape = reactor)) + 
+  geom_point()+
+  geom_smooth(method='nls',formula=y~b*(x)^-0.5+a,method.args=list(start=c(b=0.1,a=1e-7)),se=F)+
+  facet_wrap(~electrode)+
+  scale_color_viridis(discrete = T)
+
+ggplot(dm_data_norm %>% filter(reactor=='transfer'), aes(x = norm_time, y = signal, color=factor(run), shape = reactor)) + 
+  geom_point()+
+  geom_smooth(method='nls',formula=y~(a*(x)^-0.5)*(2+e^(b*(x)^-0.5))+c,method.args=list(start=c(a=0.1,b=0.1,c=0)),se=F)+
+  facet_wrap(~electrode)+
+  scale_color_viridis(discrete = T)
+
+
+ggplot(dm_data_norm %>% filter(reactor=='transfer'), aes(x = norm_time^-0.5, y = signal, color=factor(run), shape = reactor)) + 
+  geom_point()+
+  facet_wrap(~electrode)+
+  scale_color_viridis(discrete = T)
+
+```
+
+1D Diffusion over time (t) and space (x)
+$$C(x,t) = \frac{M_0}{A \sqrt{4 \pi D t}}e^{\frac{-x^2}{4 D t}}$$
+
+With a no flux boundary at L=0
+$$C(x,t) = C_{\text{real}}+C_{\text{image}} = \frac{M_0}{A \sqrt{4 \pi D t}}(e^{\frac{-x^2}{4 D t}} + e^{\frac{-(x+2L)^2}{4 D t}})$$
+evaluate at L=0
+$$C(x,t) = C_{\text{real}}+C_{\text{image}} = \frac{M_0}{A \sqrt{4 \pi D t}}(e^{\frac{-x^2}{4 D t}} + e^{\frac{-x^2}{4 D t}})$$
+
+With a no flux boundry at L=0 and L=l
+$$C(x,t) = C_{\text{real}}+C_{\text{image}_1}+C_{\text{image}_2} = \frac{M_0}{A \sqrt{4 \pi D t}}(e^{\frac{-x^2}{4 D t}} + e^{\frac{-x^2}{4 D t}} + e^{\frac{-(x+2L)^2}{4 D t}})$$
+Evaluate at x=0
+$$C(x,t) = \frac{M_0}{A \sqrt{4 \pi D t}}(e^0 + e^0 + e^{\frac{-(2L)^2}{4 D t}})$$
+$$C(x,t) = \frac{M_0}{A \sqrt{4 \pi D t}}(2 + e^{\frac{-(2L)^2}{4 D t}})$$
+Substituting for SWV
+$$I_{swv} = \frac{I_0 V}{A \sqrt{4 \pi D_m t}}(2 + e^{\frac{-(2L)^2}{4 D t}})$$
+if 
+$$y=a t^{-0.5} (2 + e^{b t^-0.5})$$
+then
+$$a = \frac{I_0 V}{A \sqrt{4 \pi D_m}}$$
+
+$$b = \frac{-(2L)^2}{4 D_m}$$
+rearranging for $D_m$
+
+$$D_m = \frac{I_0^2 V^2}{A^2 4 \pi a^2}$$
+or 
+$$D_m = \frac{I_0^2 D_{ap} t_s}{4 a^2}$$
+
+$$D_m = \frac{-(2L)^2}{4 b}$$
+
+```{r}
+nls_no_flux <- dm_data_norm %>% 
+  filter(reactor=='transfer') %>% 
+  group_by(run,electrode) %>% 
+  do(tidy(nls(.,formula = signal~(a*(norm_time)^-0.5)*(2+e^(b*(norm_time)^-0.5))+c,start=list(a=0.1,b=0.1,c=0)))) %>% 
+  mutate(model='no_flux')
+
+nls_og <- dm_data_norm %>% 
+  filter(reactor=='transfer') %>% 
+  group_by(run,electrode) %>% 
+  do(tidy(nls(.,formula = signal~(a*(norm_time)^-0.5)+c,start=list(a=0.1,c=0)))) %>% 
+  mutate(model='og')
+
+nls_fits <- rbind(nls_no_flux,nls_og)
+
+ggplot(nls_fits %>% filter(term!='c'),aes(x=model,y=estimate,color=electrode))+geom_point()+
+  facet_wrap(~term,scales='free')+ylim(0,NA)
+```
+
+
+```{r}
+
+```
+
+```{r}
+
+dm_data_2 <- read_csv("../Processing/01_17_19_swv_gc_control_dap_processed.csv")
+
+dm_data_norm_2 <- dm_data_2 %>% 
+  filter(electrode_from_swv=='i1') %>% 
+  group_by(run) %>% 
+  mutate(min_time = min(minutes_from_swv)) %>% 
+  mutate(norm_time = minutes_from_swv - min_time)
+
+ggplot(dm_data_2 %>% filter(electrode_from_swv=='i1'), aes(x = minutes_from_swv, y = signal_from_swv, color=factor(run), shape = reactor)) + 
+  geom_line() + geom_point()+
+  scale_color_viridis(discrete = T)
+
+ggplot(dm_data_norm_2, aes(x = norm_time, y = signal_from_swv, color=factor(run), shape = reactor)) + 
+  geom_point()+
+  geom_smooth(method='nls',formula=y~b*(x)^-0.5+a,method.args=list(start=c(b=0.1,a=1e-7)),se=F)+
+  scale_color_viridis(discrete = T)
+
+```
