@@ -1,0 +1,57 @@
+---
+title: "Psoralen Toxicity "
+subtitle: "Plate Reader Data"
+fontsize: 12pt
+date: "01_21_19 "
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
+---
+
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+source("../../tools/echem_processing_tools.R")
+source("../../tools/plotting_tools.R")
+
+theme_set(theme_1())
+```
+
+Protocol 
+
+* 189 MM Succinate Medium
+* 1uL EtOH / Psoralen
+* 10uL $OD_{500}=0.1$ cells in MM
+* 50uL sterile mineral oil on top
+
+~24hrs @ 37 degrees medium shaking, reading OD 500 and fluorescence excited at 365 every 15min.
+
+```{r}
+pr_data <- read_csv("../Data/01_21_19_psoralen_toxicity_growth_curve.csv") %>% 
+  gather(key = well, value = abs, -time)
+
+pr_metadata <- read_csv("../Data/01_21_19_psoralen_platereader_metadata.csv")
+
+df_pr <- left_join(pr_data,pr_metadata, by='well')
+head(df_pr)
+
+ggplot(df_pr, aes(x = time, y = abs, color = factor(psoralen))) + 
+  geom_point(size=0.5) + 
+  facet_wrap(~strain) + 
+  scale_color_viridis(discrete = T)
+```
+
+It does not appear that trioxsalen is overly toxic to PA cells. 
