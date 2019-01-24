@@ -327,3 +327,13 @@ swv_gc_psoralen_lms <- swv_gc_psoralen %>%
   group_by(run,treatment,electrode_from_swv) %>% 
   do(tidy(lm(signal_from_gc~signal_from_swv,.)))
 ```
+
+## Control $D_m$
+
+```{r}
+
+write_csv(swv_control_signals %>% filter(run >= 4),path = "./01_17_19_swv_control_dm_processed.csv")
+
+```
+
+

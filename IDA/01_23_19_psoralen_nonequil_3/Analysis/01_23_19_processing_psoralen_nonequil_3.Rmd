@@ -1,0 +1,138 @@
+---
+title: "Psoralen treatment - Non equilibrium #3"
+subtitle: "Processing"
+fontsize: 12pt
+date: "01_23_19 "
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
+---
+
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+source("../../tools/echem_processing_tools.R")
+source("../../tools/plotting_tools.R")
+
+theme_set(theme_1())
+```
+
+# Import
+
+## SWV data
+
+First let's import the SWV data from all the runs. Now I'm using the "recursive" option in dir() to look through the whole directory strucutre of the raw data files. This allows me to preserve the file structure, which is nice for humans, but still find all the SWV txt files. This works well because the individual files are still named uniquely.
+
+```{r}
+
+SWV_file_paths <-  dir(path='../Data', pattern = "[SWV]+.+[txt]$",recursive = T,full.names = T)
+
+SWV_filenames <- basename(SWV_file_paths)
+
+swv_data_cols <-  c('E','i1','i2')
+
+filename_cols = c('PHZadded','treatment','reactor','run','echem','rep')
+
+swv_skip_rows=18
+  
+
+swv_data <- echem_import_to_df(filenames = SWV_filenames, 
+                                       file_paths = SWV_file_paths, 
+                                       data_cols = swv_data_cols, 
+                                       skip_rows = swv_skip_rows,
+                                       filename_cols = filename_cols,
+                                       rep = T) %>% 
+  mutate(rep=rep-1)
+```
+
+```{r}
+
+ggplot(swv_data %>% filter(electrode=='i1' & reactor=='transfer'), aes(x=E, y=current,color=rep,group=factor(rep)))+geom_path()+
+  facet_grid(treatment~run,scales='free')+
+  scale_color_viridis()
+
+```
+
+```{r}
+ggplot(swv_data %>% filter(electrode=='i2' & reactor=='transfer'), aes(x=E, y=current,color=rep,group=factor(rep)))+geom_path()+
+  facet_grid(treatment~run,scales='free')+
+  scale_color_viridis()
+```
+
+```{r}
+
+ggplot(swv_data %>% filter(electrode=='i1' & reactor=='transfer' & run==1 & rep<14), aes(x=E, y=current,color=rep,group=factor(rep)))+geom_path()+
+  facet_wrap(~treatment,scales='free')+
+  scale_color_viridis()
+```
+
+## GC data
+
+
+```{r}
+
+GC_file_paths <-  dir(path='../Data', pattern = "[GC]+.+[txt]$",recursive = T,full.names = T)
+
+GC_filenames <- basename(GC_file_paths)
+
+gc_data_cols <-  c('E','i1','i2','t')
+
+filename_cols = c('PHZadded','treatment','reactor','run','echem','rep')
+
+gc_skip_rows=21
+  
+
+gc_data <- echem_import_to_df(filenames = GC_filenames, 
+                                       file_paths = GC_file_paths, 
+                                       data_cols = gc_data_cols, 
+                                       skip_rows = gc_skip_rows,
+                                       filename_cols = filename_cols,
+                                       rep = T)
+
+```
+
+```{r}
+
+ggplot(gc_data %>% filter(reactor=='transfer'), aes(x=E, y=current,color=rep,group=electrode))+
+  geom_point(size=0.5)+
+  facet_grid(treatment~run,scales='free')+
+  scale_x_reverse() + 
+  scale_color_viridis(discrete = F)
+```
+
+```{r}
+ggplot(gc_data %>% filter(reactor=='transfer' & electrode=='i2'), aes(x=E, y=-current,color=rep,group=factor(rep))) +
+  geom_path()+
+  facet_grid(treatment~run,scales='free')+
+  scale_color_viridis()+
+  scale_x_reverse()
+```
+
+# Quantification
+
+## Control SWV
+
+```{r}
+swv_control_data <- swv_data %>% 
+  filter(treatment=='control' & PHZaddedInt==75)
+
+unique_id_cols = c('PHZadded','treatment','reactor','run','echem','rep','minutes','PHZaddedInt','electrode')
+
+swv_control_signals <- echem_signal(df = swv_control_data, 
+                            unique_id_cols = unique_id_cols,
+                            max_interval = c(0.0,-0.4), 
+                            min_interval = c(0.0,-0.4)) 
+```
