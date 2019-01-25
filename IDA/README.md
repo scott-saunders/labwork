@@ -55,5 +55,3 @@ for(link in files){
 <a href="https://scott-saunders.github.io/labwork/IDA/diffusion_modeling_11_17_18.nb.html">diffusion\_modeling\_11\_17\_18.nb.html</a>
 
 <a href="https://scott-saunders.github.io/labwork/IDA/diffusionLayerTheory.html">diffusionLayerTheory.html</a>
-
-<a href="https://scott-saunders.github.io/labwork/IDA/README.html">README.html</a>

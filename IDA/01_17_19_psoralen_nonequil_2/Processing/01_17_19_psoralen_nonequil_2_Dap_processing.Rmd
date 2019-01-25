@@ -305,6 +305,8 @@ swv_gc_control_lms <- swv_gc_control %>%
   filter(reactor=='transfer' & rep>0 & electrode_from_swv=='i1') %>%
   group_by(run,treatment,electrode_from_swv) %>% 
   do(tidy(lm(signal_from_gc~signal_from_swv,.)))
+
+swv_gc_control_lms
 ```
 
 Psoralen dataset
@@ -326,6 +328,8 @@ swv_gc_psoralen_lms <- swv_gc_psoralen %>%
   filter(reactor=='transfer' & rep>0) %>%
   group_by(run,treatment,electrode_from_swv) %>% 
   do(tidy(lm(signal_from_gc~signal_from_swv,.)))
+
+swv_gc_psoralen_lms
 ```
 
 ## Control $D_m$
