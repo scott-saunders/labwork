@@ -1,5 +1,5 @@
 ---
-title: "Psoralen treatment - Non equilibrium #3"
+title: "Psoralen treatment and toxicity - Non equilibrium #3"
 subtitle: "Overview"
 fontsize: 12pt
 date: "01_23_19"
@@ -31,6 +31,7 @@ for(link in files){
 
 ## Purpose
 
+This is the third replicate of the psoralen nonequilibrium experiment. 
 
 ## Protocol 
 
@@ -49,13 +50,32 @@ Essentially the same protocol was used as 1/08/19:
   * Prepare a SWV fast repetitive run in the software (56 sec gap, repeat 60 times).
   * Hook up counter and reference in transfer reactor. Remove the biofilm from the soak reactor, dip once in a MM succ wash, and then transfer to other reactor. Connect working electrodes and check open circuit potential (OCP). Start the repetitive run. Try to time the seconds between immersing the biofilm in the transfer reactor and starting the first scan. 
   
-*SWV slow was run several times for the psoralen biofilms because of high background current.
+*SWV slow used during run 4 for both biofilms. 
   
 Note that I had two potentiostats running. There were three chambers total, 1 soak and 2 transfers, so only one biofilm could soak at one time, but two transfers could be monitored simultaneously. I kept the biofilms staggered, first control, then psoralen, but I made sure that much of the transfer time overlapped to try to make it efficient.
   
 ## Data
 
+Before running this echem experiment, I was also able to test the toxicity of trioxsalen in the plate reader. Therefore in the data folder there is a separate folder for the plate reader psoralen toxicity data. There is a separate analysis notebook for this experiment. This notebook contains the protocol etc. 
+
+For the echem the files are separed into the control biofilm and the psoralen treated biofilm. In total 5 runs were taken for each biofilm. The first 4 runs were paired SWV, GCs scans for measuring $D_{ap}$, and the last run was an SWV repetitive run for measuring $D_m$. For runs 1 and 2, I used the 760b potentiostat with the psoralen biofilm, and the 760e potentiostat with the control biofilm. For runs 3 and 4, I used the 760b with the control and 760e with the psoralen. 
+
+For run 4, I used SWV slow on both the control and psoralen biofilms (to enable comparison), because the SWVfast signal was not working well with the psoralen biofilm.
+
+In general for the $D_{ap}$ runs I took 15 paired scans as the biofilm equilibrated.
+
+### Notes
+
+Before the psoralen #2 run with the 760b potentiostat, the open circuit potential was > -1V and it was unclear why. I tried replacing the ref electrode etc, but eventually hooking up the potentiostat to the other IDA and then moving back to the psoralen IDA fixed the problem. Later on this happened again, and I fixed the problem by restarting the 760b potentiostat, therefore I believe it was a potentiostat issue. 
+
+In the GC data you can see "wiggliness." At first I thought this may be a potentiostat specific issue, which is why I switched potentiostats/biofilms halfway through. I also tried orienting the biofilms slightly differently in the reactor. I do not know if any of this truly made a difference. 
 
 
 ### Imaging
+
+Zstack tilescans were of both IDAs were taken at the BIF. It seemed that the control biofilm was significantly larger/more complex coming off the electrode, although both biofilms clearly had cells and DNA on the IDA band surface. The filenames are: 
+
+* 01_23_19_psoralen_biofilm_dPHZstar_10x_tile_zstack_syto60_toto1.czi 
+* 01_23_19_control_biofilm_dPHZstar_10x_tile_zstack_syto60_toto1.czi 
+
 

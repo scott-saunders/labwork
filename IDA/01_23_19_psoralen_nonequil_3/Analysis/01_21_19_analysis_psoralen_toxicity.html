@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Psoralen Toxicity</title>
+
+<script src="01_21_19_analysis_psoralen_toxicity_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="01_21_19_analysis_psoralen_toxicity_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="01_21_19_analysis_psoralen_toxicity_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="01_21_19_analysis_psoralen_toxicity_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="01_21_19_analysis_psoralen_toxicity_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="01_21_19_analysis_psoralen_toxicity_files/navigation-1.1/tabsets.js"></script>
+<script src="01_21_19_analysis_psoralen_toxicity_files/navigation-1.1/codefolding.js"></script>
+<link href="01_21_19_analysis_psoralen_toxicity_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="01_21_19_analysis_psoralen_toxicity_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Psoralen Toxicity</h1>
+<h3 class="subtitle"><em>Plate Reader Data</em></h3>
+<h4 class="date"><em>01_21_19</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#purpose">Purpose</a></li>
+<li><a href="#protocol">Protocol</a></li>
+<li><a href="#data">Data</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+</ul>
+</div>
+
+<pre class="r"><code>library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)
+
+source(&quot;../../tools/echem_processing_tools.R&quot;)
+source(&quot;../../tools/plotting_tools.R&quot;)
+
+theme_set(theme_1())</code></pre>
+<div id="purpose" class="section level1">
+<h1>Purpose</h1>
+<p>The purpose of this experiment was to test the toxicity of trioxsalen toward <em>Pseudomonas aeruginosa</em> cells under growth conditions. I have been using trioxsalen to treat IDA biofilms, and I wanted to get a sense for whether toxicity would be a huge problem for that set of experiments.</p>
+</div>
+<div id="protocol" class="section level1">
+<h1>Protocol</h1>
+<p>deltaPHZstar or WT PA cells were grown in minimal succinate medium with 1uM or 10uM trioxsalen (from a 50x EtOH stock), or with just EtOH, or with nothing added at all. This was to separate the effect of the 0.5% Ethanol on the cultures.</p>
+<p>Each well contained the following:</p>
+<ul>
+<li>189 MM Succinate Medium</li>
+<li>1uL EtOH / Psoralen or None</li>
+<li>10uL <span class="math inline">\(OD_{500}=0.1\)</span> cells in MM</li>
+<li>50uL sterile mineral oil on top</li>
+</ul>
+<p>The plate was incubated for ~24hrs @ 37 degrees with medium shaking, reading OD 500 and fluorescence excited at 365nm every 15min.</p>
+</div>
+<div id="data" class="section level1">
+<h1>Data</h1>
+<p>The well data is saved separately from the metadata for each well. Here I join them:</p>
+<pre class="r"><code>pr_data &lt;- read_csv(&quot;../Data/plate_reader/01_21_19_psoralen_toxicity_growth_curve.csv&quot;) %&gt;% 
+    gather(key = well, value = abs, -time) %&gt;% mutate(time = as.numeric(time)/60)
+
+pr_metadata &lt;- read_csv(&quot;../Data/plate_reader/01_21_19_psoralen_platereader_metadata.csv&quot;)
+
+df_pr &lt;- left_join(pr_data, pr_metadata, by = &quot;well&quot;)</code></pre>
+<p>And now we can plot the data:</p>
+<pre class="r"><code>ggplot(df_pr, aes(x = as.numeric(time)/60, y = abs, color = factor(psoralen))) + 
+    geom_point(size = 0.5) + facet_wrap(~strain) + scale_color_viridis(discrete = T) + 
+    xlab(&quot;Hours&quot;) + ylab(&quot;Abs @ 500nm&quot;)</code></pre>
+<p><img src="01_21_19_analysis_psoralen_toxicity_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /> It looks like WT and dPHZstar grew a little differently in this experiment, but it does not seem like the trioxsalen affected the growth curves.</p>
+</div>
+<div id="conclusion" class="section level1">
+<h1>Conclusion</h1>
+<p>It does not appear that trioxsalen is overly toxic to PA cells, and 10uM is an appropriate concentration to use in the IDA experiments.</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
