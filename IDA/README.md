@@ -34,6 +34,12 @@ for(link in files){
 
 <a href="https://scott-saunders.github.io/labwork/IDA/01_08_19_psoralen_nonequil/README.html">01\_08\_19\_psoralen\_nonequil/README.html</a>
 
+<a href="https://scott-saunders.github.io/labwork/IDA/01_17_19_psoralen_nonequil_2/Analysis/01_17_19_psoralen_nonequil_2_Dap_analysis.html">01\_17\_19\_psoralen\_nonequil\_2/Analysis/01\_17\_19\_psoralen\_nonequil\_2\_Dap\_analysis.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/IDA/01_17_19_psoralen_nonequil_2/Processing/01_17_19_psoralen_nonequil_2_Dap_processing.html">01\_17\_19\_psoralen\_nonequil\_2/Processing/01\_17\_19\_psoralen\_nonequil\_2\_Dap\_processing.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/IDA/01_17_19_psoralen_nonequil_2/README.html">01\_17\_19\_psoralen\_nonequil\_2/README.html</a>
+
 <a href="https://scott-saunders.github.io/labwork/IDA/09_11_18_DapEstimation.html">09\_11\_18\_DapEstimation.html</a>
 
 <a href="https://scott-saunders.github.io/labwork/IDA/11_28_18_blank_IDA/Analysis/11_28_18_blank_IDA_Analysis.html">11\_28\_18\_blank\_IDA/Analysis/11\_28\_18\_blank\_IDA\_Analysis.html</a>
@@ -49,5 +55,3 @@ for(link in files){
 <a href="https://scott-saunders.github.io/labwork/IDA/diffusion_modeling_11_17_18.nb.html">diffusion\_modeling\_11\_17\_18.nb.html</a>
 
 <a href="https://scott-saunders.github.io/labwork/IDA/diffusionLayerTheory.html">diffusionLayerTheory.html</a>
-
-<a href="https://scott-saunders.github.io/labwork/IDA/README.html">README.html</a>
