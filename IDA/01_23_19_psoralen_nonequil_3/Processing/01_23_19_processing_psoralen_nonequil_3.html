@@ -217,11 +217,14 @@ $(document).ready(function () {
 <li><a href="#psoralen-swv">Psoralen SWV</a></li>
 <li><a href="#all-gc">All GC</a></li>
 </ul></li>
+<<<<<<< HEAD
 <li><a href="#combine-swvgc">Combine SWV/GC</a><ul>
 <li><a href="#control">Control</a></li>
 <li><a href="#psoralen">Psoralen</a></li>
 </ul></li>
 <li><a href="#processed-dataset">Processed Dataset</a></li>
+=======
+>>>>>>> 00cf73fd426532c7e10ba192cfd9fd2b62bf3ecf
 </ul>
 </div>
 
@@ -244,6 +247,7 @@ theme_set(theme_1())</code></pre>
 <div id="swv-data" class="section level2">
 <h2>SWV data</h2>
 <p>First, import all SWV files.</p>
+<<<<<<< HEAD
 <pre class="r"><code>SWV_file_paths &lt;-  dir(path=&#39;../Data&#39;, pattern = &quot;[SWV]+.+[txt]$&quot;,recursive = T,full.names = T)
 
 SWV_filenames &lt;- basename(SWV_file_paths)
@@ -277,11 +281,48 @@ swv_data &lt;- echem_import_to_df(filenames = SWV_filenames,
 <pre class="r"><code>ggplot(swv_data %&gt;% filter(electrode==&#39;i1&#39; &amp; reactor==&#39;transfer&#39; &amp; run==1 &amp; rep&lt;14 &amp; rep&gt;0), aes(x=E, y=current,color=rep,group=factor(rep)))+geom_path()+
   facet_wrap(~treatment,scales=&#39;free&#39;)+
   scale_color_viridis()</code></pre>
+=======
+<pre class="r"><code>SWV_file_paths &lt;- dir(path = &quot;../Data&quot;, pattern = &quot;[SWV]+.+[txt]$&quot;, 
+    recursive = T, full.names = T)
+
+SWV_filenames &lt;- basename(SWV_file_paths)
+
+swv_data_cols &lt;- c(&quot;E&quot;, &quot;i1&quot;, &quot;i2&quot;)
+
+filename_cols = c(&quot;PHZadded&quot;, &quot;treatment&quot;, &quot;reactor&quot;, &quot;run&quot;, 
+    &quot;echem&quot;, &quot;rep&quot;)
+
+swv_skip_rows = 18
+
+
+swv_data &lt;- echem_import_to_df(filenames = SWV_filenames, file_paths = SWV_file_paths, 
+    data_cols = swv_data_cols, skip_rows = swv_skip_rows, filename_cols = filename_cols, 
+    rep = T) %&gt;% mutate(rep = rep - 1)</code></pre>
+<p>These are all of the scans taken in the transfer reactor. This is i1, which is usually used for the downstream quantification:</p>
+<pre class="r"><code>ggplot(swv_data %&gt;% filter(electrode == &quot;i1&quot; &amp; reactor == &quot;transfer&quot;), 
+    aes(x = E, y = current, color = rep, group = factor(rep))) + 
+    geom_path() + facet_grid(treatment ~ run, scales = &quot;free&quot;) + 
+    scale_color_viridis()</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>It looks about as expected. Unfortunately there is a high background signal that comes up in the psoralen starting at run 3. I switched to SWVslow parameters after that.</p>
+<p>Here’s i2:</p>
+<pre class="r"><code>ggplot(swv_data %&gt;% filter(electrode == &quot;i2&quot; &amp; reactor == &quot;transfer&quot;), 
+    aes(x = E, y = current, color = rep, group = factor(rep))) + 
+    geom_path() + facet_grid(treatment ~ run, scales = &quot;free&quot;) + 
+    scale_color_viridis()</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /> It looks typical. Taking an SWV after GC results in this weird peak at the collector electrode…at least it’s consistent. For run 5, the psoralen biofilm was started with SWV fast parameters and it looked bad, so I restarted it with swv slow parameters, so the real scans are very tiny on this plot.</p>
+<p>Let’s focus on the first run for both conditions.</p>
+<pre class="r"><code>ggplot(swv_data %&gt;% filter(electrode == &quot;i1&quot; &amp; reactor == &quot;transfer&quot; &amp; 
+    run == 1 &amp; rep &lt; 14 &amp; rep &gt; 0), aes(x = E, y = current, color = rep, 
+    group = factor(rep))) + geom_path() + facet_wrap(~treatment, 
+    scales = &quot;free&quot;) + scale_color_viridis()</code></pre>
+>>>>>>> 00cf73fd426532c7e10ba192cfd9fd2b62bf3ecf
 <p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /> It looks pretty good, although the psoralen data may need some loess smoothing. Let’s ignore that for now.</p>
 </div>
 <div id="gc-data" class="section level2">
 <h2>GC data</h2>
 <p>Let’s import all the GC data.</p>
+<<<<<<< HEAD
 <pre class="r"><code>GC_file_paths &lt;-  dir(path=&#39;../Data&#39;, pattern = &quot;[GC]+.+[txt]$&quot;,recursive = T,full.names = T)
 
 GC_filenames &lt;- basename(GC_file_paths)
@@ -314,12 +355,44 @@ gc_data &lt;- echem_import_to_df(filenames = GC_filenames,
   scale_color_viridis()+
   scale_x_reverse()</code></pre>
 <p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /> The collector is more robus to the wiggliness, but it is still apparent in many curves.</p>
+=======
+<pre class="r"><code>GC_file_paths &lt;- dir(path = &quot;../Data&quot;, pattern = &quot;[GC]+.+[txt]$&quot;, 
+    recursive = T, full.names = T)
+
+GC_filenames &lt;- basename(GC_file_paths)
+
+gc_data_cols &lt;- c(&quot;E&quot;, &quot;i1&quot;, &quot;i2&quot;, &quot;t&quot;)
+
+filename_cols = c(&quot;PHZadded&quot;, &quot;treatment&quot;, &quot;reactor&quot;, &quot;run&quot;, 
+    &quot;echem&quot;, &quot;rep&quot;)
+
+gc_skip_rows = 21
+
+
+gc_data &lt;- echem_import_to_df(filenames = GC_filenames, file_paths = GC_file_paths, 
+    data_cols = gc_data_cols, skip_rows = gc_skip_rows, filename_cols = filename_cols, 
+    rep = T)</code></pre>
+<p>Here’s all the data plotted.</p>
+<pre class="r"><code>ggplot(gc_data %&gt;% filter(reactor == &quot;transfer&quot;), aes(x = E, 
+    y = current, color = rep, group = electrode)) + geom_point(size = 0.5) + 
+    facet_grid(treatment ~ run, scales = &quot;free&quot;) + scale_x_reverse() + 
+    scale_color_viridis(discrete = F)</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /> Eh, this data looks ok, but not great. I do not understand why the curves get “wiggly” or why such a weird high signal pops up on the generators. These weird effects seemed to be indpendent of potentiostat and not sensitive to minor changes in where the IDA faced in the reactors. I think the 760b might give somewhat smoother results, but it’s perplexing that it is relatively inconsistent. Note that for runs 1 and 2 the 760e was used with the control and the 760b with psoralen, and runs 3 and 4 were the exact opposite.</p>
+<p>It looks like the collectors were somewhat more immune to the wiggliness than the generators, but I do worry that these anomalies will affect the quantification…For now, I think we should look at the series more closely, and try to make sure that the wiggles are small compared to the main PYO peak arising around 250mV. Assuming that is true, I think we should be fine.</p>
+<p>Let’s look at the collector data specifically:</p>
+<pre class="r"><code>ggplot(gc_data %&gt;% filter(reactor == &quot;transfer&quot; &amp; electrode == 
+    &quot;i2&quot;), aes(x = E, y = -current, color = rep, group = factor(rep))) + 
+    geom_path() + facet_grid(treatment ~ run, scales = &quot;free&quot;) + 
+    scale_color_viridis() + scale_x_reverse()</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+>>>>>>> 00cf73fd426532c7e10ba192cfd9fd2b62bf3ecf
 </div>
 </div>
 <div id="quantification" class="section level1">
 <h1>Quantification</h1>
 <div id="control-swv" class="section level2">
 <h2>Control SWV</h2>
+<<<<<<< HEAD
 <p>Let’s start with the control SWV data, which overall looks cleaner than the psoralen data.</p>
 <pre class="r"><code>swv_control_data &lt;- swv_data %&gt;% 
   filter(treatment==&#39;control&#39; &amp; PHZaddedInt==75)
@@ -647,6 +720,139 @@ swv_gc_all &lt;- rbind(swv_gc_control, swv_gc_psoralen)
 write_csv(swv_gc_all, &quot;./01_23_19_processed_swv_gc_all.csv&quot;)</code></pre>
 <p>See the analysis notebook for further work with the processed datasets.</p>
 </div>
+=======
+<pre class="r"><code>swv_control_data &lt;- swv_data %&gt;% filter(treatment == &quot;control&quot; &amp; 
+    PHZaddedInt == 75)
+
+unique_id_cols = c(&quot;PHZadded&quot;, &quot;treatment&quot;, &quot;reactor&quot;, &quot;run&quot;, 
+    &quot;echem&quot;, &quot;rep&quot;, &quot;minutes&quot;, &quot;PHZaddedInt&quot;, &quot;electrode&quot;)
+
+swv_control_signals &lt;- echem_signal(df = swv_control_data, unique_id_cols = unique_id_cols, 
+    max_interval = c(-0.2, -0.4), min_interval = c(0, -0.4))</code></pre>
+<pre class="r"><code>ggplot(swv_control_data %&gt;% filter(electrode == &quot;i1&quot;), aes(x = E, 
+    y = current, color = rep, shape = reactor, group = factor(rep))) + 
+    geom_path() + geom_point(data = swv_control_signals %&gt;% filter(electrode == 
+    &quot;i1&quot;), aes(x = E_from_maxs, y = current_from_maxs), color = &quot;red&quot;) + 
+    geom_point(data = swv_control_signals %&gt;% filter(electrode == 
+        &quot;i1&quot;), aes(x = E_from_mins, y = current_from_mins), color = &quot;blue&quot;) + 
+    facet_wrap(~run, scales = &quot;free&quot;) + scale_x_reverse() + scale_color_viridis()</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(swv_control_data %&gt;% filter(electrode == &quot;i2&quot;), aes(x = E, 
+    y = current, color = rep, shape = reactor, group = factor(rep))) + 
+    geom_path() + geom_point(data = swv_control_signals %&gt;% filter(electrode == 
+    &quot;i2&quot;), aes(x = E_from_maxs, y = current_from_maxs), color = &quot;red&quot;) + 
+    geom_point(data = swv_control_signals %&gt;% filter(electrode == 
+        &quot;i2&quot;), aes(x = E_from_mins, y = current_from_mins), color = &quot;blue&quot;) + 
+    facet_wrap(~run, scales = &quot;free&quot;) + scale_x_reverse() + scale_color_viridis()</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(swv_control_signals, aes(x = rep, y = signal, shape = reactor, 
+    color = factor(run))) + geom_line() + geom_point() + facet_wrap(~electrode) + 
+    scale_color_viridis(discrete = T)</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="psoralen-swv" class="section level2">
+<h2>Psoralen SWV</h2>
+<pre class="r"><code>swv_psoralen_data &lt;- swv_data %&gt;% filter(treatment == &quot;psoralen&quot; &amp; 
+    PHZaddedInt == 75)
+
+unique_id_cols = c(&quot;PHZadded&quot;, &quot;treatment&quot;, &quot;reactor&quot;, &quot;run&quot;, 
+    &quot;echem&quot;, &quot;rep&quot;, &quot;minutes&quot;, &quot;PHZaddedInt&quot;, &quot;electrode&quot;)
+
+swv_psoralen_signals &lt;- echem_signal(df = swv_psoralen_data, 
+    unique_id_cols = unique_id_cols, max_interval = c(-0.2, -0.4), 
+    min_interval = c(-0.11, -0.4))</code></pre>
+<pre class="r"><code>ggplot(swv_psoralen_data %&gt;% filter(electrode == &quot;i1&quot; &amp; reactor == 
+    &quot;transfer&quot; &amp; rep &gt; 0), aes(x = E, y = current, color = rep, 
+    shape = reactor, group = factor(rep))) + geom_path() + geom_point(data = swv_psoralen_signals %&gt;% 
+    filter(electrode == &quot;i1&quot; &amp; reactor == &quot;transfer&quot; &amp; rep &gt; 
+        0), aes(x = E_from_maxs, y = current_from_maxs), color = &quot;red&quot;) + 
+    geom_point(data = swv_psoralen_signals %&gt;% filter(electrode == 
+        &quot;i1&quot; &amp; reactor == &quot;transfer&quot; &amp; rep &gt; 0), aes(x = E_from_mins, 
+        y = current_from_mins), color = &quot;blue&quot;) + facet_wrap(~run, 
+    scales = &quot;free&quot;) + scale_x_reverse() + scale_color_viridis()</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(swv_psoralen_data %&gt;% filter(electrode == &quot;i1&quot; &amp; reactor == 
+    &quot;transfer&quot; &amp; rep &gt; 0 &amp; run == 3), aes(x = E, y = current, 
+    color = rep, shape = reactor, group = factor(rep))) + geom_path() + 
+    geom_point(data = swv_psoralen_signals %&gt;% filter(electrode == 
+        &quot;i1&quot; &amp; reactor == &quot;transfer&quot; &amp; rep &gt; 0 &amp; run == 3), aes(x = E_from_maxs, 
+        y = current_from_maxs), color = &quot;red&quot;) + geom_point(data = swv_psoralen_signals %&gt;% 
+    filter(electrode == &quot;i1&quot; &amp; reactor == &quot;transfer&quot; &amp; rep &gt; 
+        0 &amp; run == 3), aes(x = E_from_mins, y = current_from_mins), 
+    color = &quot;blue&quot;) + facet_wrap(~echem, scales = &quot;free&quot;) + ylim(2e-06, 
+    5e-06) + scale_x_reverse() + scale_color_viridis()</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="all-gc" class="section level2">
+<h2>All GC</h2>
+<pre class="r"><code>gc_data_i2 &lt;- gc_data %&gt;% filter(electrode == &quot;i2&quot; &amp; PHZaddedInt == 
+    75) %&gt;% mutate(current = -current)
+
+unique_id_cols = c(&quot;PHZadded&quot;, &quot;treatment&quot;, &quot;reactor&quot;, &quot;run&quot;, 
+    &quot;echem&quot;, &quot;rep&quot;, &quot;minutes&quot;, &quot;PHZaddedInt&quot;, &quot;electrode&quot;)
+
+gc_signals &lt;- echem_signal(df = gc_data_i2, unique_id_cols = unique_id_cols, 
+    max_interval = c(-0.399, -0.399), min_interval = c(0, -0.4))</code></pre>
+<pre class="r"><code>ggplot(gc_data_i2 %&gt;% filter(reactor == &quot;transfer&quot;), aes(x = E, 
+    y = current, color = rep, shape = reactor, group = factor(rep))) + 
+    geom_path() + geom_point(data = gc_signals %&gt;% filter(reactor == 
+    &quot;transfer&quot;), aes(x = E_from_maxs, y = current_from_maxs), 
+    color = &quot;red&quot;) + geom_point(data = gc_signals %&gt;% filter(reactor == 
+    &quot;transfer&quot;), aes(x = E_from_mins, y = current_from_mins), 
+    color = &quot;blue&quot;) + facet_grid(treatment ~ run, scales = &quot;free&quot;) + 
+    scale_x_reverse() + scale_color_viridis()</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(gc_data_i2 %&gt;% filter(reactor == &quot;soak&quot; &amp; rep == 1), aes(x = E, 
+    y = current, color = factor(run), shape = reactor, linetype = treatment)) + 
+    geom_path() + geom_point(data = gc_signals %&gt;% filter(reactor == 
+    &quot;soak&quot;), aes(x = E_from_maxs, y = current_from_maxs), color = &quot;red&quot;) + 
+    geom_point(data = gc_signals %&gt;% filter(reactor == &quot;soak&quot;), 
+        aes(x = E_from_mins, y = current_from_mins), color = &quot;blue&quot;) + 
+    scale_x_reverse() + scale_color_viridis(discrete = T)</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-17-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(gc_signals, aes(x = rep, y = signal, shape = reactor, 
+    color = factor(run))) + geom_line() + geom_point() + facet_wrap(reactor ~ 
+    treatment, scales = &quot;free&quot;) + scale_color_viridis(discrete = T)</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-18-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>swv_gc_control &lt;- left_join(swv_control_signals %&gt;% filter(run &lt;= 
+    4), gc_signals, by = c(&quot;run&quot;, &quot;rep&quot;, &quot;reactor&quot;, &quot;treatment&quot;), 
+    suffix = c(&quot;_from_swv&quot;, &quot;_from_gc&quot;))
+
+# write_csv(swv_gc_control,&#39;./01_17_19_swv_gc_control_dap_processed.csv&#39;)
+
+ggplot(swv_gc_control %&gt;% filter(reactor == &quot;transfer&quot; &amp; electrode_from_swv == 
+    &quot;i1&quot; &amp; rep &gt; 0), aes(x = signal_from_swv, y = signal_from_gc, 
+    color = factor(run))) + geom_line() + geom_point() + geom_smooth(method = &quot;lm&quot;, 
+    se = F) + scale_color_viridis(discrete = T)</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>swv_gc_control_lms &lt;- swv_gc_control %&gt;% filter(reactor == &quot;transfer&quot; &amp; 
+    rep &gt; 0 &amp; electrode_from_swv == &quot;i1&quot;) %&gt;% group_by(run, treatment, 
+    electrode_from_swv) %&gt;% do(tidy(lm(signal_from_gc ~ signal_from_swv, 
+    .)))</code></pre>
+<pre class="r"><code>swv_gc_psoralen &lt;- left_join(swv_psoralen_signals %&gt;% filter(run &lt;= 
+    4), gc_signals, by = c(&quot;run&quot;, &quot;rep&quot;, &quot;reactor&quot;, &quot;treatment&quot;), 
+    suffix = c(&quot;_from_swv&quot;, &quot;_from_gc&quot;))
+
+# write_csv(swv_gc_control,&#39;./01_17_19_swv_gc_control_dap_processed.csv&#39;)
+
+ggplot(swv_gc_psoralen %&gt;% filter(reactor == &quot;transfer&quot; &amp; electrode_from_swv == 
+    &quot;i1&quot; &amp; rep &gt; 0 &amp; rep &lt; 14), aes(x = signal_from_swv, y = signal_from_gc, 
+    color = factor(run))) + geom_line() + geom_point(aes(size = rep)) + 
+    geom_smooth(method = &quot;lm&quot;, se = F) + scale_color_viridis(discrete = T)</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-21-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(swv_gc_psoralen %&gt;% filter(reactor == &quot;transfer&quot; &amp; electrode_from_swv == 
+    &quot;i1&quot; &amp; rep &gt; 0 &amp; rep &lt; 14 &amp; run %in% c(1, 4)), aes(x = signal_from_swv, 
+    y = signal_from_gc, color = factor(run))) + geom_line() + 
+    geom_point() + geom_smooth(method = &quot;lm&quot;, se = F) + facet_wrap(~run, 
+    scales = &quot;free&quot;) + scale_color_viridis(discrete = T)</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-22-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>swv_gc_psoralen_lms &lt;- swv_gc_psoralen %&gt;% filter(reactor == 
+    &quot;transfer&quot; &amp; rep &gt; 0 &amp; rep &lt; 14 &amp; electrode_from_swv == &quot;i1&quot;) %&gt;% 
+    group_by(run, treatment, electrode_from_swv) %&gt;% do(tidy(lm(signal_from_gc ~ 
+    signal_from_swv, .)))</code></pre>
+</div>
+</div>
+>>>>>>> 00cf73fd426532c7e10ba192cfd9fd2b62bf3ecf
 
 
 

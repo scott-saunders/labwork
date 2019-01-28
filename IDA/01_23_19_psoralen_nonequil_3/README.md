@@ -1,0 +1,144 @@
+Psoralen treatment and toxicity - Non equilibrium \#3
+================
+01\_23\_19
+
+Notebooks:
+
+``` r
+library(htmltools)
+
+base_path="https://scott-saunders.github.io/labwork/IDA/01_23_19_psoralen_nonequil_3/"
+
+files <- dir(path=".", pattern = "*\\.html$",include.dirs = T,recursive = T)
+
+for(link in files){
+  print(
+    tags$a(href = paste(base_path, link, sep=''), link)
+    )
+  writeLines("")
+}
+```
+
+<a href="https://scott-saunders.github.io/labwork/IDA/01_23_19_psoralen_nonequil_3/Analysis/01_21_19_analysis_psoralen_toxicity.html">Analysis/01\_21\_19\_analysis\_psoralen\_toxicity.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/IDA/01_23_19_psoralen_nonequil_3/Processing/01_23_19_processing_psoralen_nonequil_3.html">Processing/01\_23\_19\_processing\_psoralen\_nonequil\_3.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/IDA/01_23_19_psoralen_nonequil_3/README.html">README.html</a>
+
+## Purpose
+
+This is the third replicate of the psoralen nonequilibrium experiment.
+
+## Protocol
+
+Essentially the same protocol was used as 1/08/19:
+
+1.  Biofilms were grown in reactors with minimal succinate medium for 4
+    days, at ~30 degrees C, as usual.
+2.  Before any echem, one biofilm was submerged in a 10uM trioxsalen
+    solution in a petri dish (from 2mM EtOH stock) and exposed to 365nm
+    light from a handheld lamp placed directly above it. The other
+    biofilm was submerged in MM succ with an ethanol control.
+3.  After an hour of treatment, the biofilms were briefly left in the
+    petri dishes, but the UVA light was turned off.
+4.  I then used a non-equilibrium type protocol, similar to the one
+    first attempted on 12\_10\_18.
+5.  To measure
+    ![D\_{ap}](https://latex.codecogs.com/png.latex?D_%7Bap%7D "D_{ap}")
+    I performed the following echem:
+
+<!-- end list -->
+
+  - Soak only working electrode part of IDA (100mL liquid in reactor) in
+    75uM PYO in MM succ medium for at least 10 min. Take SWV fast scan
+    in soak reactor. During soak, make sure that transfer reactor has
+    180mL fresh MM succ medium and that it is stirring with N2 bubbling
+    to make anaerobic and equilibrate temperature.
+  - Hook up counter and reference in transfer reactor. Remove the
+    biofilm from the soak reactor, dip once in a MM succ wash, and then
+    transfer to other reactor. Connect working electrodes and check open
+    circuit potential (OCP). Take first SWV fast scan. Try to time the
+    seconds between immersing the biofilm in the transfer reactor and
+    starting the first scan.
+  - Run a 1 segment GC ( +0.2 to -0.4 V only ~2min), and then
+    immediately run an SWV fast\* to pair the data. Repeat for ~30min
+    when the signals start to level off.  
+
+<!-- end list -->
+
+6.  To measure ![D\_{m}](https://latex.codecogs.com/png.latex?D_%7Bm%7D
+    "D_{m}") I performed the following echem:
+
+<!-- end list -->
+
+  - The first step was the exact same as the first bullet point for
+    ![D\_{ap}](https://latex.codecogs.com/png.latex?D_%7Bap%7D
+    "D_{ap}").
+  - Prepare a SWV fast repetitive run in the software (56 sec gap,
+    repeat 60 times).
+  - Hook up counter and reference in transfer reactor. Remove the
+    biofilm from the soak reactor, dip once in a MM succ wash, and then
+    transfer to other reactor. Connect working electrodes and check open
+    circuit potential (OCP). Start the repetitive run. Try to time the
+    seconds between immersing the biofilm in the transfer reactor and
+    starting the first scan.
+
+\*SWV slow used during run 4 for both biofilms.
+
+Note that I had two potentiostats running. There were three chambers
+total, 1 soak and 2 transfers, so only one biofilm could soak at one
+time, but two transfers could be monitored simultaneously. I kept the
+biofilms staggered, first control, then psoralen, but I made sure that
+much of the transfer time overlapped to try to make it efficient.
+
+## Data
+
+Before running this echem experiment, I was also able to test the
+toxicity of trioxsalen in the plate reader. Therefore in the data folder
+there is a separate folder for the plate reader psoralen toxicity data.
+There is a separate analysis notebook for this experiment. This notebook
+contains the protocol etc.
+
+For the echem the files are separed into the control biofilm and the
+psoralen treated biofilm. In total 5 runs were taken for each biofilm.
+The first 4 runs were paired SWV, GCs scans for measuring
+![D\_{ap}](https://latex.codecogs.com/png.latex?D_%7Bap%7D "D_{ap}"),
+and the last run was an SWV repetitive run for measuring
+![D\_m](https://latex.codecogs.com/png.latex?D_m "D_m"). For runs 1 and
+2, I used the 760b potentiostat with the psoralen biofilm, and the 760e
+potentiostat with the control biofilm. For runs 3 and 4, I used the 760b
+with the control and 760e with the psoralen.
+
+For run 4, I used SWV slow on both the control and psoralen biofilms (to
+enable comparison), because the SWVfast signal was not working well with
+the psoralen biofilm.
+
+In general for the
+![D\_{ap}](https://latex.codecogs.com/png.latex?D_%7Bap%7D "D_{ap}")
+runs I took 15 paired scans as the biofilm equilibrated.
+
+### Notes
+
+Before the psoralen \#2 run with the 760b potentiostat, the open circuit
+potential was \> -1V and it was unclear why. I tried replacing the ref
+electrode etc, but eventually hooking up the potentiostat to the other
+IDA and then moving back to the psoralen IDA fixed the problem. Later on
+this happened again, and I fixed the problem by restarting the 760b
+potentiostat, therefore I believe it was a potentiostat issue.
+
+In the GC data you can see “wiggliness.” At first I thought this may be
+a potentiostat specific issue, which is why I switched
+potentiostats/biofilms halfway through. I also tried orienting the
+biofilms slightly differently in the reactor. I do not know if any of
+this truly made a difference.
+
+### Imaging
+
+Zstack tilescans were of both IDAs were taken at the BIF. It seemed that
+the control biofilm was significantly larger/more complex coming off the
+electrode, although both biofilms clearly had cells and DNA on the IDA
+band surface. The filenames
+    are:
+
+  - 01\_23\_19\_psoralen\_biofilm\_dPHZstar\_10x\_tile\_zstack\_syto60\_toto1.czi
+  - 01\_23\_19\_control\_biofilm\_dPHZstar\_10x\_tile\_zstack\_syto60\_toto1.czi
