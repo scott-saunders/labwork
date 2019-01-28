@@ -78,6 +78,7 @@ The other thing to notice, is that the control data takes on a different shape f
 ## Run 1
 
 Let's focus on run 1, which may be the most reliable subset of the data. All of the SWVs were taken with fast settings.
+
 ```{r}
 df_1 <- read_csv("../Processing/01_23_19_processed_swv_gc_run_1.csv")
 
@@ -173,4 +174,3 @@ For this replicate, runs 1 and 4 seemed to be the most reliable. Neither run sug
 That said, the control dataset actually looks pretty good, and I think we can trust the quantification of run 1. It is also very interesting that the control dataset becomes more nonlinear throughout the runs. 
 
 Further, if we trust the slope based estimates, all of the datasets converge on similar values for $D_{ap}$: the estimates are all between $1 * 10^{-6} \text{cm}^2 / \text{sec}$ to $5 * 10^{-6} \text{cm}^2 / \text{sec}$. That's actually a pretty narrow range!?
-
