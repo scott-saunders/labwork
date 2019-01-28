@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Psoralen treatment - Non equilibrium #3</title>
+
+<script src="01_23_19_psoralen_nonequil_3_Dap_analysis_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="01_23_19_psoralen_nonequil_3_Dap_analysis_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="01_23_19_psoralen_nonequil_3_Dap_analysis_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="01_23_19_psoralen_nonequil_3_Dap_analysis_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="01_23_19_psoralen_nonequil_3_Dap_analysis_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="01_23_19_psoralen_nonequil_3_Dap_analysis_files/navigation-1.1/tabsets.js"></script>
+<script src="01_23_19_psoralen_nonequil_3_Dap_analysis_files/navigation-1.1/codefolding.js"></script>
+<link href="01_23_19_psoralen_nonequil_3_Dap_analysis_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="01_23_19_psoralen_nonequil_3_Dap_analysis_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Psoralen treatment - Non equilibrium #3</h1>
+<h3 class="subtitle"><em><span class="math inline">\(D_{ap}\)</span> Analysis</em></h3>
+<h4 class="date"><em>01_23_19</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#intro">Intro</a></li>
+<li><a href="#results">Results</a><ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#run-1">Run 1</a></li>
+<li><a href="#run-4">Run 4</a></li>
+</ul></li>
+<li><a href="#conclusions">Conclusions</a></li>
+</ul>
+</div>
+
+<pre class="r"><code>library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)
+
+source(&quot;../../tools/echem_processing_tools.R&quot;)
+source(&quot;../../tools/plotting_tools.R&quot;)
+
+theme_set(theme_1())</code></pre>
+<div id="intro" class="section level1">
+<h1>Intro</h1>
+<p>This is the third replicate of the psoralen IDA experiment. Please see the processing notebook for the quantification of the raw echem scans. See the README for the project folder for the protocol and details about the data.</p>
+</div>
+<div id="results" class="section level1">
+<h1>Results</h1>
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p>Let’s look at the data quantified from the electrode 1 SWVs.</p>
+<pre class="r"><code>df_all &lt;-  read_csv(&quot;../Processing/01_23_19_processed_swv_gc_all.csv&quot;)
+
+#ignore rep 0, because it is not paired with a GC measurement, ignore soak datapoints
+
+ggplot(df_all %&gt;% filter(electrode_from_swv==&#39;i1&#39; &amp; reactor==&#39;transfer&#39; &amp; rep&gt;0), aes(x = signal_from_swv, y = signal_from_gc, color = factor(run))) +
+  geom_line()+
+  geom_point()+
+  facet_wrap(~treatment,scales=&#39;free&#39;) + 
+  xlim(0,NA) + 
+  scale_color_viridis(discrete = T)</code></pre>
+<p><img src="01_23_19_psoralen_nonequil_3_Dap_analysis_files/figure-html/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Ok,the most obvious thing we can see is that there’s some craziness that happened in the quantitation of the psoralen data. This is to be expected from some of the weird echem behavior described in the processing notebook. Psoralen runs 2 and 3 look unsalvagable, but you can see that run 1 and 4 look pretty ok, except that psoralen run 1 has 2 points that seem to be outliers.</p>
+<p>Apparently those two outlier datapoints for psoralen run 1 are reps 14 and 15, when the SWVs randomly had very high noise. I believe we could smooth the data and get nice quantification for those scans, but for now let’s exclude all of the reps &gt;= 14.</p>
+<pre class="r"><code>ggplot(df_all %&gt;% filter(electrode_from_swv==&#39;i1&#39; &amp; reactor==&#39;transfer&#39; &amp; rep&gt;0 &amp; rep&lt;14), aes(x = signal_from_swv, y = signal_from_gc, color = factor(run))) +
+  geom_line()+
+  geom_point()+
+  facet_wrap(~treatment,scales=&#39;free&#39;) + 
+  xlim(0,NA) + 
+  scale_color_viridis(discrete = T)</code></pre>
+<p><img src="01_23_19_psoralen_nonequil_3_Dap_analysis_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /> Now you can see that runs 1 and 4 in both the control and psoralen treatments look pretty nicely behaved and quite linear. Thankfully, those runs were taken at the same scan rates for the two biofilms, so they are directly comparable. See more detail below.</p>
+<p>The other thing to notice, is that the control data takes on a different shape from runs 1-3. Run 1 seems very linear, Run 2 maybe has a slight curve, but Run 3 is obviously nonlinear. I do not know what causes this change, but it is interesting that this trend also appeared in other replicates of this experiment. In general I can think of three reasons why the nonlinear trend might appear:</p>
+<ol style="list-style-type: decimal">
+<li>There truly is a different mode of electron transfer that dominates by run 3. Dianne suggested that it could be that only after 3 consecutive soaks of the biofilm in PYO, maybe the biofilm acquired enough PYO to enable some sort of electron hopping.
+<ul>
+<li>Perhaps this would be motivation to try the experiment with a WT biofilm and it’s own supernatant? If the trend always looks nonlinear in WT, maybe it’s real, since it should already be loaded with PYO. Or soaking the dPHZ* biofilm in PYO for a longer period before measurement.</li>
+</ul></li>
+<li>By run 3 there is less biofilm attached to the electrode and therefore the loss of PYO from the biofilm is faster. The faster the loss, the more curve you would expect because of the increasing mismatch between the GC scan (first) followed by the SWV scan (second). For example if a GC scan is taken with XuM PYO, and by the time the SWV is taken there’s only 0.5XuM PYO, then the datapoint on the above plot would be higher than expected, giving a curved trend.
+<ul>
+<li>Perhaps the <span class="math inline">\(D_m\)</span> of the samples could be compared to address this.</li>
+</ul></li>
+<li>By run 3, there has been a buildup of the i2 contaminant, that has started to affect the GC signal. Again, a systematic increase in the GC signal may manifest as a curved shape.
+<ul>
+<li>This may be addressed by requantifying the GCs ~ -0.3V before the redox potential of the contaminant? I tried this (secondary plots in processing notebook), and if anything it makes the curves look a little more nonlinear.</li>
+</ul></li>
+</ol>
+</div>
+<div id="run-1" class="section level2">
+<h2>Run 1</h2>
+<p>Let’s focus on run 1, which may be the most reliable subset of the data. All of the SWVs were taken with fast settings.</p>
+<pre class="r"><code>df_1 &lt;- read_csv(&quot;../Processing/01_23_19_processed_swv_gc_run_1.csv&quot;)
+
+
+ggplot(df_1 %&gt;% filter(rep&gt;0), aes(x = signal_from_swv, y = signal_from_gc, color = treatment)) + geom_point() + 
+  geom_smooth(method=&#39;lm&#39;, se=F)</code></pre>
+<p><img src="01_23_19_psoralen_nonequil_3_Dap_analysis_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /> Here you can see that the linear trend is very nice. It is also clear that the psoralen dataset has a higher slope than the control.</p>
+<p>Recall that: <span class="math display">\[ D_{ap} = \frac{(m A \psi)^2 }{S^2 \pi t_p }\]</span> So, the higher the slope the higher <span class="math inline">\(D_{ap}\)</span>. Let’s directly calculate <span class="math inline">\(D_{ap}\)</span> from the slopes of the fitted lines:</p>
+<pre class="r"><code>dap_calc &lt;- function(m, t_p=1/(2*300)){
+  
+  psi &lt;-  0.91
+  A &lt;-  0.013 #cm^2
+  S &lt;-  18.4 #cm
+  d_ap &lt;- (m*A*psi)^2 / (S^2 * pi * t_p)
+  
+  d_ap
+}
+
+swv_gc_lms &lt;- df_1 %&gt;% 
+  filter(rep&gt;0 ) %&gt;%
+  group_by(treatment) %&gt;% 
+  do(tidy(lm(signal_from_gc~signal_from_swv,.)))
+
+(swv_gc_dap &lt;- swv_gc_lms %&gt;% 
+  filter(term==&#39;signal_from_swv&#39;) %&gt;% 
+  mutate(dap=dap_calc(m = estimate)))</code></pre>
+<pre><code>## # A tibble: 2 x 7
+## # Groups:   treatment [2]
+##   treatment term            estimate std.error statistic  p.value       dap
+##   &lt;chr&gt;     &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+## 1 control   signal_from_swv    0.151   0.00399      38.0 1.06e-14   1.81e-6
+## 2 psoralen  signal_from_swv    0.238   0.00324      73.5 3.70e-16   4.47e-6</code></pre>
+<p>As was clear from the plot, the psoralen titration actually has a higher <span class="math inline">\(D_{ap}\)</span> estimate than the control, which is the exact opposite of what we would expect from the DNA CT hypothesis. Let’s look at run 4, before we draw our final conclusions.</p>
+<hr />
+<p><em><span class="math inline">\(D_{ap}\)</span> Parameter Notes:</em></p>
+<p>So, apparently <span class="math inline">\(t_p\)</span> should be one half of the sample period (inverse of frequency). Therefore <span class="math inline">\(t_p = \frac{1}{2} * \frac{1}{300\text{Hz}}\)</span>.</p>
+<p>Also, the surface area was measured to be ~0.025 <span class="math inline">\(\text{cm}^2\)</span>, but in terms of the dimensions of the actual IDA, there are 65 pairs of electrodes that are 2mm long and 10um wide. Therefore for just the i1 channel <span class="math inline">\(65 * 0.2 * 0.001 = 0.013 \text{cm}^2\)</span>. The estimate therefore seems high, and could be one reason why the blank IDA PYO <span class="math inline">\(D_{ap}\)</span> measurements seem quite high.</p>
+</div>
+<div id="run-4" class="section level2">
+<h2>Run 4</h2>
+<p>Here’s the Run 4 data. Note that these SWVs were taken with slow parameters. Note that the psoralen SWVslows did have a slightly weird shape (see processing).</p>
+<pre class="r"><code>df_4 &lt;- read_csv(&quot;../Processing/01_23_19_processed_swv_gc_run_4.csv&quot;)
+
+
+ggplot(df_4 %&gt;% filter(rep&gt;0), aes(x = signal_from_swv, y = signal_from_gc, color = treatment)) + geom_point() + 
+  geom_smooth(method=&#39;lm&#39;, se=F)</code></pre>
+<p><img src="01_23_19_psoralen_nonequil_3_Dap_analysis_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The first thing I notice is that the highest control datapoint seems to be an outlier. Looking back at the processing notebook, shows that GC scan actually has a strange extra peak at the reductive end of the scan (where we quantify), so let’s ignore that datapoint for now:</p>
+<pre class="r"><code>df_4_outlier &lt;- df_4 %&gt;% 
+  filter(treatment!=&#39;control&#39; | rep!=1)
+
+ggplot(df_4_outlier %&gt;% filter(rep&gt;0), aes(x = signal_from_swv, y = signal_from_gc, color = treatment)) + geom_point() + 
+  geom_smooth(method=&#39;lm&#39;, se=F)</code></pre>
+<p><img src="01_23_19_psoralen_nonequil_3_Dap_analysis_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /> Now the linear trends look reasonably clear. It looks like the slopes are quite similar now, let’s calculate <span class="math inline">\(D_{ap}\)</span>:</p>
+<pre class="r"><code>swv_gc_4_lms &lt;- df_4_outlier %&gt;% 
+  filter(rep&gt;0 ) %&gt;%
+  group_by(treatment) %&gt;% 
+  do(tidy(lm(signal_from_gc~signal_from_swv,.)))
+
+(swv_gc_4_dap &lt;- swv_gc_4_lms %&gt;% 
+  filter(term==&#39;signal_from_swv&#39;) %&gt;% 
+  mutate(dap=dap_calc(m = estimate)))</code></pre>
+<pre><code>## # A tibble: 2 x 7
+## # Groups:   treatment [2]
+##   treatment term         estimate std.error statistic     p.value       dap
+##   &lt;chr&gt;     &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;
+## 1 control   signal_from…    0.254   0.0156       16.3     5.33e-8   5.10e-6
+## 2 psoralen  signal_from…    0.191   0.00999      19.2     3.25e-9   2.89e-6</code></pre>
+<p>You can see from slope (“estimate” column), that the two datasets are pretty close. The <span class="math inline">\(D_{ap}\)</span> estimate enhances the difference a little, because <span class="math inline">\(D_{ap}\)</span> scales with the square of <span class="math inline">\(m\)</span>, but I’m not sure these datasets are distinguishable given the small difference, and relatively poor quality of the psoralen dataset peaks…</p>
+<p>Let’s look at all four <span class="math inline">\(D_{ap}\)</span> estimates on one plot.</p>
+<pre class="r"><code>dap_agg &lt;- rbind(swv_gc_dap %&gt;% mutate(run=&#39;1&#39;),swv_gc_4_dap %&gt;% mutate(run=&#39;4&#39;))
+
+ggplot(dap_agg, aes(x = treatment, y = dap, color = treatment, shape = run)) + 
+  geom_point(size=3) +
+  ylim(0,NA)</code></pre>
+<p><img src="01_23_19_psoralen_nonequil_3_Dap_analysis_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /> This just summarizes what we already learned…at this stage there is not obvious difference between the estimates for the control vs. psoralen treated biofilm <span class="math inline">\(D_{ap}\)</span>. That said, the estimates are reasonably close together…</p>
+</div>
+</div>
+<div id="conclusions" class="section level1">
+<h1>Conclusions</h1>
+<p>For this replicate, runs 1 and 4 seemed to be the most reliable. Neither run suggests that the psoralen biofilm has a lower <span class="math inline">\(D_{ap}\)</span> than the control. Therefore, this replicate does not support the idea that psoralen treatment disrupts DNA CT and or that DNA CT is a major component of <span class="math inline">\(D_{ap}\)</span>.</p>
+<p>That said, the control dataset actually looks pretty good, and I think we can trust the quantification of run 1. It is also very interesting that the control dataset becomes more nonlinear throughout the runs.</p>
+<p>Further, if we trust the slope based estimates, all of the datasets converge on similar values for <span class="math inline">\(D_{ap}\)</span>: the estimates are all between <span class="math inline">\(1 * 10^{-6} \text{cm}^2 / \text{sec}\)</span> to <span class="math inline">\(5 * 10^{-6} \text{cm}^2 / \text{sec}\)</span>. That’s actually a pretty narrow range!?</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

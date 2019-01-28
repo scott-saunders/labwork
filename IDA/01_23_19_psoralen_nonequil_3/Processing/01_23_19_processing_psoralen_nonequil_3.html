@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Psoralen treatment - Non equilibrium #3</title>
+
+<script src="01_23_19_processing_psoralen_nonequil_3_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="01_23_19_processing_psoralen_nonequil_3_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="01_23_19_processing_psoralen_nonequil_3_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="01_23_19_processing_psoralen_nonequil_3_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="01_23_19_processing_psoralen_nonequil_3_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="01_23_19_processing_psoralen_nonequil_3_files/navigation-1.1/tabsets.js"></script>
+<script src="01_23_19_processing_psoralen_nonequil_3_files/navigation-1.1/codefolding.js"></script>
+<link href="01_23_19_processing_psoralen_nonequil_3_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="01_23_19_processing_psoralen_nonequil_3_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Psoralen treatment - Non equilibrium #3</h1>
+<h3 class="subtitle"><em>Processing</em></h3>
+<h4 class="date"><em>01_23_19</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#import">Import</a><ul>
+<li><a href="#swv-data">SWV data</a></li>
+<li><a href="#gc-data">GC data</a></li>
+</ul></li>
+<li><a href="#quantification">Quantification</a><ul>
+<li><a href="#control-swv">Control SWV</a></li>
+<li><a href="#psoralen-swv">Psoralen SWV</a></li>
+<li><a href="#all-gc">All GC</a></li>
+</ul></li>
+<li><a href="#combine-swvgc">Combine SWV/GC</a><ul>
+<li><a href="#control">Control</a></li>
+<li><a href="#psoralen">Psoralen</a></li>
+</ul></li>
+<li><a href="#processed-dataset">Processed Dataset</a></li>
+</ul>
+</div>
+
+<pre class="r"><code>library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)
+
+source(&quot;../../tools/echem_processing_tools.R&quot;)
+source(&quot;../../tools/plotting_tools.R&quot;)
+
+theme_set(theme_1())</code></pre>
+<div id="import" class="section level1">
+<h1>Import</h1>
+<div id="swv-data" class="section level2">
+<h2>SWV data</h2>
+<p>First, import all SWV files.</p>
+<pre class="r"><code>SWV_file_paths &lt;-  dir(path=&#39;../Data&#39;, pattern = &quot;[SWV]+.+[txt]$&quot;,recursive = T,full.names = T)
+
+SWV_filenames &lt;- basename(SWV_file_paths)
+
+swv_data_cols &lt;-  c(&#39;E&#39;,&#39;i1&#39;,&#39;i2&#39;)
+
+filename_cols = c(&#39;PHZadded&#39;,&#39;treatment&#39;,&#39;reactor&#39;,&#39;run&#39;,&#39;echem&#39;,&#39;rep&#39;)
+
+swv_skip_rows=18
+  
+
+swv_data &lt;- echem_import_to_df(filenames = SWV_filenames, 
+                                       file_paths = SWV_file_paths, 
+                                       data_cols = swv_data_cols, 
+                                       skip_rows = swv_skip_rows,
+                                       filename_cols = filename_cols,
+                                       rep = T) %&gt;% 
+  mutate(rep=rep-1)</code></pre>
+<p>These are all of the scans taken in the transfer reactor. This is i1, which is usually used for the downstream quantification:</p>
+<pre class="r"><code>ggplot(swv_data %&gt;% filter(electrode==&#39;i1&#39; &amp; reactor==&#39;transfer&#39;), aes(x=E, y=current,color=rep,group=factor(rep)))+geom_path()+
+  facet_grid(treatment~run,scales=&#39;free&#39;)+
+  scale_color_viridis()</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>It looks about as expected. Unfortunately there is a high background signal that comes up in the psoralen starting at run 3. I switched to SWVslow parameters after that.</p>
+<p>Here’s i2:</p>
+<pre class="r"><code>ggplot(swv_data %&gt;% filter(electrode==&#39;i2&#39; &amp; reactor==&#39;transfer&#39;), aes(x=E, y=current,color=rep,group=factor(rep)))+geom_path()+
+  facet_grid(treatment~run,scales=&#39;free&#39;)+
+  scale_color_viridis()</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /> It looks typical. Taking an SWV after GC results in this weird peak at the collector electrode…at least it’s consistent. For run 5, the psoralen biofilm was started with SWV fast parameters and it looked bad, so I restarted it with swv slow parameters, so the real scans are very tiny on this plot.</p>
+<p>Let’s focus on the first run for both conditions.</p>
+<pre class="r"><code>ggplot(swv_data %&gt;% filter(electrode==&#39;i1&#39; &amp; reactor==&#39;transfer&#39; &amp; run==1 &amp; rep&lt;14 &amp; rep&gt;0), aes(x=E, y=current,color=rep,group=factor(rep)))+geom_path()+
+  facet_wrap(~treatment,scales=&#39;free&#39;)+
+  scale_color_viridis()</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /> It looks pretty good, although the psoralen data may need some loess smoothing. Let’s ignore that for now.</p>
+</div>
+<div id="gc-data" class="section level2">
+<h2>GC data</h2>
+<p>Let’s import all the GC data.</p>
+<pre class="r"><code>GC_file_paths &lt;-  dir(path=&#39;../Data&#39;, pattern = &quot;[GC]+.+[txt]$&quot;,recursive = T,full.names = T)
+
+GC_filenames &lt;- basename(GC_file_paths)
+
+gc_data_cols &lt;-  c(&#39;E&#39;,&#39;i1&#39;,&#39;i2&#39;,&#39;t&#39;)
+
+filename_cols = c(&#39;PHZadded&#39;,&#39;treatment&#39;,&#39;reactor&#39;,&#39;run&#39;,&#39;echem&#39;,&#39;rep&#39;)
+
+gc_skip_rows=21
+  
+
+gc_data &lt;- echem_import_to_df(filenames = GC_filenames, 
+                                       file_paths = GC_file_paths, 
+                                       data_cols = gc_data_cols, 
+                                       skip_rows = gc_skip_rows,
+                                       filename_cols = filename_cols,
+                                       rep = T)</code></pre>
+<p>Here’s all the data plotted.</p>
+<pre class="r"><code>ggplot(gc_data %&gt;% filter(reactor==&#39;transfer&#39;), aes(x=E, y=current,color=rep,group=electrode))+
+  geom_point(size=0.5)+
+  facet_grid(treatment~run,scales=&#39;free&#39;)+
+  scale_x_reverse() + 
+  scale_color_viridis(discrete = F)</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /> Eh, this data looks ok, but not great. I do not understand why the curves get “wiggly” or why such a weird high signal pops up on the generators. These weird effects seemed to be indpendent of potentiostat and not sensitive to minor changes in where the IDA faced in the reactors. I think the 760b might give somewhat smoother results, but it’s perplexing that it is relatively inconsistent. Note that for runs 1 and 2 the 760e was used with the control and the 760b with psoralen, and runs 3 and 4 were the exact opposite.</p>
+<p>It looks like the collectors were somewhat more immune to the wiggliness than the generators, but I do worry that these anomalies will affect the quantification…For now, I think we should look at the series more closely, and try to make sure that the wiggles are small compared to the main PYO peak arising around 250mV. Assuming that is true, I think we should be fine.</p>
+<p>Let’s look at the collector data specifically:</p>
+<pre class="r"><code>ggplot(gc_data %&gt;% filter(reactor==&#39;transfer&#39; &amp; electrode==&#39;i2&#39;), aes(x=E, y=-current,color=rep,group=factor(rep))) +
+  geom_path()+
+  facet_grid(treatment~run,scales=&#39;free&#39;)+
+  scale_color_viridis()+
+  scale_x_reverse()</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /> The collector is more robus to the wiggliness, but it is still apparent in many curves.</p>
+</div>
+</div>
+<div id="quantification" class="section level1">
+<h1>Quantification</h1>
+<div id="control-swv" class="section level2">
+<h2>Control SWV</h2>
+<p>Let’s start with the control SWV data, which overall looks cleaner than the psoralen data.</p>
+<pre class="r"><code>swv_control_data &lt;- swv_data %&gt;% 
+  filter(treatment==&#39;control&#39; &amp; PHZaddedInt==75)
+
+unique_id_cols = c(&#39;PHZadded&#39;,&#39;treatment&#39;,&#39;reactor&#39;,&#39;run&#39;,&#39;echem&#39;,&#39;rep&#39;,&#39;minutes&#39;,&#39;PHZaddedInt&#39;,&#39;electrode&#39;)
+
+swv_control_signals_1 &lt;- echem_signal(df = swv_control_data %&gt;% filter(run!=4), 
+                            unique_id_cols = unique_id_cols,
+                            max_interval = c(-0.2,-0.4), 
+                            min_interval = c(0.0,-0.4)) 
+
+swv_control_signals_2 &lt;- echem_signal(df = swv_control_data %&gt;% filter(run==4), 
+                            unique_id_cols = unique_id_cols,
+                            max_interval = c(-0.2,-0.4), 
+                            min_interval = c(-0.11,-0.4)) 
+
+swv_control_signals = rbind(swv_control_signals_1,swv_control_signals_2)</code></pre>
+<pre class="r"><code>ggplot(swv_control_data %&gt;% filter(electrode==&#39;i1&#39;), 
+       aes(x = E, y = current, color = rep, shape=reactor, group=factor(rep))) +
+  geom_path()+
+  geom_point(data = swv_control_signals %&gt;% filter(electrode==&#39;i1&#39;), 
+             aes(x = E_from_maxs, y = current_from_maxs), color = &#39;red&#39;) + 
+  geom_point(data = swv_control_signals %&gt;% filter(electrode==&#39;i1&#39;), 
+             aes(x = E_from_mins, y = current_from_mins), color = &#39;blue&#39;) +
+  facet_wrap(~run,scales=&#39;free&#39;)+
+  scale_x_reverse()+
+  scale_color_viridis()</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(swv_control_data %&gt;% filter(electrode==&#39;i1&#39; &amp; reactor==&#39;transfer&#39;), 
+       aes(x = E, y = current, color = rep, shape=reactor, group=factor(rep))) +
+  geom_path()+
+  geom_point(data = swv_control_signals %&gt;% filter(electrode==&#39;i1&#39; &amp; reactor==&#39;transfer&#39;), 
+             aes(x = E_from_maxs, y = current_from_maxs), color = &#39;red&#39;) + 
+  geom_point(data = swv_control_signals %&gt;% filter(electrode==&#39;i1&#39; &amp; reactor==&#39;transfer&#39;), 
+             aes(x = E_from_mins, y = current_from_mins), color = &#39;blue&#39;) +
+  facet_wrap(~run,scales=&#39;free&#39;)+
+  scale_x_reverse()+
+  scale_color_viridis()</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-9-2.png" width="672" style="display: block; margin: auto;" /> Overall, these look pretty good, there isn’t any crazy background that obviously messes with the quantification. Also, in the top plot, you can see that the soak scans aren’t way higher than the first rep 0 transfer scan, which will be useful for the <span class="math inline">\(D_m\)</span> estimate.</p>
+<p>Here’s what the i2 swvs look like:</p>
+<pre class="r"><code>ggplot(swv_control_data %&gt;% filter(electrode==&#39;i2&#39; &amp; reactor==&#39;transfer&#39; &amp; rep&gt;0), 
+       aes(x = E, y = current, color = rep, shape=reactor, group=factor(rep))) + 
+  geom_path()+
+  geom_point(data = swv_control_signals %&gt;% filter(electrode==&#39;i2&#39; &amp; reactor==&#39;transfer&#39; &amp; rep&gt;0), 
+             aes(x = E_from_maxs, y = current_from_maxs), color = &#39;red&#39;) + 
+  geom_point(data = swv_control_signals %&gt;% filter(electrode==&#39;i2&#39; &amp; reactor==&#39;transfer&#39; &amp; rep&gt;0), 
+             aes(x = E_from_mins, y = current_from_mins), color = &#39;blue&#39;) +
+  facet_wrap(~run,scales=&#39;free&#39;)+
+  scale_x_reverse()+
+  scale_color_viridis()</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /> Again, following GC, swv i2 has a weird signal. This signal is still present in run 4 (SWV slow), so it’s not that time sensitive.</p>
+<p>Let’s look at how the quantified signals decay over the reps.</p>
+<pre class="r"><code>ggplot(swv_control_signals, aes(x=rep, y=signal,shape=reactor,color=factor(run)))+geom_line()+geom_point()+
+  facet_wrap(~electrode)+
+  scale_color_viridis(discrete = T)</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /> Overall, the control i1 signals look pretty consistent (except run 4 which was taken with swv slow). As expected the i2 signals look a little weird, except for runs 4 and 5. So maybe the SWV slow did deal with the contaminant better??</p>
+</div>
+<div id="psoralen-swv" class="section level2">
+<h2>Psoralen SWV</h2>
+<p>Let’s examine the psoralen SWVs.</p>
+<pre class="r"><code>swv_psoralen_data &lt;- swv_data %&gt;% 
+  filter(treatment==&#39;psoralen&#39; &amp; PHZaddedInt==75) %&gt;% 
+  filter(echem!=&#39;SWV&#39; | run!=5)
+
+unique_id_cols = c(&#39;PHZadded&#39;,&#39;treatment&#39;,&#39;reactor&#39;,&#39;run&#39;,&#39;echem&#39;,&#39;rep&#39;,&#39;minutes&#39;,&#39;PHZaddedInt&#39;,&#39;electrode&#39;)
+
+swv_psoralen_signals &lt;- echem_signal(df = swv_psoralen_data, 
+                            unique_id_cols = unique_id_cols,
+                            max_interval = c(-0.2,-0.4), 
+                            min_interval = c(-0.11,-0.4)) </code></pre>
+<pre class="r"><code>ggplot(swv_psoralen_data %&gt;% filter(electrode==&#39;i1&#39; &amp; reactor==&#39;transfer&#39; &amp; rep&gt;0), 
+       aes(x = E, y = current, color = rep, shape=reactor, group=factor(rep))) +
+  geom_path()+
+  geom_point(data = swv_psoralen_signals %&gt;% filter(electrode==&#39;i1&#39; &amp; reactor==&#39;transfer&#39; &amp; rep&gt;0), 
+             aes(x = E_from_maxs, y = current_from_maxs), color = &#39;red&#39;) + 
+  geom_point(data = swv_psoralen_signals %&gt;% filter(electrode==&#39;i1&#39; &amp; reactor==&#39;transfer&#39; &amp; rep&gt;0), 
+             aes(x = E_from_mins, y = current_from_mins), color = &#39;blue&#39;) +
+  facet_wrap(~run,scales=&#39;free&#39;)+
+  scale_x_reverse()+
+  scale_color_viridis()</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># ggplot(swv_psoralen_data %&gt;% filter(electrode==&#39;i1&#39; &amp; reactor==&#39;transfer&#39; &amp; rep&gt;0 &amp; run==5), 
+#        aes(x = E, y = current, color = rep, shape=echem, group=factor(rep))) +
+#   geom_point()+
+#   facet_wrap(~run,scales=&#39;free&#39;)+
+#   scale_x_reverse()+
+#   scale_color_viridis()</code></pre>
+<p>Ok, we can see that some of the later scans during run 1 had very high noise. See below for a plot of run 1 excluding those sans. Rep 2 looks a little weird, maybe there’s some high noise, but not so bad. Run 3 is hard to examine because of the high background, see below for a better view. Runs 3 and 4 used SWVslows and both have unusually broad peaks, but the plots seem to decay monotonically.</p>
+<p>Here’s run 1:</p>
+<pre class="r"><code>ggplot(swv_psoralen_data %&gt;% filter(electrode==&#39;i1&#39; &amp; reactor==&#39;transfer&#39; &amp; rep&gt;0 &amp; rep&lt;14 &amp; run==1), 
+       aes(x = E, y = current, color = rep, shape=reactor, group=factor(rep))) +
+  geom_path()+
+  geom_point(data = swv_psoralen_signals %&gt;% filter(electrode==&#39;i1&#39; &amp; reactor==&#39;transfer&#39; &amp; rep&gt;0 &amp; rep&lt;14 &amp; run==1), 
+             aes(x = E_from_maxs, y = current_from_maxs), color = &#39;red&#39;) + 
+  geom_point(data = swv_psoralen_signals %&gt;% filter(electrode==&#39;i1&#39; &amp; reactor==&#39;transfer&#39; &amp; rep&gt;0 &amp; rep&lt;14 &amp; run==1), 
+             aes(x = E_from_mins, y = current_from_mins), color = &#39;blue&#39;) +
+  facet_wrap(~echem,scales=&#39;free&#39;)+
+  scale_x_reverse()+
+  scale_color_viridis()</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /> Run 1 looks quite good. Perhaps we should loess smooth later.</p>
+<p>Here’s run 3:</p>
+<pre class="r"><code>ggplot(swv_psoralen_data %&gt;% filter(electrode==&#39;i1&#39; &amp; reactor==&#39;transfer&#39; &amp; rep&gt;0 &amp; run==3), 
+       aes(x = E, y = current, color = rep, shape=reactor, group=factor(rep))) +
+  geom_path()+
+  geom_point(data = swv_psoralen_signals %&gt;% filter(electrode==&#39;i1&#39; &amp; reactor==&#39;transfer&#39; &amp; rep&gt;0 &amp; run==3), 
+             aes(x = E_from_maxs, y = current_from_maxs), color = &#39;red&#39;) + 
+  geom_point(data = swv_psoralen_signals %&gt;% filter(electrode==&#39;i1&#39; &amp; reactor==&#39;transfer&#39; &amp; rep&gt;0 &amp; run==3), 
+             aes(x = E_from_mins, y = current_from_mins), color = &#39;blue&#39;) +
+  facet_wrap(~echem,scales=&#39;free&#39;)+
+  ylim(2e-6,5e-6)+
+  scale_x_reverse()+
+  scale_color_viridis()</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /> It’s clear that these peaks are going to be useless.</p>
+</div>
+<div id="all-gc" class="section level2">
+<h2>All GC</h2>
+<p>Now let’s quantify the GC data. I’m going to quantify at the last point of the scan ~ -0.4V and right after the PYO redox peak at -0.3 V.</p>
+<pre class="r"><code>gc_data_i2 &lt;- gc_data %&gt;% 
+  filter(electrode==&#39;i2&#39; &amp; PHZaddedInt==75) %&gt;% 
+  mutate(current=-current)
+
+unique_id_cols = c(&#39;PHZadded&#39;,&#39;treatment&#39;,&#39;reactor&#39;,&#39;run&#39;,&#39;echem&#39;,&#39;rep&#39;,&#39;minutes&#39;,&#39;PHZaddedInt&#39;,&#39;electrode&#39;)
+
+gc_signals &lt;- echem_signal(df = gc_data_i2, 
+                            unique_id_cols = unique_id_cols,
+                            max_interval = c(-0.399,-0.399), 
+                            min_interval = c(0.0,-0.4))
+
+gc_signals_2 &lt;- echem_signal(df = gc_data_i2, 
+                            unique_id_cols = unique_id_cols,
+                            max_interval = c(-0.3,-0.3), 
+                            min_interval = c(0.0,-0.4)) </code></pre>
+<pre class="r"><code>ggplot(gc_data_i2 %&gt;% filter(reactor==&#39;transfer&#39;), 
+       aes(x = E, y = current, color = rep, shape=reactor, group=factor(rep))) +
+  geom_path()+
+  geom_point(data = gc_signals %&gt;% filter(reactor==&#39;transfer&#39;), 
+             aes(x = E_from_maxs, y = current_from_maxs), color = &#39;red&#39;) + 
+  geom_point(data = gc_signals %&gt;% filter(reactor==&#39;transfer&#39;), 
+             aes(x = E_from_mins, y = current_from_mins), color = &#39;blue&#39;) +
+  facet_grid(treatment~run,scales=&#39;free&#39;)+
+  scale_x_reverse()+
+  scale_color_viridis() </code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-17-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(gc_data_i2 %&gt;% filter(reactor==&#39;transfer&#39;) %&gt;% filter(E&gt;-0.5), 
+       aes(x = E, y = current, color = rep, shape=reactor, group=factor(rep))) +
+  geom_path()+
+  geom_point(data = gc_signals_2 %&gt;% filter(reactor==&#39;transfer&#39;), 
+             aes(x = E_from_maxs, y = current_from_maxs), color = &#39;red&#39;) + 
+  geom_point(data = gc_signals_2 %&gt;% filter(reactor==&#39;transfer&#39;), 
+             aes(x = E_from_mins, y = current_from_mins), color = &#39;blue&#39;) +
+  facet_grid(treatment~run,scales=&#39;free&#39;)+
+  scale_x_reverse()+
+  scale_color_viridis() </code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-17-2.png" width="672" style="display: block; margin: auto;" /> The quantifications look clean.</p>
+<p>Let’s look at the soak data:</p>
+<pre class="r"><code>ggplot(gc_data_i2 %&gt;% filter(reactor==&#39;soak&#39; &amp; rep==1), 
+       aes(x = E, y = current, color = factor(run), shape=reactor, linetype=treatment)) +
+  geom_path()+
+  geom_point(data = gc_signals %&gt;% filter(reactor==&#39;soak&#39;), 
+             aes(x = E_from_maxs, y = current_from_maxs), color = &#39;red&#39;) + 
+  geom_point(data = gc_signals %&gt;% filter(reactor==&#39;soak&#39;), 
+             aes(x = E_from_mins, y = current_from_mins), color = &#39;blue&#39;) +
+  scale_x_reverse()+
+  scale_color_viridis(discrete = T)</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-18-1.png" width="672" style="display: block; margin: auto;" /> The only pattern I see is that the psoralen signal goes up each run in the soak reactor. Perhaps this is an indication that the biofilm is falling off and the soak IDA is able to see more of the solution?</p>
+<p>Let’s look at all of the GC signals over the reps from each run.</p>
+<pre class="r"><code>ggplot(gc_signals, aes(x = rep, y = signal,shape=reactor, color=factor(run)))+
+  geom_line()+
+  geom_point()+
+  facet_wrap(reactor~treatment,scales=&#39;free&#39;)+
+  scale_color_viridis(discrete = T)</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;" /> Ok, overall, things look reasonably good, they decline monotonically. It is interesting that run 1 seems to decay more slowly than the other runs. Also notice that the first transfer psoralen data points decrease from run 1 to 4, further indicating that the biofilm may have degraded, since less PYO was carried over. We should look at the timing from transfer to run 1 to be sure though.</p>
+</div>
+</div>
+<div id="combine-swvgc" class="section level1">
+<h1>Combine SWV/GC</h1>
+<p>Again we are going to look at the last GC datapoint and at -0.3, which has &quot;_2&quot; appended to everything. Here’s a quick pass at the data. See the analysis notebook for more detailed thoughts:</p>
+<div id="control" class="section level2">
+<h2>Control</h2>
+<pre class="r"><code>swv_gc_control &lt;- left_join(swv_control_signals %&gt;% filter(run&lt;=4),gc_signals,
+                            by=c(&#39;run&#39;,&#39;rep&#39;,&#39;reactor&#39;,&#39;treatment&#39;),
+                            suffix=c(&#39;_from_swv&#39;,&#39;_from_gc&#39;))
+
+swv_gc_control_2 &lt;- left_join(swv_control_signals %&gt;% filter(run&lt;=4),gc_signals_2,
+                            by=c(&#39;run&#39;,&#39;rep&#39;,&#39;reactor&#39;,&#39;treatment&#39;),
+                            suffix=c(&#39;_from_swv&#39;,&#39;_from_gc&#39;))
+
+#write_csv(swv_gc_control,&quot;./01_17_19_swv_gc_control_dap_processed.csv&quot;)
+
+ggplot(swv_gc_control %&gt;% filter(reactor==&#39;transfer&#39; &amp; electrode_from_swv==&#39;i1&#39; &amp; rep&gt;0), aes(x = signal_from_swv, y = signal_from_gc, color=factor(run)))+
+  geom_line()+
+  geom_point()+
+  geom_smooth(method=&#39;lm&#39;,se=F)+
+  scale_color_viridis(discrete = T)</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-20-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(swv_gc_control_2 %&gt;% filter(reactor==&#39;transfer&#39; &amp; electrode_from_swv==&#39;i1&#39; &amp; rep&gt;0), aes(x = signal_from_swv, y = signal_from_gc, color=factor(run)))+
+  geom_line()+
+  geom_point()+
+  geom_smooth(method=&#39;lm&#39;,se=F)+
+  scale_color_viridis(discrete = T)+
+  facet_wrap(~run,scales=&#39;free&#39;)</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-20-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>(swv_gc_control_lms &lt;- swv_gc_control %&gt;% 
+  filter(reactor==&#39;transfer&#39; &amp; rep&gt;0 &amp; electrode_from_swv==&#39;i1&#39;) %&gt;%
+  group_by(run,treatment,electrode_from_swv) %&gt;% 
+  do(tidy(lm(signal_from_gc~signal_from_swv,.))))</code></pre>
+<pre><code>## # A tibble: 8 x 8
+## # Groups:   run, treatment, electrode_from_swv [4]
+##   run   treatment electrode_from_… term  estimate std.error statistic
+##   &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;            &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 1     control   i1               (Int… -2.81e-8   1.94e-9    -14.5 
+## 2 1     control   i1               sign…  1.51e-1   3.99e-3     38.0 
+## 3 2     control   i1               (Int… -2.09e-8   1.98e-9    -10.6 
+## 4 2     control   i1               sign…  1.05e-1   3.49e-3     30.0 
+## 5 3     control   i1               (Int… -5.28e-8   5.49e-9     -9.62
+## 6 3     control   i1               sign…  1.20e-1   7.90e-3     15.2 
+## 7 4     control   i1               (Int… -2.29e-8   4.58e-9     -5.00
+## 8 4     control   i1               sign…  3.91e-1   2.91e-2     13.4 
+## # … with 1 more variable: p.value &lt;dbl&gt;</code></pre>
+<pre class="r"><code>(swv_gc_control_lms_2 &lt;- swv_gc_control_2 %&gt;% 
+  filter(reactor==&#39;transfer&#39; &amp; rep&gt;0 &amp; electrode_from_swv==&#39;i1&#39;) %&gt;%
+  group_by(run,treatment,electrode_from_swv) %&gt;% 
+  do(tidy(lm(signal_from_gc~signal_from_swv,.))))</code></pre>
+<pre><code>## # A tibble: 8 x 8
+## # Groups:   run, treatment, electrode_from_swv [4]
+##   run   treatment electrode_from_… term  estimate std.error statistic
+##   &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;            &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 1     control   i1               (Int… -2.50e-8   2.53e-9     -9.89
+## 2 1     control   i1               sign…  1.26e-1   5.20e-3     24.2 
+## 3 2     control   i1               (Int… -2.79e-8   2.95e-9     -9.45
+## 4 2     control   i1               sign…  1.18e-1   5.20e-3     22.7 
+## 5 3     control   i1               (Int… -5.57e-8   7.72e-9     -7.21
+## 6 3     control   i1               sign…  1.22e-1   1.11e-2     11.0 
+## 7 4     control   i1               (Int… -1.54e-8   1.83e-9     -8.41
+## 8 4     control   i1               sign…  2.81e-1   1.16e-2     24.2 
+## # … with 1 more variable: p.value &lt;dbl&gt;</code></pre>
+</div>
+<div id="psoralen" class="section level2">
+<h2>Psoralen</h2>
+<pre class="r"><code>swv_gc_psoralen &lt;- left_join(swv_psoralen_signals %&gt;% filter(run&lt;=4),gc_signals,
+                            by=c(&#39;run&#39;,&#39;rep&#39;,&#39;reactor&#39;,&#39;treatment&#39;),
+                            suffix=c(&#39;_from_swv&#39;,&#39;_from_gc&#39;))
+
+swv_gc_psoralen_2 &lt;- left_join(swv_psoralen_signals %&gt;% filter(run&lt;=4),gc_signals_2,
+                            by=c(&#39;run&#39;,&#39;rep&#39;,&#39;reactor&#39;,&#39;treatment&#39;),
+                            suffix=c(&#39;_from_swv&#39;,&#39;_from_gc&#39;))
+
+#write_csv(swv_gc_control,&quot;./01_17_19_swv_gc_control_dap_processed.csv&quot;)
+
+ggplot(swv_gc_psoralen %&gt;% filter(reactor==&#39;transfer&#39; &amp; electrode_from_swv==&#39;i1&#39; &amp; rep&gt;0 &amp; rep&lt;14), aes(x = signal_from_swv, y = signal_from_gc, color=factor(run)))+
+  geom_line()+
+  geom_point(aes(size=rep))+
+  geom_smooth(method=&#39;lm&#39;,se=F)+
+  scale_color_viridis(discrete = T)</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-22-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(swv_gc_psoralen_2 %&gt;% filter(reactor==&#39;transfer&#39; &amp; electrode_from_swv==&#39;i1&#39; &amp; rep&gt;0 &amp; rep&lt;14), aes(x = signal_from_swv, y = signal_from_gc, color=factor(run)))+
+  geom_line()+
+  geom_point(aes(size=rep))+
+  geom_smooth(method=&#39;lm&#39;,se=F)+
+  scale_color_viridis(discrete = T)</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-22-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Runs 1 and 4 only</p>
+<pre class="r"><code>ggplot(swv_gc_psoralen %&gt;% filter(reactor==&#39;transfer&#39; &amp; electrode_from_swv==&#39;i1&#39; &amp; rep&gt;0 &amp; rep&lt;14 &amp; run %in% c(1,4)), aes(x = signal_from_swv, y = signal_from_gc, color=factor(run)))+
+  geom_line()+
+  geom_point()+
+  geom_smooth(method=&#39;lm&#39;,se=F)+
+  facet_wrap(~run,scales=&#39;free&#39;)+
+  scale_color_viridis(discrete = T)</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-23-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(swv_gc_psoralen_2 %&gt;% filter(reactor==&#39;transfer&#39; &amp; electrode_from_swv==&#39;i1&#39; &amp; rep&gt;0 &amp; rep&lt;14 &amp; run %in% c(1,4)), aes(x = signal_from_swv, y = signal_from_gc, color=factor(run)))+
+  geom_line()+
+  geom_point()+
+  geom_smooth(method=&#39;lm&#39;,se=F)+
+  facet_wrap(~run,scales=&#39;free&#39;)+
+  scale_color_viridis(discrete = T)</code></pre>
+<p><img src="01_23_19_processing_psoralen_nonequil_3_files/figure-html/unnamed-chunk-23-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>(swv_gc_psoralen_lms &lt;- swv_gc_psoralen %&gt;% 
+  filter(reactor==&#39;transfer&#39; &amp; rep&gt;0 &amp; rep&lt;14 &amp; electrode_from_swv==&#39;i1&#39;) %&gt;%
+  group_by(run,treatment,electrode_from_swv) %&gt;% 
+  do(tidy(lm(signal_from_gc~signal_from_swv,.))))</code></pre>
+<pre><code>## # A tibble: 8 x 8
+## # Groups:   run, treatment, electrode_from_swv [4]
+##   run   treatment electrode_from_… term   estimate std.error statistic
+##   &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;            &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 1     psoralen  i1               (Int… -1.87e- 8  5.98e-10 -31.3    
+## 2 1     psoralen  i1               sign…  2.38e- 1  3.24e- 3  73.5    
+## 3 2     psoralen  i1               (Int… -3.37e- 8  1.39e- 8  -2.42   
+## 4 2     psoralen  i1               sign…  1.61e- 1  4.41e- 2   3.65   
+## 5 3     psoralen  i1               (Int…  6.13e- 9  1.21e- 8   0.505  
+## 6 3     psoralen  i1               sign… -1.87e- 4  3.35e- 2  -0.00558
+## 7 4     psoralen  i1               (Int… -8.73e-10  2.81e-10  -3.10   
+## 8 4     psoralen  i1               sign…  1.91e- 1  9.99e- 3  19.2    
+## # … with 1 more variable: p.value &lt;dbl&gt;</code></pre>
+<pre class="r"><code>(swv_gc_psoralen_lms_2 &lt;- swv_gc_psoralen_2 %&gt;% 
+  filter(reactor==&#39;transfer&#39; &amp; rep&gt;0 &amp; rep&lt;14 &amp; electrode_from_swv==&#39;i1&#39;) %&gt;%
+  group_by(run,treatment,electrode_from_swv) %&gt;% 
+  do(tidy(lm(signal_from_gc~signal_from_swv,.))))</code></pre>
+<pre><code>## # A tibble: 8 x 8
+## # Groups:   run, treatment, electrode_from_swv [4]
+##   run   treatment electrode_from_… term  estimate std.error statistic
+##   &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;            &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 1     psoralen  i1               (Int… -2.05e-8  1.30e- 9  -15.8   
+## 2 1     psoralen  i1               sign…  2.28e-1  7.03e- 3   32.4   
+## 3 2     psoralen  i1               (Int… -3.69e-8  1.32e- 8   -2.80  
+## 4 2     psoralen  i1               sign…  1.61e-1  4.18e- 2    3.84  
+## 5 3     psoralen  i1               (Int…  4.07e-9  8.85e- 9    0.460 
+## 6 3     psoralen  i1               sign… -4.75e-4  2.44e- 2   -0.0195
+## 7 4     psoralen  i1               (Int… -1.09e-9  3.68e-10   -2.95  
+## 8 4     psoralen  i1               sign…  1.40e-1  1.31e- 2   10.7   
+## # … with 1 more variable: p.value &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<div id="processed-dataset" class="section level1">
+<h1>Processed Dataset</h1>
+<pre class="r"><code>swv_gc_run_1 &lt;- rbind(swv_gc_psoralen %&gt;% filter(run==1 &amp; rep&lt;14 &amp; electrode_from_swv==&#39;i1&#39; &amp; reactor==&#39;transfer&#39;), swv_gc_control %&gt;% filter(run==1 &amp; electrode_from_swv==&#39;i1&#39; &amp; reactor==&#39;transfer&#39;))
+
+write_csv(swv_gc_run_1, &quot;./01_23_19_processed_swv_gc_run_1.csv&quot;)
+
+swv_gc_run_4 &lt;- rbind(swv_gc_psoralen %&gt;% filter(run==4 &amp; electrode_from_swv==&#39;i1&#39; &amp; reactor==&#39;transfer&#39;), swv_gc_control %&gt;% filter(run==4 &amp; electrode_from_swv==&#39;i1&#39; &amp; reactor==&#39;transfer&#39;))
+
+write_csv(swv_gc_run_4, &quot;./01_23_19_processed_swv_gc_run_4.csv&quot;)
+
+swv_gc_all &lt;- rbind(swv_gc_control, swv_gc_psoralen)
+
+write_csv(swv_gc_all, &quot;./01_23_19_processed_swv_gc_all.csv&quot;)</code></pre>
+<p>See the analysis notebook for further work with the processed datasets.</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
