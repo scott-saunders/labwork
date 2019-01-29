@@ -21,6 +21,8 @@ library(modelr)
 library(viridis)
 library(lubridate)
 library(hms)
+library(knitr)
+library(kableExtra)
 
 knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
 
@@ -32,7 +34,10 @@ theme_set(theme_1())
 
 # Intro
 
-Now that three replicates of the nonequilibrium psoralen experiment have been completed, let's combine the datasets to get a feel for what the experiments can broadly tell us. The primary goal was to test whether psoralen (trioxsalen) treatment had an effect on measured $D_{ap}$ on the IDA biofilms. The secondary goal was to get a set of controls that either way would allow us to confidently estimate $D_{ap}$ for a normal biofilm.
+Now that three replicates of the nonequilibrium psoralen experiment have been completed, let's combine the datasets to get a feel for what the experiments can broadly tell us. There were two goals with this set of experiments: 
+
+1. Test whether psoralen (trioxsalen) treatment has an effect on measured $D_{ap}$ on the IDA biofilms.  
+2. Acquire a set of controls that would allow us to confidently estimate $D_{ap}$ for a normal biofilm.
 
 I will also compare the biofilm datasets to a 'blank' dataset to give us some perspective.
 
@@ -90,7 +95,7 @@ ggplot(df_all %>% filter(electrode_from_swv=='i1' & electrode_from_gc=='i2' & tr
 You can see that the blank dataset is almost perfectly linear.
 
 Now let's look at all of the biofilm data. Below the data are broken down by experiment number and treatment. The colors represent each run within each experiment. The scales are free, so you can assess how well each dataset is fit by the linear model. Remember we are very interested to know whether the shape is linear or nonlinear.
-```{r}
+```{r , out.width='100%'}
 ggplot(df_all %>% filter(electrode_from_swv=='i1' & electrode_from_gc=='i2' & treatment!='blank'), 
        aes(x = signal_from_swv, y = signal_from_gc, color = factor(run))) + 
   geom_point() + 
@@ -111,7 +116,7 @@ ggplot(df_all %>% filter(electrode_from_swv=='i1' & electrode_from_gc=='i2' & tr
 Overall, I think the data are fit pretty well by the linear models. There are definitely subsets that are not fit well, and we can break those into two categories: obviously bad data, and good data that doesn't look linear. For experiment 3 psoralen treated biofilm, you can see that runs 2 and 3 do not look like nice monotonic trends. This is likely because the SWV scans were super weird for those runs - therefore we will ignore them later on. On the other hand, exp 1 run 1 for control and psoralen looks pretty clean, but they look quite nonlinear. There are several other runs in the dataset that look somewhat nonlinear, and it is interesting to think about what that might mean. For now though, let's move forward with the assumption that most of the datasets can be reasonably fit with a linear model.
 
 Given that we can fit with a linear model let's now compare the slopes of the datasets, by looking at the same plot with fixed scales:
-```{r}
+```{r , out.width='100%'}
 
 ggplot(df_all %>% filter(electrode_from_swv=='i1' & electrode_from_gc=='i2' & treatment!='blank'), 
        aes(x = signal_from_swv, y = signal_from_gc, color = factor(run))) + 
@@ -169,26 +174,34 @@ Let's move forward calculating $D_{ap}$, but we'll exclude all the models with $
 
 ```{r}
 
-(swv_gc_dap <- swv_gc_fit %>% 
+swv_gc_dap <- swv_gc_fit %>% 
   filter(r.squared>0.9) %>% 
   filter(echem_from_swv=='SWV' | echem_from_swv == 'SWV.txt') %>% 
   mutate(dap=dap_calc(m = estimate)) %>% 
   mutate(dap_high = dap_calc(m = conf.high)) %>% 
   mutate(dap_low = dap_calc(m = conf.low)) 
-)
+  
+
+swv_gc_dap %>% 
+  select(treatment, exp_id, run, echem_from_swv, estimate, conf.low, conf.high, r.squared, dap, dap_high, dap_low) %>% 
+  kable() %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = F)
 ```
 
-And now we'll separately calcualte $D_{ap}$ for the SWV slow subsets, with $t_p = 1/30$.
+And now we'll separately calculate $D_{ap}$ for the SWV slow subsets, with $t_p = 1/30$.
 ```{r}
 
-(swvSlow_gc_dap <- swv_gc_fit %>% 
+swvSlow_gc_dap <- swv_gc_fit %>% 
   filter(r.squared>0.9) %>% 
   filter(echem_from_swv=='SWVslow') %>% 
   mutate(dap=dap_calc(m = estimate,t_p= (1 / 30))) %>% 
   mutate(dap_high = dap_calc(m = conf.high,t_p= (1 / 30))) %>% 
   mutate(dap_low = dap_calc(m = conf.low,t_p= (1 / 30))) 
-)
 
+swvSlow_gc_dap %>% 
+  select(treatment, exp_id, run, echem_from_swv, estimate, conf.low, conf.high, r.squared, dap, dap_high, dap_low) %>% 
+  kable() %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),full_width = F)
 ```
 
 ## Evaluating $D_{ap}$ Estimates {.tabset}
@@ -198,7 +211,7 @@ Now let's combine all of the $D_{ap}$ estimates and plot them. First, let's look
 swv_gc_dap_estimates <- rbind(swv_gc_dap, swvSlow_gc_dap)
 
 ggplot(swv_gc_dap_estimates %>% filter(treatment!='blank'), 
-       aes(x = treatment, y = dap, color = factor(run))) +
+       aes(x = treatment, y = dap, color = factor(run), shape = treatment)) +
   geom_point() + 
   geom_pointrange(aes(ymin = dap_low, ymax = dap_high))+
   facet_wrap(~exp_id) +
@@ -207,12 +220,18 @@ ggplot(swv_gc_dap_estimates %>% filter(treatment!='blank'),
 ```
 This plot may be a little much at first - feel free to look at the tabs below with only the subsets of SWVfast or SWVslow data, which may be more digestible.
 
+Overall, despite individual experiments looking like psoralen treated biofilms may have lower $D_{ap}$ estimates, there is significant overlap between the two treatments and no consistent trend that suggests there is a true, clear difference between control and psoralen treated biofilms.
+
+* **Experiment 1:** The psoralen $D_{ap}$ estimates clearly overlap with the control estimates, suggesting that the difference is not meaningful. 
+* **Experiment 2:** The control $D_{ap}$ is much higher than the psoralen, but the psoralen datasets were taken with SWV slow parameters, which all  (including control) have significantly lower values - therefore it may not be a fair comparison. 
+* **Experiment 3:** The SWV fast scans (runs 1-3) show that the psoralen biofilm actually has a higher value than the control. For the SWV slow scans (run 4), the control is slightly higher than the psoralen.
+
 
 ### SWV fast Data
 ```{r}
 
 ggplot(swv_gc_dap %>% filter(treatment!='blank'), 
-       aes(x = treatment, y = dap, color = factor(run))) +
+       aes(x = treatment, y = dap, color = factor(run),shape = treatment)) +
   geom_point() + 
   geom_pointrange(aes(ymin = dap_low, ymax = dap_high))+
   facet_wrap(~exp_id) +
@@ -223,23 +242,25 @@ ggplot(swv_gc_dap %>% filter(treatment!='blank'),
 ```{r}
 
 ggplot(swvSlow_gc_dap %>% filter(treatment!='blank'), 
-       aes(x = treatment, y = dap, shape = factor(run), color = factor(run))) +
+       aes(x = treatment, y = dap, color = factor(run),shape = treatment)) +
   geom_point() + 
   geom_pointrange(aes(ymin = dap_low, ymax = dap_high))+
   facet_wrap(~exp_id) +
-  labs(y=expression(D[ap] (cm^2 / sec)),color='Run Number',shape='Run Number') 
+  labs(y=expression(D[ap] (cm^2 / sec)),color='Run Number') 
 
 ```
 
 ## Blank vs. Biofilm
+
+Although there may not be a clear difference +/- psoralen, let's examine the dataset in comparison to a dataset acquired with a blank (no biofilm) IDA. This dataset should report on the $D_{ap}$ of free PYO in solution:
 ```{r}
 
-ggplot(swv_gc_dap_estimates, aes(x = treatment, y = dap, shape = factor(run), color = factor(run))) +
+ggplot(swv_gc_dap_estimates, aes(x = treatment, y = dap, color = factor(run))) +
   geom_point() + 
   geom_pointrange(aes(ymin = dap_low, ymax = dap_high))+
   facet_grid(~exp_id,scales='free_x') +
   scale_color_viridis(discrete = T)+
-  labs(y=expression(D[ap] (cm^2 / sec)),color='Run Number',shape='Run Number') 
+  labs(y=expression(D[ap] (cm^2 / sec)),color='Run Number') 
 
 # ggplot(swv_gc_dap_estimates %>% filter(treatment!='blank' & exp_id=='3'), aes(x = treatment, y = dap, color = factor(run),shape = factor(run))) +
 #   geom_point() + 
@@ -248,5 +269,9 @@ ggplot(swv_gc_dap_estimates, aes(x = treatment, y = dap, shape = factor(run), co
 #   scale_color_viridis(discrete = T)
 ```
 
+This plot definitely gives us a different view. It's clear that the blank $D_{ap}$ is much higher than the biofilm measurements, and that perspective also shows how relatively consistent our biofilm measurements are. Almost all of the biofilm measurements are between $1$ and $5 * 10^{-6} \text{cm}^2 / \text{sec}$, while the solution $D_{ap}$ is nearly an order of magnitude higher.
+
 # Conclusions
 
+1. It is not clear that psoralen treatment reduces $D_{ap}$ estimates from the IDA biofilms. Subtle differences may exist, but that will require a level of biofilm and measurement consistency that I have not yet seen. 
+2. Broadly the control datasets do provide a reasonably confident estimate of $D_{ap}$ for PYO in the dPHZ* biofilms. 
