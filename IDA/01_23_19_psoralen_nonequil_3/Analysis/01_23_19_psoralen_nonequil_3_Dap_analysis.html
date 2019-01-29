@@ -340,13 +340,14 @@ ggplot(df_4_outlier %&gt;% filter(rep&gt;0), aes(x = signal_from_swv, y = signal
 
 (swv_gc_4_dap &lt;- swv_gc_4_lms %&gt;% 
   filter(term==&#39;signal_from_swv&#39;) %&gt;% 
-  mutate(dap=dap_calc(m = estimate)))</code></pre>
+  mutate(dap=dap_calc(m = estimate, t_p = (1 / 30) ))
+)</code></pre>
 <pre><code>## # A tibble: 2 x 7
 ## # Groups:   treatment [2]
 ##   treatment term         estimate std.error statistic     p.value       dap
 ##   &lt;chr&gt;     &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;
-## 1 control   signal_from…    0.254   0.0156       16.3     5.33e-8   5.10e-6
-## 2 psoralen  signal_from…    0.191   0.00999      19.2     3.25e-9   2.89e-6</code></pre>
+## 1 control   signal_from…    0.254   0.0156       16.3     5.33e-8   2.55e-7
+## 2 psoralen  signal_from…    0.191   0.00999      19.2     3.25e-9   1.45e-7</code></pre>
 <p>You can see from slope (“estimate” column), that the two datasets are pretty close. The <span class="math inline">\(D_{ap}\)</span> estimate enhances the difference a little, because <span class="math inline">\(D_{ap}\)</span> scales with the square of <span class="math inline">\(m\)</span>, but I’m not sure these datasets are distinguishable given the small difference, and relatively poor quality of the psoralen dataset peaks…</p>
 <p>Let’s look at all four <span class="math inline">\(D_{ap}\)</span> estimates on one plot.</p>
 <pre class="r"><code>dap_agg &lt;- rbind(swv_gc_dap %&gt;% mutate(run=&#39;1&#39;),swv_gc_4_dap %&gt;% mutate(run=&#39;4&#39;))
@@ -354,14 +355,14 @@ ggplot(df_4_outlier %&gt;% filter(rep&gt;0), aes(x = signal_from_swv, y = signal
 ggplot(dap_agg, aes(x = treatment, y = dap, color = treatment, shape = run)) + 
   geom_point(size=3) +
   ylim(0,NA)</code></pre>
-<p><img src="01_23_19_psoralen_nonequil_3_Dap_analysis_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /> This just summarizes what we already learned…at this stage there is not obvious difference between the estimates for the control vs. psoralen treated biofilm <span class="math inline">\(D_{ap}\)</span>. That said, the estimates are reasonably close together…</p>
+<p><img src="01_23_19_psoralen_nonequil_3_Dap_analysis_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /> This just summarizes what we already learned…at this stage there is not obvious difference between the estimates for the control vs. psoralen treated biofilm <span class="math inline">\(D_{ap}\)</span>. Further, the estimates obtained from the SWVslow trials are significantly lower than the SWVfast…that’s not the end of the world, but it is a little concerning. Perhaps it is worth looking again to make sure the parameters we are inputing into the equation <span class="math inline">\(\psi, A, S, t_p\)</span> are correct.</p>
 </div>
 </div>
 <div id="conclusions" class="section level1">
 <h1>Conclusions</h1>
-<p>For this replicate, runs 1 and 4 seemed to be the most reliable. Neither run suggests that the psoralen biofilm has a lower <span class="math inline">\(D_{ap}\)</span> than the control. Therefore, this replicate does not support the idea that psoralen treatment disrupts DNA CT and or that DNA CT is a major component of <span class="math inline">\(D_{ap}\)</span>.</p>
+<p>For this replicate, runs 1 and 4 seemed to be the most reliable. Only run 4 weakly suggests that the psoralen biofilm has a lower <span class="math inline">\(D_{ap}\)</span> than the control. Therefore, this replicate does not strongly support the idea that psoralen treatment disrupts DNA CT and or that DNA CT is a major component of <span class="math inline">\(D_{ap}\)</span>.</p>
 <p>That said, the control dataset actually looks pretty good, and I think we can trust the quantification of run 1. It is also very interesting that the control dataset becomes more nonlinear throughout the runs.</p>
-<p>Further, if we trust the slope based estimates, all of the datasets converge on similar values for <span class="math inline">\(D_{ap}\)</span>: the estimates are all between <span class="math inline">\(1 * 10^{-6} \text{cm}^2 / \text{sec}\)</span> to <span class="math inline">\(5 * 10^{-6} \text{cm}^2 / \text{sec}\)</span>. That’s actually a pretty narrow range!?</p>
+<p>Further, if we trust the slope based estimates, all of the datasets almost converge within an order of magnitude for <span class="math inline">\(D_{ap}\)</span>: the estimates are all between <span class="math inline">\(1.4 * 10^{-7} \text{cm}^2 / \text{sec}\)</span> to <span class="math inline">\(5 * 10^{-6} \text{cm}^2 / \text{sec}\)</span>. That’s not perfect, but perhaps we can just look at the SWVfast datasets. I believe they are of higher quality, partly because they were always the first runs taken during every experiment.</p>
 </div>
 
 

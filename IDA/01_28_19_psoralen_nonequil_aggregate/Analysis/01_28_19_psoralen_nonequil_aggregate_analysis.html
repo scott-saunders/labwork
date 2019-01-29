@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Psoralen Non equilibrium Aggregate</title>
+
+<script src="01_28_19_psoralen_nonequil_aggregate_analysis_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="01_28_19_psoralen_nonequil_aggregate_analysis_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="01_28_19_psoralen_nonequil_aggregate_analysis_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="01_28_19_psoralen_nonequil_aggregate_analysis_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="01_28_19_psoralen_nonequil_aggregate_analysis_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="01_28_19_psoralen_nonequil_aggregate_analysis_files/navigation-1.1/tabsets.js"></script>
+<script src="01_28_19_psoralen_nonequil_aggregate_analysis_files/navigation-1.1/codefolding.js"></script>
+<link href="01_28_19_psoralen_nonequil_aggregate_analysis_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="01_28_19_psoralen_nonequil_aggregate_analysis_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Psoralen Non equilibrium Aggregate</h1>
+<h3 class="subtitle"><em><span class="math inline">\(D_{ap}\)</span> Analysis</em></h3>
+<h4 class="date"><em>01_28_19</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#intro">Intro</a></li>
+<li><a href="#results">Results</a><ul>
+<li><a href="#data-import">Data import</a></li>
+<li><a href="#examine-linear-fits">Examine Linear Fits</a></li>
+<li><a href="#d_ap-estimation"><span class="math inline">\(D_{ap}\)</span> Estimation</a></li>
+<li><a href="#evaluating-d_ap-estimates">Evaluating <span class="math inline">\(D_{ap}\)</span> Estimates</a><ul>
+<li><a href="#swv-fast-data">SWV fast Data</a></li>
+<li><a href="#swv-slow-data">SWV slow data</a></li>
+</ul></li>
+<li><a href="#blank-vs.biofilm">Blank vs. Biofilm</a></li>
+</ul></li>
+</ul>
+</div>
+
+<pre class="r"><code>library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)
+
+source(&quot;../../tools/echem_processing_tools.R&quot;)
+source(&quot;../../tools/plotting_tools.R&quot;)
+
+theme_set(theme_1())</code></pre>
+<div id="intro" class="section level1">
+<h1>Intro</h1>
+<p>Now that three replicates of the nonequilibrium psoralen experiment have been completed, let’s combine the datasets to get a feel for what the experiments can broadly tell us. The primary goal was to test whether psoralen (trioxsalen) treatment had an effect on measured <span class="math inline">\(D_{ap}\)</span> on the IDA biofilms. The secondary goal was to get a set of controls that either way would allow us to confidently estimate <span class="math inline">\(D_{ap}\)</span> for a normal biofilm.</p>
+<p>I will also compare the biofilm datasets to a ‘blank’ dataset to give us some perspective.</p>
+</div>
+<div id="results" class="section level1">
+<h1>Results</h1>
+<p>I’m using processed datasets from the three psoralen nonequil experiments (01/08/19, 01/17/19, and 01/23/19), as well as the blank dataset from (11/28/18).</p>
+<p>Please look back at those notebooks/datasets for more info about the raw data and acquisition parameters. I believe the acquisition parameters for all 4 datasets are nearly identical, except the scan window (voltage range) was changed a little, and accordingly the GC collector potential may be 0V instead of +0.1V for exeriments 3 and 4.</p>
+<div id="data-import" class="section level2">
+<h2>Data import</h2>
+<p>First let’s import the datasets and exclude some of the problematic points that were obvious from the past analyses.</p>
+<pre class="r"><code>df_blank &lt;- read_csv(&quot;../../11_28_18_blank_IDA/Processing/11_28_18_swv_gc_soak_processed.csv&quot;) %&gt;% 
+  select(reactor,electrode_from_swv,signal_from_swv,electrode_from_gc, signal_from_gc,echem_from_swv ) %&gt;% 
+  mutate(run = 1, rep = 0, treatment=&#39;blank&#39;, exp_id = &#39;blank&#39;)
+
+
+df_3 &lt;- read_csv(&quot;../../01_23_19_psoralen_nonequil_3/Processing/01_23_19_processed_swv_gc_all.csv&quot;) %&gt;% 
+  select(treatment,run,rep,reactor,electrode_from_swv,signal_from_swv,electrode_from_gc, signal_from_gc, echem_from_swv ) %&gt;% 
+  mutate(exp_id = &#39;3&#39;) %&gt;% 
+  filter(run!=1 | treatment!=&#39;psoralen&#39; | rep&lt;14 ) %&gt;% 
+  filter(run!=4 | treatment!=&#39;control&#39; | rep&gt;1 )
+  
+
+df_2_control &lt;- read_csv(&quot;../../01_17_19_psoralen_nonequil_2/Processing/01_17_19_swv_gc_control_dap_processed.csv&quot;)
+df_2_psoralen &lt;- read_csv(&quot;../../01_17_19_psoralen_nonequil_2/Processing/01_17_19_swv_gc_psoralen_dap_processed.csv&quot;)
+
+df_2 &lt;- rbind(df_2_control,df_2_psoralen) %&gt;% 
+  select(treatment,run, rep, reactor,electrode_from_swv,signal_from_swv,electrode_from_gc, signal_from_gc, echem_from_swv ) %&gt;% 
+  mutate(exp_id = &#39;2&#39;)
+
+df_1 &lt;- read_csv(&quot;../../01_08_19_psoralen_nonequil/Processing/01_08_19_processed_swv_gc_signals.csv&quot;) %&gt;% 
+  select(treatment,run, rep, reactor,electrode_from_swv,signal_from_swv,electrode_from_gc, signal_from_gc , echem_from_swv) %&gt;% 
+  mutate(exp_id = &quot;1&quot;)
+
+
+df_all &lt;- rbind(df_1,df_2,df_3,df_blank)</code></pre>
+</div>
+<div id="examine-linear-fits" class="section level2">
+<h2>Examine Linear Fits</h2>
+<p>First, let’s look at the blank dataset.</p>
+<pre class="r"><code>ggplot(df_all %&gt;% filter(electrode_from_swv==&#39;i1&#39; &amp; electrode_from_gc==&#39;i2&#39; &amp; treatment==&#39;blank&#39;), 
+       aes(x = signal_from_swv, y = signal_from_gc)) + 
+  geom_point() + 
+  geom_smooth(method=&#39;lm&#39;)+
+  facet_wrap(~exp_id)</code></pre>
+<p><img src="01_28_19_psoralen_nonequil_aggregate_analysis_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>You can see that the blank dataset is almost perfectly linear.</p>
+<p>Now let’s look at all of the biofilm data. Below the data are broken down by experiment number and treatment. The colors represent each run within each experiment. The scales are free, so you can assess how well each dataset is fit by the linear model. Remember we are very interested to know whether the shape is linear or nonlinear.</p>
+<pre class="r"><code>ggplot(df_all %&gt;% filter(electrode_from_swv==&#39;i1&#39; &amp; electrode_from_gc==&#39;i2&#39; &amp; treatment!=&#39;blank&#39;), 
+       aes(x = signal_from_swv, y = signal_from_gc, color = factor(run))) + 
+  geom_point() + 
+  geom_smooth(method=&#39;lm&#39;)+
+  facet_wrap(treatment~exp_id,scales=&#39;free&#39;)+
+  scale_color_viridis(discrete = T)</code></pre>
+<p><img src="01_28_19_psoralen_nonequil_aggregate_analysis_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># ggplot(df_all %&gt;% 
+#          filter(electrode_from_swv==&#39;i1&#39; &amp; electrode_from_gc==&#39;i2&#39;) %&gt;% 
+#          filter(exp_id==&#39;3&#39; &amp; run==4), 
+#        aes(x = signal_from_swv, y = signal_from_gc, color = factor(run), shape = treatment)) + 
+#   geom_point() + 
+#   geom_smooth(method=&#39;lm&#39;) +
+#   facet_wrap(reactor~exp_id,scales=&#39;free&#39;)</code></pre>
+<p>Overall, I think the data are fit pretty well by the linear models. There are definitely subsets that are not fit well, and we can break those into two categories: obviously bad data, and good data that doesn’t look linear. For experiment 3 psoralen treated biofilm, you can see that runs 2 and 3 do not look like nice monotonic trends. This is likely because the SWV scans were super weird for those runs - therefore we will ignore them later on. On the other hand, exp 1 run 1 for control and psoralen looks pretty clean, but they look quite nonlinear. There are several other runs in the dataset that look somewhat nonlinear, and it is interesting to think about what that might mean. For now though, let’s move forward with the assumption that most of the datasets can be reasonably fit with a linear model.</p>
+<p>Given that we can fit with a linear model let’s now compare the slopes of the datasets, by looking at the same plot with fixed scales:</p>
+<pre class="r"><code>ggplot(df_all %&gt;% filter(electrode_from_swv==&#39;i1&#39; &amp; electrode_from_gc==&#39;i2&#39; &amp; treatment!=&#39;blank&#39;), 
+       aes(x = signal_from_swv, y = signal_from_gc, color = factor(run))) + 
+  geom_point() + 
+  geom_smooth(method=&#39;lm&#39;)+
+  facet_grid(treatment~exp_id)+
+  scale_color_viridis(discrete = T)</code></pre>
+<p><img src="01_28_19_psoralen_nonequil_aggregate_analysis_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /> We can see some clear differences in slopes across the datasets. However, keep in mind that exp 2 psoralen and experiment 3 run 4 both conditions were taken with SWVslow settings that will increase the slope due to the different scan rate. Still, it’s clear that there’s a variety of slopes, but also that none of the slopes seem like crazy outliers.</p>
+</div>
+<div id="d_ap-estimation" class="section level2">
+<h2><span class="math inline">\(D_{ap}\)</span> Estimation</h2>
+<p>Now, let’s grab the coefficients of those linear fits and calculate <span class="math inline">\(D_{ap}\)</span> estimates using our known parameters.</p>
+<p>Recall: <span class="math display">\[ D_{ap} = \frac{(m A \psi)^2 }{S^2 \pi t_p }\]</span></p>
+<p>Here’s our default <span class="math inline">\(D_{ap}\)</span> calculator function to get from slope, <span class="math inline">\(m\)</span>, to our estimate.</p>
+<pre class="r"><code>dap_calc &lt;- function(m, t_p=1/(2*300)){
+  
+  psi &lt;-  0.91
+  A &lt;-  0.013 #cm^2
+  S &lt;-  18.4 #cm
+  d_ap &lt;- (m*A*psi)^2 / (S^2 * pi * t_p)
+  
+  d_ap
+}</code></pre>
+<p>Now, we’ll fit all the subsets of data and grab metrics like <span class="math inline">\(R^2\)</span> and confidence intervals for the slope coefficient. Let’s go ahead and plot all of the <span class="math inline">\(R^2\)</span> values for the datasets to quantitatively assess the fits.</p>
+<pre class="r"><code>swv_gc_all &lt;- df_all %&gt;% 
+  filter(electrode_from_swv==&#39;i1&#39; &amp; electrode_from_gc==&#39;i2&#39; ) %&gt;% 
+  group_by(treatment,exp_id,run,echem_from_swv) %&gt;% 
+  do(fit = lm(signal_from_gc~signal_from_swv,data = .))
+
+swv_gc_fit_tidy &lt;- tidy(swv_gc_all,fit,conf.int=T)
+
+swv_gc_fit_glance &lt;- glance(swv_gc_all,fit) %&gt;% 
+  select(treatment,exp_id,run,r.squared,adj.r.squared)
+
+swv_gc_fit &lt;- left_join(swv_gc_fit_tidy %&gt;% filter(term==&#39;signal_from_swv&#39;), swv_gc_fit_glance, by = c(&#39;treatment&#39;,&#39;exp_id&#39;,&#39;run&#39;,&#39;echem_from_swv&#39;))
+
+ggplot(swv_gc_fit, aes(x = exp_id, y = r.squared, shape=treatment,color = factor(run)))+
+  geom_point()+
+  scale_color_viridis(discrete = T)</code></pre>
+<p><img src="01_28_19_psoralen_nonequil_aggregate_analysis_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /> You can see that all of the datasets have very high <span class="math inline">\(R^2\)</span> values (1 is a perfect line), except for the problematic subsets we identified earlier (exp 3, psoralen, runs 2-3), and a very nonlinear subset (exp 1 control run 1)</p>
+<p>Let’s move forward calculating <span class="math inline">\(D_{ap}\)</span>, but we’ll exclude all the models with <span class="math inline">\(R^2 &lt; 0.9\)</span>. First calculate <span class="math inline">\(D_{ap}\)</span> for all the data that was acquired with SWV fast settings, which has a pulse time of <span class="math inline">\(t_p=1/600\)</span></p>
+<pre class="r"><code>(swv_gc_dap &lt;- swv_gc_fit %&gt;% 
+  filter(r.squared&gt;0.9) %&gt;% 
+  filter(echem_from_swv==&#39;SWV&#39; | echem_from_swv == &#39;SWV.txt&#39;) %&gt;% 
+  mutate(dap=dap_calc(m = estimate)) %&gt;% 
+  mutate(dap_high = dap_calc(m = conf.high)) %&gt;% 
+  mutate(dap_low = dap_calc(m = conf.low)) 
+)</code></pre>
+<pre><code>## # A tibble: 13 x 16
+## # Groups:   treatment, exp_id, run, echem_from_swv [13]
+##    treatment exp_id   run echem_from_swv term  estimate std.error statistic
+##    &lt;chr&gt;     &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+##  1 blank     blank      1 SWV.txt        sign…   0.544    0.00372     146. 
+##  2 control   1          2 SWV            sign…   0.106    0.00474      22.3
+##  3 control   1          3 SWV            sign…   0.140    0.00763      18.3
+##  4 control   2          1 SWV            sign…   0.279    0.00369      75.7
+##  5 control   2          2 SWV            sign…   0.213    0.00773      27.5
+##  6 control   2          3 SWV            sign…   0.223    0.00772      28.9
+##  7 control   3          1 SWV            sign…   0.151    0.00399      38.0
+##  8 control   3          2 SWV            sign…   0.105    0.00349      30.0
+##  9 control   3          3 SWV            sign…   0.120    0.00790      15.2
+## 10 psoralen  1          1 SWV            sign…   0.112    0.00837      13.4
+## 11 psoralen  1          2 SWV            sign…   0.0760   0.00409      18.6
+## 12 psoralen  1          3 SWV            sign…   0.0772   0.00273      28.3
+## 13 psoralen  3          1 SWV            sign…   0.238    0.00324      73.5
+## # … with 8 more variables: p.value &lt;dbl&gt;, conf.low &lt;dbl&gt;, conf.high &lt;dbl&gt;,
+## #   r.squared &lt;dbl&gt;, adj.r.squared &lt;dbl&gt;, dap &lt;dbl&gt;, dap_high &lt;dbl&gt;,
+## #   dap_low &lt;dbl&gt;</code></pre>
+<p>And now we’ll separately calcualte <span class="math inline">\(D_{ap}\)</span> for the SWV slow subsets, with <span class="math inline">\(t_p = 1/30\)</span>.</p>
+<pre class="r"><code>(swvSlow_gc_dap &lt;- swv_gc_fit %&gt;% 
+  filter(r.squared&gt;0.9) %&gt;% 
+  filter(echem_from_swv==&#39;SWVslow&#39;) %&gt;% 
+  mutate(dap=dap_calc(m = estimate,t_p= (1 / 30))) %&gt;% 
+  mutate(dap_high = dap_calc(m = conf.high,t_p= (1 / 30))) %&gt;% 
+  mutate(dap_low = dap_calc(m = conf.low,t_p= (1 / 30))) 
+)</code></pre>
+<pre><code>## # A tibble: 4 x 16
+## # Groups:   treatment, exp_id, run, echem_from_swv [4]
+##   treatment exp_id   run echem_from_swv term  estimate std.error statistic
+##   &lt;chr&gt;     &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 control   3          4 SWVslow        sign…    0.254   0.0156       16.3
+## 2 psoralen  2          4 SWVslow        sign…    0.539   0.0125       43.2
+## 3 psoralen  2          5 SWVslow        sign…    0.648   0.0186       34.8
+## 4 psoralen  3          4 SWVslow        sign…    0.191   0.00999      19.2
+## # … with 8 more variables: p.value &lt;dbl&gt;, conf.low &lt;dbl&gt;, conf.high &lt;dbl&gt;,
+## #   r.squared &lt;dbl&gt;, adj.r.squared &lt;dbl&gt;, dap &lt;dbl&gt;, dap_high &lt;dbl&gt;,
+## #   dap_low &lt;dbl&gt;</code></pre>
+</div>
+<div id="evaluating-d_ap-estimates" class="section level2 tabset">
+<h2>Evaluating <span class="math inline">\(D_{ap}\)</span> Estimates</h2>
+<p>Now let’s combine all of the <span class="math inline">\(D_{ap}\)</span> estimates and plot them. First, let’s look at our primary question, which was whether or not psoralen treatment affects <span class="math inline">\(D_{ap}\)</span>.</p>
+<pre class="r"><code>swv_gc_dap_estimates &lt;- rbind(swv_gc_dap, swvSlow_gc_dap)
+
+ggplot(swv_gc_dap_estimates %&gt;% filter(treatment!=&#39;blank&#39;), 
+       aes(x = treatment, y = dap, shape = factor(run), color = factor(run))) +
+  geom_point() + 
+  geom_pointrange(aes(ymin = dap_low, ymax = dap_high))+
+  facet_wrap(~exp_id) +
+  scale_color_viridis(discrete = T)+
+  labs(y=expression(D[ap] (cm^2 / sec)),color=&#39;Run Number&#39;,shape=&#39;Run Number&#39;) </code></pre>
+<p><img src="01_28_19_psoralen_nonequil_aggregate_analysis_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div id="swv-fast-data" class="section level3">
+<h3>SWV fast Data</h3>
+<pre class="r"><code>ggplot(swv_gc_dap %&gt;% filter(treatment!=&#39;blank&#39;), 
+       aes(x = treatment, y = dap, shape = factor(run), color = factor(run))) +
+  geom_point() + 
+  geom_pointrange(aes(ymin = dap_low, ymax = dap_high))+
+  facet_wrap(~exp_id) +
+  labs(y=expression(D[ap] (cm^2 / sec)),color=&#39;Run Number&#39;,shape=&#39;Run Number&#39;) </code></pre>
+<p><img src="01_28_19_psoralen_nonequil_aggregate_analysis_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="swv-slow-data" class="section level3">
+<h3>SWV slow data</h3>
+<pre class="r"><code>ggplot(swvSlow_gc_dap %&gt;% filter(treatment!=&#39;blank&#39;), 
+       aes(x = treatment, y = dap, shape = factor(run), color = factor(run))) +
+  geom_point() + 
+  geom_pointrange(aes(ymin = dap_low, ymax = dap_high))+
+  facet_wrap(~exp_id) +
+  labs(y=expression(D[ap] (cm^2 / sec)),color=&#39;Run Number&#39;,shape=&#39;Run Number&#39;) </code></pre>
+<p><img src="01_28_19_psoralen_nonequil_aggregate_analysis_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="blank-vs.biofilm" class="section level2">
+<h2>Blank vs. Biofilm</h2>
+<pre class="r"><code>ggplot(swv_gc_dap_estimates, aes(x = treatment, y = dap, shape = factor(run), color = factor(run))) +
+  geom_point() + 
+  geom_pointrange(aes(ymin = dap_low, ymax = dap_high))+
+  facet_grid(~exp_id,scales=&#39;free_x&#39;) +
+  scale_color_viridis(discrete = T)+
+  labs(y=expression(D[ap] (cm^2 / sec)),color=&#39;Run Number&#39;,shape=&#39;Run Number&#39;) </code></pre>
+<p><img src="01_28_19_psoralen_nonequil_aggregate_analysis_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># ggplot(swv_gc_dap_estimates %&gt;% filter(treatment!=&#39;blank&#39; &amp; exp_id==&#39;3&#39;), aes(x = treatment, y = dap, color = factor(run),shape = factor(run))) +
+#   geom_point() + 
+#   geom_pointrange(aes(ymin = dap_low, ymax = dap_high))+
+#   facet_wrap(~exp_id,scales = &#39;free&#39;)+
+#   scale_color_viridis(discrete = T)</code></pre>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

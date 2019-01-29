@@ -152,7 +152,8 @@ swv_gc_4_lms <- df_4_outlier %>%
 
 (swv_gc_4_dap <- swv_gc_4_lms %>% 
   filter(term=='signal_from_swv') %>% 
-  mutate(dap=dap_calc(m = estimate)))
+  mutate(dap=dap_calc(m = estimate, t_p = (1 / 30) ))
+)
 ```
 
 You can see from slope ("estimate" column), that the two datasets are pretty close. The $D_{ap}$ estimate enhances the difference a little, because $D_{ap}$ scales with the square of $m$, but I'm not sure these datasets are distinguishable given the small difference, and relatively poor quality of the psoralen dataset peaks...
@@ -165,12 +166,12 @@ ggplot(dap_agg, aes(x = treatment, y = dap, color = treatment, shape = run)) +
   geom_point(size=3) +
   ylim(0,NA)
 ```
-This just summarizes what we already learned...at this stage there is not obvious difference between the estimates for the control vs. psoralen treated biofilm $D_{ap}$. That said, the estimates are reasonably close together...
+This just summarizes what we already learned...at this stage there is not obvious difference between the estimates for the control vs. psoralen treated biofilm $D_{ap}$. Further, the estimates obtained from the SWVslow trials are significantly lower than the SWVfast...that's not the end of the world, but it is a little concerning. Perhaps it is worth looking again to make sure the parameters we are inputing into the equation $\psi, A, S, t_p$ are correct.
 
 # Conclusions
 
-For this replicate, runs 1 and 4 seemed to be the most reliable. Neither run suggests that the psoralen biofilm has a lower $D_{ap}$ than the control. Therefore, this replicate does not support the idea that psoralen treatment disrupts DNA CT and or that DNA CT is a major component of $D_{ap}$.
+For this replicate, runs 1 and 4 seemed to be the most reliable. Only run 4 weakly suggests that the psoralen biofilm has a lower $D_{ap}$ than the control. Therefore, this replicate does not strongly support the idea that psoralen treatment disrupts DNA CT and or that DNA CT is a major component of $D_{ap}$.
 
 That said, the control dataset actually looks pretty good, and I think we can trust the quantification of run 1. It is also very interesting that the control dataset becomes more nonlinear throughout the runs. 
 
-Further, if we trust the slope based estimates, all of the datasets converge on similar values for $D_{ap}$: the estimates are all between $1 * 10^{-6} \text{cm}^2 / \text{sec}$ to $5 * 10^{-6} \text{cm}^2 / \text{sec}$. That's actually a pretty narrow range!?
+Further, if we trust the slope based estimates, all of the datasets almost converge within an order of magnitude for $D_{ap}$: the estimates are all between $1.4 * 10^{-7} \text{cm}^2 / \text{sec}$ to $5 * 10^{-6} \text{cm}^2 / \text{sec}$. That's not perfect, but perhaps we can just look at the SWVfast datasets. I believe they are of higher quality, partly because they were always the first runs taken during every experiment.

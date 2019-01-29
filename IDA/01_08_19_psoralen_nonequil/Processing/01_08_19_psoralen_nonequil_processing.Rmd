@@ -221,23 +221,14 @@ df_sigs <- left_join(df_maxs,df_mins,by=unique_id_cols,suffix=c('_from_maxs','_f
 #gc_signals <- echem_signal(df = gc_i2_data, unique_id_cols = unique_id_cols, max_interval = c(-0.39,-0.41), #min_interval = c(-0.1,-0.4))
 ```
 
-```{r}
-ggplot(gc_i2_data %>% filter(reactor=='transfer' & treatment=='control'), aes(x=E,y=current,group=run,color=rep))+geom_point(size=0.2)+
-  geom_point(data=gc_signals %>% filter(reactor=='transfer' & treatment=='control'), aes(x=E_from_maxs,y=current_from_maxs),color='red') +
-  geom_point(data=gc_signals %>% filter(reactor=='transfer' & treatment=='control'), aes(x=E_from_mins,y=current_from_mins),color='blue')+
-  facet_wrap(run~electrode,scales='free')+
-  scale_x_reverse()
-
-ggplot(gc_i2_data %>% filter(run==2 & rep<4 & treatment=='control' & reactor=='transfer'), aes(x=E,y=current,color=rep))+geom_point()+scale_x_reverse()
-```
 
 ```{r}
-
-ggplot(gc_i2_data %>% filter(reactor=='transfer' & treatment=='psoralen'), aes(x=E,y=current,group=run,color=rep))+geom_point(size=0.2)+
-  geom_point(data=gc_signals %>% filter(reactor=='transfer' & treatment=='psoralen'), aes(x=E_from_maxs,y=current_from_maxs),color='red') +
-  geom_point(data=gc_signals %>% filter(reactor=='transfer' & treatment=='psoralen'), aes(x=E_from_mins,y=current_from_mins),color='blue')+
-  facet_wrap(run~electrode,scales='free')+
-  scale_x_reverse()
+# 
+# ggplot(gc_i2_data %>% filter(reactor=='transfer' & treatment=='psoralen'), aes(x=E,y=current,group=run,color=rep))+geom_point(size=0.2)+
+#   geom_point(data=gc_signals %>% filter(reactor=='transfer' & treatment=='psoralen'), aes(x=E_from_maxs,y=current_from_maxs),color='red') +
+#   geom_point(data=gc_signals %>% filter(reactor=='transfer' & treatment=='psoralen'), aes(x=E_from_mins,y=current_from_mins),color='blue')+
+#   facet_wrap(run~electrode,scales='free')+
+#   scale_x_reverse()
 
 ggplot(gc_i2_data %>% filter(reactor=='transfer' & treatment=='psoralen'), aes(x=E,y=current,group=run,color=rep))+geom_point(size=0.2)+
   geom_point(data=df_sigs %>% filter(reactor=='transfer' & treatment=='psoralen'), aes(x=E_from_maxs,y=current_from_maxs),color='red') +
@@ -252,35 +243,37 @@ Quantification looks okay right now, although you can see that the max data poin
 
 ```{r}
 
-swv_gc_signals <- left_join(swv_signals, gc_signals, 
+# swv_gc_signals <- left_join(swv_signals, gc_signals, 
+#                             by=c('PHZadded',"PHZaddedInt","treatment","reactor","run","rep"), 
+#                             suffix=c("_from_swv","_from_gc"))
+
+swv_gc_signals <- left_join(swv_signals, df_sigs, 
                             by=c('PHZadded',"PHZaddedInt","treatment","reactor","run","rep"), 
                             suffix=c("_from_swv","_from_gc"))
 
-swv_gc_signals2 <- left_join(swv_signals, df_sigs, 
-                            by=c('PHZadded',"PHZaddedInt","treatment","reactor","run","rep"), 
-                            suffix=c("_from_swv","_from_gc"))
+write_csv(swv_gc_signals,"01_08_19_processed_swv_gc_signals.csv")
 
+```
 
-plotly_test <- ggplot(swv_gc_signals %>% filter(electrode_from_swv=='i1' & reactor=='transfer'), aes(x=signal_from_swv, y=signal_from_gc,color=rep,shape=run))+geom_point()+geom_line()+
-  facet_wrap(~treatment,scales='free')+
-  xlim(0,2e-06)+
-  scale_color_viridis()
+```{r}
 
-plotly::ggplotly(plotly_test)
+# plotly_test <- ggplot(swv_gc_signals %>% filter(electrode_from_swv=='i1' & reactor=='transfer'), aes(x=signal_from_swv, y=signal_from_gc,color=rep,shape=run))+geom_point()+geom_line()+
+#   facet_wrap(~treatment,scales='free')+
+#   xlim(0,2e-06)+
+#   scale_color_viridis()
+# 
+# plotly::ggplotly(plotly_test)
 
 ggplot(swv_gc_signals %>% filter(electrode_from_swv=='i1' & rep>0 & reactor=='transfer'), aes(x=signal_from_swv, y=signal_from_gc,color=rep,shape=factor(run)))+geom_point()+geom_line()+
   facet_wrap(~treatment,scales='free')+
   scale_color_viridis()
 
-ggplot(swv_gc_signals2 %>% filter(electrode_from_swv=='i1' & rep>0 & reactor=='transfer'), aes(x=signal_from_swv, y=signal_from_gc,color=rep,shape=factor(run)))+geom_point()+geom_line()+
-  facet_wrap(~treatment,scales='free')+
-  scale_color_viridis()
 
 ggplot(swv_gc_signals %>% filter(electrode_from_swv=='i2'), aes(x=signal_from_swv, y=signal_from_gc,color=rep,shape=run))+geom_point()+geom_line()+
   facet_wrap(~treatment,scales='free')+
   scale_color_viridis()
 
-write_csv(swv_gc_signals,"01_08_19_processed_swv_gc_signals.csv")
+
 
 ```
 
