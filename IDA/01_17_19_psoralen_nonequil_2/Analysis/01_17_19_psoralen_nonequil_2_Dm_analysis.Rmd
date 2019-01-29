@@ -83,7 +83,7 @@ $$C(x,t) = \frac{M_0}{A \sqrt{4 \pi D t}}(2 + e^{\frac{-(2L)^2}{4 D t}})$$
 Substituting for SWV
 $$I_{swv} = \frac{I_0 V}{A \sqrt{4 \pi D_m t}}(2 + e^{\frac{-(2L)^2}{4 D t}})$$
 if 
-$$y=a t^{-0.5} (2 + e^{b t^-0.5})$$
+$$y=a t^{-0.5} (2 + e^{b/t})$$
 then
 $$a = \frac{I_0 V}{A \sqrt{4 \pi D_m}}$$
 
@@ -100,7 +100,7 @@ $$D_m = \frac{-(2L)^2}{4 b}$$
 nls_no_flux <- dm_data_norm %>% 
   filter(reactor=='transfer') %>% 
   group_by(run,electrode) %>% 
-  do(tidy(nls(.,formula = signal~(a*(norm_time)^-0.5)*(2+e^(b*(norm_time)^-0.5))+c,start=list(a=0.1,b=0.1,c=0)))) %>% 
+  do(tidy(nls(.,formula = signal~(a*(norm_time)^-0.5)*(2+e^(b/norm_time))+c,start=list(a=0.1,b=0.1,c=0)))) %>% 
   mutate(model='no_flux')
 
 nls_og <- dm_data_norm %>% 
@@ -117,7 +117,17 @@ ggplot(nls_fits %>% filter(term!='c'),aes(x=model,y=estimate,color=electrode))+g
 
 
 ```{r}
+dm_from_a <- function(estimate, i_0, dap, t_s=0.1){
+  
+  dm <- ( i_0^2 * dap * t_s ) / ( 4* estimate^2)
+  
+  dm
+}
 
+dm_a <- dm_from_a(6e-7,3e-6,dap=1e-6)
+
+
+sqrt(-1 * 4 * dm_a) / 2
 ```
 
 ```{r}
