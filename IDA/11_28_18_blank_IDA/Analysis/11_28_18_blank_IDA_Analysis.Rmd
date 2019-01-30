@@ -126,7 +126,7 @@ Wow, when we look at it like this, it is clear that the first datapoint is not a
 ```{r}
 ggplot(swv_decays %>% filter(PHZaddedInt>10) ,aes(x=norm_time,y=signal_from_transfer))+
   geom_point()+
-  geom_smooth(data=swv_decays %>% filter(PHZaddedInt>10 & rep <10), 
+  geom_smooth(data=swv_decays %>% filter(PHZaddedInt>10 & rep <10 ), 
               method='nls', 
               formula=y~b*(x)^-0.5+a, 
               method.args = list(start = c(b = 0.1,a = 0)), 
@@ -141,11 +141,12 @@ nls_fit <- swv_decays %>%
   group_by(PHZadded) %>% 
   do(tidy(nls(.,formula=signal_from_transfer~m*(norm_time^-0.5)+b, start = list(m=0.1,b=0))))
 
-#nls_fit <- swv_decays %>% 
-#  filter(PHZaddedInt>10) %>% 
-#  group_by(PHZadded) %>% 
-#  do(tidy(nls(.,formula=signal_from_transfer~m*(norm_time^-0.5)+b, start = list(m=0.1,b=0))))
-
+nls_fit_2 <- swv_decays %>% 
+  filter(PHZaddedInt>10) %>% 
+  group_by(PHZadded) %>% 
+  do(tidy(nls(.,formula=signal_from_transfer~m*(norm_time^-0.5)+b, start = list(m=0.1,b=0))))
+nls_fit
+nls_fit_2
 nls_fit %>% filter(term=='m')
 ```
 

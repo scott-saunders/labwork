@@ -1,0 +1,34 @@
+---
+title: "Psoralen Non equilibrium Aggregate"
+subtitle: "Overview"
+fontsize: 12pt
+date: "01_28_19"
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
+---
+
+Notebooks: 
+
+```{r, results='asis'}
+library(htmltools)
+
+base_path="https://scott-saunders.github.io/labwork/IDA/01_28_19_psoralen_nonequil_aggregate/"
+
+files <- dir(path=".", pattern = "*\\.html$",include.dirs = T,recursive = T)
+
+for(link in files){
+  print(
+    tags$a(href = paste(base_path, link, sep=''), link)
+    )
+  writeLines("")
+}
+```
+
+## Purpose
+
+This directory contains analysis from the three replicates of the psoralen IDA experiments in January 2019.

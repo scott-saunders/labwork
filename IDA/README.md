@@ -36,15 +36,23 @@ for(link in files){
 
 <a href="https://scott-saunders.github.io/labwork/IDA/01_17_19_psoralen_nonequil_2/Analysis/01_17_19_psoralen_nonequil_2_Dap_analysis.html">01\_17\_19\_psoralen\_nonequil\_2/Analysis/01\_17\_19\_psoralen\_nonequil\_2\_Dap\_analysis.html</a>
 
+<a href="https://scott-saunders.github.io/labwork/IDA/01_17_19_psoralen_nonequil_2/Analysis/01_17_19_psoralen_nonequil_2_Dm_analysis.html">01\_17\_19\_psoralen\_nonequil\_2/Analysis/01\_17\_19\_psoralen\_nonequil\_2\_Dm\_analysis.html</a>
+
 <a href="https://scott-saunders.github.io/labwork/IDA/01_17_19_psoralen_nonequil_2/Processing/01_17_19_psoralen_nonequil_2_Dap_processing.html">01\_17\_19\_psoralen\_nonequil\_2/Processing/01\_17\_19\_psoralen\_nonequil\_2\_Dap\_processing.html</a>
 
 <a href="https://scott-saunders.github.io/labwork/IDA/01_17_19_psoralen_nonequil_2/README.html">01\_17\_19\_psoralen\_nonequil\_2/README.html</a>
 
 <a href="https://scott-saunders.github.io/labwork/IDA/01_23_19_psoralen_nonequil_3/Analysis/01_21_19_analysis_psoralen_toxicity.html">01\_23\_19\_psoralen\_nonequil\_3/Analysis/01\_21\_19\_analysis\_psoralen\_toxicity.html</a>
 
+<a href="https://scott-saunders.github.io/labwork/IDA/01_23_19_psoralen_nonequil_3/Analysis/01_23_19_psoralen_nonequil_3_Dap_analysis.html">01\_23\_19\_psoralen\_nonequil\_3/Analysis/01\_23\_19\_psoralen\_nonequil\_3\_Dap\_analysis.html</a>
+
 <a href="https://scott-saunders.github.io/labwork/IDA/01_23_19_psoralen_nonequil_3/Processing/01_23_19_processing_psoralen_nonequil_3.html">01\_23\_19\_psoralen\_nonequil\_3/Processing/01\_23\_19\_processing\_psoralen\_nonequil\_3.html</a>
 
 <a href="https://scott-saunders.github.io/labwork/IDA/01_23_19_psoralen_nonequil_3/README.html">01\_23\_19\_psoralen\_nonequil\_3/README.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/IDA/01_28_19_psoralen_nonequil_aggregate/Analysis/01_28_19_psoralen_nonequil_aggregate_analysis.html">01\_28\_19\_psoralen\_nonequil\_aggregate/Analysis/01\_28\_19\_psoralen\_nonequil\_aggregate\_analysis.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/IDA/01_28_19_psoralen_nonequil_aggregate/README.html">01\_28\_19\_psoralen\_nonequil\_aggregate/README.html</a>
 
 <a href="https://scott-saunders.github.io/labwork/IDA/09_11_18_DapEstimation.html">09\_11\_18\_DapEstimation.html</a>
 

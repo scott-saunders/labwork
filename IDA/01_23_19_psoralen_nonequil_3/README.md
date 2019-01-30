@@ -21,6 +21,8 @@ for(link in files){
 
 <a href="https://scott-saunders.github.io/labwork/IDA/01_23_19_psoralen_nonequil_3/Analysis/01_21_19_analysis_psoralen_toxicity.html">Analysis/01\_21\_19\_analysis\_psoralen\_toxicity.html</a>
 
+<a href="https://scott-saunders.github.io/labwork/IDA/01_23_19_psoralen_nonequil_3/Analysis/01_23_19_psoralen_nonequil_3_Dap_analysis.html">Analysis/01\_23\_19\_psoralen\_nonequil\_3\_Dap\_analysis.html</a>
+
 <a href="https://scott-saunders.github.io/labwork/IDA/01_23_19_psoralen_nonequil_3/Processing/01_23_19_processing_psoralen_nonequil_3.html">Processing/01\_23\_19\_processing\_psoralen\_nonequil\_3.html</a>
 
 <a href="https://scott-saunders.github.io/labwork/IDA/01_23_19_psoralen_nonequil_3/README.html">README.html</a>
