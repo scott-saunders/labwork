@@ -26,8 +26,23 @@ library(kableExtra)
 
 knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
 
-source("../../tools/echem_processing_tools.R")
-source("../../tools/plotting_tools.R")
+#source("../../tools/echem_processing_tools.R")
+source("../IDA/tools/plotting_tools.R")
 
 theme_set(theme_1())
+```
+
+```{r}
+df <- read_csv("../IDA/01_28_19_psoralen_nonequil_aggregate/Analysis/01_28_19_swv_gc_dap_estimates_aggregate.csv")
+
+ggplot(df %>% filter(treatment!='psoralen' & echem_from_swv!='SWVslow'), aes(x = treatment, y = dap, color = exp_id)) +
+  geom_pointrange(aes(ymin = dap_low, ymax = dap_high),position = position_jitter(height = 0, width = 0.2))+
+  scale_color_viridis(discrete = T)+
+  labs(y=expression(D[ap] (cm^2 / sec)),color='Experiment #') 
+
+ggplot(df %>% filter(treatment!='psoralen' & echem_from_swv!='SWVslow'), aes(x = treatment, y = dap, color = exp_id)) +
+  geom_pointrange(aes(ymin = dap_low, ymax = dap_high),position = position_jitter(height = 0, width = 0.2))+
+  scale_color_viridis(discrete = T)+
+  labs(y=expression(D[ap] (cm^2 / sec)),color='Experiment #') +
+  scale_y_log10(limits = c(1e-9, 2.5e-5))
 ```
