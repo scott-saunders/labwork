@@ -425,16 +425,16 @@ ggplot(blank_estimates_tidy, aes(x = model, shape = PHZadded)) +
 <p>For the SWV fast parameter set we use: * Init E (V) = 0.1 * Final E (V) = -0.5 * Incr E (V) = 0.001 * Amplitude (V) = 0.025 * Frequency (Hz) = 300</p>
 <p>Therefore the scan window is 0.6V or 600mV, with a 1mV increment will require 600 cycles. 1 cycle takes 1/frequency or 1/300 seconds. 1/300 seconds * 600 cycles = 2 seconds for the total scan time. If the electrode is actually only driving a reaction from -0.2V to -0.4V (200mV) that would be 1/3 * 2 seconds = 0.666 seconds. However, the peak is reached in half that amount of time ( 0.333 seconds). That said, each cycle is partially renewing the diffusion layer for each redox species because the amplitude is 25mV.</p>
 <p>Only, starting 12.5mV before PYO redox potential there’s net reduction occuring? 12 cycles would be 12 / 300 = 0.04 seconds (but that includes up and down steps), but even after those steps, most of the PYO is re-oxidized by the downward step. So for the one step up at the peak the scan time would be the pulse time <span class="math inline">\(t_p\)</span>, which is 1/2 * 1/300 = 0.001666, if we take that time over 12 cyles we get ~0.02…which empirically provides the expected results, not sure how to proceed.</p>
-<p>All this is to say, that I do not know how to theoretically get at the scan time, and as far as I know now anything between 0.3 and 0.001 seconds could probably be justified…See below for how the blank data look when we use an empirically “good” value of <span class="math inline">\(t_s = 0.02\)</span>:</p>
+<p>All this is to say, that I do not know how to theoretically get at the scan time, and as far as I know now anything between 0.3 and 0.001 seconds could probably be justified…See below for how the blank data look when we use an empirically “good” value of <span class="math inline">\(t_s = 0.008\)</span>:</p>
 <pre class="r"><code>blank_estimates_og &lt;- blank_estimates %&gt;% filter(model == &quot;og&quot;) %&gt;% 
     mutate(dm_soak = dm_from_a_OG(estimate = estimate, i_0 = i0_soak, 
-        dap = 1e-05, t_s = 0.02)) %&gt;% mutate(dm_transfer = dm_from_a_OG(estimate = estimate, 
-    i_0 = i0_transfer, dap = 1e-05, t_s = 0.02))
+        dap = 1e-05, t_s = 0.008)) %&gt;% mutate(dm_transfer = dm_from_a_OG(estimate = estimate, 
+    i_0 = i0_transfer, dap = 1e-05, t_s = 0.008))
 
 blank_estimates_noFlux &lt;- blank_estimates %&gt;% filter(model == 
     &quot;no_flux&quot;) %&gt;% mutate(dm_soak = dm_from_a_noFlux(estimate = estimate, 
-    i_0 = i0_soak, dap = 1e-05, t_s = 0.02)) %&gt;% mutate(dm_transfer = dm_from_a_noFlux(estimate = estimate, 
-    i_0 = i0_transfer, dap = 1e-05, t_s = 0.02))
+    i_0 = i0_soak, dap = 1e-05, t_s = 0.008)) %&gt;% mutate(dm_transfer = dm_from_a_noFlux(estimate = estimate, 
+    i_0 = i0_transfer, dap = 1e-05, t_s = 0.008))
 
 blank_estimates_tidy &lt;- rbind(blank_estimates_og, blank_estimates_noFlux)
 
@@ -442,17 +442,17 @@ ggplot(blank_estimates_tidy, aes(x = model, shape = PHZadded)) +
     geom_point(aes(y = dm_soak), color = &quot;red&quot;) + geom_point(aes(y = dm_transfer), 
     color = &quot;blue&quot;) + geom_hline(yintercept = 1e-05, linetype = 2) + 
     facet_wrap(~model, scales = &quot;free&quot;) + scale_y_log10()</code></pre>
-<p><img src="01_17_19_psoralen_nonequil_2_Dm_analysis_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /> Now both models have the expected behavior. The no flux/finite model estimates straddle the given <span class="math inline">\(D_{ap}\)</span>, where the soak <span class="math inline">\(I_0\)</span> estimates are true overestimates and the transfer <span class="math inline">\(I_0\)</span> estimates are true underestimates. Further, the og model now significantly underestimates <span class="math inline">\(D_m\)</span> as would be expected from the poor fit of the data.</p>
+<p><img src="01_17_19_psoralen_nonequil_2_Dm_analysis_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /> Now both models have the expected behavior. The no flux/finite model estimates straddle the given <span class="math inline">\(D_{ap}\)</span>. The soak <span class="math inline">\(I_0\)</span> estimates in this case are the true <span class="math inline">\(I_0\)</span> values, while the transfer <span class="math inline">\(I_0\)</span> estimates are underestimates. Further, the og model now significantly underestimates <span class="math inline">\(D_m\)</span> as would be expected from the poor fit of the data.</p>
 <p>I do not know if we can justify the use of an empirical value for <span class="math inline">\(t_s\)</span> by saying that we expect at a blank IDA with PYO in solution we assume <span class="math inline">\(D_m \approx D_{ap}\)</span> with some citations? If we can, then let’s see what the biofilm data would look like with this parameter set.</p>
 <pre class="r"><code>dm_estimates_og &lt;- dm_estimates %&gt;% filter(model == &quot;og&quot;) %&gt;% 
     mutate(dm_soak = dm_from_a_OG(estimate = estimate, i_0 = i0_soak, 
-        dap = 1e-06, t_s = 0.02)) %&gt;% mutate(dm_transfer = dm_from_a_OG(estimate = estimate, 
-    i_0 = i0_transfer, dap = 1e-06, t_s = 0.02))
+        dap = 1e-06, t_s = 0.008)) %&gt;% mutate(dm_transfer = dm_from_a_OG(estimate = estimate, 
+    i_0 = i0_transfer, dap = 1e-06, t_s = 0.008))
 
 dm_estimates_noFlux &lt;- dm_estimates %&gt;% filter(model == &quot;no_flux&quot;) %&gt;% 
     mutate(dm_soak = dm_from_a_noFlux(estimate = estimate, i_0 = i0_soak, 
-        dap = 1e-06, t_s = 0.02)) %&gt;% mutate(dm_transfer = dm_from_a_noFlux(estimate = estimate, 
-    i_0 = i0_transfer, dap = 1e-06, t_s = 0.02))
+        dap = 1e-06, t_s = 0.008)) %&gt;% mutate(dm_transfer = dm_from_a_noFlux(estimate = estimate, 
+    i_0 = i0_transfer, dap = 1e-06, t_s = 0.008))
 
 dm_estimates_tidy &lt;- rbind(dm_estimates_og, dm_estimates_noFlux)
 
@@ -460,7 +460,7 @@ ggplot(dm_estimates_tidy, aes(x = model, shape = electrode)) +
     geom_point(aes(y = dm_soak), color = &quot;red&quot;) + geom_point(aes(y = dm_transfer), 
     color = &quot;blue&quot;) + geom_hline(yintercept = 1e-06, linetype = 2) + 
     facet_wrap(~run) + scale_y_log10(limits = c(1e-09, 1e-06))</code></pre>
-<p><img src="01_17_19_psoralen_nonequil_2_Dm_analysis_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /> By using this 0.02 value for <span class="math inline">\(t_s\)</span> you can see that the estimates for the biofilm <span class="math inline">\(D_m\)</span> shift downward. If this process is defensible then we may have a case that <span class="math inline">\(D_m\)</span> could be slower than <span class="math inline">\(D_{ap}\)</span> in the biofilm.</p>
+<p><img src="01_17_19_psoralen_nonequil_2_Dm_analysis_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /> By using this 0.008 value for <span class="math inline">\(t_s\)</span> you can see that the estimates for the biofilm <span class="math inline">\(D_m\)</span> shift downward. If this process is defensible then we may have a case that <span class="math inline">\(D_m\)</span> could be slower than <span class="math inline">\(D_{ap}\)</span> in the biofilm. Also note that run 5 had the better fit at the beginning, so I would trust that estimate slightly more than run 4.</p>
 </div>
 </div>
 <div id="conclusions" class="section level1">
@@ -486,10 +486,16 @@ ggplot(dm_estimates_tidy, aes(x = model, shape = electrode)) +
 </ol>
 <ul>
 <li>The value of <span class="math inline">\(t_s\)</span> is proportional to the estimate of <span class="math inline">\(D_m\)</span>, but I can only pin down <span class="math inline">\(t_s\)</span> to a range of two orders of magnitude in theory, because I don’t really know how to extrapolate from the complex SWV potential vs. time wave.</li>
-<li>If we assume for the blank IDA that <span class="math inline">\(D_m \approx D_{ap}\)</span>, then empirically <span class="math inline">\(t_s \approx 0.02 \text{ sec}\)</span> provides a good estimate. <strong>I am not sure if this will be considered legit enough…</strong></li>
+<li>If we assume for the blank IDA that <span class="math inline">\(D_m \approx D_{ap}\)</span>, then empirically <span class="math inline">\(t_s \approx 0.008 \text{ sec}\)</span> provides a good estimate. <strong>I am not sure if this will be considered legit enough…</strong></li>
 <li>If we accept that <span class="math inline">\(t_s\)</span> estimate as reasonable, then it does seem like this dataset for the control biofilm shows a <span class="math inline">\(D_m\)</span> well below the given <span class="math inline">\(D_{ap}\)</span></li>
 </ul>
-<p>Moving forward, let’s get feedback on estimating <span class="math inline">\(t_s\)</span>, and we should probably talk to someone about more clearly/rigorously deriving the finite diffusion model.</p>
+<p><strong>Next Steps:</strong></p>
+<ul>
+<li>Apply analysis to all three biofilm replicates</li>
+<li>Gain confidence with finite model / derivation (help from math people?)</li>
+<li>Decide how to proceed with <span class="math inline">\(t_s\)</span> (get feedback)</li>
+</ul>
+<hr />
 </div>
 
 

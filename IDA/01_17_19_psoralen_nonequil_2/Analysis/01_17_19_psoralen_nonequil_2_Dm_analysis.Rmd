@@ -294,17 +294,17 @@ Therefore the scan window is 0.6V or 600mV, with a 1mV increment will require 60
 
 Only, starting 12.5mV before PYO redox potential there's net reduction occuring? 12 cycles would be 12 / 300 = 0.04 seconds (but that includes up and down steps), but even after those steps, most of the PYO is re-oxidized by the downward step. So for the one step up at the peak the scan time would be the pulse time $t_p$, which is 1/2 * 1/300 = 0.001666, if we take that time over 12 cyles we get ~0.02...which empirically provides the expected results, not sure how to proceed.
 
-All this is to say, that I do not know how to theoretically get at the scan time, and as far as I know now anything between 0.3 and 0.001 seconds could probably be justified...See below for how the blank data look when we use an empirically "good" value of $t_s = 0.02$:
+All this is to say, that I do not know how to theoretically get at the scan time, and as far as I know now anything between 0.3 and 0.001 seconds could probably be justified...See below for how the blank data look when we use an empirically "good" value of $t_s = 0.008$:
 ```{r}
 blank_estimates_og <- blank_estimates %>% 
   filter(model=='og') %>% 
-  mutate(dm_soak = dm_from_a_OG(estimate = estimate, i_0 = i0_soak, dap = 1e-5, t_s = 0.02)) %>% 
-  mutate(dm_transfer = dm_from_a_OG(estimate = estimate, i_0 = i0_transfer, dap = 1e-5, t_s = 0.02))
+  mutate(dm_soak = dm_from_a_OG(estimate = estimate, i_0 = i0_soak, dap = 1e-5, t_s = 0.008)) %>% 
+  mutate(dm_transfer = dm_from_a_OG(estimate = estimate, i_0 = i0_transfer, dap = 1e-5, t_s = 0.008))
 
 blank_estimates_noFlux <- blank_estimates %>% 
   filter(model=='no_flux') %>% 
-  mutate(dm_soak = dm_from_a_noFlux(estimate = estimate, i_0 = i0_soak, dap = 1e-5, t_s = 0.02)) %>% 
-  mutate(dm_transfer = dm_from_a_noFlux(estimate = estimate, i_0 = i0_transfer, dap = 1e-5, t_s = 0.02)) 
+  mutate(dm_soak = dm_from_a_noFlux(estimate = estimate, i_0 = i0_soak, dap = 1e-5, t_s = 0.008)) %>% 
+  mutate(dm_transfer = dm_from_a_noFlux(estimate = estimate, i_0 = i0_transfer, dap = 1e-5, t_s = 0.008)) 
 
 blank_estimates_tidy <- rbind(blank_estimates_og, blank_estimates_noFlux)
 
@@ -315,20 +315,20 @@ ggplot(blank_estimates_tidy, aes(x = model, shape = PHZadded)) +
   facet_wrap(~model, scales = 'free')+
   scale_y_log10()
 ```
-Now both models have the expected behavior. The no flux/finite model estimates straddle the given $D_{ap}$, where the soak $I_0$ estimates are true overestimates and the transfer $I_0$ estimates are true underestimates. Further, the og model now significantly underestimates $D_m$ as would be expected from the poor fit of the data. 
+Now both models have the expected behavior. The no flux/finite model estimates straddle the given $D_{ap}$. The soak $I_0$ estimates in this case are the true $I_0$ values, while the transfer $I_0$ estimates are underestimates. Further, the og model now significantly underestimates $D_m$ as would be expected from the poor fit of the data. 
 
 I do not know if we can justify the use of an empirical value for $t_s$ by saying that we expect at a blank IDA with PYO in solution we assume $D_m \approx D_{ap}$ with some citations? If we can, then let's see what the biofilm data would look like with this parameter set.
 
 ```{r}
 dm_estimates_og <- dm_estimates %>% 
   filter(model=='og') %>% 
-  mutate(dm_soak = dm_from_a_OG(estimate = estimate, i_0 = i0_soak, dap = 1e-6, t_s = 0.02)) %>% 
-  mutate(dm_transfer = dm_from_a_OG(estimate = estimate, i_0 = i0_transfer, dap = 1e-6, t_s = 0.02))
+  mutate(dm_soak = dm_from_a_OG(estimate = estimate, i_0 = i0_soak, dap = 1e-6, t_s = 0.008)) %>% 
+  mutate(dm_transfer = dm_from_a_OG(estimate = estimate, i_0 = i0_transfer, dap = 1e-6, t_s = 0.008))
 
 dm_estimates_noFlux <- dm_estimates %>% 
   filter(model=='no_flux') %>% 
-  mutate(dm_soak = dm_from_a_noFlux(estimate = estimate, i_0 = i0_soak, dap = 1e-6, t_s = 0.02)) %>% 
-  mutate(dm_transfer = dm_from_a_noFlux(estimate = estimate, i_0 = i0_transfer, dap = 1e-6, t_s = 0.02)) 
+  mutate(dm_soak = dm_from_a_noFlux(estimate = estimate, i_0 = i0_soak, dap = 1e-6, t_s = 0.008)) %>% 
+  mutate(dm_transfer = dm_from_a_noFlux(estimate = estimate, i_0 = i0_transfer, dap = 1e-6, t_s = 0.008)) 
 
 dm_estimates_tidy <- rbind(dm_estimates_og,dm_estimates_noFlux)
 
@@ -339,7 +339,7 @@ ggplot(dm_estimates_tidy, aes(x = model, shape = electrode)) +
   facet_wrap(~run) + 
   scale_y_log10(limits = c(1e-9,1e-6))
 ```
-By using this 0.02 value for $t_s$ you can see that the estimates for the biofilm $D_m$ shift downward. If this process is defensible then we may have a case that $D_m$ could be slower than $D_{ap}$ in the biofilm.
+By using this 0.008 value for $t_s$ you can see that the estimates for the biofilm $D_m$ shift downward. If this process is defensible then we may have a case that $D_m$ could be slower than $D_{ap}$ in the biofilm. Also note that run 5 had the better fit at the beginning, so I would trust that estimate slightly more than run 4. 
 
 # Conclusions
 
@@ -355,7 +355,14 @@ By using this 0.02 value for $t_s$ you can see that the estimates for the biofil
   
 3. **The issue of $t_s$** 
   * The value of $t_s$ is proportional to the estimate of $D_m$, but I can only pin down $t_s$ to a range of two orders of magnitude in theory, because I don't really know how to extrapolate from the complex SWV potential vs. time wave. 
-  * If we assume for the blank IDA that $D_m \approx D_{ap}$, then empirically $t_s \approx 0.02 \text{ sec}$ provides a good estimate. **I am not sure if this will be considered legit enough...** 
+  * If we assume for the blank IDA that $D_m \approx D_{ap}$, then empirically $t_s \approx 0.008 \text{ sec}$ provides a good estimate. **I am not sure if this will be considered legit enough...** 
   * If we accept that $t_s$ estimate as reasonable, then it does seem like this dataset for the control biofilm shows a $D_m$ well below the given $D_{ap}$
   
-Moving forward, let's get feedback on estimating $t_s$, and we should probably talk to someone about more clearly/rigorously deriving the finite diffusion model.
+**Next Steps:** 
+
+  * Apply analysis to all three biofilm replicates 
+  * Gain confidence with finite model / derivation (help from math people?) 
+  * Decide how to proceed with $t_s$ (get feedback) 
+  
+
+*********
