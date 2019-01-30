@@ -210,6 +210,8 @@ Now let's combine all of the $D_{ap}$ estimates and plot them. First, let's look
 ```{r}
 swv_gc_dap_estimates <- rbind(swv_gc_dap, swvSlow_gc_dap)
 
+#write_csv(swv_gc_dap_estimates, "./01_28_19_swv_gc_dap_estimates_aggregate.csv")
+
 ggplot(swv_gc_dap_estimates %>% filter(treatment!='blank'), 
        aes(x = treatment, y = dap, color = factor(run), shape = treatment)) +
   geom_point() + 
