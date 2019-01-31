@@ -50,6 +50,8 @@ for(link in files){
 
 <a href="https://scott-saunders.github.io/labwork/IDA/01_23_19_psoralen_nonequil_3/README.html">01\_23\_19\_psoralen\_nonequil\_3/README.html</a>
 
+<a href="https://scott-saunders.github.io/labwork/IDA/01_28_19_psoralen_nonequil_aggregate/Analysis/01_28_19_Dm_psoralen_nonequil_aggregate_analysis.html">01\_28\_19\_psoralen\_nonequil\_aggregate/Analysis/01\_28\_19\_Dm\_psoralen\_nonequil\_aggregate\_analysis.html</a>
+
 <a href="https://scott-saunders.github.io/labwork/IDA/01_28_19_psoralen_nonequil_aggregate/Analysis/01_28_19_psoralen_nonequil_aggregate_analysis.html">01\_28\_19\_psoralen\_nonequil\_aggregate/Analysis/01\_28\_19\_psoralen\_nonequil\_aggregate\_analysis.html</a>
 
 <a href="https://scott-saunders.github.io/labwork/IDA/01_28_19_psoralen_nonequil_aggregate/README.html">01\_28\_19\_psoralen\_nonequil\_aggregate/README.html</a>
