@@ -247,6 +247,7 @@ Ok, seems reasonable. Notice that these estimates for $a$ are significantly lowe
 Let's convert to $D_m$ and look at the results:
 
 ```{r}
+blank_dap = 2.33e-5
 
 blank_i0 <- blank_data %>% 
   group_by(PHZadded) %>% 
@@ -260,20 +261,20 @@ blank_estimates <- left_join(blank_fits %>% filter(term=='a'), blank_i0, by = c(
 
 blank_estimates_og <- blank_estimates %>% 
   filter(model=='og') %>% 
-  mutate(dm_soak = dm_from_a_OG(estimate = estimate, i_0 = i0_soak, dap = 1e-5, t_s = 0.1)) %>% 
-  mutate(dm_transfer = dm_from_a_OG(estimate = estimate, i_0 = i0_transfer, dap = 1e-5, t_s = 0.1))
+  mutate(dm_soak = dm_from_a_OG(estimate = estimate, i_0 = i0_soak, dap = blank_dap, t_s = 0.1)) %>% 
+  mutate(dm_transfer = dm_from_a_OG(estimate = estimate, i_0 = i0_transfer, dap = blank_dap, t_s = 0.1))
 
 blank_estimates_noFlux <- blank_estimates %>% 
   filter(model=='no_flux') %>% 
-  mutate(dm_soak = dm_from_a_noFlux(estimate = estimate, i_0 = i0_soak, dap = 1e-5, t_s = 0.1)) %>% 
-  mutate(dm_transfer = dm_from_a_noFlux(estimate = estimate, i_0 = i0_transfer, dap = 1e-5, t_s = 0.1)) 
+  mutate(dm_soak = dm_from_a_noFlux(estimate = estimate, i_0 = i0_soak, dap = blank_dap, t_s = 0.1)) %>% 
+  mutate(dm_transfer = dm_from_a_noFlux(estimate = estimate, i_0 = i0_transfer, dap = blank_dap, t_s = 0.1)) 
 
 blank_estimates_tidy <- rbind(blank_estimates_og, blank_estimates_noFlux)
 
 ggplot(blank_estimates_tidy, aes(x = model, shape = PHZadded)) + 
   geom_point(aes(y = dm_soak),color = 'red') +
   geom_point(aes(y = dm_transfer), color = 'blue') +
-  geom_hline(yintercept = 1e-5, linetype = 2)+
+  geom_hline(yintercept = blank_dap, linetype = 2)+
   facet_wrap(~model, scales = 'free')+
   scale_y_log10()
 
@@ -298,20 +299,26 @@ All this is to say, that I do not know how to theoretically get at the scan time
 ```{r}
 blank_estimates_og <- blank_estimates %>% 
   filter(model=='og') %>% 
-  mutate(dm_soak = dm_from_a_OG(estimate = estimate, i_0 = i0_soak, dap = 1e-5, t_s = 0.008)) %>% 
-  mutate(dm_transfer = dm_from_a_OG(estimate = estimate, i_0 = i0_transfer, dap = 1e-5, t_s = 0.008))
+  mutate(dm_soak = dm_from_a_OG(estimate = estimate, i_0 = i0_soak, dap = blank_dap, t_s = 0.008)) %>% 
+  mutate(dm_transfer = dm_from_a_OG(estimate = estimate, i_0 = i0_transfer, dap = blank_dap, t_s = 0.008))
 
 blank_estimates_noFlux <- blank_estimates %>% 
   filter(model=='no_flux') %>% 
-  mutate(dm_soak = dm_from_a_noFlux(estimate = estimate, i_0 = i0_soak, dap = 1e-5, t_s = 0.008)) %>% 
-  mutate(dm_transfer = dm_from_a_noFlux(estimate = estimate, i_0 = i0_transfer, dap = 1e-5, t_s = 0.008)) 
+  mutate(dm_soak = dm_from_a_noFlux(estimate = estimate, i_0 = i0_soak, dap = blank_dap, t_s = 0.008)) %>% 
+  mutate(dm_transfer = dm_from_a_noFlux(estimate = estimate, i_0 = i0_transfer, dap = blank_dap, t_s = 0.008)) 
 
 blank_estimates_tidy <- rbind(blank_estimates_og, blank_estimates_noFlux)
+
+blank_ts_008 <- blank_estimates_tidy %>% 
+  ungroup() %>% 
+  mutate(run = PHZadded, electrode = 'i1', biofilm = 'blank') %>% 
+  select(-PHZadded) %>% 
+  select(run, electrode,term, estimate, std.error, statistic, p.value, model, i0_soak, i0_transfer, dm_soak, dm_transfer,biofilm)
 
 ggplot(blank_estimates_tidy, aes(x = model, shape = PHZadded)) + 
   geom_point(aes(y = dm_soak),color = 'red') +
   geom_point(aes(y = dm_transfer), color = 'blue') +
-  geom_hline(yintercept = 1e-5, linetype = 2)+
+  geom_hline(yintercept = blank_dap, linetype = 2)+
   facet_wrap(~model, scales = 'free')+
   scale_y_log10()
 ```
@@ -331,6 +338,17 @@ dm_estimates_noFlux <- dm_estimates %>%
   mutate(dm_transfer = dm_from_a_noFlux(estimate = estimate, i_0 = i0_transfer, dap = 1e-6, t_s = 0.008)) 
 
 dm_estimates_tidy <- rbind(dm_estimates_og,dm_estimates_noFlux)
+
+biofilm_ts_008 <- dm_estimates_tidy %>% 
+  ungroup() %>% 
+  select(-reactor.x, -reactor.y) %>% 
+  mutate(biofilm = 'biofilm', run = as.character(run)) %>% 
+  select(run, electrode,term, estimate, std.error, statistic, p.value, model, i0_soak, i0_transfer, dm_soak, dm_transfer,biofilm)
+
+
+dm_ts_008 <- rbind(biofilm_ts_008, blank_ts_008)
+
+write_csv(dm_ts_008, "./01_17_19_dm_estimates.csv")
 
 ggplot(dm_estimates_tidy, aes(x = model, shape = electrode)) + 
   geom_point(aes(y = dm_soak),color = 'red') +

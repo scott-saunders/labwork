@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Psoralen Non equilibrium Aggregate</title>
+
+<script src="01_28_19_Dm_psoralen_nonequil_aggregate_analysis_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="01_28_19_Dm_psoralen_nonequil_aggregate_analysis_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="01_28_19_Dm_psoralen_nonequil_aggregate_analysis_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="01_28_19_Dm_psoralen_nonequil_aggregate_analysis_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="01_28_19_Dm_psoralen_nonequil_aggregate_analysis_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="01_28_19_Dm_psoralen_nonequil_aggregate_analysis_files/navigation-1.1/tabsets.js"></script>
+<script src="01_28_19_Dm_psoralen_nonequil_aggregate_analysis_files/navigation-1.1/codefolding.js"></script>
+<link href="01_28_19_Dm_psoralen_nonequil_aggregate_analysis_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="01_28_19_Dm_psoralen_nonequil_aggregate_analysis_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Psoralen Non equilibrium Aggregate</h1>
+<h3 class="subtitle"><em><span class="math inline">\(D_m\)</span> Analysis</em></h3>
+<h4 class="date"><em>01_28_19</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#intro">Intro</a></li>
+<li><a href="#results">Results</a><ul>
+<li><a href="#data-overview-and-fits">Data overview and fits</a></li>
+<li><a href="#estimate-model-coefficients">Estimate model coefficients</a></li>
+<li><a href="#calculate-d_m">Calculate <span class="math inline">\(D_m\)</span></a><ul>
+<li><a href="#estimating-parameters-with-uncertainty">Estimating parameters (with uncertainty)</a></li>
+<li><a href="#d_m-estimates-by-diffusion-model"><span class="math inline">\(D_m\)</span> estimates by diffusion model</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#comparing-d_ap-to-d_m">Comparing <span class="math inline">\(D_{ap}\)</span> to <span class="math inline">\(D_m\)</span></a><ul>
+<li><a href="#comparing-biofilm-to-blank-ida">Comparing Biofilm to Blank IDA</a></li>
+</ul></li>
+<li><a href="#conclusions">Conclusions</a></li>
+</ul>
+</div>
+
+<pre class="r"><code>library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+library(knitr)
+library(kableExtra)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)
+
+source(&quot;../../tools/echem_processing_tools.R&quot;)
+source(&quot;../../tools/plotting_tools.R&quot;)
+
+theme_set(theme_1())</code></pre>
+<div id="intro" class="section level1">
+<h1>Intro</h1>
+<p>So, we’ve already established that psoralen treatment doesn’t have an obvious effect on <span class="math inline">\(D_{ap}\)</span>, but that this dataset is still very useful for estimating <span class="math inline">\(D_{ap}\)</span> for our control dPHZ biofilms. Let’s use that data to also estimate <span class="math inline">\(D_m\)</span> for the control biofilm, since we are very interested to see whether <span class="math inline">\(D_m\)</span> can explain <span class="math inline">\(D_{ap}\)</span>.</p>
+</div>
+<div id="results" class="section level1">
+<h1>Results</h1>
+<p>Let’s import all the processed data, which will have the signals from the SWVs along with their timestamp. I’m importing our <span class="math inline">\(D_{ap}\)</span> estimates as well as the blank IDA <span class="math inline">\(D_m\)</span> estimates from the psoralen 2 (01/17/19) notebook.</p>
+<pre class="r"><code>dap_dataset &lt;- read_csv(&quot;../../01_28_19_psoralen_nonequil_aggregate/Analysis/01_28_19_aggregate_SWV_GC_signals.csv&quot;)
+
+dap_estimates &lt;- read_csv(&quot;./01_28_19_swv_gc_dap_estimates_aggregate.csv&quot;)
+
+df_2blank_estimates &lt;- read_csv(&quot;../../01_17_19_psoralen_nonequil_2/Analysis/01_17_19_dm_estimates.csv&quot;)</code></pre>
+<div id="data-overview-and-fits" class="section level2">
+<h2>Data overview and fits</h2>
+<p>First, let’s look at all of the SWV signals vs. timestamp (in min) for all of the different experiments. This is only the transfer scans from i1, since i2 is problematic.</p>
+<pre class="r"><code>ggplot(dap_dataset %&gt;% filter(reactor==&#39;transfer&#39; &amp; electrode_from_swv==&#39;i1&#39;) , 
+       aes(x = minutes_from_swv, signal_from_swv, color = factor(run))) + 
+  geom_point() + 
+  facet_wrap(treatment~exp_id, scales = &#39;free&#39;)</code></pre>
+<p><img src="01_28_19_Dm_psoralen_nonequil_aggregate_analysis_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /> Overall it looks pretty good! Now let’s reset the start of each run to ~0 min (exactly 0.6 min because that’s the average time it takes between immersion and starting the scan). Let’s also go ahead and exclude the psoralen data right now and get rid of that one control dataset that was taken with SWVslow parameters (exp 3, run 4).</p>
+<p>Once that’s done I can plot all of the datasets fit with the semi-infinite diffusion model:</p>
+<pre class="r"><code>dap_test &lt;- dap_dataset %&gt;%  
+  filter(electrode_from_swv==&#39;i1&#39; &amp; treatment==&#39;control&#39;) %&gt;% 
+  filter(exp_id!=&#39;3&#39; | run!=4)
+
+dap_test_norm &lt;- dap_test %&gt;% 
+  group_by(exp_id,reactor,run) %&gt;% 
+  mutate(min_time = min(minutes_from_swv)) %&gt;% 
+  mutate(norm_time = minutes_from_swv - min_time + 0.6)
+
+ggplot(dap_test_norm %&gt;% filter(reactor==&#39;transfer&#39;), 
+       aes(x = norm_time, y = signal_from_swv, color = exp_id)) + 
+  geom_point() +
+  geom_smooth(method=&#39;nls&#39;,
+              formula=y~b*(x)^-0.5+a,
+              method.args=list(start=c(b=0.1,a=1e-7)),
+              se=F)+
+  facet_wrap(exp_id~run,scales=&#39;free&#39;)</code></pre>
+<p><img src="01_28_19_Dm_psoralen_nonequil_aggregate_analysis_files/figure-html/unnamed-chunk-3-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p>Unlike for the other biofilm/blank datasets this original model actually fits reasonably well. Let’s see how the finite diffusion model fits:</p>
+<pre class="r"><code>e = exp(1)
+
+ggplot(dap_test_norm %&gt;% filter(reactor==&#39;transfer&#39;), 
+       aes(x = norm_time, y = signal_from_swv, color = exp_id )) + 
+  geom_point() +
+  geom_smooth(method=&#39;nls&#39;,
+              formula=y~(a*(x)^-0.5)*(2+e^(b*(x)^-0.5))+c,
+              method.args=list(start=c(a=0.1,b=0.1,c=0)),
+              se=F)+
+    facet_wrap(exp_id~run,scales=&#39;free&#39;)</code></pre>
+<p><img src="01_28_19_Dm_psoralen_nonequil_aggregate_analysis_files/figure-html/unnamed-chunk-4-1.png" width="100%" style="display: block; margin: auto;" /> It looks like it does fit slightly better, although the difference is not that great. Let’s proceed to estimate <span class="math inline">\(D_m\)</span> with both models for now, although ultimately I will just use the no flux / finite model because we already estimated a <span class="math inline">\(t_s\)</span> for that one.</p>
+<p>Also notice that experiment one looks a little different than the other two experiments. The points decay very quickly, and they never approach zero because of a weird high background. I always thought that dataset was a little weird, so we’ll throw that out later.</p>
+</div>
+<div id="estimate-model-coefficients" class="section level2">
+<h2>Estimate model coefficients</h2>
+<p>Now lets perform the nls fits and look at the parameter estimates for the two models:</p>
+<pre class="r"><code>nls_no_flux &lt;- dap_test_norm %&gt;% 
+  filter(reactor==&#39;transfer&#39;) %&gt;% 
+  group_by(exp_id,run) %&gt;% 
+  do(tidy(nls(.,formula = signal_from_swv~(a*(norm_time)^-0.5)*(2+e^(b/norm_time))+c,start=list(a=0.1,b=0.1,c=0)))) %&gt;% 
+  mutate(model=&#39;no_flux&#39;)
+
+nls_og &lt;- dap_test_norm %&gt;% 
+  filter(reactor==&#39;transfer&#39;) %&gt;% 
+  group_by(exp_id,run) %&gt;% 
+  do(tidy(nls(.,formula = signal_from_swv~(a*(norm_time)^-0.5)+c,start=list(a=0.1,c=0)))) %&gt;% 
+  mutate(model=&#39;og&#39;)
+
+nls_fits &lt;- rbind(nls_no_flux,nls_og)
+
+ggplot(nls_fits %&gt;% filter(term!=&#39;c&#39;),aes(x=model,y=estimate,color=factor(run),shape = exp_id))+geom_point()+
+  facet_wrap(~term,scales=&#39;free&#39;)+ylim(0,NA)</code></pre>
+<p><img src="01_28_19_Dm_psoralen_nonequil_aggregate_analysis_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /> Ok, this is very similar to what I saw before. Recall that if the OG and no_flux model had identical fits, they should estimate <span class="math inline">\(a\)</span> with a 4x difference, which is about what we see because the fits are similar.</p>
+</div>
+<div id="calculate-d_m" class="section level2">
+<h2>Calculate <span class="math inline">\(D_m\)</span></h2>
+<p>With those estimates let’s now get our functions to calculate <span class="math inline">\(D_m\)</span> from <span class="math inline">\(a\)</span>. Recall that for the no flux / finite model <span class="math inline">\(D_m = \frac{I_0^2 D_{ap} t_s}{4 \pi a^2}\)</span> and for the original semi infinite model <span class="math inline">\(D_m = \frac{I_0^2 D_{ap} t_s}{\pi a^2}\)</span>.</p>
+<pre class="r"><code>dm_from_a_noFlux &lt;- function(estimate, i_0, dap, t_s=0.1){
+  
+  dm &lt;- ( i_0^2 * dap * t_s ) / ( 4*pi* estimate^2)
+  
+  dm
+}
+
+dm_from_a_OG &lt;- function(estimate, i_0, dap, t_s=0.1){
+  
+  dm &lt;- ( i_0^2 * dap * t_s ) / ( pi* estimate^2)
+  
+  dm
+}</code></pre>
+<div id="estimating-parameters-with-uncertainty" class="section level3">
+<h3>Estimating parameters (with uncertainty)</h3>
+<p>So in order to estimate <span class="math inline">\(D_m\)</span> we have to have the fit coefficient - <span class="math inline">\(a\)</span>, <span class="math inline">\(D_{ap}\)</span>, the scan time <span class="math inline">\(t_s\)</span> and also the initial current <span class="math inline">\(I_0\)</span>. I was using the first SWV signal from the transfer to estimate <span class="math inline">\(I_0\)</span>, but I realized that it might be a severe underestimate.</p>
+<p>I decided that the best way to proceed would be to use the soak SWV signal as a clear overestimate of the true <span class="math inline">\(I_0\)</span>, and we could look at the interval between the “transfer <span class="math inline">\(I_0\)</span>” and the “soak <span class="math inline">\(I_0\)</span>” as a sort of confidence interval.</p>
+<p>So to estimate <span class="math inline">\(D_m\)</span> I’ll grab the soak and transfer <span class="math inline">\(I_0\)</span> estimates and feed them into the functions to estimate a high and low <span class="math inline">\(D_m\)</span> for each dataset. Here I also grab the <span class="math inline">\(D_{ap}\)</span> estimates for each run to use as an input. Lastly, I’m using <span class="math inline">\(t_s = 0.008\)</span> because it empirically gave <span class="math inline">\(D_{ap} \approx D_m\)</span> for the blank dataset using the no flux / finite model.</p>
+<pre class="r"><code>soak_i0 &lt;- dap_test_norm %&gt;% 
+  mutate(i0_soak = signal_from_swv) %&gt;% 
+  filter(rep==0 &amp; reactor==&#39;soak&#39;) %&gt;% 
+  select(exp_id,reactor, run, i0_soak) 
+
+transfer_i0 &lt;- dap_test_norm %&gt;% 
+  mutate(i0_transfer = signal_from_swv) %&gt;% 
+  filter(rep==0 &amp; reactor==&#39;transfer&#39;) %&gt;% 
+  select(exp_id,reactor, run, i0_transfer) 
+
+dm_estimates_soak &lt;- left_join(nls_fits %&gt;% filter(term==&#39;a&#39;), soak_i0, by = c(&#39;exp_id&#39;,&#39;run&#39;))
+
+dm_estimates &lt;- left_join(dm_estimates_soak, transfer_i0, by = c(&#39;exp_id&#39;,&#39;run&#39;))
+
+dm_estimates_wDap &lt;- left_join(dm_estimates, 
+                               dap_estimates %&gt;% 
+                                 filter(treatment==&#39;control&#39;) %&gt;% 
+                                 select(exp_id, run, r.squared, dap, dap_high, dap_low), 
+                               by = c(&#39;exp_id&#39;,&#39;run&#39;))</code></pre>
+</div>
+<div id="d_m-estimates-by-diffusion-model" class="section level3">
+<h3><span class="math inline">\(D_m\)</span> estimates by diffusion model</h3>
+<p>Ok, so let’s calculate of <span class="math inline">\(D_m\)</span>’s and plot the estimates for each model.</p>
+<pre class="r"><code>dm_estimates_og &lt;- dm_estimates_wDap %&gt;% 
+  filter(model==&#39;og&#39;) %&gt;% 
+  mutate(dm_soak = dm_from_a_OG(estimate = estimate, i_0 = i0_soak, dap = dap, t_s = 0.008)) %&gt;% 
+  mutate(dm_transfer = dm_from_a_OG(estimate = estimate, i_0 = i0_transfer, dap = dap, t_s = 0.008))
+
+dm_estimates_noFlux &lt;- dm_estimates_wDap %&gt;% 
+  filter(model==&#39;no_flux&#39;) %&gt;% 
+  mutate(dm_soak = dm_from_a_noFlux(estimate = estimate, i_0 = i0_soak, dap = dap, t_s = 0.008)) %&gt;% 
+  mutate(dm_transfer = dm_from_a_noFlux(estimate = estimate, i_0 = i0_transfer, dap = dap, t_s = 0.008)) 
+
+dm_estimates_tidy &lt;- rbind(dm_estimates_og,dm_estimates_noFlux) %&gt;% 
+  rowwise() %&gt;% 
+  mutate(mean = mean(c(dm_soak, dm_transfer)))
+
+mean_biofilm_dap &lt;- mean(dm_estimates_tidy$dap, na.rm = T)
+
+ggplot(dm_estimates_tidy, aes(x = exp_id, shape = factor(run))) + 
+  geom_point(aes(y = dm_soak),color = &#39;red&#39;) +
+  geom_point(aes(y = dm_transfer), color = &#39;blue&#39;) +
+  geom_hline(yintercept = mean_biofilm_dap, linetype = 2) +
+  facet_wrap(~model) + 
+  scale_y_log10(limits = c(1e-9,5e-6))</code></pre>
+<p><img src="01_28_19_Dm_psoralen_nonequil_aggregate_analysis_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>So, in this plot the red is the estimate using the soak <span class="math inline">\(I_0\)</span> and the blue dots are estimates using the transfer <span class="math inline">\(I_0\)</span>. You can see that although they vary, they are all within an order of magnitude of each other, so that’s encouraging! The other thing to notice is that all of the estimates are below the average biofilm <span class="math inline">\(D_{ap}\)</span> (dotted line), which is interesting.</p>
+<p>The two models do give different estimates, where the original (OG) model is consistently lower, which we saw previously. I’m going to proceed with the no flux / finite model since it gave slightly better fits and that’s what we used previously and also estimated <span class="math inline">\(t_s\)</span> with.</p>
+<p>The last thing to notice is that experiment 1 now gives a relatively higher <span class="math inline">\(D_m\)</span> estimate with the finite model. At this point, because the data was weird from the beginning, I’m going to drop it from the figures below.</p>
+</div>
+</div>
+</div>
+<div id="comparing-d_ap-to-d_m" class="section level1">
+<h1>Comparing <span class="math inline">\(D_{ap}\)</span> to <span class="math inline">\(D_m\)</span></h1>
+<p>First let’s just look at the individual <span class="math inline">\(D_{ap}\)</span> estimates for each run compared to the <span class="math inline">\(D_m\)</span> estimates.</p>
+<pre class="r"><code>ggplot(dm_estimates_tidy %&gt;% filter(exp_id!=&#39;1&#39;), aes(x = exp_id, y = mean, color = factor(run))) + 
+  geom_pointrange(aes(ymin = dm_transfer, ymax = dm_soak), position = position_jitter(height = 0))+
+  geom_pointrange(aes(y = dap, ymin = dap_low, ymax = dap_high), position = position_jitter(height = 0), shape = 2)+
+  geom_hline(yintercept = mean_biofilm_dap, linetype = 2)+
+  facet_wrap(~model) + 
+  scale_y_log10(limits = c(1e-9,NA)) + 
+  scale_color_viridis(discrete = T) + 
+  labs(y = &quot;D estimate (cm^2 / sec)&quot;)</code></pre>
+<p><img src="01_28_19_Dm_psoralen_nonequil_aggregate_analysis_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /> Here the triangle point ranges are the <span class="math inline">\(D_{ap}\)</span> estimates and the circles are the <span class="math inline">\(D_m\)</span>’s. Note that the ranges for the <span class="math inline">\(D_{ap}\)</span> are based off the confidence intervals from the fit’s estimate of the slope, but the <span class="math inline">\(D_m\)</span> ranges are based off the soak and transfer <span class="math inline">\(I_0\)</span> estimates (the center point is jus the mean of the two).</p>
+<p>You can clearly see that <span class="math inline">\(D_m\)</span> estimates lie 1-2 orders of magnitude lower than <span class="math inline">\(D_{ap}\)</span>. This may indicate that the molecular diffusion described by <span class="math inline">\(D_m\)</span> may not be fast enough to explain the perceived diffusion described by <span class="math inline">\(D_{ap}\)</span>.</p>
+<p>To get some more perspective on this let’s reshape the data so we can plot it a little differently.</p>
+<pre class="r"><code>d_combined &lt;- dm_estimates_tidy %&gt;% 
+  filter(exp_id!=&#39;1&#39; &amp; model==&#39;no_flux&#39;) %&gt;% 
+  mutate(dm = mean) %&gt;% 
+  gather(key=d_cat,val=d_est,dap,dm) %&gt;% 
+  mutate(ymax = if_else(d_cat==&#39;dap&#39;, dap_high, dm_soak)) %&gt;% 
+  mutate(ymin = if_else(d_cat==&#39;dap&#39;, dap_low, dm_transfer)) %&gt;% 
+  mutate(biofilm = &#39;biofilm&#39;)
+
+ggplot(d_combined, 
+       aes(x = d_cat, y = d_est, shape = exp_id)) + 
+  geom_pointrange(aes(ymin = ymin, ymax = ymax), position = position_jitter(height = 0))+
+  facet_wrap(~model) + 
+  scale_y_log10(limits = c(1e-9,NA))</code></pre>
+<p><img src="01_28_19_Dm_psoralen_nonequil_aggregate_analysis_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /> Now we can compare all of the estimates of biofilm <span class="math inline">\(D_m\)</span> separately from <span class="math inline">\(D_{ap}\)</span> and it’s clear they are quite different…</p>
+<div id="comparing-biofilm-to-blank-ida" class="section level2">
+<h2>Comparing Biofilm to Blank IDA</h2>
+<p>With that type of visualization in hand let’s go back and get the <span class="math inline">\(D_m\)</span> and <span class="math inline">\(D_{ap}\)</span> data for the blank IDA. We can organize it in the same way and then show the blank and biofilm datasets on the same plot / scale.</p>
+<pre class="r"><code>d_blank &lt;- left_join(df_2blank_estimates %&gt;% filter(biofilm==&#39;blank&#39; &amp; model==&#39;no_flux&#39;),
+                     dap_estimates %&gt;% filter(treatment==&#39;blank&#39;), 
+                     by = c(&#39;biofilm&#39;=&#39;exp_id&#39;)) %&gt;% 
+  mutate(dm = dm_soak) %&gt;% 
+  gather(key=d_cat,val=d_est,dap,dm) %&gt;% 
+  mutate(ymax = if_else(d_cat==&#39;dap&#39;, dap_high, dm_soak)) %&gt;% 
+  mutate(ymin = if_else(d_cat==&#39;dap&#39;, dap_low, dm_soak)) %&gt;% 
+  mutate(exp_id = treatment) %&gt;% 
+  distinct(d_est,.keep_all = T)
+
+#dap_estimates
+
+d_combined_wBlank &lt;- bind_rows(d_combined, d_blank)
+
+ggplot(d_combined_wBlank, 
+       aes(x = d_cat, y = d_est, fill = exp_id)) + 
+  geom_pointrange(aes(ymin = ymin, ymax = ymax), position = position_jitter(height = 0,width=0.2),shape=21)+
+  facet_wrap(~biofilm, scales=&#39;free&#39;) + 
+  scale_y_log10(limits = c(1e-9,1e-4))+
+  scale_fill_viridis(discrete = T) +
+  scale_x_discrete(breaks = c(&#39;dap&#39;,&#39;dm&#39;), labels=c(expression(D[ap]),expression(D[m]))) +
+  labs(x=&#39;&#39;,y=expression(&quot;Estimate (&quot;~cm^2 / sec~&quot;)&quot;))+
+  guides(fill=F) + 
+  theme(axis.text.x = element_text( size=14) )</code></pre>
+<p><img src="01_28_19_Dm_psoralen_nonequil_aggregate_analysis_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#ggsave(filename = &quot;../Figures/01_30_19_estimated_Dap_Dm_combined.pdf&quot;, width = 6, height = 4)</code></pre>
+<p>Here you can now get perspective on how well our pipeline estimates <span class="math inline">\(D_m\)</span> and <span class="math inline">\(D_{ap}\)</span> for the blank IDA, where we think <span class="math inline">\(D_{ap} \approx D_m\)</span>, while also seeing how the biofilm compares.</p>
+<p>This figure summarizes a lot of our conclusions, and I plan for it to be a panel in a figure for the paper.</p>
+<p>You can see that:</p>
+<ul>
+<li>the blank <span class="math inline">\(D_m \approx D_{ap}\)</span></li>
+<li>The biofilm <span class="math inline">\(D_{ap}\)</span> is significantly less than the blank.</li>
+<li>The biofilm <span class="math inline">\(D_m\)</span> is significantly lower than <span class="math inline">\(D_{ap}\)</span></li>
+</ul>
+</div>
+</div>
+<div id="conclusions" class="section level1">
+<h1>Conclusions</h1>
+<p>If we trust this analysis and the data then I think we would conclude that indeed <span class="math inline">\(D_m\)</span> is less than <span class="math inline">\(D_{ap}\)</span> in the biofilm and there must be some other process besides molecular diffusion that contributes to the perceived movement of electrons through the biofilm.</p>
+<p>That said, we sorta cheated a little, since we chose a <span class="math inline">\(t_s\)</span> that made <span class="math inline">\(D_{ap}\)</span> and <span class="math inline">\(D_m\)</span> similar.</p>
+<p>Moving forward it will be important to evaluate that decision regarding <span class="math inline">\(t_s\)</span> and also the finite diffusion model.</p>
+<hr />
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

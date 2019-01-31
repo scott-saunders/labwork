@@ -52,12 +52,12 @@ Please look back at those notebooks/datasets for more info about the raw data an
 First let's import the datasets and exclude some of the problematic points that were obvious from the past analyses.
 ```{r}
 df_blank <- read_csv("../../11_28_18_blank_IDA/Processing/11_28_18_swv_gc_soak_processed.csv") %>% 
-  select(reactor,electrode_from_swv,signal_from_swv,electrode_from_gc, signal_from_gc,echem_from_swv ) %>% 
+  select(reactor,electrode_from_swv,signal_from_swv,electrode_from_gc, signal_from_gc,echem_from_swv, minutes_from_swv ) %>% 
   mutate(run = 1, rep = 0, treatment='blank', exp_id = 'blank')
 
 
 df_3 <- read_csv("../../01_23_19_psoralen_nonequil_3/Processing/01_23_19_processed_swv_gc_all.csv") %>% 
-  select(treatment,run,rep,reactor,electrode_from_swv,signal_from_swv,electrode_from_gc, signal_from_gc, echem_from_swv ) %>% 
+  select(treatment,run,rep,reactor,electrode_from_swv,signal_from_swv,electrode_from_gc, signal_from_gc, echem_from_swv, minutes_from_swv ) %>% 
   mutate(exp_id = '3') %>% 
   filter(run!=1 | treatment!='psoralen' | rep<14 ) %>% 
   filter(run!=4 | treatment!='control' | rep>1 )
@@ -67,15 +67,17 @@ df_2_control <- read_csv("../../01_17_19_psoralen_nonequil_2/Processing/01_17_19
 df_2_psoralen <- read_csv("../../01_17_19_psoralen_nonequil_2/Processing/01_17_19_swv_gc_psoralen_dap_processed.csv")
 
 df_2 <- rbind(df_2_control,df_2_psoralen) %>% 
-  select(treatment,run, rep, reactor,electrode_from_swv,signal_from_swv,electrode_from_gc, signal_from_gc, echem_from_swv ) %>% 
+  select(treatment,run, rep, reactor,electrode_from_swv,signal_from_swv,electrode_from_gc, signal_from_gc, echem_from_swv, minutes_from_swv ) %>% 
   mutate(exp_id = '2')
 
 df_1 <- read_csv("../../01_08_19_psoralen_nonequil/Processing/01_08_19_processed_swv_gc_signals.csv") %>% 
-  select(treatment,run, rep, reactor,electrode_from_swv,signal_from_swv,electrode_from_gc, signal_from_gc , echem_from_swv) %>% 
+  select(treatment,run, rep, reactor,electrode_from_swv,signal_from_swv,electrode_from_gc, signal_from_gc , echem_from_swv, minutes_from_swv) %>% 
   mutate(exp_id = "1")
 
 
 df_all <- rbind(df_1,df_2,df_3,df_blank)
+
+write_csv(df_all, "./01_28_19_aggregate_SWV_GC_signals.csv")
 
 ```
 

@@ -207,6 +207,8 @@ Let's look at how the quantified signals decay over the reps.
 ggplot(swv_control_signals, aes(x=rep, y=signal,shape=reactor,color=factor(run)))+geom_line()+geom_point()+
   facet_wrap(~electrode)+
   scale_color_viridis(discrete = T)
+
+write_csv(swv_control_signals %>% filter(run==5), "./01_23_19_swv_control_decay_run5_processed.csv")
 ```
 Overall, the control i1 signals look pretty consistent (except run 4 which was taken with swv slow). As expected the i2 signals look a little weird, except for runs 4 and 5. So maybe the SWV slow did deal with the contaminant better??
 
