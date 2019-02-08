@@ -1,0 +1,263 @@
+---
+title: "Figure 2 - Draft 2"
+fontsize: 12pt
+date: "02_05_19"
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
+---
+
+**Note** the YAML contains specifications for a github document and html. The best way to deal with this is to knit them separately from the knit menu. Otherwise the html has blurry plots and tends to delete the md cached plots unless you tell it to cache everything!
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(kableExtra)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+theme_1 <- function () { 
+    theme_classic() %+replace% 
+        theme(
+          axis.text = element_text( size=12),
+          axis.title=element_text(size=14),
+          strip.text = element_text(size = 14),
+          strip.background = element_rect(color='white'),
+          legend.title=element_text(size=14),
+          legend.text=element_text(size=12),
+          panel.grid.major = element_line(color='grey',size=0.1)
+        )
+}
+theme_set(theme_1())
+```
+
+# Panel A - Pel
+
+Let's read in and look at the table of pel data. 
+```{r}
+pel_extracts <- read_csv('../data/2018_10_30_HPLC_concentrations_df.csv',comment = "#") %>% 
+  filter(strain %in% c('WTpar','dPel'))
+
+pel_extracts %>% 
+  kable() %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = F) %>% 
+  scroll_box(height = '250px')
+```
+
+Ok, now let's plot an overview of the dataset. 
+```{r}
+pel_extracts_means <- pel_extracts %>% 
+  group_by(material, measured_phenazine, strain) %>% 
+  mutate(mean = ifelse(replicate==1, mean(calcConc), NA)) 
+
+ggplot(pel_extracts_means ,aes(x=strain,y=calcConc,fill=measured_phenazine))+
+  geom_col( aes(y = mean)) +
+    geom_jitter(width=0.1,height=0,shape=21,size=2)+
+    facet_wrap(material~measured_phenazine,scales='free')+
+    scale_x_discrete(breaks = c('dPel','WTpar'), labels=c(expression(Delta*"pel"),"WT")) +
+    labs(x='Strain',y=expression("Biofilm concentration" ~ (mu*M )) ) +
+    guides(fill=F)
+```
+You can see that for each phenazine the concentration differs between the strains for both the cells aka biofilm and the agar. What we actually care about is the retention ratio, so let's calculate and look at that. 
+
+```{r}
+
+# Split dataset by material
+pel_extracts_means_agar <- pel_extracts_means %>% 
+  filter(material=='agar')
+
+pel_extracts_means_biofilm <- pel_extracts_means %>% 
+  filter(material=='cells')
+
+# Join agar and cell observations and calculate retention ratios = biofilm / agar
+pel_extracts_means_join <- left_join(pel_extracts_means_biofilm, 
+                                     pel_extracts_means_agar, 
+                                     by=c('strain','replicate','measured_phenazine'), 
+                                     suffix = c('_from_biofilm','_from_agar') 
+                                     ) %>% 
+  mutate(retention_ratio = calcConc_from_biofilm / calcConc_from_agar) %>% 
+  mutate(mean_retention_ratio = mean_from_biofilm / mean_from_agar)
+
+# Plot Layout
+plot_pel <- ggplot(pel_extracts_means_join ,aes(x=strain,y=retention_ratio,fill=measured_phenazine))+
+  geom_col( aes(y = mean_retention_ratio)) +
+    geom_jitter(width=0.1,height=0,shape=21,size=2)+
+    facet_wrap(~measured_phenazine,scales='free')
+
+# Styling
+plot_pel_styled <- plot_pel +
+  scale_x_discrete(breaks = c('WTpar','dPel'), 
+                   labels=c("WT",expression(Delta*"pel")), 
+                   limits = c('WTpar','dPel')) +
+  labs(x=NULL, y = expression(Biofilm/Agar)) +
+  theme(axis.text.x = element_text(size = 14) ) +
+  guides(fill=F)
+
+plot_pel_styled
+```
+Cool, now we can see that indeed PYO may be more tightly retained in the pel mutant. 
+
+# Panel B - DNase
+
+Let's read in the dnase dataset and look at the table:
+```{r}
+dnase_extracts <- read_csv('../data/2018_10_08_HPLC_concentrations_df.csv',comment = "#") %>% 
+  filter(Strain=='WT' & Day=='D4') %>% 
+  group_by(Phenazine,Condition,Material) %>% 
+  mutate(mean = ifelse(Replicate==1, mean(calcConc), NA))
+  
+
+dnase_extracts %>% 
+  kable() %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = F) %>% 
+  scroll_box(height = '250px')
+
+```
+
+Now, let's look at an overview of the experiment.
+
+```{r}
+
+ggplot(dnase_extracts ,aes(x=Condition,y=calcConc,fill=Phenazine))+
+  geom_col( aes(y = mean)) +
+    geom_jitter(width=0.1,height=0,shape=21,size=2)+
+    facet_wrap(Material~Phenazine,scales='free')
+
+```
+Here you can see that the agar concentrations between the Dnase treated and untreated don't differ meaningfully, but the cell/biofilm concentrations might. This might be because for this experiment the colonies were transferred to a fresh agar plate for only 24hrs as opposed to staying on the same plate for 4 days as with the pel experiment. So, let's ignore the agar concentrations for now. It's also important to note that by calculating a ratio as we did above for pel we do risk amplifying meaningless differences by dividing large numbers by small numbers.
+
+Here's the biofilm only:
+
+```{r}
+# Plot layout
+dnase_plot <- ggplot(dnase_extracts %>% filter(Material=='cells') ,aes(x=Condition,y=calcConc,fill=Phenazine))+
+  geom_col( aes(y = mean)) +
+    geom_jitter(width=0.1,height=0,shape=21,size=2)+
+    facet_wrap(~Phenazine,scales='free') 
+
+# Plot styling
+dnase_plot_styled <- dnase_plot +
+  labs(x=NULL, y=expression("Biofilm concentration" ~ (mu*M ))) + 
+  scale_x_discrete(limits = c("none",'DNase')) +
+  guides(fill = F)+
+  theme(axis.text.x = element_text(size = 14))
+
+dnase_plot_styled
+```
+So there may be a difference for PYO and PCN, but it's not dramatic.
+
+Here's the retention ratios just for comparison:
+```{r}
+# Split dataset by material
+dnase_extracts_agar <- dnase_extracts %>% 
+  filter(Material=='agar')
+
+dnase_extracts_biofilm <- dnase_extracts %>% 
+  filter(Material=='cells')
+
+# Join agar and cell observations and calculate retention ratios = biofilm / agar
+dnase_extracts_join <- left_join(dnase_extracts_biofilm, 
+                                     dnase_extracts_agar, 
+                                     by=c('Strain','Replicate','Phenazine','Condition','Day'), 
+                                     suffix = c('_from_biofilm','_from_agar') 
+                                     ) %>% 
+  mutate(retention_ratio = calcConc_from_biofilm / calcConc_from_agar) %>% 
+  mutate(mean_retention_ratio = mean_from_biofilm / mean_from_agar)
+
+# Plot
+ggplot(dnase_extracts_join ,aes(x=Condition,y=retention_ratio,fill=Phenazine))+
+  geom_col( aes(y = mean_retention_ratio)) +
+    geom_jitter(width=0.1,height=0,shape=21,size=2)+
+    facet_wrap(~Phenazine,scales='free')+   
+    guides(fill=F)
+
+```
+
+# Panel E - MM Discrimination
+
+This data is electrochemical and contains the third/final sweep of an electrode with two different DNA monolayers.
+```{r}
+df_noO2 <- read_csv('../data/DNA_modified_electrode_noO2.csv',comment = "#") %>% 
+  mutate(Construct=fct_relevel(Construct,'wm','mm'))
+
+df_noO2 %>% 
+  kable() %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = F) %>% 
+  scroll_box(height = '250px')
+```
+
+Let's make the figure:
+```{r}
+
+plot_dnaCT_noO2 <- ggplot(df_noO2,aes(x=E,y=Current,linetype = Construct))+
+  geom_path(size=1,lineend = 'round')
+
+plot_dnaCT_noO2_styled <- plot_dnaCT_noO2 +
+  scale_x_reverse()+
+  scale_linetype_manual(breaks = c('wm','mm'), labels=c("Well matched DNA","Mismatched DNA")) +
+  labs(x='E (V vs. Ag/AgCl)',y='Current (A)')+
+  theme(legend.position = c(0.3, 0.8),
+        legend.title = element_blank(),
+        legend.background = element_rect(fill=NA))
+
+plot_dnaCT_noO2_styled
+```
+
+
+
+
+# Panel F - DNA CT Catalytic
+
+```{r}
+df_wO2 <- read_csv('../data/DNA_modified_electrode_wO2.csv',comment = "#") %>% 
+  mutate(Condition=paste(Construct,Aerobic,PCN,sep='_')) %>% 
+  mutate(Condition=fct_relevel(Condition,"wm_TRUE_TRUE","mm_TRUE_TRUE","wm_TRUE_FALSE"))
+
+df_wO2 %>% 
+  kable() %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = F) %>% 
+  scroll_box(height = '250px')
+```
+
+```{r}
+plot_dnaCT_wO2 <- ggplot(df_wO2 %>% filter(Aerobic==T),aes(x=E,y=Current,linetype=Condition))+
+  geom_path(size=1,lineend = 'round')
+
+plot_dnaCT_wO2_styled <- plot_dnaCT_wO2 +
+  scale_x_reverse()+
+  scale_linetype_manual(
+    breaks = c('wm_TRUE_TRUE','mm_TRUE_TRUE','wm_TRUE_FALSE'), values = c("solid",'dashed',"dotted"),
+    labels=c(expression("wmDNA"+"PCN"+O[2]),expression("mmDNA"+"PCN"+O[2]),expression("wmDNA"-"PCN"+O[2]))
+    ) +
+  labs(x='E (V vs. Ag/AgCl)',y='Current (Amps)')+
+  theme(
+    legend.position = c(0.3, 0.8),
+    legend.title = element_blank(),
+    legend.background = element_rect(fill=NA))
+
+plot_dnaCT_wO2_styled
+```
+
+# Combine Panels
+
+```{r}
+top_panel <- plot_grid(plot_pel_styled, dnase_plot_styled,align = 'hv', axis= 'tblr')
+
+plots <- list(NULL, plot_dnaCT_noO2_styled, plot_dnaCT_wO2_styled)
+bottom_panel <- plot_grid(plotlist = plots, align = 'hv', axis= 'tblr', rel_widths = c(1,1.5,1.5), ncol=3)
+
+fig_2 <- plot_grid(top_panel,bottom_panel, align = 'h',ncol=1)
+``` 
+
+```{r}
+
+save_plot("../figures/02_05_19_fig_2_draft_2.pdf", fig_2, base_height = 8, base_width = 12)
+```
+

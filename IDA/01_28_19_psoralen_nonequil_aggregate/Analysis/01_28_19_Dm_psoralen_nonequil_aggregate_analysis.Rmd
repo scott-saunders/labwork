@@ -44,6 +44,8 @@ dap_dataset <- read_csv("../../01_28_19_psoralen_nonequil_aggregate/Analysis/01_
 
 dap_estimates <- read_csv("./01_28_19_swv_gc_dap_estimates_aggregate.csv")
 
+#dap_estimates <- read_csv("./01_28_19_swv_gc_dap_estimates_aggregate_updated.csv")
+
 df_2blank_estimates <- read_csv("../../01_17_19_psoralen_nonequil_2/Analysis/01_17_19_dm_estimates.csv")
 
 ```
@@ -168,6 +170,8 @@ transfer_i0 <- dap_test_norm %>%
 dm_estimates_soak <- left_join(nls_fits %>% filter(term=='a'), soak_i0, by = c('exp_id','run'))
 
 dm_estimates <- left_join(dm_estimates_soak, transfer_i0, by = c('exp_id','run'))
+
+#write_csv(dm_estimates, "./02_07_19_biofilm_dm_fits.csv")
 
 dm_estimates_wDap <- left_join(dm_estimates, 
                                dap_estimates %>% 

@@ -115,6 +115,13 @@ gc_data <- echem_import_to_df(filenames = GC_filenames,
 
 ```
 
+```{r}
+
+ggplot(gc_data %>% filter(reactor=='transfer' & run==3 & treatment=='control' & electrode=='i2'), 
+       aes(x = minutes+ (t / 60), y = -current)) + 
+  geom_point()
+```
+
 Here's all the data plotted. 
 ```{r}
 
@@ -467,3 +474,9 @@ write_csv(swv_gc_all, "./01_23_19_processed_swv_gc_all.csv")
 ```
 
 See the analysis notebook for further work with the processed datasets.
+
+```{r}
+ggplot(swv_gc_control %>% filter(run==1 & electrode_from_swv=='i1' & reactor=='transfer'), aes(x = minutes_from_gc , y = signal_from_gc)) +
+  geom_point() +
+  geom_point(aes(x = minutes_from_swv, y = signal_from_swv / 10), color = 'red')
+```

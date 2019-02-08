@@ -1,0 +1,146 @@
+---
+title: "Blank Dm and t_s"
+fontsize: 12pt
+date: "02_07_19 "
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
+---
+
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+library(knitr)
+library(kableExtra)
+library(patchwork)
+
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+source("../../../IDA/tools/echem_processing_tools.R")
+source("../../../IDA/tools/plotting_tools.R")
+
+theme_set(theme_1())
+```
+
+```{r}
+blank_data <- read_csv("../data/11_28_18_swv_decays_Processed.csv") %>% filter(PHZadded!="10uM")
+
+ggplot(blank_data , aes(x = norm_time, y = signal_from_transfer, color=PHZadded, shape = electrode)) + 
+  geom_point()+
+  geom_smooth(method='nls',formula=y~b*(x)^-0.5+a,method.args=list(start=c(b=0.1,a=1e-7)),se=F)+
+  facet_wrap(~electrode)+
+  scale_color_viridis(discrete = T)
+```
+
+```{r}
+e = exp(1)
+
+ggplot(blank_data , aes(x = norm_time, y = signal_from_transfer, color=PHZadded, shape = electrode)) + 
+  geom_point()+
+  geom_smooth(method='nls',
+              formula=y~(a*(x)^-0.5)*(2+e^(b*(x)^-0.5))+c,
+              method.args=list(start=c(a=0.1,b=0.3,c=0)),
+              se=F)+
+  scale_color_viridis(discrete = T)
+```
+
+```{r}
+blank_no_flux <- blank_data %>% 
+  group_by(PHZadded) %>% 
+  do(
+    tidy(
+      nls(.,formula = signal_from_transfer~(a*(norm_time)^-0.5)*(2+e^(b/norm_time))+c,start=list(a=0.1,b=0.1,c=0)),
+      conf.int = T)
+    ) %>% 
+  mutate(model='no_flux')
+
+blank_og <- blank_data %>% 
+  group_by(PHZadded) %>% 
+  do(
+    tidy(
+      nls(.,formula = signal_from_transfer~(a*(norm_time)^-0.5)+c,start=list(a=0.1,c=0)),
+      conf.int = T)
+    ) %>% 
+  mutate(model='og')
+
+blank_fits <- rbind(blank_no_flux,blank_og)
+
+ggplot(blank_fits %>% filter(term!='c'),aes(x=model,y=estimate,color = PHZadded))+
+  geom_pointrange(aes(ymin = conf.low, ymax = conf.high), position = position_jitter(height = 0))+
+  facet_wrap(~term,scales='free')+ylim(0,NA)
+```
+
+
+```{r}
+dm_from_a_noFlux <- function(estimate, i_0, dap, t_s=0.1){
+  
+  dm <- ( i_0^2 * dap * t_s ) / ( 4*pi* estimate^2)
+  
+  dm
+}
+
+dm_from_a_OG <- function(estimate, i_0, dap, t_s=0.1){
+  
+  dm <- ( i_0^2 * dap * t_s ) / ( pi* estimate^2)
+  
+  dm
+}
+```
+
+
+
+```{r}
+
+blank_dap = 6.9e-6
+
+blank_i0 <- blank_data %>% 
+  group_by(PHZadded) %>% 
+  mutate(i0_transfer = max(signal_from_transfer)) %>% 
+  filter(signal_from_transfer==i0_transfer) %>% 
+  mutate(i0_soak = i0) %>% 
+  select(PHZadded, i0_transfer, i0_soak )
+
+blank_estimates <- left_join(blank_fits %>% filter(term=='a'), blank_i0, by = c('PHZadded'))
+
+
+blank_estimates_og <- blank_estimates %>% 
+  filter(model=='og') %>% 
+  mutate(dm_soak = dm_from_a_OG(estimate = estimate, i_0 = i0_soak, dap = blank_dap, t_s = 0.008)) %>% 
+  mutate(dm_high = dm_from_a_OG(estimate = conf.high, i_0 = i0_soak, dap = blank_dap, t_s = 0.008)) %>% 
+  mutate(dm_low = dm_from_a_OG(estimate = conf.low, i_0 = i0_soak, dap = blank_dap, t_s = 0.008))
+
+blank_estimates_noFlux <- blank_estimates %>% 
+  filter(model=='no_flux') %>% 
+  mutate(dm_soak = dm_from_a_noFlux(estimate = estimate, i_0 = i0_soak, dap = blank_dap, t_s = 0.008)) %>% 
+  mutate(dm_high = dm_from_a_noFlux(estimate = conf.high, i_0 = i0_soak, dap = blank_dap, t_s = 0.008)) %>% 
+  mutate(dm_low = dm_from_a_noFlux(estimate = conf.low, i_0 = i0_soak, dap = blank_dap, t_s = 0.008)) 
+
+blank_estimates_tidy <- rbind(blank_estimates_og, blank_estimates_noFlux)
+
+#write_csv(blank_estimates_tidy, "../data/02_07_19_blank_dm_estimates.csv")
+
+labels = c(no_flux = "Finite Model", og = "Semi-infinite Model")
+
+ggplot(blank_estimates_tidy, aes(x = model, y = dm_soak, shape = PHZadded)) + 
+  geom_pointrange(aes(ymin = dm_low, ymax = dm_high), position = position_jitter(height = 0)) +
+  geom_hline(yintercept = blank_dap, linetype = 2)+
+  facet_wrap(~model, scales = 'free', labeller = labeller(model = labels))+
+  scale_y_log10(limits = c(1e-7,1e-4)) + 
+  theme(axis.text.x = element_blank())+
+  labs(x = NULL, y = expression(D[m] ~ (cm^2 / sec)), shape = 'Added PYO')
+```
+
+This makes sense, because it looks like the poor fit of the semi-infinite model fits the points too shallowly, which would give a slower diffusion coefficient. The finite model seems to perform well and gives a reasonably close estimate of $D_m$ to $D_{ap}$.
+
+
