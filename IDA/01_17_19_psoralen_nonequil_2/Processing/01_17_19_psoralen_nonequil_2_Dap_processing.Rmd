@@ -170,6 +170,16 @@ ggplot(swv_control_data %>% filter(electrode=='i1'),
   facet_wrap(~run,scales='free')+
   scale_x_reverse()+
   scale_color_viridis()
+
+swv_control_r1 <- swv_control_data %>% filter(run==1 & electrode=='i1', reactor=='transfer')
+swv_signals_control_r1 <- swv_control_signals %>% filter(run==1 & electrode=='i1', reactor=='transfer')
+
+ggplot(swv_control_r1, aes(x = E, y = current, color = rep)) + geom_point() + 
+  geom_point(data = swv_signals_control_r1,aes(x = E_from_maxs, y = current_from_maxs), color = 'red') +
+  geom_point(data = swv_signals_control_r1,aes(x = E_from_mins, y = current_from_mins), color = 'blue') 
+
+write_csv(swv_control_r1, "../Data/01_17_19_swv_r1_raw.csv")
+write_csv(swv_signals_control_r1, "../Data/01_17_19_swv_r1_signals.csv")
 ```
 The quantification looks pretty clean overall: 
 
@@ -254,6 +264,16 @@ ggplot(gc_data_i2 %>% filter(reactor=='transfer'),
   facet_grid(treatment~run,scales='free')+
   scale_x_reverse()+
   scale_color_viridis()
+
+gc_control_r1 <- gc_data %>% filter(PHZaddedInt==75 & reactor=='transfer' & treatment=='control' & run==1)
+gc_signals_control_r1 <- gc_signals %>% filter(PHZaddedInt==75 & reactor=='transfer' & treatment=='control' & run==1)
+
+ggplot(gc_control_r1, aes(x = E, y = current, color = rep)) + geom_point() + 
+  geom_point(data = gc_signals_control_r1, aes(x = E_from_maxs, y = -current_from_maxs), color = 'red') +
+  geom_point(data = gc_signals_control_r1, aes(x = E_from_mins, y = -current_from_mins), color = 'blue')
+
+write_csv(gc_control_r1, "../Data/01_17_19_gc_r1_raw.csv")
+write_csv(gc_signals_control_r1, "../Data/01_17_19_gc_r1_signals.csv")
 ```
 
 This quantification looks reasonable. All the maxs are at the endpoints of the run and the mins are in the same regions of the plots. 

@@ -49,7 +49,7 @@ e = exp(1)
 ggplot(blank_data , aes(x = norm_time, y = signal_from_transfer, color=PHZadded, shape = electrode)) + 
   geom_point()+
   geom_smooth(method='nls',
-              formula=y~(a*(x)^-0.5)*(2+e^(b*(x)^-0.5))+c,
+              formula=y~(a*(x)^-0.5)*(2+e^(b*x^-1))+c,
               method.args=list(start=c(a=0.1,b=0.3,c=0)),
               se=F)+
   scale_color_viridis(discrete = T)
@@ -104,6 +104,8 @@ dm_from_a_OG <- function(estimate, i_0, dap, t_s=0.1){
 
 blank_dap = 6.9e-6
 
+t_s = 0.005819382
+
 blank_i0 <- blank_data %>% 
   group_by(PHZadded) %>% 
   mutate(i0_transfer = max(signal_from_transfer)) %>% 
@@ -116,15 +118,15 @@ blank_estimates <- left_join(blank_fits %>% filter(term=='a'), blank_i0, by = c(
 
 blank_estimates_og <- blank_estimates %>% 
   filter(model=='og') %>% 
-  mutate(dm_soak = dm_from_a_OG(estimate = estimate, i_0 = i0_soak, dap = blank_dap, t_s = 0.008)) %>% 
-  mutate(dm_high = dm_from_a_OG(estimate = conf.high, i_0 = i0_soak, dap = blank_dap, t_s = 0.008)) %>% 
-  mutate(dm_low = dm_from_a_OG(estimate = conf.low, i_0 = i0_soak, dap = blank_dap, t_s = 0.008))
+  mutate(dm_soak = dm_from_a_OG(estimate = estimate, i_0 = i0_soak, dap = blank_dap, t_s = t_s)) %>% 
+  mutate(dm_high = dm_from_a_OG(estimate = conf.high, i_0 = i0_soak, dap = blank_dap, t_s = t_s)) %>% 
+  mutate(dm_low = dm_from_a_OG(estimate = conf.low, i_0 = i0_soak, dap = blank_dap, t_s = t_s))
 
 blank_estimates_noFlux <- blank_estimates %>% 
   filter(model=='no_flux') %>% 
-  mutate(dm_soak = dm_from_a_noFlux(estimate = estimate, i_0 = i0_soak, dap = blank_dap, t_s = 0.008)) %>% 
-  mutate(dm_high = dm_from_a_noFlux(estimate = conf.high, i_0 = i0_soak, dap = blank_dap, t_s = 0.008)) %>% 
-  mutate(dm_low = dm_from_a_noFlux(estimate = conf.low, i_0 = i0_soak, dap = blank_dap, t_s = 0.008)) 
+  mutate(dm_soak = dm_from_a_noFlux(estimate = estimate, i_0 = i0_soak, dap = blank_dap, t_s = t_s)) %>% 
+  mutate(dm_high = dm_from_a_noFlux(estimate = conf.high, i_0 = i0_soak, dap = blank_dap, t_s = t_s)) %>% 
+  mutate(dm_low = dm_from_a_noFlux(estimate = conf.low, i_0 = i0_soak, dap = blank_dap, t_s = t_s)) 
 
 blank_estimates_tidy <- rbind(blank_estimates_og, blank_estimates_noFlux)
 
