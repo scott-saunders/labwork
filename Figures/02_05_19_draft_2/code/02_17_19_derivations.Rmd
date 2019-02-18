@@ -47,3 +47,7 @@ $$ a = \frac{I_0 \sqrt{D_{ap} t_s}}{\sqrt{\pi D_m}}$$
 Therefore $D_m$ is:
 
 $$D_m = \frac{I_0^2 D_{ap} t_s}{\pi a^2}$$
+
+********
+
+$$y = m x + b$$
