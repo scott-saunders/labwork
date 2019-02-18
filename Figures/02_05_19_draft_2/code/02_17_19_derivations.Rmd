@@ -1,0 +1,49 @@
+---
+title: "$D_{ap}$ and $D_m$ derviations from echem"
+subtitle: "For QBio"
+fontsize: 12pt
+date: "02_17_19 "
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
+---
+
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+```
+
+Starting with 1D Diffusion over time (t) and infinite space (x) the concentration in the system is described by:
+$$C(x,t) = \frac{M_0}{A \sqrt{4 \pi D t}}e^{\frac{-x^2}{4 D t}}$$
+
+For a no-flux boundary at x=0, and evaluating at x=0:
+
+$$C_{x=0}(t) = \frac{2 M_0}{A_e \sqrt{4 \pi D_m t}}$$
+
+Substituting in from the equation for $I_{swv}$ gives:
+
+$$I(t) = \frac{2 I_0 V_e}{A_e \sqrt{4 \pi D_m t}}$$
+
+Since $A_e$ is the area of the electrode, and $V_e$ is the volume of solution probed by the electrode $V_e / A_e$ depends on the diffusion layer at the electrode.
+$$\frac{V_e}{A_e} = \sqrt{D_{ap} t_s}$$
+
+So, our model can be described as:
+$$I(t) = \frac{I_0 \sqrt{D_{ap} t_s}}{\sqrt{\pi D_m t}}$$
+
+Fitting the data to the equation,
+$$y = \frac{a}{\sqrt{t}} + b$$
+
+Allows us to write down $a$ as:
+
+$$ a = \frac{I_0 \sqrt{D_{ap} t_s}}{\sqrt{\pi D_m}}$$
+
+Therefore $D_m$ is:
+
+$$D_m = \frac{I_0^2 D_{ap} t_s}{\pi a^2}$$

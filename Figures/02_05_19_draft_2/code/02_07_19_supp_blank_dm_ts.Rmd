@@ -141,6 +141,8 @@ ggplot(blank_estimates_tidy, aes(x = model, y = dm_soak, shape = PHZadded)) +
   scale_y_log10(limits = c(1e-7,1e-4)) + 
   theme(axis.text.x = element_blank())+
   labs(x = NULL, y = expression(D[m] ~ (cm^2 / sec)), shape = 'Added PYO')
+
+mean(blank_estimates_noFlux$dm_soak)
 ```
 
 This makes sense, because it looks like the poor fit of the semi-infinite model fits the points too shallowly, which would give a slower diffusion coefficient. The finite model seems to perform well and gives a reasonably close estimate of $D_m$ to $D_{ap}$.

@@ -23,18 +23,7 @@ library(kableExtra)
 
 knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
 
-theme_1 <- function () { 
-    theme_classic() %+replace% 
-        theme(
-          axis.text = element_text( size=12),
-          axis.title=element_text(size=14),
-          strip.text = element_text(size = 14),
-          strip.background = element_rect(color='white'),
-          legend.title=element_text(size=14),
-          legend.text=element_text(size=12),
-          panel.grid.major = element_line(color='grey',size=0.1)
-        )
-}
+source("../../../IDA/tools/plotting_tools.R")
 theme_set(theme_1())
 ```
 
@@ -84,20 +73,53 @@ Here you can see that the abundance of phena
 
 ```{r}
 #Plot layout
-plot_wt_free <- ggplot(wt_conc_means, aes(x = material, fill = material)) + 
-  geom_col(aes(y = mean)) + 
-  geom_jitter(aes(y = phz_conc), height = 0, width = 0.1, shape = 21) +
+plot_wt_free <- ggplot(wt_conc_means, aes(x = material)) + 
+  geom_col(aes(y = mean, fill = material)) + 
+  geom_jitter(aes(y = phz_conc), height = 0, width = 0.1, shape = 21,color = 'black', size = 2) +
   facet_wrap(~Name, scales = 'free')
 
 #Plot styling
 plot_wt_free_styled <- plot_wt_free +
   labs(x = NULL, y = expression("Phenazine concentration" ~ ( mu*M ))) + 
   theme(axis.title.x = element_text(size = 14)) + 
-  scale_fill_manual(guide = F, values = c("#F0E442","light green"))
+  scale_fill_manual(guide = F, values = c("#66CCFF","#FFCC66"))
     
 plot_wt_free_styled     
 ```
 ok and now this makes our point.
+
+# Retention Ratio
+
+```{r}
+# Split dataset by material
+wt_conc_means_agar <- wt_conc_means %>% 
+  filter(material=='agar')
+
+wt_conc_means_biofilm <- wt_conc_means %>% 
+  filter(material=='biofilm')
+
+# Join agar and cell observations and calculate retention ratios = biofilm / agar
+wt_conc_means_join <- left_join(wt_conc_means_biofilm, 
+                                     wt_conc_means_agar, 
+                                     by=c('strain','replicate','Name'), 
+                                     suffix = c('_from_biofilm','_from_agar') 
+                                     ) %>% 
+  mutate(retention_ratio = phz_conc_from_biofilm / phz_conc_from_agar) %>% 
+  mutate(mean_retention_ratio = mean_from_biofilm / mean_from_agar)
+
+# Plot Layout
+wt_ret_ratio <- ggplot(wt_conc_means_join ,aes(x=Name,y=retention_ratio))+
+  geom_col( aes(y = mean_retention_ratio), fill = 'light gray') +
+    geom_jitter(width=0.1,height=0,shape=21,size=2)
+
+# Plot Stlying
+wt_ret_ratio_styled <- wt_ret_ratio +
+  guides(fill=F) +
+  scale_y_continuous(labels = fold_label) + 
+  labs(x = NULL, y = "[Biofilm] / [Agar]")
+
+wt_ret_ratio_styled
+```
 
 # Panel E
 
@@ -151,9 +173,14 @@ plot_dphz_binding <- ggplot(dphz_extracts_means, aes(x=added_phz_num,y=calcConc)
   geom_line(size=1, aes(y=mean,color=measured_phenazine))+
   geom_point(size=2, shape = 21, aes(fill=measured_phenazine))
 
+plot_dphz_binding <- ggplot(dphz_extracts_means, aes(x=added_phz_num,y=calcConc))+
+  geom_line(size=1, aes(y=mean, group = measured_phenazine))+
+  geom_point(size=2, aes(shape=measured_phenazine))
+
 # Plot styling
 plot_dphz_binding_styled <- plot_dphz_binding + 
-  labs(x=expression('Phenazine in agar ('~mu*"M)"), 
+  scale_shape_discrete(solid=F, guide = F)+
+  labs(x=expression('Phenazine added to agar ('~mu*"M)"), 
        y = expression("Biofilm concentration" ~ ( mu*M )) ) +
   theme(legend.position = c(0.5, 0.9),
         legend.title = element_blank(),
@@ -167,14 +194,22 @@ plot_dphz_binding_styled
 
 # Combine Panels 
 ```{r}
-fig_1 <- plot_grid(plot_wt_free_styled, plot_dphz_binding_styled, align = 'hv', axis = 'tblr', rel_widths = c(1.5,1), aspec)
+top_panel <- plot_grid(NULL, wt_ret_ratio_styled, ncol = 2, rel_widths = c(2.5,1), scale = 0.9, labels = c('',"E"))
+
+bottom_panel <- plot_grid(plot_wt_free_styled, plot_dphz_binding_styled, 
+                   ncol = 2,
+                   align = 'hv', axis = 'tblr', 
+                   rel_widths = c(1.25,1), 
+                   scale = 0.9, labels = c("D", "F"))
+
+fig_1 <- plot_grid(top_panel, bottom_panel, ncol = 1, rel_heights = c(1,1.5))
 
 fig_1
 ```
 
 ```{r eval = F}
 
-save_plot("../figures/02_05_19_fig_1_draft_2.pdf", fig_1, base_aspect_ratio = 2)
+save_plot("../figures/02_12_19_fig_1_draft_2.pdf", fig_1, base_width = 8.5, base_height = 6)
 
 ```
 
