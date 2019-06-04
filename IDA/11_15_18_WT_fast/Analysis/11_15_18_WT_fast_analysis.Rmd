@@ -1,0 +1,101 @@
+---
+title: "WT Biofilm Fast Transfer"
+subtitle: "PCA to PYO transition"
+fontsize: 12pt
+date: "11_15_18 "
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
+---
+
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+source("../../tools/echem_processing_tools.R")
+source("../../tools/plotting_tools.R")
+
+theme_set(theme_1())
+```
+
+```{r}
+SWV_file_paths <-  dir(path='../Data', pattern = "[SWV]+.+[txt]$",recursive = T,full.names = T)
+
+SWV_filenames <- basename(SWV_file_paths)
+
+swv_data_cols <-  c('E','i1','i2')
+
+filename_cols = c('strain','reactor','echem','rep')
+
+swv_skip_rows=18
+  
+
+swv_data <- echem_import(filenames = SWV_filenames, 
+                                       file_paths = SWV_file_paths, 
+                                       data_cols = swv_data_cols, 
+                                       skip_rows = swv_skip_rows)
+
+swv_data_unnested <- swv_data %>% 
+  unnest(minutes) %>% 
+  unnest(file_contents)%>% 
+  separate(filename, filename_cols, sep='_') %>%
+  gather(key=electrode,value=current,i1,i2) %>% 
+  mutate(rep=as.integer(str_extract(rep,"^[0-9]+"))) 
+
+```
+
+```{r}
+ggplot(swv_data_unnested, aes(x = E, y = current, color = rep)) + geom_point() + 
+  facet_wrap(~echem, scales = 'free') + 
+  scale_color_viridis() + 
+  scale_x_reverse()
+
+ggplot(swv_data_unnested %>% filter(echem =='swvFast'), aes(x = E, y = current, color = rep)) + geom_point() + 
+  scale_color_viridis() + 
+  scale_x_reverse() + 
+  facet_wrap(~electrode)
+
+max_points <- swv_data_unnested %>% 
+  filter(echem =='swvFast' & electrode=='i1') %>% 
+  group_by(rep) %>% 
+  filter(current == max(current))
+
+max_points_1 <- max_points %>% 
+  filter(rep==1)
+
+max_points_50 <- max_points %>% 
+  filter(rep==50)
+
+swv_data_unnested <- swv_data_unnested %>% 
+  group_by(reactor,echem) %>% 
+  mutate(min_time = min(minutes)) %>% 
+  mutate(norm_time = minutes - min_time)
+
+ggplot(swv_data_unnested %>% 
+         filter(echem =='swvFast' & electrode=='i1') %>% 
+         filter(rep %% 10 ==0 | rep==1), 
+       aes(x = E, y = current, color = norm_time )) +
+  geom_vline(xintercept = max_points_1$E) +
+  geom_vline(xintercept = max_points_50$E) +
+  geom_point() + 
+  scale_color_viridis("Time (min)") + 
+  scale_x_reverse()
+
+
+```
+
+```{r}
+ggplot(swv_data_unnested %>% filter(echem=='swvFast'), aes(x = minutes + , y = current)) + geom_point()
+```

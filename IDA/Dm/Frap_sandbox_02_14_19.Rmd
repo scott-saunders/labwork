@@ -1,0 +1,120 @@
+---
+title: "Frap"
+fontsize: 12pt
+date: "02_14_19 "
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
+---
+
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+library(knitr)
+library(kableExtra)
+library(patchwork)
+library(VGAM)
+
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+source("../tools/echem_processing_tools.R")
+source("../tools/plotting_tools.R")
+
+theme_set(theme_1())
+```
+
+
+```{r}
+
+frap_inf <- function(c0, a, D, x, t){
+  c0-(c0 / 2)*(2+erf( (x - a) / sqrt(4 * D * t) )-erf( (x + a) / sqrt(4 * D * t) ) )
+}
+```
+
+```{r}
+grid <- expand.grid(
+  x = seq(-0.1,0.1,length=101),
+  t = seq(0, 2000, length = 201)
+  )
+
+profile_frap_inf <- grid %>% 
+  mutate(c=frap_inf(c0 = 2, a = 0.05, D = 5e-5, x=x, t=t ))
+
+ggplot(profile_frap_inf, aes(x = x, y = c, color = t))+geom_path(aes(group = t))
+```
+
+```{r}
+ggplot(profile_frap_inf %>% filter(x==0.0), aes(x = t, y = c, color = t))+geom_point()
+```
+
+```{r}
+frap_semi_inf <- function(c0, a, D, x, t){
+  profile <- c0-(c0 /2)*(2+erf( (x - a) / sqrt(4 * D * t) )-erf( (x + a) / sqrt(4 * D * t) ) )
+  2*profile
+}
+
+
+profile_frap_semi_inf <- profile_frap_inf %>% 
+  mutate(c_semi_inf=frap_semi_inf(c0 = 2, a = 0.05, D = 5e-5, x=x, t=t )) %>% 
+  gather(model, concentration, c, c_semi_inf)
+
+ggplot(profile_frap_semi_inf, aes(x = x, y = concentration, color = t))+
+  geom_path(aes(group = t)) + 
+  facet_wrap(~model)
+
+ggplot(profile_frap_semi_inf %>% filter(x==0.0), aes(x = t, y = concentration, color = t))+
+  geom_point(aes(group = t)) + 
+  facet_wrap(~model)
+```
+
+```{r}
+lim_ext <- function(c0, a, D, x, t){
+  profile <- (c0 /2)*(
+    erf( (a-x ) / sqrt(4 * D * t) ) + 
+      erf( ( a + x) / sqrt(4 * D * t)) 
+    )
+  rnorm(length(profile), mean = profile, sd = 0.02)
+}
+
+
+profile_lim_ext <- grid %>% 
+  mutate(c_lim_ext=lim_ext(c0 = 2, a = 0.05, D = 5e-5, x=x, t=t )) 
+
+ggplot(profile_lim_ext, aes(x = x, y = c_lim_ext, color = t))+
+  geom_path(aes(group = t)) 
+
+ggplot(profile_lim_ext %>% filter(x==0.0 & t>0), aes(x = t, y = c_lim_ext, color = t))+
+  geom_point(aes(group = t))
+
+nls_predictor <- function(m = 2, b,t){
+  m*erf(b*t^-0.5)
+}
+
+summary(
+  nls(formula = c_lim_ext~2*erf(b*t^-0.5), 
+            data = profile_lim_ext %>% filter(x==0.0), 
+            trace = T,
+            start = c(b=5)
+            )
+        )
+
+
+profile_lim_ext_preds <- profile_lim_ext %>% 
+  filter(x==0.0) %>% 
+  mutate(pred = nls_predictor(b = 3.55, t=t))
+
+ggplot(profile_lim_ext_preds , aes(x = t, y = c_lim_ext, color = t))+
+  geom_point(aes(group = t)) +
+  geom_point(aes(y = pred), color = 'red')
+```

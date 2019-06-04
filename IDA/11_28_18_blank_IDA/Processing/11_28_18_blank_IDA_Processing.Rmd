@@ -131,7 +131,7 @@ swv_gc_soak_data <- left_join(soak_swv_slow_signal,soak_gc_signal,
                               by=c('PHZadded','PHZaddedInt','molecule','reactor'),
                               suffix=c('_from_swv','_from_gc'))
 
-write_csv(swv_gc_soak_data,'./11_28_18_swv_gc_soak_processed.csv')
+write_csv(swv_gc_soak_data,'./11_28_18_swvSlow_gc_soak_processed.csv')
 
 ggplot(swv_gc_soak_data %>% filter(electrode_from_gc=='i2' & electrode_from_swv=='i1'),aes(x=signal_from_swv,y=signal_from_gc))+geom_point()
 
@@ -153,6 +153,14 @@ ggplot(soak_swv_fast_data,aes(x=E,y=current,color=PHZadded)) + geom_point() +
 
 ggplot(soak_swv_fast_signal,aes(x=PHZaddedInt,y=signal,color=electrode))+
   geom_point()+xlim(0,NA)+ylim(0,NA)
+
+swvFast_gc_soak_data <- left_join(soak_swv_fast_signal,soak_gc_signal,
+                              by=c('PHZadded','PHZaddedInt','molecule','reactor'),
+                              suffix=c('_from_swv','_from_gc'))
+
+ggplot(swvFast_gc_soak_data %>% filter(electrode_from_gc=='i2' & electrode_from_swv=='i1'),aes(x=signal_from_swv,y=signal_from_gc))+geom_point()
+
+write_csv(swvFast_gc_soak_data,'./11_28_18_swvFast_gc_soak_processed.csv')
 ```
 
 ```{r}

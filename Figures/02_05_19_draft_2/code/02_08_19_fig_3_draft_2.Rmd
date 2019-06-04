@@ -1,0 +1,100 @@
+---
+title: "Figure 3 Draft 2"
+fontsize: 12pt
+date: "02_08_19 "
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
+---
+
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+library(knitr)
+library(kableExtra)
+library(patchwork)
+library(ggsci)
+
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+source("../../../IDA/tools/echem_processing_tools.R")
+source("../../../IDA/tools/plotting_tools.R")
+
+theme_set(theme_1())
+```
+
+```{r}
+wt_ca <- read_csv("../data/08_31_18_fernanda_wt_CA.csv") %>% mutate(strain = 'WT')
+dPHZ_ca <- read_csv("../data/08_31_18_fernanda_dPHZpyo_CA.csv") %>% mutate(strain = 'dPHZ')
+
+df_ca <- bind_rows(wt_ca[seq(1,nrow(wt_ca), 100),],dPHZ_ca[seq(1,nrow(wt_ca), 100),])
+
+ggplot(wt_ca[seq(1,nrow(wt_ca), 100),], aes(x = Time_h, y = I_nA)) + geom_point()
+
+ggplot(dPHZ_ca[seq(1,nrow(wt_ca), 100),], aes(x = Time_h, y = I_nA)) + geom_point()
+
+# Plot Layout
+plot_ca <- ggplot(df_ca, aes(x = Time_h, y = I_nA, color = strain)) + geom_path(size = 1)
+
+# Plot Styling
+plot_ca_styled <- plot_ca+
+  scale_color_manual(breaks = c('WT','dPHZ'), labels = c('WT', expression(Delta*phz)), values = c("#FFCC66","#66CCFF")) +
+  labs(x = 'Time (hr)', y = expression(I[ca]~(nA)), color = NULL)+
+  theme(legend.position = c(0.2,0.75), legend.background = element_blank()) 
+
+plot_ca_styled
+```
+
+```{r}
+wt_gc <- read_csv("../data/WT_newMedia_postEquil_GC.txt", skip = 21,col_names =c('E', 'i1', 'i2', 't')) %>% mutate(strain='WT')
+dphz_gc <- read_csv("../data/dPHZ_d3_newMedia_GC_3mVs.txt", skip = 0,col_names =c('E', 'i1', 'i2', 't') ) %>% mutate(strain = 'dPHZ')
+dphz_pyo_gc <- read_csv("../data/A_75uM_PYO_GC_2.txt",skip = 21,col_names =c('E', 'i1', 'i2', 't')) %>% mutate(strain = 'dPHZ_PYO')
+
+basic_gc <- bind_rows(wt_gc,dphz_gc,dphz_pyo_gc) %>% 
+  group_by(strain,E) %>% 
+  mutate(max_i1 = max(i1)) %>% 
+  mutate(min_i2 = min(i2)) 
+
+basic_gc$strain = fct_relevel(basic_gc$strain, c("dPHZ","WT","dPHZ_PYO"))
+
+# Plot Layout
+plot_gcBasic <- ggplot(basic_gc %>% filter(E<=0), aes(x = E , y = min_i2 , color = strain)) + 
+  geom_vline(xintercept = -0.265, linetype=2, color = 'gray') + 
+  geom_path( size = 1) + 
+  geom_path(aes(y = max_i1), size = 1)
+
+# Plot Styling
+plot_gcBasic_styled <- plot_gcBasic +
+  scale_x_reverse(labels = mV_label)+
+  scale_y_continuous(labels = nA_label)+
+  scale_color_manual(breaks = c("WT","dPHZ","dPHZ_PYO"), 
+                     labels = c('WT', expression(Delta*phz), expression(Delta*phz + PYO)), 
+                     values = c( "#FFCC66","#66CCFF","gray")) + 
+  labs(x = "E (mV vs. Ag/AgCl)", y = expression(I[gc]~(nA)), color = NULL) +
+  theme(legend.position = c(0.2,0.8), legend.background = element_blank()) +
+  annotate('text', x = -0.2, y = -2e-8, label = 'Collector', size = 5) +
+  annotate('text', x = -0.2, y = 3e-8, label = 'Generator', size = 5)+
+  annotate('text', x = -0.3, y = 4e-8,label = expression({E^0}[pyo]) )
+
+
+
+plot_gcBasic_styled
+```
+
+```{r}
+fig_3 <- plot_grid( plot_ca_styled, plot_gcBasic_styled, align = 'hv', axis = 'tblr', ncol=1, scale = 0.9)
+
+save_plot("../figures/02_15_19_fig_3.pdf",fig_3, base_width = 4, base_height = 5)
+````
+

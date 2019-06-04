@@ -1,0 +1,468 @@
+---
+title: "Figure 4 Draft 2"
+fontsize: 12pt
+date: "02_07_19 "
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
+---
+
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+library(knitr)
+library(kableExtra)
+library(patchwork)
+
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+source("../../../IDA/tools/echem_processing_tools.R")
+source("../../../IDA/tools/plotting_tools.R")
+
+theme_set(theme_1())
+```
+
+```{r}
+gc_r1_raw <- read_csv("../data/01_17_19_gc_r1_raw.csv")
+gc_r1_signals <- read_csv("../data/01_17_19_gc_r1_signals.csv")
+
+# Color option 1
+
+# Plot Layout
+plot_GCraw <- ggplot() + 
+  geom_path(data=gc_r1_raw %>% filter(electrode=='i1'), aes(x = E, y = current, color = rep, group = rep), size = 1.5) + 
+  geom_path(data=gc_r1_raw %>% filter(electrode=='i2'), aes(x = E, y = current, color = rep, group = rep), size = 1.5) +
+  geom_point(data = gc_r1_signals, aes(x = E_from_maxs, y = -current_from_maxs), color = 'red', size = 2) +
+  geom_point(data = gc_r1_signals, aes(x = E_from_mins, y = -current_from_mins), color = 'blue', size = 2) + 
+  scale_x_reverse()
+
+# Plot styling
+plot_GCraw_styled <- plot_GCraw +
+  scale_color_viridis() + 
+  labs(x = "E (V)", y = expression(I[gc]~(A)), color = "Scan #") + 
+  theme(legend.position = c(0.15,0.75), 
+        legend.background = element_blank())
+
+plot_GCraw_styled
+```
+
+```{r}
+# color options 2
+
+# Plot Layout
+plot_GCraw2 <- ggplot() + 
+  geom_vline(xintercept = -0.265, linetype=2, color = 'gray') + 
+  geom_path(data=gc_r1_raw %>% filter(electrode=='i1'), 
+            aes(x = E , y = current , group = rep, color = rep)) + 
+  geom_path(data=gc_r1_raw %>% filter(electrode=='i2'), 
+            aes(x = E , y = current, group = rep, color = rep)) +
+  geom_point(data = gc_r1_signals, 
+             aes(x = E_from_maxs , y = -current_from_maxs , fill = rep), shape = 21, size = 2) 
+
+# Plot styling
+plot_GCraw_styled2 <- plot_GCraw2 +
+  annotate('text', x = -0.2, y = 3.5e-7,label = expression({E^0}[pyo]) )+
+  scale_x_reverse(labels = mV_label)+
+  scale_y_continuous(labels = nA_label)+
+  scale_fill_viridis(guide=F) + 
+  scale_color_viridis(guide=F) + 
+  labs(x = "E (mV vs. Ag/AgCl)", y = expression(I[gc]~(nA)), color = "Scan #") + 
+  theme(legend.position = c(0.15,0.75), 
+        legend.background = element_blank())
+
+plot_GCraw_styled2
+```
+
+
+```{r}
+
+swv_r1_raw <- read_csv("../data/01_17_19_swv_r1_raw.csv")
+swv_r1_signals <- read_csv("../data/01_17_19_swv_r1_signals.csv")
+
+# Plot Layout
+plot_SWVraw <- ggplot(swv_r1_raw %>% filter(E<=0), aes(x = E , y = current )) +
+  geom_vline(xintercept = -0.265, linetype=2, color = 'gray') + 
+  geom_path(aes(group = rep, color = rep)) + 
+  geom_point(data = swv_r1_signals,aes(x = E_from_maxs , y = current_from_maxs , fill = rep), shape = 21,size = 2) 
+
+# Plot Styling
+plot_SWVraw_styled <- plot_SWVraw + 
+  annotate('text', x = -0.2, y = 3.5e-6,label = expression({E^0}[pyo]) )+
+  scale_x_reverse(labels = mV_label)+
+  scale_y_continuous(labels = nA_label)+
+  scale_fill_viridis(guide = F) + 
+  scale_color_viridis(guide = F) + 
+  labs(x = "E (mV vs. Ag/AgCl)", y = expression(I[swv]~(n*A)), color = "Scan #") + 
+  theme(legend.position = c(0.15,0.75), legend.background = element_blank())
+
+plot_SWVraw_styled
+
+
+```
+# 
+
+```{r}
+biofilm_signals <- read_csv('../data/01_28_19_aggregate_SWV_GC_signals.csv')
+blank_signals <- read_csv("../data/11_28_18_swv_decays_Processed.csv") %>% 
+  filter(PHZadded!='10uM')
+
+ggplot(blank_signals, aes(x = norm_time , y = signal_from_transfer, color = PHZadded)) + 
+  geom_point() + 
+  facet_wrap(~electrode)
+
+biofilm_signals_norm <- biofilm_signals %>%  
+  filter(electrode_from_swv=='i1' & treatment=='control') %>% 
+  filter(exp_id!='3' | run!=4) %>% 
+  group_by(exp_id,reactor,run) %>% 
+  mutate(min_time = min(minutes_from_swv)) %>% 
+  mutate(norm_time = minutes_from_swv - min_time + 0.6)
+
+ggplot(biofilm_signals_norm %>% filter(treatment=='control' & reactor=='transfer'), 
+       aes(x = norm_time , y = signal_from_swv, color = factor(run))) + 
+  geom_point() + 
+  facet_wrap(exp_id~electrode_from_swv)
+
+biofilm_signals_norm_2_3 <- biofilm_signals_norm %>% 
+  filter(exp_id==2 & run ==1 & reactor=='transfer') 
+
+blank_signals_50 <- blank_signals %>% 
+  filter(PHZadded =='50uM')
+
+p_blank <- ggplot()+geom_point(data = blank_signals_50, aes(x = norm_time, y = signal_from_transfer)) + xlim(0,45) 
+
+p_biofilm <- ggplot()+geom_point(data = biofilm_signals_norm_2_3, aes(x = norm_time, y = signal_from_swv))+
+  xlim(0,45) 
+
+
+
+p_blank / p_biofilm
+```
+
+```{r}
+nA_label <- function(x){
+  lab <- x / 1e-9
+}
+
+# Plot Layout
+plot_swvsignal <- ggplot(data = biofilm_signals_norm_2_3, aes(x = norm_time, y = signal_from_swv))+
+  geom_smooth(method='nls',
+              formula=y~(a*(x)^-0.5)*(2+e^(b*(x)^-0.5))+c,
+              method.args=list(start=c(a=0.1,b=0.1,c=0)),
+              se=F, color = 'black', linetype = 'dashed', size = 0.5) +
+  geom_point(shape = 21, size = 1, aes(fill = norm_time))
+
+# Plot Styling
+plot_swvsignal_styled <- plot_swvsignal +
+  labs(x = 'Time (min)', y = expression(I[swv]~(nA)), fill = 'Time (min)') +
+  scale_fill_viridis(guide = F) +
+  scale_y_continuous(labels = nA_label)+
+  theme(axis.text = element_text(size = 6), axis.title = element_text(size = 8))
+
+plot_swvsignal_styled
+```
+
+```{r}
+# Plot Layout
+plot_gcsignal <- ggplot(data = biofilm_signals_norm_2_3, aes(x = norm_time, y = signal_from_gc))+
+  geom_smooth(method='nls',
+              formula=y~(a*(x)^-0.5)*(2+e^(b*(x)^-0.5))+c,
+              method.args=list(start=c(a=0.1,b=0.1,c=0)),
+              se=F, color = 'black', linetype = 'dashed', size = 0.5) +
+  geom_point(shape = 21, size = 1, aes(fill = norm_time))
+
+# Plot Styling
+plot_gcsignal_styled <- plot_gcsignal +
+  labs(x = 'Time (min)', y = expression(I[gc]~(nA)), fill = 'Time (min)') +
+  scale_fill_viridis(guide = F) +
+  scale_y_continuous(labels = nA_label) +
+  theme(axis.text = element_text(size = 6), axis.title = element_text(size = 8))
+
+plot_gcsignal_styled
+
+```
+
+```{r}
+# Could try to get confidence intervals by plotting all of the different combinations of the 3 parameters high and low estimates.
+
+    tidy(
+      nls(biofilm_signals_norm_2_3,formula = signal_from_swv~(a*(norm_time)^-0.5)*(2+e^(b/norm_time))+c,start=list(a=0.1,b=0.1,c=0)),
+      conf.int = T)
+    
+```
+
+```{r}
+# Plot Layout
+plot_swvGCsignal <- ggplot(biofilm_signals_norm_2_3 %>% filter(rep>0), 
+                           aes(x = signal_from_swv, y = signal_from_gc)) +
+  geom_smooth(method = 'lm', se = T, color = 'black', linetype = 2) +
+  geom_point(shape = 21, size = 2, aes(fill = norm_time))
+
+# Plot Styling
+plot_swvGCsignal_styled <- plot_swvGCsignal + 
+  scale_x_continuous(breaks=c(0,2.5e-7,5.0e-7, 7.5e-7, 1.0e-6), labels = nA_label)+
+  scale_y_continuous(labels = nA_label)+
+  labs(x = expression(I[swv]~(nA)), y = expression(I[gc]~(nA))) +
+  scale_fill_viridis(guide=F)
+
+
+plot_swvGCsignal_styled
+```
+
+
+# Final Figure
+
+```{r}
+blank_dm <- read_csv("../data/02_07_19_blank_dm_estimates.csv")
+
+blank_dap <- read_csv("../data/02_07_19_blank_dap_estimates.csv")
+
+biofilm_dap <- read_csv("../data/01_28_19_swv_gc_dap_estimates_aggregate_updated.csv")
+
+biofilm_dm_fits <- read_csv("../data/02_07_19_biofilm_dm_fits.csv") %>% 
+  mutate(exp_id = as.character(exp_id))
+```
+
+$t_s$ used is from
+
+
+$$t_s = t_p \left( \frac{2 * 0.654}{\psi} \right) ^2$$  
+$t_s = 5.819382 \text{ ms}$
+
+
+```{r}
+t_s = 0.005819382
+
+dm_estimates_wDap <- left_join(biofilm_dm_fits, 
+                               biofilm_dap %>% 
+                                 filter(treatment=='control') %>% 
+                                 select(exp_id, run, r.squared, dap, dap_high, dap_low), 
+                               by = c('exp_id','run'))
+
+
+dm_from_a_noFlux <- function(estimate, i_0, dap, t_s=0.1){
+  
+  dm <- ( i_0^2 * dap * t_s ) / ( 4*pi* estimate^2)
+  
+  dm
+}
+
+dm_from_a_OG <- function(estimate, i_0, dap, t_s=0.1){
+  
+  dm <- ( i_0^2 * dap * t_s ) / ( pi* estimate^2)
+  
+  dm
+}
+
+```
+
+
+```{r}
+dm_estimates_og <- dm_estimates_wDap %>% 
+  filter(model=='og') %>% 
+  mutate(dm_soak = dm_from_a_OG(estimate = estimate, i_0 = i0_soak, dap = dap, t_s = t_s)) %>% 
+  mutate(dm_transfer = dm_from_a_OG(estimate = estimate, i_0 = i0_transfer, dap = dap, t_s = t_s))
+
+dm_estimates_noFlux <- dm_estimates_wDap %>% 
+  filter(model=='no_flux') %>% 
+  mutate(dm_soak = dm_from_a_noFlux(estimate = estimate, i_0 = i0_soak, dap = dap, t_s = t_s)) %>% 
+  mutate(dm_transfer = dm_from_a_noFlux(estimate = estimate, i_0 = i0_transfer, dap = dap, t_s = t_s)) 
+
+dm_estimates_tidy <- rbind(dm_estimates_og,dm_estimates_noFlux) %>% 
+  rowwise() %>% 
+  mutate(mean = mean(c(dm_soak, dm_transfer)))
+
+mean_biofilm_dap <- mean(dm_estimates_tidy$dap, na.rm = T)
+
+ggplot(dm_estimates_tidy, aes(x = exp_id, y = mean, color = factor(run))) + 
+  geom_pointrange(aes(ymin = dm_transfer, ymax = dm_soak), position = position_jitter(height = 0))+
+  geom_pointrange(aes(y = dap, ymin = dap_low, ymax = dap_high), position = position_jitter(height = 0), shape = 2)+
+  geom_hline(yintercept = mean_biofilm_dap, linetype = 2)+
+  facet_wrap(~model) + 
+  scale_y_log10(limits = c(1e-9,NA)) + 
+  scale_color_viridis(discrete = T) + 
+  labs(y = "D estimate (cm^2 / sec)")
+```
+
+```{r}
+d_combined <- dm_estimates_tidy %>% 
+
+  mutate(dm = mean) %>% 
+  gather(key=d_cat,val=d_est,dap,dm) %>% 
+  mutate(ymax = if_else(d_cat=='dap', dap_high, dm_soak)) %>% 
+  mutate(ymin = if_else(d_cat=='dap', dap_low, dm_transfer)) %>% 
+  mutate(biofilm = 'biofilm')
+
+ggplot(d_combined, 
+       aes(x = d_cat, y = d_est, shape = exp_id)) + 
+  geom_pointrange(aes(ymin = ymin, ymax = ymax), position = position_jitter(height = 0))+
+  facet_wrap(~model) + 
+  scale_y_log10(limits = c(1e-9,NA))
+```
+
+```{r}
+d_blank_noFlux <- blank_dm %>% 
+  filter(model=='no_flux') %>% 
+  mutate(dap = blank_dap$dap, dap_high = blank_dap$dap_high, dap_low = blank_dap$dap_low) %>% 
+  mutate(dm = dm_soak) %>% 
+  gather(key=d_cat,val=d_est,dap,dm) %>% 
+  mutate(ymax = if_else(d_cat=='dap', dap_high, dm_low)) %>% 
+  mutate(ymin = if_else(d_cat=='dap', dap_low, dm_high)) %>%
+  mutate(biofilm = 'blank') %>% 
+  mutate(exp_id = 'blank') %>% 
+  distinct(d_est,.keep_all = T)
+
+d_blank_og <- blank_dm %>% 
+  filter(model=='og') %>% 
+  mutate(dap = blank_dap$dap, dap_high = blank_dap$dap_high, dap_low = blank_dap$dap_low) %>% 
+  mutate(dm = dm_soak) %>% 
+  gather(key=d_cat,val=d_est,dap,dm) %>% 
+  mutate(ymax = if_else(d_cat=='dap', dap_high, dm_low)) %>% 
+  mutate(ymin = if_else(d_cat=='dap', dap_low, dm_high)) %>%
+  mutate(biofilm = 'blank') %>% 
+  mutate(exp_id = 'blank') %>% 
+  distinct(d_est,.keep_all = T)
+#dap_estimates
+
+d_combined_wBlank_noFlux <- bind_rows(d_combined, d_blank_noFlux) %>% 
+  filter(model=='no_flux')
+
+d_combined_wBlank_OG <- bind_rows(d_combined, d_blank_og) %>% 
+  filter(model=='og')
+
+ggplot(d_combined_wBlank_noFlux, 
+       aes(x = d_cat, y = d_est, fill = exp_id)) + 
+  geom_pointrange(aes(ymin = ymin, ymax = ymax), position = position_jitter(height = 0,width=0.2),shape=21)+
+  facet_wrap(~biofilm, scales='free') + 
+  scale_y_log10(limits = c(1e-9,1e-4))+
+  scale_fill_viridis(discrete = T) +
+  scale_x_discrete(breaks = c('dap','dm'), labels=c(expression(D[ap]),expression(D[m]))) +
+  labs(x='',y=expression("Estimate ("~cm^2 / sec~")"))+
+  guides(fill=F) + 
+  theme(axis.text.x = element_text( size=14) ) 
+
+ggplot(d_combined_wBlank_OG, 
+       aes(x = d_cat, y = d_est, fill = exp_id)) + 
+  geom_pointrange(aes(ymin = ymin, ymax = ymax), position = position_jitter(height = 0,width=0.2),shape=21)+
+  facet_wrap(~biofilm, scales='free') + 
+  scale_y_log10(limits = c(1e-9,1e-4))+
+  scale_fill_viridis(discrete = T) +
+  scale_x_discrete(breaks = c('dap','dm'), labels=c(expression(D[ap]),expression(D[m]))) +
+  labs(x='',y=expression("Estimate ("~cm^2 / sec~")"))+
+  guides(fill=F) + 
+  theme(axis.text.x = element_text( size=14) )
+```
+
+```{r}
+plot_dm_dap <- ggplot(d_combined_wBlank_noFlux %>% filter(exp_id!='1'), 
+       aes(x = d_cat, y = d_est, shape = exp_id)) + 
+  geom_pointrange(aes(ymin = ymin, ymax = ymax), position = position_jitter(height = 0,width=0.2))+
+  facet_wrap(~biofilm, scales='free') + 
+  scale_y_log10(limits = c(1e-9,1e-4))+
+  scale_shape(solid=F) +
+  scale_x_discrete(breaks = c('dap','dm'), labels=c(expression(D[ap]),expression(D[m]))) +
+  labs(x='',y=expression("Estimate ("~cm^2 / sec~")"))+
+  guides(shape=F) + 
+  theme(axis.text.x = element_text( size=12) )
+
+
+d_combined_wBlank_noFlux %>% filter(exp_id!='1' & biofilm =='biofilm' & d_cat=='dm') %>% 
+  group_by(exp_id) %>% 
+  summarise(mean = mean(d_est))
+
+mean(c(9.951939e-06 ,2.781293e-06))
+
+mean(c(9.904384e-08,5.340084e-08))
+plot_dm_dap
+
+plot_blank_dm_dap <- ggplot(d_blank_noFlux, 
+       aes(x = d_cat, y = d_est, shape = exp_id)) + 
+  geom_hline(yintercept = 7e-6, linetype = 2, color = 'gray')+
+  geom_pointrange(aes(ymin = ymin, ymax = ymax), position = position_jitter(height = 0,width=0.3), size = 0.25)+
+  facet_wrap(~biofilm, scales='free') + 
+  scale_y_log10(limits = c(1e-9,1e-4))+
+  scale_shape(solid=F) +
+  scale_x_discrete(breaks = c('dap','dm'), labels=c(expression(D[ap]),expression(D[m]))) +
+  labs(x='',y=expression("Estimate ("~cm^2 / sec~")"))+
+  guides(shape=F) + 
+  theme(axis.text.x = element_text( size=12) )
+
+plot_blank_dm_dap
+
+plot_biofilm_dm_dap <- ggplot(d_combined %>% filter(model=='no_flux' & exp_id!='1'), 
+       aes(x = d_cat, y = d_est, shape = exp_id)) + 
+  geom_hline(yintercept = 7e-6, linetype = 2, color = 'gray')+
+  geom_pointrange(aes(ymin = ymin, ymax = ymax), position = position_jitter(height = 0,width=0.4), size = 0.25)+
+  facet_wrap(~biofilm, scales='free') + 
+  scale_y_log10(limits = c(1e-9,1e-4))+
+  scale_shape(solid=F) +
+  scale_x_discrete(breaks = c('dap','dm'), labels=c(expression(D[ap]),expression(D[m]))) +
+  labs(x='',y=expression("Estimate ("~cm^2 / sec~")"))+
+  guides(shape=F) + 
+  theme(axis.text.x = element_text( size=12) )
+
+plot_biofilm_dm_dap
+```
+
+# Combine
+
+```{r}
+fig_4_insets <- plot_grid(plot_gcsignal_styled, plot_swvsignal_styled,ncol = 2,align = 'hv', axis = 'tblr')
+
+fig_4 <- plot_grid( plot_GCraw_styled2, plot_GCraw_styled2,        
+                   plot_SWVraw_styled, plot_swvGCsignal_styled,
+                   plot_blank_dm_dap, plot_biofilm_dm_dap, 
+                   fig_4_insets, plot_blank_dm_dap,
+                       rel_heights = c(1,1,0.75,0.75),
+                       rel_widths =  c(1,1), 
+                       ncol = 2,nrow = 4,
+                       align = 'hv', axis = 'tblr', scale = 0.9)
+
+
+
+fig_4_alt_top <- plot_grid(NULL,plot_GCraw_styled2,        plot_SWVraw_styled,
+                       plot_swvGCsignal_styled,
+                       rel_heights = c(1,1,1,1),
+                       rel_widths = c(1,1,1,1), 
+                       ncol = 2,
+                       align = 'hv', axis = 'tblr', scale = 0.9)
+
+fig_4_alt_inset <- plot_grid( plot_gcsignal_styled,plot_swvsignal_styled,NULL, ncol=3, align = 'hv', axis = 'tblr',scale = 0.9, rel_widths = c(1,1,2))
+
+fig_4_alt_bottom <- plot_grid(plot_dm_dap,        NULL,
+                       rel_heights = c(1,1,1),
+                       rel_widths = c(2,1), 
+                       ncol = 2,
+                       align = 'hv', axis = 'tblr' , scale = 0.9)
+
+fig_4_alt <- plot_grid(fig_4_alt_top, fig_4_alt_bottom,fig_4_alt_inset, rel_heights = c(2,1,0.5), ncol = 1)
+
+#library(extrafont)
+#library(Cairo)
+
+#ggsave("../figures/02_12_19_fig_4_draft_2.pdf",fig_4, device = cairo_pdf)
+
+#font_import(pattern = "Calibri")
+#loadfonts()
+
+save_plot("../figures/02_14_19_fig_4_draft_2.pdf",fig_4, base_width = 8.5, base_height = 11)
+
+save_plot("../figures/02_12_19_fig_4_alt.pdf",fig_4_alt, base_width = 8.5, base_height = 11)
+
+fig_4_dm_dap <- plot_grid(plot_blank_dm_dap, plot_biofilm_dm_dap, ncol = 2, align = 'hv', axis = 'tblr')
+
+save_plot("../figures/02_15_19_fig_4_dm_dap.pdf",fig_4_dm_dap, base_width = 6, base_height = 2)
+
+#embed_fonts("../figures/02_12_19_fig_4_draft_2.pdf", outfile = "../figures/02_12_19_fig_4_draft_2_embedded.pdf")
+```
+

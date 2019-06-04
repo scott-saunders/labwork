@@ -115,6 +115,13 @@ gc_data <- echem_import_to_df(filenames = GC_filenames,
 
 ```
 
+```{r}
+
+ggplot(gc_data %>% filter(reactor=='transfer' & run==3 & treatment=='control' & electrode=='i2'), 
+       aes(x = minutes+ (t / 60), y = -current)) + 
+  geom_point()
+```
+
 Here's all the data plotted. 
 ```{r}
 
@@ -207,6 +214,8 @@ Let's look at how the quantified signals decay over the reps.
 ggplot(swv_control_signals, aes(x=rep, y=signal,shape=reactor,color=factor(run)))+geom_line()+geom_point()+
   facet_wrap(~electrode)+
   scale_color_viridis(discrete = T)
+
+write_csv(swv_control_signals %>% filter(run==5), "./01_23_19_swv_control_decay_run5_processed.csv")
 ```
 Overall, the control i1 signals look pretty consistent (except run 4 which was taken with swv slow). As expected the i2 signals look a little weird, except for runs 4 and 5. So maybe the SWV slow did deal with the contaminant better??
 
@@ -465,3 +474,9 @@ write_csv(swv_gc_all, "./01_23_19_processed_swv_gc_all.csv")
 ```
 
 See the analysis notebook for further work with the processed datasets.
+
+```{r}
+ggplot(swv_gc_control %>% filter(run==1 & electrode_from_swv=='i1' & reactor=='transfer'), aes(x = minutes_from_gc , y = signal_from_gc)) +
+  geom_point() +
+  geom_point(aes(x = minutes_from_swv, y = signal_from_swv / 10), color = 'red')
+```

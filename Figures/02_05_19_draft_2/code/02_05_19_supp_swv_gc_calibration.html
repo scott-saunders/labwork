@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>SWV and GC calibration - Blank</title>
+
+<script src="02_05_19_supp_swv_gc_calibration_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="02_05_19_supp_swv_gc_calibration_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="02_05_19_supp_swv_gc_calibration_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="02_05_19_supp_swv_gc_calibration_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="02_05_19_supp_swv_gc_calibration_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="02_05_19_supp_swv_gc_calibration_files/navigation-1.1/tabsets.js"></script>
+<script src="02_05_19_supp_swv_gc_calibration_files/navigation-1.1/codefolding.js"></script>
+<link href="02_05_19_supp_swv_gc_calibration_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="02_05_19_supp_swv_gc_calibration_files/highlightjs-9.12.0/highlight.js"></script>
+<script src="02_05_19_supp_swv_gc_calibration_files/kePrint-0.0.1/kePrint.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">SWV and GC calibration - Blank</h1>
+<h4 class="date"><em>02_07_19</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#intro">Intro</a></li>
+<li><a href="#swv-fast-and-gc-dataset">SWV Fast and GC Dataset</a><ul>
+<li><a href="#swv-vs.gc">SWV vs. GC</a></li>
+<li><a href="#swv">SWV</a></li>
+<li><a href="#gc">GC</a></li>
+<li><a href="#comparison">Comparison</a></li>
+</ul></li>
+<li><a href="#swv-slow-and-gc-dataset">SWV Slow and GC Dataset</a></li>
+<li><a href="#conclusions">Conclusions</a></li>
+</ul>
+</div>
+
+<pre class="r"><code>library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+library(knitr)
+library(kableExtra)
+library(patchwork)
+
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)
+
+source(&quot;../../../IDA/tools/echem_processing_tools.R&quot;)
+source(&quot;../../../IDA/tools/plotting_tools.R&quot;)
+
+theme_set(theme_1())</code></pre>
+<div id="intro" class="section level1">
+<h1>Intro</h1>
+<p>Let’s try to settle on an estimate for <span class="math inline">\(n\)</span> and <span class="math inline">\(\psi\)</span> and by looking for consistent <span class="math inline">\(D_{ap}\)</span> estimates from the SWV and GC blank datasets with known concentrations. We can extract a <span class="math inline">\(D_{ap}\)</span> by comparing <span class="math inline">\(I_{GC}\)</span> to <span class="math inline">\(I_{SWV}\)</span>, but because we know the bulk concentration for this in vitro system we can also estimate <span class="math inline">\(D_{ap}\)</span> by comparing <span class="math inline">\(I_{GC}\)</span> to <span class="math inline">\(C\)</span>, or <span class="math inline">\(I_{SWV}\)</span> to <span class="math inline">\(C\)</span>.</p>
+</div>
+<div id="swv-fast-and-gc-dataset" class="section level1">
+<h1>SWV Fast and GC Dataset</h1>
+<p>Let’s first read in the processed fast dataset.</p>
+<pre class="r"><code>df_blank &lt;- read_csv(&quot;../data/11_28_18_swvFast_gc_soak_processed.csv&quot;)</code></pre>
+<p>We’ll select just the subset from SWV electrode 1 and GC electrode 2 (collector). Let’s also transform the added PYO from <span class="math inline">\(\mu M\)</span> to <span class="math inline">\(\frac{mol}{cm^3}\)</span>.</p>
+<pre class="r"><code>df_cal &lt;- df_blank %&gt;% filter(electrode_from_swv == &quot;i1&quot; &amp; electrode_from_gc == 
+    &quot;i2&quot;) %&gt;% mutate(C_mol_cm3 = PHZaddedInt * (10^-9))</code></pre>
+<div id="swv-vs.gc" class="section level2">
+<h2>SWV vs. GC</h2>
+<p>The data look like this:</p>
+<pre class="r"><code>ggplot(df_cal, aes(x = signal_from_swv, y = signal_from_gc)) + 
+    geom_point() + geom_smooth(method = &quot;lm&quot;)</code></pre>
+<p><img src="02_05_19_supp_swv_gc_calibration_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Recall that for this type of data:</p>
+<p><span class="math display">\[D_{ap} = \pi t_p \left( \frac{m A \psi}{S} \right) ^2\]</span><br />
+So, here’s a function that will calculate <span class="math inline">\(D_{ap}\)</span> from the slope of this data:</p>
+<pre class="r"><code>dap_from_swvGC &lt;- function(m, t_p = 1/(2 * 300)) {
+    
+    psi &lt;- 0.7
+    # psi &lt;- 0.75 A &lt;- 0.013 #cm^2
+    A &lt;- 0.025  #cm^2
+    S &lt;- 18.4  #cm
+    d_ap &lt;- (m * A * psi)^2/(S^2 * pi * t_p)
+    
+    d_ap
+}</code></pre>
+<p>And now, we’ll fit a linear model and calculate a <span class="math inline">\(D_{ap}\)</span>.</p>
+<pre class="r"><code>lm_swvGC &lt;- tidy(lm(signal_from_gc ~ signal_from_swv, data = df_cal), 
+    conf.int = T) %&gt;% filter(term == &quot;signal_from_swv&quot;) %&gt;% mutate(dap = dap_from_swvGC(m = estimate)) %&gt;% 
+    mutate(dap_high = dap_from_swvGC(m = conf.high)) %&gt;% mutate(dap_low = dap_from_swvGC(m = conf.low)) %&gt;% 
+    mutate(dataset = &quot;SWVvsGC&quot;)
+
+lm_swvGC %&gt;% kable() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+term
+</th>
+<th style="text-align:right;">
+estimate
+</th>
+<th style="text-align:right;">
+std.error
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+<th style="text-align:right;">
+conf.low
+</th>
+<th style="text-align:right;">
+conf.high
+</th>
+<th style="text-align:right;">
+dap
+</th>
+<th style="text-align:right;">
+dap_high
+</th>
+<th style="text-align:right;">
+dap_low
+</th>
+<th style="text-align:left;">
+dataset
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+signal_from_swv
+</td>
+<td style="text-align:right;">
+0.1990355
+</td>
+<td style="text-align:right;">
+0.0028369
+</td>
+<td style="text-align:right;">
+70.15961
+</td>
+<td style="text-align:right;">
+6.4e-06
+</td>
+<td style="text-align:right;">
+0.1900072
+</td>
+<td style="text-align:right;">
+0.2080638
+</td>
+<td style="text-align:right;">
+6.8e-06
+</td>
+<td style="text-align:right;">
+7.5e-06
+</td>
+<td style="text-align:right;">
+6.2e-06
+</td>
+<td style="text-align:left;">
+SWVvsGC
+</td>
+</tr>
+</tbody>
+</table>
+<p>Ok, seems reasonable, let’s move forward and we’ll compare at the end.</p>
+</div>
+<div id="swv" class="section level2">
+<h2>SWV</h2>
+<p>Here’s the data:</p>
+<pre class="r"><code>ggplot(df_cal, aes(x = C_mol_cm3, y = signal_from_swv)) + geom_point() + 
+    geom_smooth(method = &quot;lm&quot;)</code></pre>
+<p><img src="02_05_19_supp_swv_gc_calibration_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>For a plot of <span class="math inline">\(I_{SWV}\)</span> vs. <span class="math inline">\(C\)</span>, the slope can be definited in terms of the parameters for <span class="math inline">\(I_{SWV}\)</span> other than concentration. This yields an expression for <span class="math inline">\(D_{ap}\)</span>:</p>
+<p><span class="math display">\[D_{ap} = \pi t_p \left( \frac{m}{\psi n F A} \right) ^2 \]</span> So we’ll again define the function to calculate it:</p>
+<pre class="r"><code>dap_from_SWV &lt;- function(m, t_p = 1/(2 * 300)) {
+    
+    n = 1.8
+    # n=2
+    psi &lt;- 0.7
+    # psi &lt;- 0.75
+    
+    # A &lt;- 0.013 #cm^2
+    A &lt;- 0.025  #cm^2
+    
+    F_C = 96485.332
+    
+    d_ap &lt;- pi * t_p * (m/(psi * n * F_C * A))^2
+    
+    d_ap
+}</code></pre>
+<p>The linear model of this data gives the following:</p>
+<pre class="r"><code>lm_SWV &lt;- tidy(lm(signal_from_swv ~ C_mol_cm3, data = df_cal), 
+    conf.int = T) %&gt;% filter(term == &quot;C_mol_cm3&quot;) %&gt;% mutate(dap = dap_from_SWV(m = estimate)) %&gt;% 
+    mutate(dap_high = dap_from_SWV(m = conf.high)) %&gt;% mutate(dap_low = dap_from_SWV(m = conf.low)) %&gt;% 
+    mutate(dataset = &quot;SWV&quot;)
+
+lm_SWV %&gt;% kable() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+term
+</th>
+<th style="text-align:right;">
+estimate
+</th>
+<th style="text-align:right;">
+std.error
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+<th style="text-align:right;">
+conf.low
+</th>
+<th style="text-align:right;">
+conf.high
+</th>
+<th style="text-align:right;">
+dap
+</th>
+<th style="text-align:right;">
+dap_high
+</th>
+<th style="text-align:right;">
+dap_low
+</th>
+<th style="text-align:left;">
+dataset
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+C_mol_cm3
+</td>
+<td style="text-align:right;">
+111.2799
+</td>
+<td style="text-align:right;">
+1.590469
+</td>
+<td style="text-align:right;">
+69.96673
+</td>
+<td style="text-align:right;">
+6.4e-06
+</td>
+<td style="text-align:right;">
+106.2183
+</td>
+<td style="text-align:right;">
+116.3415
+</td>
+<td style="text-align:right;">
+7e-06
+</td>
+<td style="text-align:right;">
+7.7e-06
+</td>
+<td style="text-align:right;">
+6.4e-06
+</td>
+<td style="text-align:left;">
+SWV
+</td>
+</tr>
+</tbody>
+</table>
+<p>Also seems reasonable.</p>
+</div>
+<div id="gc" class="section level2">
+<h2>GC</h2>
+<p>Here’s the GC vs. Concentration data:</p>
+<pre class="r"><code>ggplot(df_cal, aes(x = C_mol_cm3, y = signal_from_gc)) + geom_point() + 
+    geom_smooth(method = &quot;lm&quot;)</code></pre>
+<p><img src="02_05_19_supp_swv_gc_calibration_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /> Again, very linear.</p>
+<p><span class="math inline">\(I_{GC}\)</span> is simply <span class="math inline">\(I = nFSDC\)</span>, so <span class="math inline">\(D_{ap}\)</span> is:</p>
+<p><span class="math display">\[D_{ap} = \frac{m}{n F S}\]</span></p>
+<p>And here’s our function.</p>
+<pre class="r"><code>dap_from_GC &lt;- function(m) {
+    
+    n = 1.8
+    # n=2
+    
+    S &lt;- 18.4  #cm
+    
+    F_C = 96485.332
+    
+    d_ap &lt;- m/(n * F_C * S)
+    
+    d_ap
+}</code></pre>
+<p>The linear model:</p>
+<pre class="r"><code>lm_GC &lt;- tidy(lm(signal_from_gc ~ C_mol_cm3, data = df_cal), 
+    conf.int = T) %&gt;% filter(term == &quot;C_mol_cm3&quot;) %&gt;% mutate(dap = dap_from_GC(m = estimate)) %&gt;% 
+    mutate(dap_high = dap_from_GC(m = conf.high)) %&gt;% mutate(dap_low = dap_from_GC(m = conf.low)) %&gt;% 
+    mutate(dataset = &quot;GC&quot;)
+
+lm_GC %&gt;% kable() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+term
+</th>
+<th style="text-align:right;">
+estimate
+</th>
+<th style="text-align:right;">
+std.error
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+<th style="text-align:right;">
+conf.low
+</th>
+<th style="text-align:right;">
+conf.high
+</th>
+<th style="text-align:right;">
+dap
+</th>
+<th style="text-align:right;">
+dap_high
+</th>
+<th style="text-align:right;">
+dap_low
+</th>
+<th style="text-align:left;">
+dataset
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+C_mol_cm3
+</td>
+<td style="text-align:right;">
+22.16111
+</td>
+<td style="text-align:right;">
+0.12625
+</td>
+<td style="text-align:right;">
+175.5335
+</td>
+<td style="text-align:right;">
+4e-07
+</td>
+<td style="text-align:right;">
+21.75932
+</td>
+<td style="text-align:right;">
+22.56289
+</td>
+<td style="text-align:right;">
+6.9e-06
+</td>
+<td style="text-align:right;">
+7.1e-06
+</td>
+<td style="text-align:right;">
+6.8e-06
+</td>
+<td style="text-align:left;">
+GC
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="comparison" class="section level2">
+<h2>Comparison</h2>
+<p>Now let’s look at the estimates from each subset of the data:</p>
+<pre class="r"><code>lms &lt;- bind_rows(lm_swvGC, lm_SWV, lm_GC) %&gt;% select(dataset, 
+    term, dap, dap_low, dap_high)
+
+lms %&gt;% kable() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+dataset
+</th>
+<th style="text-align:left;">
+term
+</th>
+<th style="text-align:right;">
+dap
+</th>
+<th style="text-align:right;">
+dap_low
+</th>
+<th style="text-align:right;">
+dap_high
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+SWVvsGC
+</td>
+<td style="text-align:left;">
+signal_from_swv
+</td>
+<td style="text-align:right;">
+6.8e-06
+</td>
+<td style="text-align:right;">
+6.2e-06
+</td>
+<td style="text-align:right;">
+7.5e-06
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SWV
+</td>
+<td style="text-align:left;">
+C_mol_cm3
+</td>
+<td style="text-align:right;">
+7.0e-06
+</td>
+<td style="text-align:right;">
+6.4e-06
+</td>
+<td style="text-align:right;">
+7.7e-06
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GC
+</td>
+<td style="text-align:left;">
+C_mol_cm3
+</td>
+<td style="text-align:right;">
+6.9e-06
+</td>
+<td style="text-align:right;">
+6.8e-06
+</td>
+<td style="text-align:right;">
+7.1e-06
+</td>
+</tr>
+</tbody>
+</table>
+<p>So, you can see that the estimates actually match very closely!!</p>
+<p>Here it is plotted:</p>
+<pre class="r"><code>ggplot(lms, aes(x = dataset, y = dap)) + geom_pointrange(aes(ymin = dap_low, 
+    ymax = dap_high)) + ylim(0, 1e-05)</code></pre>
+<p><img src="02_05_19_supp_swv_gc_calibration_files/figure-html/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>So, you can see that the estimates correspond very nicely when we use these parameters. Realizing that these estimates should match led me to look for a better estimate of <span class="math inline">\(\psi\)</span> based on our scan parameters and I found this <a href="https://link.springer.com/book/10.1007%2F978-3-642-02915-8">reference</a>, which suggested that for <span class="math inline">\(n = 2\)</span> and <span class="math inline">\(E_{swv} = 25mV, \psi = 0.75\)</span> and for <span class="math inline">\(n = 1.8, \psi = 0.7\)</span>. I tested both and the second parameter set yielded good results, and corresponds to the peak splitting we see in CVs (n is not quite 2). Therefore the parameters I would like to proceed with are:</p>
+<ul>
+<li><span class="math inline">\(A = 0.025 \text{cm}^2\)</span> as measured by Fernanda<br />
+</li>
+<li><span class="math inline">\(S = 18.4 \text{cm}\)</span><br />
+</li>
+<li><span class="math inline">\(n = 1.8\)</span></li>
+<li><span class="math inline">\(\psi = 0.7\)</span></li>
+<li><span class="math inline">\(t_p = \frac{1}{600}\)</span> for SWV fast settings (one half the SWV period, which is 1/freq)</li>
+</ul>
+<p>Of course the first thing I did was go back to the aggregate biofilm dataset and use these parameters to recalculate the biofilm values. Interestingly, many of the values lie higher than the blank IDA estimate. I also saw that the slow SWV blank dataset gave a different value, and that confused me. So I wanted to evaluate it here.</p>
+</div>
+</div>
+<div id="swv-slow-and-gc-dataset" class="section level1">
+<h1>SWV Slow and GC Dataset</h1>
+<p>Here I import the dataset, and calculate <span class="math inline">\(D_{ap}\)</span> values from each subset of the data (using <span class="math inline">\(t_p = \frac{1}{30}\)</span>). I also defined some alternative functions to play around with the parameters, you can ignore those for now. Here I am using the exact same functions from the SWV fast dataset above.</p>
+<pre class="r"><code>df_slow &lt;- read_csv(&quot;../data/11_28_18_swvSlow_gc_soak_processed.csv&quot;)
+
+df_slowCal &lt;- df_slow %&gt;% filter(electrode_from_swv == &quot;i1&quot; &amp; 
+    electrode_from_gc == &quot;i2&quot;) %&gt;% mutate(C_mol_cm3 = PHZaddedInt * 
+    (10^-9))
+
+dap_from_SWV2 &lt;- function(m, t_p = 1/(2 * 300)) {
+    
+    # n=1.8
+    n = 2
+    # psi &lt;- 0.7
+    psi &lt;- 0.75
+    
+    # A &lt;- 0.013 #cm^2
+    A &lt;- 0.025  #cm^2
+    
+    F_C = 96485.332
+    
+    d_ap &lt;- pi * t_p * (m/(psi * n * F_C * A))^2
+    
+    d_ap
+}
+
+dap_from_swvGC2 &lt;- function(m, t_p = 1/(2 * 300)) {
+    
+    # psi &lt;- 0.7
+    psi &lt;- 0.75
+    # A &lt;- 0.013 #cm^2
+    A &lt;- 0.025  #cm^2
+    S &lt;- 18.4  #cm
+    d_ap &lt;- (m * A * psi)^2/(S^2 * pi * t_p)
+    
+    d_ap
+}
+
+lm_swvGC_slow &lt;- tidy(lm(signal_from_gc ~ signal_from_swv, data = df_slowCal), 
+    conf.int = T) %&gt;% filter(term == &quot;signal_from_swv&quot;) %&gt;% mutate(dap = dap_from_swvGC(m = estimate, 
+    t_p = (1/30))) %&gt;% mutate(dap_high = dap_from_swvGC(m = conf.high, 
+    t_p = (1/30))) %&gt;% mutate(dap_low = dap_from_swvGC(m = conf.low, 
+    t_p = (1/30))) %&gt;% mutate(dataset = &quot;SWVvsGC&quot;)
+
+lm_SWV_slow &lt;- tidy(lm(signal_from_swv ~ C_mol_cm3, data = df_slowCal), 
+    conf.int = T) %&gt;% filter(term == &quot;C_mol_cm3&quot;) %&gt;% mutate(dap = dap_from_SWV(m = estimate, 
+    t_p = (1/30))) %&gt;% mutate(dap_high = dap_from_SWV(m = conf.high, 
+    t_p = (1/30))) %&gt;% mutate(dap_low = dap_from_SWV(m = conf.low, 
+    t_p = (1/30))) %&gt;% mutate(dataset = &quot;SWV&quot;)
+
+
+lm_GC_slow &lt;- tidy(lm(signal_from_gc ~ C_mol_cm3, data = df_slowCal), 
+    conf.int = T) %&gt;% filter(term == &quot;C_mol_cm3&quot;) %&gt;% mutate(dap = dap_from_GC(m = estimate)) %&gt;% 
+    mutate(dap_high = dap_from_GC(m = conf.high)) %&gt;% mutate(dap_low = dap_from_GC(m = conf.low)) %&gt;% 
+    mutate(dataset = &quot;GC&quot;)
+
+lms_slow &lt;- bind_rows(lm_swvGC_slow, lm_SWV_slow, lm_GC_slow) %&gt;% 
+    select(dataset, term, dap, dap_low, dap_high)
+
+lms_slow %&gt;% kable() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+dataset
+</th>
+<th style="text-align:left;">
+term
+</th>
+<th style="text-align:right;">
+dap
+</th>
+<th style="text-align:right;">
+dap_low
+</th>
+<th style="text-align:right;">
+dap_high
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+SWVvsGC
+</td>
+<td style="text-align:left;">
+signal_from_swv
+</td>
+<td style="text-align:right;">
+2.6e-06
+</td>
+<td style="text-align:right;">
+2.50e-06
+</td>
+<td style="text-align:right;">
+2.60e-06
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SWV
+</td>
+<td style="text-align:left;">
+C_mol_cm3
+</td>
+<td style="text-align:right;">
+1.9e-05
+</td>
+<td style="text-align:right;">
+1.83e-05
+</td>
+<td style="text-align:right;">
+1.96e-05
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GC
+</td>
+<td style="text-align:left;">
+C_mol_cm3
+</td>
+<td style="text-align:right;">
+7.0e-06
+</td>
+<td style="text-align:right;">
+6.90e-06
+</td>
+<td style="text-align:right;">
+7.00e-06
+</td>
+</tr>
+</tbody>
+</table>
+<p>Ok, so obviously the GC is still the same, because we didn’t do anything different. However, The SWV and SWVvsGC estimates of <span class="math inline">\(D_{ap}\)</span> are now wildly different!? The SWV estimate is too high and the SWV vs. GC estimate is too low. This suggests that <span class="math inline">\(n\)</span> and <span class="math inline">\(\psi\)</span> could be too low. I tried changing the values to 2 and 0.75, but the change was minimal. Therefore, I do not know why these estimates are so off, but I would definitely trust the SWV fast datasets more until we understand why.</p>
+<p>With psi = 0.75 and n = 2:</p>
+<ul>
+<li>SWV = 1.33e-5</li>
+<li>SWV v GC = 2.93e-6</li>
+</ul>
+<p>With psi = 0.7 and n = 1.8:</p>
+<ul>
+<li>SWV = 1.897 e-5</li>
+<li>SWV v GC = 2.55e-6</li>
+</ul>
+<p>And just for clarity, here you can see that the plots are still extremely linear.</p>
+<pre class="r"><code>p1 &lt;- ggplot(df_slowCal, aes(x = signal_from_swv, y = signal_from_gc)) + 
+    geom_point() + geom_smooth(method = &quot;lm&quot;)
+
+p2 &lt;- ggplot(df_slowCal, aes(x = C_mol_cm3, y = signal_from_swv)) + 
+    geom_point() + geom_smooth(method = &quot;lm&quot;)
+
+p3 &lt;- ggplot(df_slowCal, aes(x = C_mol_cm3, y = signal_from_gc)) + 
+    geom_point() + geom_smooth(method = &quot;lm&quot;)
+
+p1 | p2 | p3</code></pre>
+<p><img src="02_05_19_supp_swv_gc_calibration_files/figure-html/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="conclusions" class="section level1">
+<h1>Conclusions</h1>
+<p>I am glad that I did this, but it is also unsettling that changing the scan rate throws off the estimate drastically even with a blank electrode. For now, let’s move forward with the parameters I used in the SWV fast section above.</p>
+<hr />
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

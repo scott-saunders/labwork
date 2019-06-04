@@ -1,0 +1,3090 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Figure 2 - Draft 2</title>
+
+<script src="02_05_19_fig_2_draft_2_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="02_05_19_fig_2_draft_2_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="02_05_19_fig_2_draft_2_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="02_05_19_fig_2_draft_2_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="02_05_19_fig_2_draft_2_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="02_05_19_fig_2_draft_2_files/navigation-1.1/tabsets.js"></script>
+<script src="02_05_19_fig_2_draft_2_files/navigation-1.1/codefolding.js"></script>
+<link href="02_05_19_fig_2_draft_2_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="02_05_19_fig_2_draft_2_files/highlightjs-9.12.0/highlight.js"></script>
+<script src="02_05_19_fig_2_draft_2_files/kePrint-0.0.1/kePrint.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Figure 2 - Draft 2</h1>
+<h4 class="date"><em>02_05_19</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#panel-a">Panel A</a></li>
+<li><a href="#panel-b">Panel B</a></li>
+</ul>
+</div>
+
+<p><strong>Note</strong> the YAML contains specifications for a github document and html. The best way to deal with this is to knit them separately from the knit menu. Otherwise the html has blurry plots and tends to delete the md cached plots unless you tell it to cache everything!</p>
+<pre class="r"><code>library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(kableExtra)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)
+
+theme_1 &lt;- function () { 
+    theme_classic() %+replace% 
+        theme(
+          axis.text = element_text( size=12),
+          axis.title=element_text(size=14),
+          strip.text = element_text(size = 14),
+          strip.background = element_rect(color=&#39;white&#39;),
+          legend.title=element_text(size=14),
+          legend.text=element_text(size=12),
+          panel.grid.major = element_line(color=&#39;grey&#39;,size=0.1)
+        )
+}
+theme_set(theme_1())</code></pre>
+<div id="panel-a" class="section level1">
+<h1>Panel A</h1>
+<p>Let’s read in and look at the table of pel data.</p>
+<pre class="r"><code>pel_extracts &lt;- read_csv(&quot;../data/2018_10_30_HPLC_concentrations_df.csv&quot;, 
+    comment = &quot;#&quot;) %&gt;% filter(strain %in% c(&quot;WTpar&quot;, &quot;dPel&quot;))
+
+pel_extracts %&gt;% kable() %&gt;% kable_styling(bootstrap_options = c(&quot;striped&quot;, 
+    &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;), full_width = F) %&gt;% 
+    scroll_box(height = &quot;250px&quot;)</code></pre>
+<div style="border: 1px solid #ddd; padding: 5px; overflow-y: scroll; height:250px; ">
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+measured_phenazine
+</th>
+<th style="text-align:left;">
+strain
+</th>
+<th style="text-align:left;">
+amount_added
+</th>
+<th style="text-align:left;">
+added_phenazine
+</th>
+<th style="text-align:left;">
+material
+</th>
+<th style="text-align:right;">
+replicate
+</th>
+<th style="text-align:right;">
+RT
+</th>
+<th style="text-align:right;">
+Area
+</th>
+<th style="text-align:left;">
+Channel Name
+</th>
+<th style="text-align:right;">
+Amount
+</th>
+<th style="text-align:right;">
+calcConc
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPel
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.060
+</td>
+<td style="text-align:right;">
+114063
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+7.487
+</td>
+<td style="text-align:right;">
+23.95840
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPel
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+8.858
+</td>
+<td style="text-align:right;">
+303178
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+19.998
+</td>
+<td style="text-align:right;">
+63.99360
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+dPel
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+6.007
+</td>
+<td style="text-align:right;">
+24774
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+0.762
+</td>
+<td style="text-align:right;">
+2.43840
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPel
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+3.056
+</td>
+<td style="text-align:right;">
+99389
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+6.524
+</td>
+<td style="text-align:right;">
+20.87680
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPel
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+8.870
+</td>
+<td style="text-align:right;">
+229828
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+15.160
+</td>
+<td style="text-align:right;">
+48.51200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+dPel
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+6.014
+</td>
+<td style="text-align:right;">
+23647
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+0.727
+</td>
+<td style="text-align:right;">
+2.32640
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPel
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+3.055
+</td>
+<td style="text-align:right;">
+104913
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+6.887
+</td>
+<td style="text-align:right;">
+22.03840
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPel
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+8.861
+</td>
+<td style="text-align:right;">
+217660
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+14.357
+</td>
+<td style="text-align:right;">
+45.94240
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+dPel
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+6.005
+</td>
+<td style="text-align:right;">
+25757
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+0.792
+</td>
+<td style="text-align:right;">
+2.53440
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPel
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.181
+</td>
+<td style="text-align:right;">
+8470
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.556
+</td>
+<td style="text-align:right;">
+15.93867
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPel
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+8.852
+</td>
+<td style="text-align:right;">
+185244
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+12.219
+</td>
+<td style="text-align:right;">
+350.27800
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+dPel
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+6.009
+</td>
+<td style="text-align:right;">
+113480
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+3.491
+</td>
+<td style="text-align:right;">
+100.07533
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPel
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+3.186
+</td>
+<td style="text-align:right;">
+10494
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.689
+</td>
+<td style="text-align:right;">
+19.75133
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPel
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+8.850
+</td>
+<td style="text-align:right;">
+179462
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+11.838
+</td>
+<td style="text-align:right;">
+339.35600
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+dPel
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+6.005
+</td>
+<td style="text-align:right;">
+117862
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+3.625
+</td>
+<td style="text-align:right;">
+103.91667
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPel
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+3.197
+</td>
+<td style="text-align:right;">
+11134
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.731
+</td>
+<td style="text-align:right;">
+20.95533
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPel
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+8.840
+</td>
+<td style="text-align:right;">
+201283
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+13.277
+</td>
+<td style="text-align:right;">
+380.60733
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+dPel
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+5.993
+</td>
+<td style="text-align:right;">
+124770
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+3.838
+</td>
+<td style="text-align:right;">
+110.02267
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+WTpar
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.234
+</td>
+<td style="text-align:right;">
+10524
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.691
+</td>
+<td style="text-align:right;">
+19.80867
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+WTpar
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+8.840
+</td>
+<td style="text-align:right;">
+227724
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+15.021
+</td>
+<td style="text-align:right;">
+430.60200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+WTpar
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5.995
+</td>
+<td style="text-align:right;">
+86700
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+2.667
+</td>
+<td style="text-align:right;">
+76.45400
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+WTpar
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+3.222
+</td>
+<td style="text-align:right;">
+11003
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.722
+</td>
+<td style="text-align:right;">
+20.69733
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+WTpar
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+8.851
+</td>
+<td style="text-align:right;">
+206671
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+13.632
+</td>
+<td style="text-align:right;">
+390.78400
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+WTpar
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+6.005
+</td>
+<td style="text-align:right;">
+84758
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+2.607
+</td>
+<td style="text-align:right;">
+74.73400
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+WTpar
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+3.178
+</td>
+<td style="text-align:right;">
+5777
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.379
+</td>
+<td style="text-align:right;">
+10.86467
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+WTpar
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+8.840
+</td>
+<td style="text-align:right;">
+220629
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+14.553
+</td>
+<td style="text-align:right;">
+417.18600
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+WTpar
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+5.995
+</td>
+<td style="text-align:right;">
+88787
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+2.731
+</td>
+<td style="text-align:right;">
+78.28867
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+WTpar
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.056
+</td>
+<td style="text-align:right;">
+124641
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+8.182
+</td>
+<td style="text-align:right;">
+26.18240
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+WTpar
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+8.855
+</td>
+<td style="text-align:right;">
+393800
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+25.976
+</td>
+<td style="text-align:right;">
+83.12320
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+WTpar
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+6.008
+</td>
+<td style="text-align:right;">
+25687
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+0.790
+</td>
+<td style="text-align:right;">
+2.52800
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+WTpar
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+3.043
+</td>
+<td style="text-align:right;">
+135302
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+8.882
+</td>
+<td style="text-align:right;">
+28.42240
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+WTpar
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+8.861
+</td>
+<td style="text-align:right;">
+435638
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+28.736
+</td>
+<td style="text-align:right;">
+91.95520
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+WTpar
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+6.009
+</td>
+<td style="text-align:right;">
+27091
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+0.833
+</td>
+<td style="text-align:right;">
+2.66560
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+WTpar
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+3.040
+</td>
+<td style="text-align:right;">
+122418
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+8.036
+</td>
+<td style="text-align:right;">
+25.71520
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+WTpar
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+8.854
+</td>
+<td style="text-align:right;">
+387178
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+25.539
+</td>
+<td style="text-align:right;">
+81.72480
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+WTpar
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+6.003
+</td>
+<td style="text-align:right;">
+24705
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+0.760
+</td>
+<td style="text-align:right;">
+2.43200
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Ok, now let’s plot an overview of the dataset.</p>
+<pre class="r"><code>pel_extracts_means &lt;- pel_extracts %&gt;% group_by(material, measured_phenazine, 
+    strain) %&gt;% mutate(mean = ifelse(replicate == 1, mean(calcConc), 
+    NA))
+
+ggplot(pel_extracts_means, aes(x = strain, y = calcConc, fill = measured_phenazine)) + 
+    geom_col(aes(y = mean)) + geom_jitter(width = 0.1, height = 0, 
+    shape = 21, size = 2) + facet_wrap(material ~ measured_phenazine, 
+    scales = &quot;free&quot;) + scale_x_discrete(breaks = c(&quot;dPel&quot;, &quot;WTpar&quot;), 
+    labels = c(expression(Delta * &quot;pel&quot;), &quot;WT&quot;)) + labs(x = &quot;Strain&quot;, 
+    y = expression(&quot;Biofilm concentration&quot; ~ (mu * M))) + guides(fill = F)</code></pre>
+<p><img src="02_05_19_fig_2_draft_2_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /> You can see that for each phenazine the concentration differs between the strains for both the cells aka biofilm and the agar. What we actually care about is the retention ratio, so let’s calculate and look at that.</p>
+<pre class="r"><code># Split dataset by material
+pel_extracts_means_agar &lt;- pel_extracts_means %&gt;% filter(material == 
+    &quot;agar&quot;)
+
+pel_extracts_means_biofilm &lt;- pel_extracts_means %&gt;% filter(material == 
+    &quot;cells&quot;)
+
+# Join agar and cell observations and calculate retention
+# ratios = biofilm / agar
+pel_extracts_means_join &lt;- left_join(pel_extracts_means_biofilm, 
+    pel_extracts_means_agar, by = c(&quot;strain&quot;, &quot;replicate&quot;, &quot;measured_phenazine&quot;), 
+    suffix = c(&quot;_from_biofilm&quot;, &quot;_from_agar&quot;)) %&gt;% mutate(retention_ratio = calcConc_from_biofilm/calcConc_from_agar) %&gt;% 
+    mutate(mean_retention_ratio = mean_from_biofilm/mean_from_agar)
+
+# Plot Layout
+plot_pel &lt;- ggplot(pel_extracts_means_join, aes(x = strain, y = retention_ratio, 
+    fill = measured_phenazine)) + geom_col(aes(y = mean_retention_ratio)) + 
+    geom_jitter(width = 0.1, height = 0, shape = 21, size = 2) + 
+    facet_wrap(~measured_phenazine, scales = &quot;free&quot;)
+
+# Styling
+plot_pel_styled &lt;- plot_pel + scale_x_discrete(breaks = c(&quot;WTpar&quot;, 
+    &quot;dPel&quot;), labels = c(&quot;WT&quot;, expression(Delta * &quot;pel&quot;)), limits = c(&quot;WTpar&quot;, 
+    &quot;dPel&quot;)) + labs(x = NULL, y = expression(Biofilm/Agar)) + 
+    theme(axis.text.x = element_text(size = 14)) + guides(fill = F)
+
+plot_pel_styled</code></pre>
+<p><img src="02_05_19_fig_2_draft_2_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /> Cool, now we can see that indeed PYO may be more tightly retained in the pel mutant.</p>
+</div>
+<div id="panel-b" class="section level1">
+<h1>Panel B</h1>
+<p>Let’s read in the dnase dataset and look at the table:</p>
+<pre class="r"><code>dnase_extracts &lt;- read_csv(&quot;../data/2018_10_08_HPLC_concentrations_df.csv&quot;, 
+    comment = &quot;#&quot;) %&gt;% filter(Strain == &quot;WT&quot; &amp; Day == &quot;D4&quot;) %&gt;% 
+    group_by(Phenazine, Condition, Material) %&gt;% mutate(mean = ifelse(Replicate == 
+    1, mean(calcConc), NA))
+
+
+dnase_extracts %&gt;% kable() %&gt;% kable_styling(bootstrap_options = c(&quot;striped&quot;, 
+    &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;), full_width = F) %&gt;% 
+    scroll_box(height = &quot;250px&quot;)</code></pre>
+<div style="border: 1px solid #ddd; padding: 5px; overflow-y: scroll; height:250px; ">
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Phenazine
+</th>
+<th style="text-align:left;">
+Strain
+</th>
+<th style="text-align:left;">
+Condition
+</th>
+<th style="text-align:right;">
+Replicate
+</th>
+<th style="text-align:left;">
+Material
+</th>
+<th style="text-align:left;">
+Day
+</th>
+<th style="text-align:right;">
+RT
+</th>
+<th style="text-align:right;">
+Area
+</th>
+<th style="text-align:left;">
+Channel Name
+</th>
+<th style="text-align:right;">
+Amount
+</th>
+<th style="text-align:right;">
+calcConc
+</th>
+<th style="text-align:right;">
+mean
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+DNase
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+5.952
+</td>
+<td style="text-align:right;">
+78120
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+2.523
+</td>
+<td style="text-align:right;">
+72.32600
+</td>
+<td style="text-align:right;">
+71.055111
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+DNase
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+3.170
+</td>
+<td style="text-align:right;">
+10966
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.698
+</td>
+<td style="text-align:right;">
+20.00933
+</td>
+<td style="text-align:right;">
+17.601333
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+DNase
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+8.799
+</td>
+<td style="text-align:right;">
+283489
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+19.744
+</td>
+<td style="text-align:right;">
+565.99467
+</td>
+<td style="text-align:right;">
+567.934444
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+DNase
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+5.963
+</td>
+<td style="text-align:right;">
+13770
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+0.445
+</td>
+<td style="text-align:right;">
+1.42400
+</td>
+<td style="text-align:right;">
+1.163733
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+DNase
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+3.066
+</td>
+<td style="text-align:right;">
+42599
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+2.712
+</td>
+<td style="text-align:right;">
+8.67840
+</td>
+<td style="text-align:right;">
+7.740800
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+DNase
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+8.807
+</td>
+<td style="text-align:right;">
+117981
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+8.217
+</td>
+<td style="text-align:right;">
+26.29440
+</td>
+<td style="text-align:right;">
+24.491733
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+DNase
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+5.967
+</td>
+<td style="text-align:right;">
+9463
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+0.306
+</td>
+<td style="text-align:right;">
+0.97920
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+DNase
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+3.065
+</td>
+<td style="text-align:right;">
+34587
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+2.202
+</td>
+<td style="text-align:right;">
+7.04640
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+DNase
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+8.812
+</td>
+<td style="text-align:right;">
+100344
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+6.989
+</td>
+<td style="text-align:right;">
+22.36480
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+DNase
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+5.964
+</td>
+<td style="text-align:right;">
+10533
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+0.340
+</td>
+<td style="text-align:right;">
+1.08800
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+DNase
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+3.105
+</td>
+<td style="text-align:right;">
+36801
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+2.343
+</td>
+<td style="text-align:right;">
+7.49760
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+DNase
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+8.803
+</td>
+<td style="text-align:right;">
+111355
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+7.755
+</td>
+<td style="text-align:right;">
+24.81600
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+none
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+5.971
+</td>
+<td style="text-align:right;">
+15508
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+0.501
+</td>
+<td style="text-align:right;">
+1.60320
+</td>
+<td style="text-align:right;">
+1.349333
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+none
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+3.054
+</td>
+<td style="text-align:right;">
+43066
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+2.742
+</td>
+<td style="text-align:right;">
+8.77440
+</td>
+<td style="text-align:right;">
+8.238933
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+none
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+8.815
+</td>
+<td style="text-align:right;">
+75035
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+5.226
+</td>
+<td style="text-align:right;">
+16.72320
+</td>
+<td style="text-align:right;">
+22.126933
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+none
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+5.968
+</td>
+<td style="text-align:right;">
+12382
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+0.400
+</td>
+<td style="text-align:right;">
+1.28000
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+none
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+3.060
+</td>
+<td style="text-align:right;">
+40419
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+2.573
+</td>
+<td style="text-align:right;">
+8.23360
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+none
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+8.814
+</td>
+<td style="text-align:right;">
+101441
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+7.065
+</td>
+<td style="text-align:right;">
+22.60800
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+none
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+5.964
+</td>
+<td style="text-align:right;">
+11287
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+0.364
+</td>
+<td style="text-align:right;">
+1.16480
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+none
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+3.059
+</td>
+<td style="text-align:right;">
+37847
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+2.409
+</td>
+<td style="text-align:right;">
+7.70880
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+none
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+agar
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+8.811
+</td>
+<td style="text-align:right;">
+121366
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+8.453
+</td>
+<td style="text-align:right;">
+27.04960
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+DNase
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+5.942
+</td>
+<td style="text-align:right;">
+75064
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+2.424
+</td>
+<td style="text-align:right;">
+69.48800
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+DNase
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+3.132
+</td>
+<td style="text-align:right;">
+9362
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.596
+</td>
+<td style="text-align:right;">
+17.08533
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+DNase
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+8.789
+</td>
+<td style="text-align:right;">
+285936
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+19.915
+</td>
+<td style="text-align:right;">
+570.89667
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+DNase
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+5.949
+</td>
+<td style="text-align:right;">
+77070
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+2.489
+</td>
+<td style="text-align:right;">
+71.35133
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+DNase
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+3.119
+</td>
+<td style="text-align:right;">
+8611
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.548
+</td>
+<td style="text-align:right;">
+15.70933
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+DNase
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+8.797
+</td>
+<td style="text-align:right;">
+283951
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+19.776
+</td>
+<td style="text-align:right;">
+566.91200
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+none
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+5.957
+</td>
+<td style="text-align:right;">
+102908
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+3.323
+</td>
+<td style="text-align:right;">
+95.25933
+</td>
+<td style="text-align:right;">
+88.847556
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+none
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+3.113
+</td>
+<td style="text-align:right;">
+13782
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.877
+</td>
+<td style="text-align:right;">
+25.14067
+</td>
+<td style="text-align:right;">
+20.324667
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+none
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+8.804
+</td>
+<td style="text-align:right;">
+306236
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+21.328
+</td>
+<td style="text-align:right;">
+611.40267
+</td>
+<td style="text-align:right;">
+614.231111
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+none
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+5.946
+</td>
+<td style="text-align:right;">
+98479
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+3.180
+</td>
+<td style="text-align:right;">
+91.16000
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+none
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+3.100
+</td>
+<td style="text-align:right;">
+9417
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.599
+</td>
+<td style="text-align:right;">
+17.17133
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+none
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+8.792
+</td>
+<td style="text-align:right;">
+301514
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+20.999
+</td>
+<td style="text-align:right;">
+601.97133
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+none
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+5.931
+</td>
+<td style="text-align:right;">
+86539
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+2.795
+</td>
+<td style="text-align:right;">
+80.12333
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+none
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+3.092
+</td>
+<td style="text-align:right;">
+10222
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.651
+</td>
+<td style="text-align:right;">
+18.66200
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+WT
+</td>
+<td style="text-align:left;">
+none
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+cells
+</td>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+8.778
+</td>
+<td style="text-align:right;">
+315202
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+21.953
+</td>
+<td style="text-align:right;">
+629.31933
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Now, let’s look at an overview of the experiment.</p>
+<pre class="r"><code>ggplot(dnase_extracts, aes(x = Condition, y = calcConc, fill = Phenazine)) + 
+    geom_col(aes(y = mean)) + geom_jitter(width = 0.1, height = 0, 
+    shape = 21, size = 2) + facet_wrap(Material ~ Phenazine, 
+    scales = &quot;free&quot;)</code></pre>
+<p><img src="02_05_19_fig_2_draft_2_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /> Here you can see that the agar concentrations between the Dnase treated and untreated don’t differ meaningfully, but the cell/biofilm concentrations might. So, let’s ignore the agar concentrations for now. It’s also important to note that by calculating a ratio as we did above for pel we do risk amplifying meaningless differences by dividing large numbers by small numbers.</p>
+<p>Here’s the biofilm only:</p>
+<pre class="r"><code># Plot layout
+dnase_plot &lt;- ggplot(dnase_extracts %&gt;% filter(Material == &quot;cells&quot;), 
+    aes(x = Condition, y = calcConc, fill = Phenazine)) + geom_col(aes(y = mean)) + 
+    geom_jitter(width = 0.1, height = 0, shape = 21, size = 2) + 
+    facet_wrap(~Phenazine, scales = &quot;free&quot;)
+
+# Plot styling
+dnase_plot_styled &lt;- dnase_plot + labs(x = NULL, y = expression(&quot;Biofilm concentration&quot; ~ 
+    (mu * M))) + scale_x_discrete(limits = c(&quot;none&quot;, &quot;DNase&quot;)) + 
+    guides(fill = F) + theme(axis.text.x = element_text(size = 14))
+
+dnase_plot_styled</code></pre>
+<p><img src="02_05_19_fig_2_draft_2_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /> So there may be a difference for PYO and PCN, but it’s not dramatic.</p>
+<p>Here’s the retention ratios just for comparison:</p>
+<pre class="r"><code># Split dataset by material
+dnase_extracts_agar &lt;- dnase_extracts %&gt;% filter(Material == 
+    &quot;agar&quot;)
+
+dnase_extracts_biofilm &lt;- dnase_extracts %&gt;% filter(Material == 
+    &quot;cells&quot;)
+
+# Join agar and cell observations and calculate retention
+# ratios = biofilm / agar
+dnase_extracts_join &lt;- left_join(dnase_extracts_biofilm, dnase_extracts_agar, 
+    by = c(&quot;Strain&quot;, &quot;Replicate&quot;, &quot;Phenazine&quot;, &quot;Condition&quot;, &quot;Day&quot;), 
+    suffix = c(&quot;_from_biofilm&quot;, &quot;_from_agar&quot;)) %&gt;% mutate(retention_ratio = calcConc_from_biofilm/calcConc_from_agar) %&gt;% 
+    mutate(mean_retention_ratio = mean_from_biofilm/mean_from_agar)
+
+# Plot
+ggplot(dnase_extracts_join, aes(x = Condition, y = retention_ratio, 
+    fill = Phenazine)) + geom_col(aes(y = mean_retention_ratio)) + 
+    geom_jitter(width = 0.1, height = 0, shape = 21, size = 2) + 
+    facet_wrap(~Phenazine, scales = &quot;free&quot;) + guides(fill = F)</code></pre>
+<p><img src="02_05_19_fig_2_draft_2_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

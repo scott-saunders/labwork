@@ -19,7 +19,11 @@ for(link in files){
 }
 ```
 
+<a href="https://scott-saunders.github.io/labwork/IDA/01_28_19_psoralen_nonequil_aggregate/Analysis/01_28_19_Dm_psoralen_nonequil_aggregate_analysis.html">Analysis/01\_28\_19\_Dm\_psoralen\_nonequil\_aggregate\_analysis.html</a>
+
 <a href="https://scott-saunders.github.io/labwork/IDA/01_28_19_psoralen_nonequil_aggregate/Analysis/01_28_19_psoralen_nonequil_aggregate_analysis.html">Analysis/01\_28\_19\_psoralen\_nonequil\_aggregate\_analysis.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/IDA/01_28_19_psoralen_nonequil_aggregate/README.html">README.html</a>
 
 ## Purpose
 
