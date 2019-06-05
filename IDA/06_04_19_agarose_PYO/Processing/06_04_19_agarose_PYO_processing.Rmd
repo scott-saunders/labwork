@@ -1,0 +1,154 @@
+---
+title: "Agarose PYO Processing"
+subtitle: ""
+fontsize: 12pt
+date: "06_05_19 "
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
+---
+
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+source("../../tools/echem_processing_tools.R")
+source("../../tools/plotting_tools.R")
+
+theme_set(theme_1())
+```
+
+## Soak
+
+
+
+```{r}
+soak_data_path = '../Data/Soak/'
+#divide swv into rep and subrep and then subtract 1 from rep to match with GC
+SWV_soak_filenames <-  dir(path=soak_data_path,pattern = "[SWV]+.+[txt]$")
+
+SWV_soak_file_paths <- paste(soak_data_path,SWV_soak_filenames,sep='')
+
+swv_data_cols <-  c('E','i1','i2')
+
+filename_cols = c('PHZadded','PYO','reactor','echem','rep')
+
+swv_skip_rows=18
+  
+
+swv_soak_data <- echem_import_to_df(filenames = SWV_soak_filenames, 
+                                       file_paths = SWV_soak_file_paths, 
+                                       data_cols = swv_data_cols, 
+                                       skip_rows = swv_skip_rows,
+                                       filename_cols = filename_cols,
+                                       rep = T)
+
+ggplot(swv_soak_data, aes(x=E, y=current,color=rep, group = rep))+geom_path()+
+  facet_wrap(~electrode, scales = 'free')+
+  scale_color_viridis() + 
+  scale_x_reverse()
+```
+
+```{r}
+
+swv_soak_max <- swv_soak_data %>% 
+  group_by(rep, electrode) %>% 
+  filter(E < -0.2) %>% 
+  summarise(max = max(current),minutes = mean(minutes))
+
+
+ggplot(swv_soak_max, aes(x = minutes, y = max, color = electrode )) + geom_point()
+```
+
+# Transfer
+
+## SWV
+
+```{r}
+tran_data_path = '../Data/Transfer/'
+#divide swv into rep and subrep and then subtract 1 from rep to match with GC
+SWV_tran_filenames <-  dir(path=tran_data_path,pattern = "[swv]+.+[txt]$")
+
+SWV_tran_file_paths <- paste(tran_data_path,SWV_tran_filenames,sep='')
+
+swv_tran_data_cols <-  c('E','i1','i2')
+
+filename_cols = c('echem','rep')
+
+swv_skip_rows=18
+  
+
+swv_tran_data <- echem_import_to_df(filenames = SWV_tran_filenames, 
+                                       file_paths = SWV_tran_file_paths, 
+                                       data_cols = swv_tran_data_cols, 
+                                       skip_rows = swv_skip_rows,
+                                       filename_cols = filename_cols,
+                                       rep = T, PHZadded = F)
+
+ggplot(swv_tran_data, aes(x=E, y=current,color=rep, group = rep))+geom_path()+
+  facet_wrap(~electrode, scales = 'free')+
+  scale_color_viridis() + 
+  scale_x_reverse()
+```
+
+```{r}
+
+swv_tran_max <- swv_tran_data %>% 
+  group_by(rep, electrode) %>% 
+  filter(E < -0.2) %>% 
+  summarise(max = max(current),minutes = mean(minutes))
+
+
+ggplot(swv_tran_max, aes(x = minutes, y = max, color = electrode )) + geom_point()
+```
+
+##GC
+
+```{r}
+tran_data_path = '../Data/Transfer/'
+#divide swv into rep and subrep and then subtract 1 from rep to match with GC
+GC_tran_filenames <-  dir(path=tran_data_path,pattern = "[gc]+.+[txt]$")
+
+GC_tran_file_paths <- paste(tran_data_path,GC_tran_filenames,sep='')
+
+gc_tran_data_cols <-  c('E','i1','i2')
+
+filename_cols = c('echem','rep')
+
+gc_skip_rows=21
+  
+
+gc_tran_data <- echem_import_to_df(filenames = GC_tran_filenames, 
+                                       file_paths = GC_tran_file_paths, 
+                                       data_cols = gc_tran_data_cols, 
+                                       skip_rows = gc_skip_rows,
+                                       filename_cols = filename_cols,
+                                       rep = T, PHZadded = F)
+
+ggplot(gc_tran_data, aes(x=E, y=current,color=rep, group = rep))+geom_path()+
+  scale_color_viridis() + 
+  scale_x_reverse()
+```
+
+```{r}
+
+gc_tran_max <- gc_tran_data %>% 
+  group_by(rep, electrode) %>% 
+  filter(E < -0.2) %>% 
+  summarise(max = max(abs(current)),minutes = mean(minutes))
+
+
+ggplot(gc_tran_max, aes(x = minutes, y = max, color = electrode )) + geom_point()
+```

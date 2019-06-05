@@ -1,0 +1,27 @@
+---
+title: "06_04_19 Agarose PYO README"
+fontsize: 12pt
+output:
+  html_document:
+    self_contained: false
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
+---
+
+# Links to all the notebook htmls
+
+```{r, results='asis'}
+library(htmltools)
+
+base_path="https://scott-saunders.github.io/labwork/IDA/06_04_19_agarose_PYO/"
+
+files <- dir(path=".", pattern = "*\\.html$",include.dirs = T,recursive = T)
+
+for(link in files){
+  print(
+    tags$a(href = paste(base_path, link, sep=''), link)
+    )
+  writeLines("")
+}
+```
