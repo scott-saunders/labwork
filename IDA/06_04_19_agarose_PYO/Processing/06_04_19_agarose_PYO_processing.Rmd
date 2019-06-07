@@ -152,3 +152,16 @@ gc_tran_max <- gc_tran_data %>%
 
 ggplot(gc_tran_max, aes(x = minutes, y = max, color = electrode )) + geom_point()
 ```
+ 
+ 
+## No Bg subtraction
+
+```{r}
+
+tran_max_comb <- left_join(swv_tran_max %>% ungroup() %>%  
+                             filter(electrode=='i1') %>% mutate(rep = rep-1), 
+                           gc_tran_max %>% filter(electrode=='i2'), by = c('rep'), suffix = c("_swv", "_gc"))
+
+ggplot(tran_max_comb, aes(x = max_swv, y = max_gc)) + geom_point()
+```
+
