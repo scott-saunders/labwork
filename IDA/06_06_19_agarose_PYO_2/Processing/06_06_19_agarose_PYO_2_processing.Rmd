@@ -30,6 +30,8 @@ source("../../tools/plotting_tools.R")
 theme_set(theme_1())
 ```
 
+I was worried about the adsorbed PYO signal from the last run, so I decided to redo the experiment on another IDA. This time I tried the SWV GC measurement scheme during the soak as well as the transfer. 
+
 # Soak
 
 ```{r}
@@ -58,6 +60,8 @@ ggplot(swv_soak_data, aes(x=E, y=current,color=rep, group = rep))+geom_path()+
   scale_color_viridis() + 
   scale_x_reverse()
 ```
+Here you can clearly see a second peak that arises later on around -400mV 
+
 ```{r}
 
 swv_soak_max <- swv_soak_data %>% 

@@ -21,6 +21,7 @@ library(modelr)
 library(viridis)
 library(lubridate)
 library(hms)
+library(kableExtra)
 
 knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
 
@@ -30,9 +31,11 @@ source("../../tools/plotting_tools.R")
 theme_set(theme_1())
 ```
 
-## Soak
+50uL droplet of 1% agarose (PBS50) solidified on IDA then soaked in 75uM PYO.
 
+# Soak
 
+Acquired SWVs every 30 seconds during soak. 
 
 ```{r}
 soak_data_path = '../Data/Soak/'
@@ -61,6 +64,8 @@ ggplot(swv_soak_data, aes(x=E, y=current,color=rep, group = rep))+geom_path()+
   scale_x_reverse()
 ```
 
+You can see the PYO peak is shifted significantly negative. I later found out this was due to the reference electrode. They probably need to be reconditioned because many had this problem. 
+
 ```{r}
 
 swv_soak_max <- swv_soak_data %>% 
@@ -71,6 +76,8 @@ swv_soak_max <- swv_soak_data %>%
 
 ggplot(swv_soak_max, aes(x = minutes, y = max, color = electrode )) + geom_point()
 ```
+
+As expected for such a thick layer (a few mm) it took a while for the PYO to diffuse through the agarose to the electrode. Even after 45 min the SWV signal hasn't quite leveled off.
 
 # Transfer
 
@@ -103,6 +110,8 @@ ggplot(swv_tran_data, aes(x=E, y=current,color=rep, group = rep))+geom_path()+
   scale_x_reverse()
 ```
 
+So the obvious weird thing here is that the signal does not decay to zero even after ~150min. I tried replacing the media etc and the peak did not significantly diminish. I take this to mean that some of the PYO irreversibly adsorbed to the electrode. It's unclear if the peak around -400mV came with the irreversibly bound PYO or not. 
+
 ```{r}
 
 swv_tran_max <- swv_tran_data %>% 
@@ -113,6 +122,8 @@ swv_tran_max <- swv_tran_data %>%
 
 ggplot(swv_tran_max, aes(x = minutes, y = max, color = electrode )) + geom_point()
 ```
+
+The signal decays as expected (although it doesn't go to zero as mentioned above). Interestingly for the first two SWV i1 points you can see that the concentration doesn't initially change, which is what we would expect for a thick enough layer - the outer PYO starts diffusing away before it affects the interior layers in contact with the electrode. 
 
 ##GC
 
@@ -142,6 +153,8 @@ ggplot(gc_tran_data, aes(x=E, y=current,color=rep, group = rep))+geom_path()+
   scale_x_reverse()
 ```
 
+GC signal looks beautiful and seems to go all the way to zero. 
+
 ```{r}
 
 gc_tran_max <- gc_tran_data %>% 
@@ -153,15 +166,57 @@ gc_tran_max <- gc_tran_data %>%
 ggplot(gc_tran_max, aes(x = minutes, y = max, color = electrode )) + geom_point()
 ```
  
+ So the decay here looks reasonable, and it's interesting that it goes all the way to zero. To me this confirmst that the persistent PYO peak for the SWV is adsorbed to each individual electrode (i1 and i2) and does not contribute to ET across the gap. 
  
 ## No Bg subtraction
 
+Let's plot SWV vs. GC. Interestingly it looks like there is a subtle difference between the SWV i1 and i2
+
 ```{r}
 
-tran_max_comb <- left_join(swv_tran_max %>% ungroup() %>%  
+tran_max_comb_i1 <- left_join(swv_tran_max %>% ungroup() %>%  
                              filter(electrode=='i1') %>% mutate(rep = rep-1), 
                            gc_tran_max %>% filter(electrode=='i2'), by = c('rep'), suffix = c("_swv", "_gc"))
 
-ggplot(tran_max_comb, aes(x = max_swv, y = max_gc)) + geom_point()
+tran_max_comb_i2 <- left_join(swv_tran_max %>% ungroup() %>%  
+                             filter(electrode=='i2') %>% mutate(rep = rep-1), 
+                           gc_tran_max %>% filter(electrode=='i2'), by = c('rep'), suffix = c("_swv", "_gc"))
 ```
 
+GC collector vs. SWV i1:
+```{r}
+
+ggplot(tran_max_comb_i1, aes(x = max_swv, y = max_gc)) + geom_point() + geom_smooth(data = tran_max_comb_i1 %>% filter(rep<10), method = 'lm')
+
+```
+
+GC collector vs. SWV i2:
+```{r}
+
+ggplot(tran_max_comb_i2, aes(x = max_swv, y = max_gc)) + geom_point() + geom_smooth(data = tran_max_comb_i2 %>% filter(rep<10), method = 'lm')
+
+```
+
+You can see that the SWV i2 signal looks more linear than i1. However it is a little confusing why both plots are obviously curved beyond the first few datapoints. My theory is that this behavior has to do with the buildup of the adsorbed PYO.
+
+Anyway, if we ignore the curved behavior for now and just fit the i2 datasets first 10 points (shown as geom smooth on the plot), let's see if we are in the same Dap ballpark as with the calibrated solution PYO. 
+
+```{r}
+dap_from_swvGC <- function(m, t_p = 1/(2 * 300)) {
+    
+    psi <- 0.7
+    # psi <- 0.75 A <- 0.013 #cm^2
+    A <- 0.025  #cm^2
+    S <- 18.4  #cm
+    d_ap <- (m * A * psi)^2/(S^2 * pi * t_p)
+    
+    d_ap
+}
+
+lm_tran <- tidy(lm(max_gc ~ max_swv, data = tran_max_comb_i2 %>% filter(rep<10)), 
+    conf.int = T) %>% filter(term == "max_swv") %>% mutate(dap = dap_from_swvGC(m = estimate)) %>% 
+    mutate(dap_high = dap_from_swvGC(m = conf.high)) %>% mutate(dap_low = dap_from_swvGC(m = conf.low)) %>% 
+    mutate(dataset = "SWVvsGC")
+
+lm_tran %>% kable() %>% kable_styling()
+```
