@@ -1,0 +1,23 @@
+FRAP README
+================
+
+# Links to all the IDA notebook htmls
+
+``` r
+library(htmltools)
+
+base_path="https://scott-saunders.github.io/labwork/FRAP/"
+
+files <- dir(path=".", pattern = "*\\.html$",include.dirs = T,recursive = T)
+
+for(link in files){
+  print(
+    tags$a(href = paste(base_path, link, sep=''), link)
+    )
+  writeLines("")
+}
+```
+
+<a href="https://scott-saunders.github.io/labwork/FRAP/05_30_19/05_30_19_PYO_FRAP_analysis_2.html">05\_30\_19/05\_30\_19\_PYO\_FRAP\_analysis\_2.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/FRAP/06_10_19_glycerol/06_10_19_PYO_FRAP_glycerol_analysis.html">06\_10\_19\_glycerol/06\_10\_19\_PYO\_FRAP\_glycerol\_analysis.html</a>
