@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>PYO FRAP glycerol 2</title>
+
+<script src="06_13_19_PYO_FRAP_glycerol_2_analysis_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="06_13_19_PYO_FRAP_glycerol_2_analysis_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="06_13_19_PYO_FRAP_glycerol_2_analysis_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="06_13_19_PYO_FRAP_glycerol_2_analysis_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="06_13_19_PYO_FRAP_glycerol_2_analysis_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="06_13_19_PYO_FRAP_glycerol_2_analysis_files/navigation-1.1/tabsets.js"></script>
+<script src="06_13_19_PYO_FRAP_glycerol_2_analysis_files/navigation-1.1/codefolding.js"></script>
+<link href="06_13_19_PYO_FRAP_glycerol_2_analysis_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="06_13_19_PYO_FRAP_glycerol_2_analysis_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">PYO FRAP glycerol 2</h1>
+<h3 class="subtitle"><em>Analysis</em></h3>
+<h4 class="date"><em>06_13_19</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#intro">Intro</a></li>
+<li><a href="#methods">Methods</a><ul>
+<li><a href="#agarose-pads">Agarose pads</a></li>
+<li><a href="#acquisition-parameters">Acquisition parameters</a></li>
+<li><a href="#two-photon-considerations">Two Photon considerations</a></li>
+</ul></li>
+<li><a href="#results">Results</a><ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#normalization">Normalization</a></li>
+<li><a href="#parameter-estimates">Parameter estimates</a></li>
+<li><a href="#attempt-to-correct-2p-issue">Attempt to correct 2p issue</a></li>
+</ul></li>
+<li><a href="#conclusions">Conclusions</a><ul>
+<li><a href="#this-experiment">This experiment</a></li>
+<li><a href="#next-steps">Next steps</a></li>
+</ul></li>
+</ul>
+</div>
+
+<pre class="r"><code>library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+library(knitr)
+library(kableExtra)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)
+
+
+source(&quot;../../IDA/tools/plotting_tools.R&quot;)
+
+theme_set(theme_1())</code></pre>
+<div id="intro" class="section level1">
+<h1>Intro</h1>
+<p>On 06/10/19 I tried a first attempt with PYO in 1% agarose +/- 50% glycerol, to try perturbing the effective diffusion coefficient measured by FRAP. This failed, and I saw photoactivation instead of any type of FRAP. I thought of a number of reasons why this might be and possible solutions, so I tried again with more concentration so glycerol. I reasoned that even if the photoactivation was real that it may not be a problem at lower concentrations. The other explanation I considered was that perhaps the TCEP did not diffuse/react as quickly in the glycerol gel, and maybe it just needed longer to reduce the PYO.</p>
+<p>For this experiment I setup 1% agarose gels with 0, 10, 20, and 50% glycerol with PYO in the same format as last time. I also tried two gels with PCA instead of PYO, but I was not able to FRAP PCA at all.</p>
+<p>It is a reasonable expectation that glycerol makes the solvent more viscous and slows diffusion. Here’s <a href="https://pubs.acs.org/doi/10.1021/je049917u">one reference</a> that suggests we should see a decrease of 2-5x over this range of glycerol.</p>
+</div>
+<div id="methods" class="section level1">
+<h1>Methods</h1>
+<div id="agarose-pads" class="section level2">
+<h2>Agarose pads</h2>
+<p>I made the agarose pads very similarly to how I did on 06/10. I made up the appropriate PBS - glycerol mixtures (1x PBS final concentration) using 2x and 1x PBS and pure glycerol. Then I dissolved the agarose in the solutions (~20mL) and microwaved to dissolve. The molten gels were stored in the 60 degree water bath, while I aliquoted the appropriate amount of PYO (300uM final) or PCA (500uM final) into fresh 15mL tubes. Then I mixed 3mL of the appropriate agarose - glycerol, vortexed and then let the tubes briefly settle in the water bath before pouring into the coverslip bottom mattek dishes.</p>
+<p>The gels were left to solidify at room temp for a full hour, since I knew that the glycerol gels take longer to solidify. Then I added 90uL of TCEP stock to each dish before I even left the lab, which gave it plenty of time to incubate. Here’s a picture about 1.5 hrs after adding the TCEP. You can see obvious PYO reduction in all three of the glycerol gels shown (the 0% glycerol pad was on the microscope), and you can see the greenish color of reduced PCA in the 0% glycerol PCA gel. So, either waiting longer for the gel to solidify or for the TCEP reduce facilitated PYO reduction even in the 50% glycerol gel as compared to the weirdness on 06/10.</p>
+<pre class="r"><code>knitr::include_graphics(&quot;Photos/IMG_20190613_144416.jpg&quot;)</code></pre>
+<p><img src="Photos/IMG_20190613_144416.jpg" width="300" style="display: block; margin: auto;" /></p>
+<p>Other photos of the gels are in the Photos directory in this directory.</p>
+</div>
+<div id="acquisition-parameters" class="section level2">
+<h2>Acquisition parameters</h2>
+<p>I did not take a picture of the settings this time, but they were very similar to 06/10. See the file names for some descriptions of the parameters. All images were collected in 16bit. The only notable change I made for some of the PYO FRAP acquisitions is that I first acquired at a 50ms frame rate (128px frame) as before (called “rep”). Subsequently I was able to acquire at a framerate of 12ms (I think?), by checking the “acquisition” check box for the bleached circle in the “regions” menu. This told the microscope to only image the 50um radius bleached circle and not the other pixels in the image. Fewer pixels to acquire enabled faster framerate, but we could not estimate the effective bleach radius or the background signal. However, because I just acquired bleaches with the whole frame I think it would be safe to extrapolate from those slower “rep” acquisitions.</p>
+</div>
+<div id="two-photon-considerations" class="section level2">
+<h2>Two Photon considerations</h2>
+<p><strong>Also important to consider</strong>, I tried bleaching at 350nm with the two photon and at 405nm with the diode and neither worked better than 375. This means that we are bleaching and acquiring using the two photon laser, which has a very thin cross section - pinhole ~ 4um. Therefore, by bleaching a disc 100um wide and 4um thick, most of the fluorescence recovery will be coming from the top and bottom of the disc, not the edges (x-y). Therefore I think I need to think harder about how to estimate the vertical “nominal” and “effective” bleach radii in order to quantify accurately.</p>
+</div>
+</div>
+<div id="results" class="section level1">
+<h1>Results</h1>
+<p>I did try FRAP on the PCA gel (0% glycerol), but there was absolutely no detectable bleaching using the 405 or two photon lasers (350 - 400nm) or both. That data along with the initial tests etc is all in the <a href="https://docs.google.com/spreadsheets/d/1VKdNNslR_wArIYrMap0Ca1XVugdLAwotxh6dAXnKHZM/edit?usp=sharing">google sheet</a>. The dataset in this notebook is specifically for the PYO pads at different concentrations of glycerol.</p>
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p>Let’s read in the dataset.</p>
+<pre class="r"><code>df &lt;- read_csv(&quot;06_13_19_PYO_FRAP_glycerols_data.csv&quot;)
+
+
+df</code></pre>
+<pre><code>## # A tibble: 10,850 x 14
+##    img_num  time bleach_int ref_int filename condition agarose PYO  
+##      &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;     &lt;chr&gt;   &lt;chr&gt;
+##  1       1 0          3283.   3299. 0pctGly… 0pctGlyc  1pctAg  300u…
+##  2       2 0.172      3172.   3221. 0pctGly… 0pctGlyc  1pctAg  300u…
+##  3       3 0.524      3234.   3134. 0pctGly… 0pctGlyc  1pctAg  300u…
+##  4       4 0.712      3160.   3154. 0pctGly… 0pctGlyc  1pctAg  300u…
+##  5       5 0.895      3153.   3213. 0pctGly… 0pctGlyc  1pctAg  300u…
+##  6       6 1.08       3205.   3093. 0pctGly… 0pctGlyc  1pctAg  300u…
+##  7       7 1.26       3141.   3284. 0pctGly… 0pctGlyc  1pctAg  300u…
+##  8       8 1.44       3142.   3150. 0pctGly… 0pctGlyc  1pctAg  300u…
+##  9       9 1.61       2960.   3193. 0pctGly… 0pctGlyc  1pctAg  300u…
+## 10      10 1.79       3157.   3066. 0pctGly… 0pctGlyc  1pctAg  300u…
+## # … with 10,840 more rows, and 6 more variables: objective &lt;chr&gt;,
+## #   frames &lt;chr&gt;, excitation &lt;chr&gt;, bleach &lt;chr&gt;, fast &lt;chr&gt;, id &lt;dbl&gt;</code></pre>
+<p>Plotting the data looks like this for the 50ms framerate acquisitions (called “rep”):</p>
+<pre class="r"><code>ggplot(df %&gt;% filter(fast == &quot;rep&quot;), aes(x = time, y = bleach_int, 
+    group = id)) + geom_path(alpha = 0.25) + facet_wrap(fast ~ 
+    condition, scales = &quot;free&quot;)</code></pre>
+<p><img src="06_13_19_PYO_FRAP_glycerol_2_analysis_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>And here’s what the 12ms acquisitions look like (called ‘repFAST’):</p>
+<pre class="r"><code>ggplot(df %&gt;% filter(fast == &quot;repFAST&quot;), aes(x = time, y = bleach_int, 
+    group = id)) + geom_path(alpha = 0.25) + facet_wrap(fast ~ 
+    condition, scales = &quot;free&quot;)</code></pre>
+<p><img src="06_13_19_PYO_FRAP_glycerol_2_analysis_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Already we can see that maybe the recovery isn’t as sharp in the 50% glycerol condition. It’s hard to tell with the others. Also note that the replicates all seem to overlap pretty well. It’s hard to tell whether the faster framerate helped or not, but we’ll come back to that. You can also see that we are consistently getting a 10 - 20% bleach, which is great compared to where we started!</p>
+</div>
+<div id="normalization" class="section level2">
+<h2>Normalization</h2>
+<p>Ok to quantify the data we need to singly normalize the data by the initial fluorescence.</p>
+<pre class="r"><code>df_baselines &lt;- df %&gt;% group_by(condition, fast, id) %&gt;% filter(img_num &lt;= 
+    10) %&gt;% summarise(avg_baseline = mean(bleach_int))
+
+df_single_norm &lt;- left_join(df, df_baselines, by = c(&quot;condition&quot;, 
+    &quot;fast&quot;, &quot;id&quot;)) %&gt;% mutate(single_norm_int = bleach_int/avg_baseline)
+
+ggplot(df_single_norm, aes(x = time, y = single_norm_int, group = id)) + 
+    geom_path(alpha = 0.25) + facet_grid(fast ~ condition, scales = &quot;free&quot;)</code></pre>
+<p><img src="06_13_19_PYO_FRAP_glycerol_2_analysis_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Next we will do the full scale normalization to account for the amount that was bleached.</p>
+<pre class="r"><code>df_full_norm &lt;- df_single_norm %&gt;% group_by(condition, fast, 
+    id) %&gt;% mutate(min_single_norm_int = min(single_norm_int)) %&gt;% 
+    mutate(full_norm_int = (single_norm_int - min_single_norm_int)/(1 - 
+        min_single_norm_int))
+
+ggplot(df_full_norm, aes(x = time, y = full_norm_int, group = id)) + 
+    geom_path(alpha = 0.25) + facet_grid(fast ~ condition, scales = &quot;free&quot;)</code></pre>
+<p><img src="06_13_19_PYO_FRAP_glycerol_2_analysis_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Then we need to normalize the bleach to t = 0.</p>
+<pre class="r"><code>df_full_fit &lt;- df_full_norm %&gt;% filter(time &gt; 5) %&gt;% group_by(condition, 
+    fast, id) %&gt;% mutate(min_time = min(time)) %&gt;% mutate(norm_time = time - 
+    min_time)
+
+ggplot(df_full_fit, aes(x = norm_time, y = full_norm_int, group = id)) + 
+    geom_line(alpha = 0.25) + facet_grid(fast ~ condition, scales = &quot;free&quot;)</code></pre>
+<p><img src="06_13_19_PYO_FRAP_glycerol_2_analysis_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Normalization looks good. Let’s directly compare the fast and slow acquisition rates:</p>
+<pre class="r"><code>ggplot(df_full_fit, aes(x = norm_time, y = full_norm_int, color = fast, 
+    group = id)) + geom_line(alpha = 0.25) + facet_wrap(~condition, 
+    scales = &quot;free&quot;)</code></pre>
+<p><img src="06_13_19_PYO_FRAP_glycerol_2_analysis_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The shorter time scales repFAST measurements overlay the rep acquisitions very well. It’s still not obvious if the two framerates will make a big difference…</p>
+<p>Finally, we can fit the recovery with our single exponential model. Here’s the slow acquisition first:</p>
+<pre class="r"><code>ggplot(df_full_fit %&gt;% filter(fast == &quot;rep&quot;), aes(x = norm_time, 
+    y = full_norm_int)) + geom_point(shape = 21, alpha = 0.5) + 
+    geom_smooth(method = &quot;nls&quot;, formula = y ~ (I0 - a * exp(-B * 
+        x)), method.args = list(start = c(I0 = 0.85, a = 0.5, 
+        B = 0.2)), se = F) + facet_grid(id ~ condition, scales = &quot;free&quot;)</code></pre>
+<p><img src="06_13_19_PYO_FRAP_glycerol_2_analysis_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The fits seem pretty good overall. Let’s pool all the conditions and see if we can simply see a difference in the fit of the whole dataset.</p>
+<pre class="r"><code>ggplot(df_full_fit %&gt;% filter(fast == &quot;rep&quot;), aes(x = norm_time, 
+    y = full_norm_int, color = condition)) + geom_point(shape = 21, 
+    alpha = 0.25) + geom_smooth(method = &quot;nls&quot;, formula = y ~ 
+    (I0 - a * exp(-B * x)), method.args = list(start = c(I0 = 0.85, 
+    a = 0.5, B = 0.2)), se = F) + scale_color_viridis_d()</code></pre>
+<p><img src="06_13_19_PYO_FRAP_glycerol_2_analysis_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Wow! We can the expected trend here and a few other things - First, the higher the percentage glycerol the slower the recovery seems to be. This is obvious for the 50pct glycerol, but actually for the 10 and 20% it’s less obvious. 10 and 20 could just look shallower because the recovery is less complete than 0% glycerol. We’ll have to look at the parameter estimations to be sure.</p>
+<p>Let’s now look at the same type of plots for the fast framerate data:</p>
+<pre class="r"><code>ggplot(df_full_fit %&gt;% filter(fast == &quot;repFAST&quot;), aes(x = norm_time, 
+    y = full_norm_int)) + geom_point(shape = 21, alpha = 0.5) + 
+    geom_smooth(method = &quot;nls&quot;, formula = y ~ (I0 - a * exp(-B * 
+        x)), method.args = list(start = c(I0 = 0.85, a = 0.5, 
+        B = 0.2)), se = F) + facet_grid(id ~ condition, scales = &quot;free&quot;)</code></pre>
+<p><img src="06_13_19_PYO_FRAP_glycerol_2_analysis_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Again, the fits look reasonably good. Let’s see what happens when we pool all the replicates:</p>
+<pre class="r"><code>ggplot(df_full_fit %&gt;% filter(fast == &quot;repFAST&quot;), aes(x = norm_time, 
+    y = full_norm_int, color = condition)) + geom_point(shape = 21, 
+    alpha = 0.25) + geom_smooth(method = &quot;nls&quot;, formula = y ~ 
+    (I0 - a * exp(-B * x)), method.args = list(start = c(I0 = 0.85, 
+    a = 0.5, B = 0.2)), se = F) + scale_color_viridis_d()</code></pre>
+<p><img src="06_13_19_PYO_FRAP_glycerol_2_analysis_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /> Nice! So we see the same trend as above. The 50% glycerol recovery seems to clearly be slower, and maybe the 20% does too. We also have the same confounding visual that the recovery is less complete when glycerol is added, so let’s move on to some parameter estimation.</p>
+</div>
+<div id="parameter-estimates" class="section level2">
+<h2>Parameter estimates</h2>
+<p>As before, we are fitting with a single exponential model of the form:</p>
+<p><span class="math display">\[ I_{fit} = I_0 - \alpha e^{- \beta t}\]</span></p>
+<p>Which gives the half recovery time:</p>
+<p><span class="math display">\[\tau_{1/2} = \frac{ln(2)}{\beta}\]</span></p>
+<p>Which then gives the diffusion coefficient:</p>
+<p><span class="math display">\[D = 0.224 \frac{r^2}{\tau_{1/2}}\]</span></p>
+<p>And corrected for bleaching that is not instantaneous:</p>
+<p><span class="math display">\[D = \frac{r_e^2 + r_n^2}{8 \tau_{1/2}}\]</span> Where <span class="math inline">\(r_e\)</span> is the effective bleach radius (determined from first image post bleach) and <span class="math inline">\(r_n\)</span> is the nominal bleach radius that was where the laser was setup to scan. This is where the tricky part about the two-photon acquisition comes in - we’ll get back to this at the end.</p>
+<p>Ok, so let’s fit the model and extract the coefficients. First the slow acquisition:</p>
+<pre class="r"><code>sing_exp_coef &lt;- NULL
+
+sing_exp_coef &lt;- df_full_fit %&gt;% group_by(condition, fast, id) %&gt;% 
+    do(tidy(nls(formula = full_norm_int ~ I0 - a * exp(-B * norm_time), 
+        data = ., start = list(I0 = 0.85, a = 0.5, B = 0.2), 
+        control = nls.control(tol = 1e-07)), conf.int = T))
+
+ggplot(sing_exp_coef %&gt;% filter(fast == &quot;rep&quot;), aes(x = condition, 
+    y = estimate, color = condition)) + geom_pointrange(aes(ymin = conf.low, 
+    ymax = conf.high), position = position_jitter(width = 0.1)) + 
+    facet_wrap(~term, scales = &quot;free&quot;, ncol = 1) + scale_color_viridis_d()</code></pre>
+<p><img src="06_13_19_PYO_FRAP_glycerol_2_analysis_files/figure-html/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>And the fast acquisition:</p>
+<pre class="r"><code>ggplot(sing_exp_coef %&gt;% filter(fast == &quot;repFAST&quot;), aes(x = condition, 
+    y = estimate, color = condition)) + geom_pointrange(aes(ymin = conf.low, 
+    ymax = conf.high), position = position_jitter(width = 0.1)) + 
+    facet_wrap(~term, scales = &quot;free&quot;, ncol = 1) + scale_color_viridis_d()</code></pre>
+<p><img src="06_13_19_PYO_FRAP_glycerol_2_analysis_files/figure-html/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Ok, so we can see the same trends in the two types of acquisitions. <span class="math inline">\(a\)</span> and <span class="math inline">\(I_0\)</span> and <span class="math inline">\(\beta\)</span> all decrease with increasing glycerol. Remember that <span class="math inline">\(\beta\)</span> is what determines the half recovery time and therefore the diffusion coefficient, so let’s focus on that. Although there are 2 fewer replicates for the fast acquisition times, it seems clearer in the fast data that <span class="math inline">\(\beta\)</span> is decreasing with added glycerol. The error bars seem tighter for the fast acquisition set. Let’s go ahead and calculate the <span class="math inline">\(\tau_{1/2}\)</span> for the datasets:</p>
+<pre class="r"><code>tau_est &lt;- sing_exp_coef %&gt;% filter(term == &quot;B&quot;) %&gt;% mutate(tau_mean = log(2)/estimate) %&gt;% 
+    mutate(tau_low = log(2)/conf.low) %&gt;% mutate(tau_high = log(2)/conf.high)
+
+
+ggplot(tau_est, aes(x = condition, y = tau_mean, color = condition)) + 
+    geom_pointrange(aes(ymin = tau_low, ymax = tau_high), position = position_jitter(width = 0.1)) + 
+    scale_color_viridis_d() + facet_wrap(~fast, scales = &quot;free&quot;, 
+    ncol = 1) + ylim(0, 10)</code></pre>
+<p><img src="06_13_19_PYO_FRAP_glycerol_2_analysis_files/figure-html/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>So as expected the changes in <span class="math inline">\(\beta\)</span> show up as increasing half recovery times. There seems to be a difference separating 0 from 50% glycerol of ~4-5 seconds. Now’s a good time to refer back to the FRAP curves. Let’s look at a few examples:</p>
+<pre class="r"><code>ggplot(df_full_fit %&gt;% filter(fast == &quot;repFAST&quot;), aes(x = norm_time, 
+    y = full_norm_int, color = condition)) + geom_hline(yintercept = 0.5, 
+    linetype = &quot;dashed&quot;) + geom_point(shape = 21, alpha = 0.5) + 
+    scale_color_viridis_d() + xlim(0, 20) + facet_wrap(~condition, 
+    scales = &quot;free&quot;) + ylim(0, 1)</code></pre>
+<p><img src="06_13_19_PYO_FRAP_glycerol_2_analysis_files/figure-html/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" /> Ok, so these <span class="math inline">\(\tau_{1/2}\)</span> estimates seem to make sense. I plotted a line at 0.5 normalized intensity here, remember that half recovery is actually half of the recovery, <span class="math inline">\(I_0\)</span>, not all the way to 1, so there is some bias in the above plot. Really all the dotted lines should vary from 0.425 (half highest 0% I0) to 0.33 (half lowest 50% I0), but I think it still makes sense and visually there is a difference.</p>
+<p>Now let’s calculate our <span class="math inline">\(D_{eff}\)</span> using just the nominal bleach radius of 50um (ignoring the two-photon issue):</p>
+<pre class="r"><code>r = 0.005
+
+d_est &lt;- tau_est %&gt;% mutate(d_mean = (0.224 * r^2)/tau_mean) %&gt;% 
+    mutate(d_low = (0.224 * r^2)/tau_low) %&gt;% mutate(d_high = (0.224 * 
+    r^2)/tau_high)
+
+
+ggplot(d_est, aes(x = condition, y = d_mean, color = condition)) + 
+    geom_pointrange(aes(ymin = d_low, ymax = d_high), position = position_jitter(width = 0.1)) + 
+    scale_color_viridis_d() + facet_wrap(~fast, scales = &quot;free&quot;, 
+    ncol = 1) + ylim(5e-07, 2.5e-06)</code></pre>
+<p><img src="06_13_19_PYO_FRAP_glycerol_2_analysis_files/figure-html/unnamed-chunk-17-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>And the effective radius corrected version:</p>
+<pre class="r"><code>r_n = 0.005
+r_e = 0.01
+
+d_mod_est &lt;- tau_est %&gt;% mutate(d_mean = ((r_n^2) + (r_e^2))/(8 * 
+    tau_mean)) %&gt;% mutate(d_low = ((r_n^2) + (r_e^2))/(8 * tau_low)) %&gt;% 
+    mutate(d_high = ((r_n^2) + (r_e^2))/(8 * tau_high))
+
+
+ggplot(d_mod_est, aes(x = condition, y = d_mean, color = condition)) + 
+    geom_pointrange(aes(ymin = d_low, ymax = d_high), position = position_jitter(width = 0.1)) + 
+    scale_color_viridis_d() + facet_wrap(~fast, scales = &quot;free&quot;, 
+    ncol = 1) + ylim(1.5e-06, 6.5e-06)</code></pre>
+<p><img src="06_13_19_PYO_FRAP_glycerol_2_analysis_files/figure-html/unnamed-chunk-18-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="attempt-to-correct-2p-issue" class="section level2">
+<h2>Attempt to correct 2p issue</h2>
+<p>Let’s see what happens to this estimate if we assume that instead of the x-y radius, that the relevant parameter is the z radius produced by the thin plane excited by the 2p laser. The pinhole was ~4.4um, so let’s consider that the nominal diameter, so the nominal radius is <span class="math inline">\(r_n = 2.2 \mu m\)</span>. Let’s assume for the moment that the effective bleach radius in Z is the same as in x-y <span class="math inline">\(r_e = 100 \mu m\)</span>. I’m not sure this is a good assumption…but let’s just see:</p>
+<pre class="r"><code>r_n = 0.00022
+r_e = 0.01
+
+d_mod_est &lt;- tau_est %&gt;% mutate(d_mean = ((r_n^2) + (r_e^2))/(8 * 
+    tau_mean)) %&gt;% mutate(d_low = ((r_n^2) + (r_e^2))/(8 * tau_low)) %&gt;% 
+    mutate(d_high = ((r_n^2) + (r_e^2))/(8 * tau_high))
+
+
+ggplot(d_mod_est, aes(x = condition, y = d_mean, color = condition)) + 
+    geom_pointrange(aes(ymin = d_low, ymax = d_high), position = position_jitter(width = 0.1)) + 
+    scale_color_viridis_d() + facet_wrap(~fast, scales = &quot;free&quot;, 
+    ncol = 1)</code></pre>
+<p><img src="06_13_19_PYO_FRAP_glycerol_2_analysis_files/figure-html/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Ok, so the estimated diffusion coefficient has decreased a little, but it’s still reasonably in the 10^-6 cm^2 / sec range. I think We will need to think about this more seriously.</p>
+</div>
+</div>
+<div id="conclusions" class="section level1">
+<h1>Conclusions</h1>
+<div id="this-experiment" class="section level2">
+<h2>This experiment</h2>
+<ol style="list-style-type: decimal">
+<li>FRAP certainly works well enough with glycerol gels (no photobleaching issues like last time).</li>
+<li>Faster acquisition (12ms) does seem to help in resolving differences between conditions (compared to slow 50ms framerate)</li>
+<li>Glycerol significantly slows the half recovery time of reduced PYO and therefore the diffusion coefficient. This seems to fit reasonably well with the reference linked in the intro.</li>
+<li>To get an accurate diffusion coefficient, we should consider how the system is affected by the 2photon excitation.</li>
+</ol>
+</div>
+<div id="next-steps" class="section level2">
+<h2>Next steps</h2>
+<ol style="list-style-type: decimal">
+<li>What models can we use to fit the two photon data? <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4399237/">This paper</a> might be one lead.</li>
+<li>Can we acquire data on the epifluorescent Nikon scope in the lab to avoid the 2p problem? Ask Lucas / John.</li>
+</ol>
+<ul>
+<li>Discuss these questions with the expert person in Rob Phillips Lab</li>
+</ul>
+<ol start="3" style="list-style-type: decimal">
+<li>What can we do to get PCA to photobleach? Is there anything to be gained by using electrolysis instead of TCEP? Perhaps this difficulty is related to the slow reaction rate between PCA and O2?</li>
+<li>Can we acquire echem data with these same glycerol / agarose gels and compare the effects?</li>
+</ol>
+<hr />
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
