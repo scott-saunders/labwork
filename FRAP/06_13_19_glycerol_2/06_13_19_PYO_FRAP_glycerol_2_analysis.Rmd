@@ -331,7 +331,7 @@ Ok, so the estimated diffusion coefficient has decreased a little, but it's stil
 
 ## Next steps
 
-1. What models can we use to fit the two photon data? [This paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4399237/) might be one lead.
+1. What models can we use to fit the two photon data? [This paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4399237/) might be one lead. How can we more accurately estimate the effective bleach radius etc?
 2. Can we acquire data on the epifluorescent Nikon scope in the lab to avoid the 2p problem? Ask Lucas / John.
   * Discuss these questions with the expert person in Rob Phillips Lab
 3. What can we do to get PCA to photobleach? Is there anything to be gained by using electrolysis instead of TCEP? Perhaps this difficulty is related to the slow reaction rate between PCA and O2?
