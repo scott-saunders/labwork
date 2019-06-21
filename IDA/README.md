@@ -56,6 +56,14 @@ for(link in files){
 
 <a href="https://scott-saunders.github.io/labwork/IDA/01_28_19_psoralen_nonequil_aggregate/README.html">01\_28\_19\_psoralen\_nonequil\_aggregate/README.html</a>
 
+<a href="https://scott-saunders.github.io/labwork/IDA/06_04_19_agarose_PYO/Processing/06_04_19_agarose_PYO_processing.html">06\_04\_19\_agarose\_PYO/Processing/06\_04\_19\_agarose\_PYO\_processing.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/IDA/06_04_19_agarose_PYO/README.html">06\_04\_19\_agarose\_PYO/README.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/IDA/06_06_19_agarose_PYO_2/Processing/06_06_19_agarose_PYO_2_processing.html">06\_06\_19\_agarose\_PYO\_2/Processing/06\_06\_19\_agarose\_PYO\_2\_processing.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/IDA/06_06_19_agarose_PYO_2/README.html">06\_06\_19\_agarose\_PYO\_2/README.html</a>
+
 <a href="https://scott-saunders.github.io/labwork/IDA/09_11_18_DapEstimation.html">09\_11\_18\_DapEstimation.html</a>
 
 <a href="https://scott-saunders.github.io/labwork/IDA/11_28_18_blank_IDA/Analysis/11_28_18_blank_IDA_Analysis.html">11\_28\_18\_blank\_IDA/Analysis/11\_28\_18\_blank\_IDA\_Analysis.html</a>
