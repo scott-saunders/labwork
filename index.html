@@ -210,11 +210,6 @@ $(document).ready(function () {
 
 </div>
 
-<div id="TOC">
-<ul>
-<li><a href="#lets-add-some-text-here">Let’s add some text here!</a></li>
-</ul>
-</div>
 
 <pre class="r"><code>library(tidyverse)
 library(cowplot)
@@ -227,8 +222,103 @@ library(knitr)
 library(kableExtra)
 
 knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)</code></pre>
-<div id="lets-add-some-text-here" class="section level1">
-<h1>Let’s add some text here!</h1>
+<div id="welcome" class="section level2">
+<h2>Welcome</h2>
+<p>This is my computational lab notebook. As of 2019 it mostly deals with work related to the bacterium <em>Pseudomonas aeruginosa</em>, which looks like this:</p>
+<hr />
+<center>
+<img src='IDA_cellDNAzoom_6.png' width='30%' height='30%'>
+</center>
+<hr />
+<p>The notebook is built from <a href="https://rmarkdown.rstudio.com/lesson-2.html">Rmarkdown notebooks</a> (I highly recommend) that are “knit” into html files.</p>
+</div>
+<div id="structure" class="section level2">
+<h2>Structure</h2>
+<p>The notebook is currently organized as the ‘labwork’ github repository that is cloned on several devices. The main folders are the following:</p>
+<div id="ida" class="section level4">
+<h4><a href="https://scott-saunders.github.io/labwork/IDA/README.html">IDA</a></h4>
+<p><strong>IDA</strong> brings you to the electrochemical work. The acronym refers to the Interdigitated Electrode Array, which is a microelectrode that I have used extensively during my PhD to study microbial phenazines.</p>
+</div>
+<div id="frap" class="section level4">
+<h4><a href="https://scott-saunders.github.io/labwork/FRAP/README.html">FRAP</a></h4>
+<p><strong>FRAP</strong> brings you to a set of photobleaching experiments conducted Summer 2019 to independently estimate diffusion coefficients for the phenazine pyocyanin.</p>
+</div>
+<div id="figures" class="section level4">
+<h4><a href="https://scott-saunders.github.io/labwork/Figures/README.html">Figures</a></h4>
+<p><strong>Figures</strong> brings you to the folder where I generated most of the figures for the phenazine paper. Many of these notebooks did not make it into nice html form, so look on the github directly for the comprehensive set.</p>
+<p>These links will take you to READMEs that display links to the html files generated from Rmarkdown notebooks. Note, that not all analyses make it into final, polished html form, so some entries may look totally unformated or may only be .rmd files that exist in the github repository. This is particularly true for the ‘Figures’ folder at this point.</p>
+</div>
+</div>
+<div id="future-hopes-and-dreams" class="section level2">
+<h2>Future hopes and Dreams</h2>
+<p>I hope that one day this repository will evolve into an organized place where almost all of my important scientific information can live. That would include protocols and ideas as well as a comprehensive set of processing and analysis notebooks for experiments. One datatype that this format does not work particularly well for is sets of images, but we’ll just have to keep thinking about that one. This project was certainly inspired by <a href="https://github.com/gchure/reproducible_research">Griffin Chure’s notebooks</a>, which I was first introduced to in <a href="http://bois.caltech.edu/index.html">Justin Bois’ Data Analysis course</a> at Caltech (2018).</p>
+</div>
+<div id="all-.html-files" class="section level2">
+<h2>All .html files:</h2>
+<p>Here’s a list of all html files in the notebook.</p>
+<pre class="r"><code>library(htmltools)
+
+base_path=&quot;https://scott-saunders.github.io/labwork/&quot;
+
+files &lt;- dir(path=&quot;.&quot;, pattern = &quot;*\\.html$&quot;,include.dirs = T,recursive = T)
+
+for(link in files){
+  print(
+    tags$a(href = paste(base_path, link, sep=&#39;&#39;), link)
+    )
+  writeLines(&quot;&quot;)
+}</code></pre>
+<p><a href="https://scott-saunders.github.io/labwork/Figures/01_30_19_fig_4.html">Figures/01_30_19_fig_4.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/Figures/02_05_19_draft_2/code/02_05_19_fig_1_draft_2.html">Figures/02_05_19_draft_2/code/02_05_19_fig_1_draft_2.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/Figures/02_05_19_draft_2/code/02_05_19_fig_2_draft_2.html">Figures/02_05_19_draft_2/code/02_05_19_fig_2_draft_2.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/Figures/02_05_19_draft_2/code/02_05_19_supp_swv_gc_calibration.html">Figures/02_05_19_draft_2/code/02_05_19_supp_swv_gc_calibration.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/Figures/02_05_19_draft_2/code/02_17_19_derivations.html">Figures/02_05_19_draft_2/code/02_17_19_derivations.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/Figures/draft1/2018_11_01_figure1.nb.html">Figures/draft1/2018_11_01_figure1.nb.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/Figures/draft1/2018_11_01_figure2.html">Figures/draft1/2018_11_01_figure2.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/Figures/draft1/2018_11_01_figure2.nb.html">Figures/draft1/2018_11_01_figure2.nb.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/Figures/draft1/2018_11_01_figure3.nb.html">Figures/draft1/2018_11_01_figure3.nb.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/Figures/draft1/2018_11_01_figure4.nb.html">Figures/draft1/2018_11_01_figure4.nb.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/Figures/README.html">Figures/README.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/FRAP/05_30_19/05_30_19_PYO_FRAP_analysis_2.html">FRAP/05_30_19/05_30_19_PYO_FRAP_analysis_2.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/FRAP/06_10_19_glycerol/06_10_19_PYO_FRAP_glycerol_analysis.html">FRAP/06_10_19_glycerol/06_10_19_PYO_FRAP_glycerol_analysis.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/FRAP/06_13_19_glycerol_2/06_13_19_PYO_FRAP_glycerol_2_analysis.html">FRAP/06_13_19_glycerol_2/06_13_19_PYO_FRAP_glycerol_2_analysis.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/FRAP/README.html">FRAP/README.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/HPLC/analysis/2018_10_30_Notebook_colonyHPLC.html">HPLC/analysis/2018_10_30_Notebook_colonyHPLC.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/HPLC/analysis/2018_10_30_Notebook_colonyHPLC.nb.html">HPLC/analysis/2018_10_30_Notebook_colonyHPLC.nb.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/01_03_19_Update/Dap_V1.html">IDA/01_03_19_Update/Dap_V1.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/01_03_19_Update/Dap_V2.html">IDA/01_03_19_Update/Dap_V2.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/01_03_19_Update/Dap_V3.html">IDA/01_03_19_Update/Dap_V3.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/01_03_19_Update/index.html">IDA/01_03_19_Update/index.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/01_03_19_Update/test.html">IDA/01_03_19_Update/test.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/01_08_19_psoralen_nonequil/Analysis/01_08_19_psoralen_nonequil_Dap_analysis.html">IDA/01_08_19_psoralen_nonequil/Analysis/01_08_19_psoralen_nonequil_Dap_analysis.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/01_08_19_psoralen_nonequil/Processing/01_08_19_psoralen_nonequil_processing.html">IDA/01_08_19_psoralen_nonequil/Processing/01_08_19_psoralen_nonequil_processing.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/01_08_19_psoralen_nonequil/README.html">IDA/01_08_19_psoralen_nonequil/README.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/01_17_19_psoralen_nonequil_2/Analysis/01_17_19_psoralen_nonequil_2_Dap_analysis.html">IDA/01_17_19_psoralen_nonequil_2/Analysis/01_17_19_psoralen_nonequil_2_Dap_analysis.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/01_17_19_psoralen_nonequil_2/Analysis/01_17_19_psoralen_nonequil_2_Dm_analysis.html">IDA/01_17_19_psoralen_nonequil_2/Analysis/01_17_19_psoralen_nonequil_2_Dm_analysis.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/01_17_19_psoralen_nonequil_2/Processing/01_17_19_psoralen_nonequil_2_Dap_processing.html">IDA/01_17_19_psoralen_nonequil_2/Processing/01_17_19_psoralen_nonequil_2_Dap_processing.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/01_17_19_psoralen_nonequil_2/README.html">IDA/01_17_19_psoralen_nonequil_2/README.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/01_23_19_psoralen_nonequil_3/Analysis/01_21_19_analysis_psoralen_toxicity.html">IDA/01_23_19_psoralen_nonequil_3/Analysis/01_21_19_analysis_psoralen_toxicity.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/01_23_19_psoralen_nonequil_3/Analysis/01_23_19_psoralen_nonequil_3_Dap_analysis.html">IDA/01_23_19_psoralen_nonequil_3/Analysis/01_23_19_psoralen_nonequil_3_Dap_analysis.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/01_23_19_psoralen_nonequil_3/Processing/01_23_19_processing_psoralen_nonequil_3.html">IDA/01_23_19_psoralen_nonequil_3/Processing/01_23_19_processing_psoralen_nonequil_3.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/01_23_19_psoralen_nonequil_3/README.html">IDA/01_23_19_psoralen_nonequil_3/README.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/01_28_19_psoralen_nonequil_aggregate/Analysis/01_28_19_Dm_psoralen_nonequil_aggregate_analysis.html">IDA/01_28_19_psoralen_nonequil_aggregate/Analysis/01_28_19_Dm_psoralen_nonequil_aggregate_analysis.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/01_28_19_psoralen_nonequil_aggregate/Analysis/01_28_19_psoralen_nonequil_aggregate_analysis.html">IDA/01_28_19_psoralen_nonequil_aggregate/Analysis/01_28_19_psoralen_nonequil_aggregate_analysis.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/01_28_19_psoralen_nonequil_aggregate/README.html">IDA/01_28_19_psoralen_nonequil_aggregate/README.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/06_04_19_agarose_PYO/Processing/06_04_19_agarose_PYO_processing.html">IDA/06_04_19_agarose_PYO/Processing/06_04_19_agarose_PYO_processing.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/06_04_19_agarose_PYO/README.html">IDA/06_04_19_agarose_PYO/README.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/06_06_19_agarose_PYO_2/Processing/06_06_19_agarose_PYO_2_processing.html">IDA/06_06_19_agarose_PYO_2/Processing/06_06_19_agarose_PYO_2_processing.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/06_06_19_agarose_PYO_2/README.html">IDA/06_06_19_agarose_PYO_2/README.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/09_11_18_DapEstimation.html">IDA/09_11_18_DapEstimation.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/11_28_18_blank_IDA/Analysis/11_28_18_blank_IDA_Analysis.html">IDA/11_28_18_blank_IDA/Analysis/11_28_18_blank_IDA_Analysis.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/12_04_18_psoralen_biofilm/Analysis/11_29_18_psoralen_crosslinking_analysis.html">IDA/12_04_18_psoralen_biofilm/Analysis/11_29_18_psoralen_crosslinking_analysis.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/12_04_18_psoralen_biofilm/Analysis/12_04_18_psoralen_Analysis.html">IDA/12_04_18_psoralen_biofilm/Analysis/12_04_18_psoralen_Analysis.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/12_10_18/Analysis/12_10_18_Analysis.html">IDA/12_10_18/Analysis/12_10_18_Analysis.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/12_10_18/Analysis/generating_and_decoding_diffusion.html">IDA/12_10_18/Analysis/generating_and_decoding_diffusion.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/diffusion_modeling_11_17_18.nb.html">IDA/diffusion_modeling_11_17_18.nb.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/diffusionLayerTheory.html">IDA/diffusionLayerTheory.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/IDA/README.html">IDA/README.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/index.html">index.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/potentialStep_Dap_09_16_18.html">potentialStep_Dap_09_16_18.html</a></p>
 </div>
 
 
