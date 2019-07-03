@@ -505,17 +505,21 @@ library(ggridges)
 get_variables(frap_model_0pct)
 
 frap_model_dists <- bind_rows(
-  frap_model_0pct %>% spread_draws(b_tau_Intercept) %>% mutate(Condition = 0),
-  frap_model_10pct %>% spread_draws(b_tau_Intercept) %>% mutate(Condition = 10),
-  frap_model_20pct %>% spread_draws(b_tau_Intercept) %>% mutate(Condition = 20),
-  frap_model_50pct %>% spread_draws(b_tau_Intercept) %>% mutate(Condition = 50)
+  frap_model_0pct %>% spread_draws(b_tau_Intercept) %>% mutate(Condition = '0'),
+  frap_model_10pct %>% spread_draws(b_tau_Intercept) %>% mutate(Condition = '10'),
+  frap_model_20pct %>% spread_draws(b_tau_Intercept) %>% mutate(Condition = '20'),
+  frap_model_50pct %>% spread_draws(b_tau_Intercept) %>% mutate(Condition = '50'),
+  frap_model_10pct %>% spread_draws(prior_b_tau) %>% mutate(Condition = 'Prior') %>% mutate(b_tau_Intercept = prior_b_tau, Condition, .chain, .iteration, .draw)
 )
 
-ggplot(frap_model_dists, aes(x = b_tau_Intercept, y = factor(Condition))) + geom_halfeyeh()
+ggplot(frap_model_dists, aes(x = b_tau_Intercept, y = factor(Condition))) + geom_halfeyeh() + xlim(0,12)
 
-ggplot(frap_model_dists, aes(x = b_tau_Intercept, y = factor(Condition))) + 
+
+ggplot(frap_model_dists, aes(x = b_tau_Intercept, y = Condition)) + 
   geom_density_ridges(quantile_lines = T,quantiles = c(0.025,0.1,0.5,0.9, 0.975), jittered_points = T, position = 'raincloud', point_alpha = 0.01) +
-  theme_ridges(grid = FALSE, center_axis_labels = TRUE)
+  theme_ridges(grid = FALSE, center_axis_labels = TRUE) +
+  labs(x = expression("Half recovery time ("*tau[1/2]*" - sec)"), y = '% Glycerol', title = 'Posterior probabilities for FRAP parameter estimate') + 
+  xlim(0,11)
 ```
 
 
@@ -567,6 +571,84 @@ ggplot(data = posterior_samples(frap_model_10pct)) +
   geom_density(aes(x = b_tau_Intercept)) + 
   geom_density(aes(x = prior_b_tau), fill = 'gray')
 
-ggplot(posterior_samples(frap_model_10pct, pars = c('b_tau_Intercept','prior_b_tau')) %>% gather(key = dist, value = val)) + 
-  geom_density(aes(x = val, fill = dist),alpha = 0.5)
+
+posterior_samples(frap_model_10pct, pars = c('b_tau_Intercept','prior_b_tau')) %>% 
+  gather(key = dist, value = val) %>% 
+  mutate(dist = fct_relevel(dist,c('prior_b_tau','b_tau_Intercept'))) %>% 
+  ggplot(.) + 
+  geom_density(aes(x = val, fill = dist))
+
+
+
 ```
+
+For other applications we should be able to add another level to the hierarchy using `(1 | level_1 / level_2)`. Let's try it:
+
+```{r}
+priorTau <- prior(normal(0.75, 0.2), nlpar = "I0", lb = 0) +
+  prior(normal(0.6, 0.1), nlpar = "a", lb = 0)+
+  prior(normal(5, 5), nlpar = "tau", lb = 0)
+
+frap_model_0_10pct_wTau <- brm(bf(full_norm_int~I0 - a*exp(- (log(2) / tau) * norm_time), I0 + a + tau~1+(1 | condition / id), nl = T),
+     data = df_fast %>% filter(condition== '0pctGlyc' | condition =='10pctGlyc'),
+     prior = priorTau,
+    chains = 2,
+    cores = 2,
+    iter = 500,
+    inits = '0',
+    control = list(adapt_delta = 0.99, max_treedepth = 20),
+    file = 'frap_0_10pct_hier_fit_wTau_1'
+)
+
+summary(frap_model_0_10pct_wTau)
+
+ggplot() + 
+  geom_density(data = prior_samples(frap_model_10pct), aes(x = b_tau), fill = 'gray')+
+  geom_density(data = posterior_samples(frap_model_0_10pct_wTau), aes(x = b_tau_Intercept), color = 'red')+
+  geom_density(data = posterior_samples(frap_model_10pct), aes(x = b_tau_Intercept), color = 'blue') +
+  geom_density(data = posterior_samples(frap_model_0pct), aes(x = b_tau_Intercept), color = 'blue', linetype =2) +
+  xlim(0,15)
+```
+
+Note, that this model took about 25min to run with only 2 chains and 500 iter! That means with 4 chains 2000 iter, it's probably ~3 hours to fit the whole thing. There are a lot of datapoints in the individual FRAP curves, which may not help, but this was only with 2 conditions...it will be interesting to see how long bigger models take. But it's not so bad to leave running overnight once it's tested.
+
+Could we try the `Future` package to speed this up at all...? Let's find out. Answer is no - It seems that we might get a benefit if we do this using brms_multiple for fitting the same model with different datasets...each model runs in its own rsession.
+
+```{r}
+library(future)
+plan(multiprocess)
+
+# 4min w / multiprocess
+# 2.5 min w/ sequential 
+frap_model_0_10pct_wFuture <- brm(bf(full_norm_int~I0 - a*exp(- (log(2) / tau) * norm_time), I0 + a + tau~1+(1 | condition / id), nl = T),
+     data = df_fast %>% filter(condition== '0pctGlyc' | condition =='10pctGlyc'),
+     prior = priorTau,
+    chains = 2,
+    cores = 2,
+    iter = 50,
+    inits = '0',
+    control = list(adapt_delta = 0.99, max_treedepth = 20)
+)
+
+# file = 'frap_0_10pct_hier_fit_wFuture_1'
+
+```
+
+```{r}
+plan(multiprocess)
+
+frap_model_all_wFuture <- brm_multiple(bf(full_norm_int~I0 - a*exp(- (log(2) / tau) * norm_time), I0 + a + tau~1+(1 | id), nl = T),
+     data = df_fast %>% group_by(condition) %>% group_split(),
+     prior = priorTau,
+    chains = 2,
+    cores = 2,
+    iter = 50,
+    inits = '0',
+    control = list(adapt_delta = 0.99, max_treedepth = 20),
+    future = T
+)
+
+summary(frap_model_all_wFuture)
+```
+
+

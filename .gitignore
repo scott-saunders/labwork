@@ -9,3 +9,5 @@ data/
 .DS_store
 *.pdf
 .DS_Store
+*.rda
+*.rds

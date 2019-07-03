@@ -1,0 +1,67 @@
+---
+title: "Colony EtBr Displacement"
+subtitle: ""
+fontsize: 12pt
+date: "07_03_19 "
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
+---
+
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+source("../../IDA/tools/plotting_tools.R")
+
+theme_set(theme_1())
+```
+
+# EtBr Displacement
+
+From 10/25/17
+
+```{r}
+etbr <- read_csv("10_25_17_etbr_colony_data.csv")
+
+ggplot(etbr, aes(x = factor(Concentration), y = Amount)) + geom_point() + 
+facet_wrap(Material~Phenazine, scale = 'free')
+```
+
+
+
+```{r}
+etbr_cells <- etbr %>% filter(Material=='cells')
+
+etbr_agar <- etbr %>% filter(Material=='agar')
+
+etbr_ratio <- left_join(etbr_cells, etbr_agar, by = c('Phenazine','Inhibitor','Concentration','Replicate'), suffix = c('_cells', '_agar')) %>% 
+  mutate(ratio = Amount_cells / Amount_agar) %>% 
+  group_by(Phenazine, Concentration) %>% 
+  mutate(mean_ratio = ifelse(Replicate==3,mean(ratio,na.rm = T),NA))
+
+ggplot(etbr_ratio, aes(x = factor(Concentration), y = ratio)) + geom_point() + facet_wrap(~Phenazine, scales = 'free')
+```
+
+Let's make a figure
+
+```{r}
+ggplot(etbr_ratio %>% filter(Phenazine =='PYO'), aes(x = factor(Concentration), y = ratio)) + 
+  geom_col(aes(y = mean_ratio), fill = 'light gray') + geom_jitter(width = 0.1, height = 0, shape = 21) + 
+  labs(x = expression("Ethidium concentration "~ (mu*M )), y = 'Ratio ( [Biofilm] / [Agar] )')
+```
+
+Could use propidium instead!?
+

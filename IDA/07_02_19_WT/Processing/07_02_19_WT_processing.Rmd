@@ -1,0 +1,274 @@
+---
+title: "WT SWV vs. GC"
+subtitle: "Processing"
+fontsize: 12pt
+date: "07_02_19 "
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
+---
+
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+source("../../tools/echem_processing_tools.R")
+source("../../tools/plotting_tools.R")
+
+theme_set(theme_1())
+```
+
+# IDA 2 transfer 1
+
+## SWV
+```{r}
+I2tran1_data_path = '../Data/IDA_2/tran_1/'
+#divide swv into rep and subrep and then subtract 1 from rep to match with GC
+I2tran1_SWV_filenames <-  dir(path=I2tran1_data_path,pattern = "[swv]+.+[txt]$")
+
+I2tran1_SWV_file_paths <- paste(I2tran1_data_path, I2tran1_SWV_filenames,sep='')
+
+swv_data_cols <-  c('E','i1','i2')
+
+filename_cols = c('echem','rep')
+
+swv_skip_rows=18
+  
+
+I2tran1_SWV_data <- echem_import_to_df(filenames = I2tran1_SWV_filenames, 
+                                       file_paths = I2tran1_SWV_file_paths, 
+                                       data_cols = swv_data_cols, 
+                                       skip_rows = swv_skip_rows,
+                                       filename_cols = filename_cols,
+                                       rep = T, PHZadded = F)
+
+ggplot(I2tran1_SWV_data, aes(x=E, y=current,color=rep, group = rep))+geom_path()+
+  facet_wrap(~electrode, scales = 'free')+
+  scale_color_viridis() + 
+  scale_x_reverse()
+
+```
+
+```{r}
+
+I2tran1_SWV_max <- I2tran1_SWV_data %>% 
+  group_by(rep, electrode) %>% 
+  filter(E < -0.15 & E > -0.35) %>% 
+  mutate(max_current = max(abs(current))) %>% 
+  filter(abs(current)==max_current)
+
+
+ggplot(I2tran1_SWV_max, aes(x = minutes, y = max_current, color = electrode )) + geom_point()
+
+ggplot(I2tran1_SWV_data, aes(x=E, y=current,color=rep, group = rep))+geom_path()+
+  geom_point(data = I2tran1_SWV_max, aes(x = E, y = max_current), color = 'red', size = 2)+
+  facet_wrap(~electrode, scales = 'free')+
+  scale_color_viridis() + 
+  scale_x_reverse()
+
+```
+
+## GC
+
+```{r}
+I2tran1_data_path = '../Data/IDA_2/tran_1/'
+#divide swv into rep and subrep and then subtract 1 from rep to match with GC
+I2tran1_GC_filenames <-  dir(path=I2tran1_data_path,pattern = "[gc]+.+[txt]$")
+
+I2tran1_GC_file_paths <- paste(I2tran1_data_path,I2tran1_GC_filenames,sep='')
+
+gc_data_cols <-  c('E','i1','i2')
+
+filename_cols = c('echem','rep')
+
+gc_skip_rows=21
+  
+
+I2tran1_GC_data <- echem_import_to_df(filenames = I2tran1_GC_filenames, 
+                                       file_paths = I2tran1_GC_file_paths, 
+                                       data_cols = gc_data_cols, 
+                                       skip_rows = gc_skip_rows,
+                                       filename_cols = filename_cols,
+                                       rep = T, PHZadded = F)
+
+ggplot(I2tran1_GC_data, aes(x=E, y=current,color=rep, group = rep))+geom_path()+
+  scale_color_viridis() + 
+  scale_x_reverse()
+```
+
+```{r}
+I2tran1_GC_max <- I2tran1_GC_data %>% 
+  group_by(rep, electrode) %>% 
+  filter(E == -0.399) %>% 
+  mutate(max_current = max(abs(current))) %>% 
+  filter(abs(current)==max_current)
+
+
+ggplot(I2tran1_GC_max, aes(x = minutes, y = max_current, color = electrode )) + geom_point()
+
+ggplot(I2tran1_GC_data, aes(x=E, y=abs(current),color=rep, group = rep))+
+  geom_path()+
+  geom_point(data = I2tran1_GC_max, aes(x = E, y = max_current), color = 'red', size = 2)+
+  facet_wrap(~electrode)+
+  scale_color_viridis() + 
+  scale_x_reverse()
+```
+
+
+## Combine
+
+```{r}
+
+I2tran1_max_comb_i1 <- left_join(I2tran1_SWV_max %>% ungroup() %>%  
+                             filter(electrode=='i1') %>% mutate(rep = rep-1), 
+                           I2tran1_GC_max %>% filter(electrode=='i2'), by = c('rep'), suffix = c("_swv", "_gc")) 
+
+I2tran1_max_comb_i2 <- left_join(I2tran1_SWV_max %>% ungroup() %>%  
+                             filter(electrode=='i2') %>% mutate(rep = rep-1), 
+                           I2tran1_GC_max %>% filter(electrode=='i2'), by = c('rep'), suffix = c("_swv", "_gc")) 
+
+# %>% mutate(norm_time = minutes_swv - min(minutes_swv))
+
+ggplot(I2tran1_max_comb_i1, aes(x = max_current_swv, y = max_current_gc)) + xlim(0.5e-6,3e-06) + geom_smooth(method = 'lm', se = F)+
+  geom_point(shape = 21)
+
+ggplot(I2tran1_max_comb_i2, aes(x = max_current_swv, y = max_current_gc))  + xlim(0.5e-6,2.8e-06) + geom_smooth(method = 'lm', se = F) + 
+  geom_point(shape = 21)
+
+```
+
+# IDA 2 Transfer 2
+
+## SWV
+```{r}
+I2tran2_data_path = '../Data/IDA_2/tran_2/'
+#divide swv into rep and subrep and then subtract 1 from rep to match with GC
+I2tran2_SWV_filenames <-  dir(path=I2tran2_data_path,pattern = "[swv]+.+[txt]$")
+
+I2tran2_SWV_file_paths <- paste(I2tran2_data_path, I2tran2_SWV_filenames,sep='')
+
+swv_data_cols <-  c('E','i1','i2')
+
+filename_cols = c('echem','rep')
+
+swv_skip_rows=18
+  
+
+I2tran2_SWV_data <- echem_import_to_df(filenames = I2tran2_SWV_filenames, 
+                                       file_paths = I2tran2_SWV_file_paths, 
+                                       data_cols = swv_data_cols, 
+                                       skip_rows = swv_skip_rows,
+                                       filename_cols = filename_cols,
+                                       rep = T, PHZadded = F)
+
+ggplot(I2tran2_SWV_data, aes(x=E, y=current,color=rep, group = rep))+geom_path()+
+  facet_wrap(~electrode, scales = 'free')+
+  scale_color_viridis() + 
+  scale_x_reverse()
+
+```
+
+```{r}
+
+I2tran2_SWV_max <- I2tran2_SWV_data %>% 
+  group_by(rep, electrode) %>% 
+  filter(E < -0.15 & E > -0.35) %>% 
+  mutate(max_current = max(abs(current))) %>% 
+  filter(abs(current)==max_current)
+
+
+ggplot(I2tran2_SWV_max, aes(x = minutes, y = max_current, color = electrode )) + geom_point()
+
+ggplot(I2tran2_SWV_data, aes(x=E, y=current,color=rep, group = rep))+geom_path()+
+  geom_point(data = I2tran2_SWV_max, aes(x = E, y = max_current), color = 'red', size = 2)+
+  facet_wrap(~electrode, scales = 'free')+
+  scale_color_viridis() + 
+  scale_x_reverse()
+
+```
+
+## GC
+
+```{r}
+I2tran2_data_path = '../Data/IDA_2/tran_2/'
+#divide swv into rep and subrep and then subtract 1 from rep to match with GC
+I2tran2_GC_filenames <-  dir(path=I2tran2_data_path,pattern = "[gc]+.+[txt]$")
+
+I2tran2_GC_file_paths <- paste(I2tran2_data_path,I2tran2_GC_filenames,sep='')
+
+gc_data_cols <-  c('E','i1','i2')
+
+filename_cols = c('echem','rep')
+
+gc_skip_rows=21
+  
+
+I2tran2_GC_data <- echem_import_to_df(filenames = I2tran2_GC_filenames, 
+                                       file_paths = I2tran2_GC_file_paths, 
+                                       data_cols = gc_data_cols, 
+                                       skip_rows = gc_skip_rows,
+                                       filename_cols = filename_cols,
+                                       rep = T, PHZadded = F)
+
+ggplot(I2tran2_GC_data, aes(x=E, y=current,color=rep, group = rep))+geom_path()+
+  scale_color_viridis() + 
+  scale_x_reverse()
+```
+
+```{r}
+I2tran2_GC_max <- I2tran2_GC_data %>% 
+  group_by(rep, electrode) %>% 
+  filter(E == -0.399) %>% 
+  mutate(max_current = max(abs(current))) %>% 
+  filter(abs(current)==max_current)
+
+
+ggplot(I2tran2_GC_max, aes(x = minutes, y = max_current, color = electrode )) + geom_point()
+
+ggplot(I2tran2_GC_data, aes(x=E, y=abs(current),color=rep, group = rep))+
+  geom_path()+
+  geom_point(data = I2tran2_GC_max, aes(x = E, y = max_current), color = 'red', size = 2)+
+  facet_wrap(~electrode)+
+  scale_color_viridis() + 
+  scale_x_reverse()
+```
+
+
+## Combine
+
+```{r}
+
+I2tran2_max_comb_i1 <- left_join(I2tran2_SWV_max %>% ungroup() %>%  
+                             filter(electrode=='i1') %>% mutate(rep = rep-1), 
+                           I2tran2_GC_max %>% filter(electrode=='i2'), by = c('rep'), suffix = c("_swv", "_gc")) 
+
+I2tran2_max_comb_i2 <- left_join(I2tran2_SWV_max %>% ungroup() %>%  
+                             filter(electrode=='i2') %>% mutate(rep = rep-1), 
+                           I2tran2_GC_max %>% filter(electrode=='i2'), by = c('rep'), suffix = c("_swv", "_gc")) 
+
+# %>% mutate(norm_time = minutes_swv - min(minutes_swv))
+
+ggplot(I2tran2_max_comb_i1, aes(x = max_current_swv, y = max_current_gc, color = rep)) + xlim(6e-7, 1e-6)+ #geom_smooth(method = 'lm', se = F)+
+  geom_point(shape = 21) + 
+  scale_color_viridis()
+
+ggplot(I2tran2_max_comb_i2, aes(x = max_current_swv, y = max_current_gc, color = rep))  + xlim(6e-7,9e-7) +# geom_smooth(method = 'lm', se = F) + 
+  geom_point(shape = 21) + 
+  scale_color_viridis()
+
+```
+
+# IDA 1 Tran 1
+
