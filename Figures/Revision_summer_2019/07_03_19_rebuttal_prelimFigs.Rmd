@@ -65,3 +65,88 @@ ggplot(etbr_ratio %>% filter(Phenazine =='PYO'), aes(x = factor(Concentration), 
 
 Could use propidium instead!?
 
+# Echem
+
+```{r}
+pca_soak_gc <- read_csv("75uM_PCA_dPHZstar_GC_1.txt", skip = 21, col_names = c('E','i1','i2')) %>% 
+  gather(key = 'electrode', value = 'current', i1, i2) %>% 
+  mutate(reactor = 'soak')
+
+pca_tran1_gc <- read_csv("gc_1.txt", skip = 21, col_names = c('E','i1','i2')) %>% 
+  gather(key = 'electrode', value = 'current', i1, i2)%>% 
+  mutate(reactor = 'transfer')
+
+pca_gc <- bind_rows(pca_soak_gc, pca_tran1_gc)
+
+pca_plot <- ggplot() + 
+  geom_vline(xintercept = -0.375, color = 'gray')+
+  geom_path(data = pca_gc %>% filter(electrode=='i1'), aes(x = E, y =current, linetype = reactor))+
+  geom_path(data = pca_gc %>% filter(electrode=='i2'), aes(x = E, y =current, linetype = reactor))+
+  scale_x_reverse(labels = mV_label)+
+  scale_y_continuous(labels = nA_label)+
+  labs(x = "E (mV vs. Ag/AgCl)", y = expression(I[gc]~(nA)), title = 'PCA')+
+  theme(legend.position = c(0.15,0.75), legend.background = element_blank(),  plot.title = element_text(hjust = 0.5))
+  
+
+pca_plot
+
+ggplot(pca_soak_gc, aes(x = E, y =current)) + geom_point()+
+  geom_point(data = pca_tran1_gc, color = 'red')+
+  scale_x_reverse()+ylim(-1e-8,+1e-8)
+```
+
+```{r}
+pyo_soak_gc <- read_csv('../../IDA/01_23_19_psoralen_nonequil_3/Data/Control/3/75uM_control_soak_3_GC_1.txt',skip = 21, col_names = c('E','i1','i2')) %>% 
+  gather(key = 'electrode', value = 'current', i1, i2) %>% 
+  mutate(reactor = 'soak')
+
+pyo_tran1_gc <- read_csv('../../IDA/01_23_19_psoralen_nonequil_3/Data/Control/3/75uM_control_transfer_3_GC_1.txt',skip = 21, col_names = c('E','i1','i2')) %>% 
+  gather(key = 'electrode', value = 'current', i1, i2) %>% 
+  mutate(reactor = 'transfer')
+
+pyo_gc <- bind_rows(pyo_soak_gc, pyo_tran1_gc)
+
+pyo_plot <- ggplot() + 
+  geom_vline(xintercept = -0.255, color = 'gray')+
+  geom_path(data = pyo_gc %>% filter(electrode=='i1'), aes(x = E, y =current, linetype = reactor))+
+  geom_path(data = pyo_gc %>% filter(electrode=='i2'), aes(x = E, y =current, linetype = reactor))+
+  scale_x_reverse(labels = mV_label)+
+  scale_y_continuous(labels = nA_label)+
+  labs(x = "E (mV vs. Ag/AgCl)", y = expression(I[gc]~(nA)), title = 'PYO')+
+  theme(legend.position = c(0.15,0.75), legend.background = element_blank(), plot.title = element_text(hjust = 0.5)) 
+
+pyo_plot
+
+
+ggplot(pyo_tran1_gc, aes(x = E, y =current)) + geom_point()+
+  scale_x_reverse()
+```
+
+```{r}
+plot_grid(pyo_plot, pca_plot, ncol = 2, align = 'hv', axis = 'tblr')
+```
+
+```{r}
+pyo_plot_zoom <- ggplot(data = pyo_gc %>% filter(electrode=='i2' & reactor=='transfer'), aes(x = E, y =current)) + 
+  geom_vline(xintercept = -0.255, color = 'gray')+
+  geom_path(linetype = 'dashed')+
+  scale_x_reverse(labels = mV_label)+
+  scale_y_continuous(labels = nA_label)+
+  labs(x = "E (mV vs. Ag/AgCl)", y = expression(I[gc]~(nA)))
+
+pyo_plot_zoom
+
+pca_plot_zoom <- ggplot(data = pca_gc %>% filter(electrode=='i2' & reactor=='transfer'), aes(x = E, y =current)) + 
+  geom_vline(xintercept = -0.375, color = 'gray')+
+  geom_path(linetype = 'dashed')+
+  scale_x_reverse(labels = mV_label)+
+  scale_y_continuous(labels = nA_label)+
+  labs(x = "E (mV vs. Ag/AgCl)", y = expression(I[gc]~(nA)))
+
+pca_plot_zoom
+```
+
+```{r}
+plot_grid(pyo_plot, pca_plot, pyo_plot_zoom, pca_plot_zoom, ncol = 2, align = 'hv', axis = 'tblr', labels = 'auto')
+```
+

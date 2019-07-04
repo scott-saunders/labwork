@@ -141,10 +141,10 @@ I2tran1_max_comb_i2 <- left_join(I2tran1_SWV_max %>% ungroup() %>%
 
 # %>% mutate(norm_time = minutes_swv - min(minutes_swv))
 
-ggplot(I2tran1_max_comb_i1, aes(x = max_current_swv, y = max_current_gc)) + xlim(0.5e-6,3e-06) + geom_smooth(method = 'lm', se = F)+
+ggplot(I2tran1_max_comb_i1, aes(x = max_current_swv, y = max_current_gc)) + xlim(0.5e-6,3e-06) + geom_smooth(method = 'lm', se = T)+
   geom_point(shape = 21)
 
-ggplot(I2tran1_max_comb_i2, aes(x = max_current_swv, y = max_current_gc))  + xlim(0.5e-6,2.8e-06) + geom_smooth(method = 'lm', se = F) + 
+ggplot(I2tran1_max_comb_i2, aes(x = max_current_swv, y = max_current_gc))  + xlim(0.5e-6,2.8e-06) + geom_smooth(method = 'lm', se = T) + 
   geom_point(shape = 21)
 
 ```
