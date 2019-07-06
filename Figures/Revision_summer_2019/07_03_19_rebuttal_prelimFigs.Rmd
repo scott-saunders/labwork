@@ -34,7 +34,8 @@ theme_set(theme_1())
 From 10/25/17
 
 ```{r}
-etbr <- read_csv("10_25_17_etbr_colony_data.csv")
+etbr <- read_csv("10_25_17_etbr_colony_data.csv") %>% 
+  mutate(phzConc = ifelse(Material == "cells", Amount * (1000/60), Amount * (8/5)))
 
 ggplot(etbr, aes(x = factor(Concentration), y = Amount)) + geom_point() + 
 facet_wrap(Material~Phenazine, scale = 'free')
@@ -48,7 +49,7 @@ etbr_cells <- etbr %>% filter(Material=='cells')
 etbr_agar <- etbr %>% filter(Material=='agar')
 
 etbr_ratio <- left_join(etbr_cells, etbr_agar, by = c('Phenazine','Inhibitor','Concentration','Replicate'), suffix = c('_cells', '_agar')) %>% 
-  mutate(ratio = Amount_cells / Amount_agar) %>% 
+  mutate(ratio = phzConc_cells / phzConc_agar) %>% 
   group_by(Phenazine, Concentration) %>% 
   mutate(mean_ratio = ifelse(Replicate==3,mean(ratio,na.rm = T),NA))
 
@@ -61,6 +62,16 @@ Let's make a figure
 ggplot(etbr_ratio %>% filter(Phenazine =='PYO'), aes(x = factor(Concentration), y = ratio)) + 
   geom_col(aes(y = mean_ratio), fill = 'light gray') + geom_jitter(width = 0.1, height = 0, shape = 21) + 
   labs(x = expression("Ethidium concentration "~ (mu*M )), y = 'Ratio ( [Biofilm] / [Agar] )')
+
+ggplot(etbr_ratio, aes(x = factor(Concentration), y = ratio)) + 
+  geom_col(aes(y = mean_ratio), fill = 'light gray') + geom_jitter(width = 0.1, height = 0, shape = 21) + 
+  labs(x = expression("Ethidium concentration "~ (mu*M )), y = 'Ratio ( [Biofilm] / [Agar] )') + 
+  facet_wrap(~Phenazine, scales = 'free')
+
+ggplot(etbr_ratio %>% filter(Concentration <= 500), aes(x = factor(Concentration), y = ratio)) + 
+  geom_col(aes(y = mean_ratio), fill = 'light gray') + geom_jitter(width = 0.1, height = 0, shape = 21) + 
+  labs(x = expression("Ethidium concentration "~ (mu*M )), y = 'Ratio ( [Biofilm] / [Agar] )') + 
+  facet_wrap(~Phenazine, scales = 'free')
 ```
 
 Could use propidium instead!?

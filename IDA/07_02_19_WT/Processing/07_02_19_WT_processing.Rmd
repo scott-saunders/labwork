@@ -144,10 +144,42 @@ I2tran1_max_comb_i2 <- left_join(I2tran1_SWV_max %>% ungroup() %>%
 ggplot(I2tran1_max_comb_i1, aes(x = max_current_swv, y = max_current_gc)) + xlim(0.5e-6,3e-06) + geom_smooth(method = 'lm', se = T)+
   geom_point(shape = 21)
 
-ggplot(I2tran1_max_comb_i2, aes(x = max_current_swv, y = max_current_gc))  + xlim(0.5e-6,2.8e-06) + geom_smooth(method = 'lm', se = T) + 
-  geom_point(shape = 21)
+swv_gc_plot <- ggplot(I2tran1_max_comb_i2, aes(x = max_current_swv, y = max_current_gc))   + geom_smooth(method = 'lm', se = T) + 
+  geom_point(shape = 21) + 
+  scale_y_continuous(labels = nA_label)+
+  scale_x_continuous(labels = nA_label, limits = c(0.5e-6,2.8e-06)) + 
+  labs(x = expression(I[swv]~(nA)), y = expression(I[gc]~(nA)))
 
 ```
+
+```{r}
+dap_from_swvGC <- function(m, t_p = 1/(2 * 300)) {
+    
+    psi <- 0.7
+    # psi <- 0.75 A <- 0.013 #cm^2
+    A <- 0.025  #cm^2
+    S <- 18.4  #cm
+    d_ap <- (m * A * psi)^2/(S^2 * pi * t_p)
+    
+    d_ap
+}
+
+
+lm_tran <- tidy(lm(max_current_gc ~ max_current_swv, data = I2tran1_max_comb_i2), conf.int = T) %>% 
+  filter(term == "max_current_swv") %>% 
+  mutate(dap = dap_from_swvGC(m = estimate)) %>% 
+  mutate(dap_high = dap_from_swvGC(m = conf.high)) %>% 
+  mutate(dap_low = dap_from_swvGC(m = conf.low)) %>% 
+  mutate(label = 'WT')
+
+dap_plot <- ggplot(lm_tran, aes(x = label, y = dap))+ geom_pointrange(aes(ymin = dap_low, ymax = dap_high)) + scale_y_log10(limits = c(1e-6, 1.5e-5)) +
+  labs(y = expression(D[ap]), x = NULL)
+```
+
+```{r}
+plot_grid(swv_gc_plot, dap_plot, rel_widths = c(1,0.5), align = 'hv', axis = 'tblr', ncol = 2)
+```
+
 
 # IDA 2 Transfer 2
 
