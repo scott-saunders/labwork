@@ -60,7 +60,7 @@ wt_meta <- read_csv("../data/07_23_19_WT_colony_toto1_well_metadata.csv")
 
 wt_df <- left_join(wt_data, wt_meta, by = 'Well')
 
-ggplot(wt_df %>% filter(Wavelength==535), aes(x = Colony_number, y = FluorInt, shape = Condition)) + geom_point()
+ggplot(wt_df %>% filter(Wavelength==535), aes(x = Colony_number, y = FluorInt, shape = Condition)) + geom_point(color = 'blue')
 ```
 
 *4 to get to tube concentration

@@ -12,5 +12,3 @@ data/
 *.rda
 *.rds
 DS_store
-
-!/HPLC/
