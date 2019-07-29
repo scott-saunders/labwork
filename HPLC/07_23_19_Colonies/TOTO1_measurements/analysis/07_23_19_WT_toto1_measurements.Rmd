@@ -1,0 +1,95 @@
+---
+title: "WT eDNA quantification"
+subtitle: "TOTO-1 with colony biofilms in plate reader"
+fontsize: 12pt
+date: "07_23_19 "
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
+---
+
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+library(knitr)
+library(kableExtra)
+library(ggridges)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+
+source("../../../../IDA/tools/plotting_tools.R")
+
+theme_set(theme_1())
+```
+
+```{r}
+cal_data <- read_csv("../data/07_23_19_ctDNA_calcurve_toto1_data.csv") %>% 
+  gather(key = "Well", value = "FluorInt", -Wavelength)
+
+cal_meta <- read_csv("../data/07_23_19_ctDNA_calcurve_toto1_well_metadata.csv", skip = 1, col_types = 'cd')
+
+cal_df <- left_join(cal_data, cal_meta, by = 'Well')
+
+ggplot(cal_df, aes(x = Wavelength, y = FluorInt, color = Well)) + geom_path()
+
+ggplot(cal_df %>% filter(Wavelength==535), aes(x = DNA_conc, y = FluorInt)) + geom_point()
+
+ggplot(cal_df %>% filter(Wavelength==535) %>% filter(DNA_conc<1), aes(x = FluorInt, y = DNA_conc)) +
+  geom_point()+
+  geom_smooth(method = 'lm')
+
+cal_model <- lm(DNA_conc~FluorInt, data = cal_df %>% filter(Wavelength==535) %>% filter(DNA_conc<1))
+```
+
+```{r}
+wt_data <- read_csv("../data/07_23_19_WT_colonies_toto1_data.csv") %>% 
+  gather(key = "Well", value = "FluorInt", -Wavelength)
+
+wt_meta <- read_csv("../data/07_23_19_WT_colony_toto1_well_metadata.csv")
+
+wt_df <- left_join(wt_data, wt_meta, by = 'Well')
+
+ggplot(wt_df %>% filter(Wavelength==535), aes(x = Colony_number, y = FluorInt, shape = Condition)) + geom_point()
+```
+
+*4 to get to tube concentration
+* 800 / 60 to get colony concentration
+
+```{r}
+wt_preds <- wt_df %>% filter(Wavelength==535) %>% 
+  add_predictions(cal_model) %>% 
+  mutate(eDNA_ug_mL = pred * 4 * 800 / 60) %>% 
+  mutate(eDNA_dsDNA_uM = eDNA_ug_mL * 150 / 50)
+
+ggplot(wt_preds, aes(x = Colony_number, y = eDNA_dsDNA_uM, shape = Condition)) + geom_point()
+
+ggplot(wt_preds %>% filter(Condition=='TOTO'), aes(x = Condition, y = eDNA_dsDNA_uM, shape = Condition)) +
+  geom_boxplot()+
+  geom_jitter(shape = 21)+
+  ylim(0,NA)
+
+ggplot(wt_preds %>% filter(Condition=='TOTO'), aes( x = eDNA_dsDNA_uM, y = factor(Colony_number))) +
+  geom_density_ridges(jittered_points=TRUE, position = position_points_jitter(height = 0))
+```
+
+
+```{r}
+wt_means <- wt_preds %>% 
+  filter(Condition=='TOTO') %>% 
+  group_by(Colony_number) %>% 
+  summarise(mean_eDNA=mean(eDNA_dsDNA_uM))
+
+mean(wt_means$mean_eDNA)
+
+```
