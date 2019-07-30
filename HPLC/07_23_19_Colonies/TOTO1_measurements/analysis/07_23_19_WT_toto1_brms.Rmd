@@ -1,0 +1,71 @@
+---
+title: "WT eDNA quantification"
+fontsize: 12pt
+date: '07_23_19 '
+output:
+  html_document:
+    code_folding: hide
+    self_contained: no
+    toc: yes
+  pdf_document:
+    toc: yes
+  github_document:
+    pandoc_args: --webtex
+subtitle: 'brms statistics'
+---
+
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+library(knitr)
+library(kableExtra)
+library(ggridges)
+library(brms)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+
+source("../../../../IDA/tools/plotting_tools.R")
+
+theme_set(theme_1())
+```
+
+
+```{r}
+wt_preds
+
+ggplot(wt_preds, aes(x = Colony_number, y = eDNA_dsDNA_uM, shape = Condition)) + geom_point()
+
+
+#need to switch to the 0 + intercept syntax to set intercept prior. may not be able to extract correct prior samples even after that...
+wt_brm <- brm(eDNA_dsDNA_uM ~ 1 + (1 | Colony_number / Replicate),
+     data = wt_preds %>% filter(Condition=='TOTO'),
+     prior = prior(normal(100, 30), class = Intercept),
+     sample_prior = T,
+    chains = 4,
+    cores = 2,
+    iter = 10000,
+    control = list(adapt_delta = 0.95),
+    thin = 5,
+    inits = 'random',
+    file = 'wt_brm_model_3'
+)
+
+summary(wt_brm)
+
+plot(wt_brm, N = 3, ask = F)
+
+plot(hypothesis(wt_brm, 'Intercept > 0'))
+```
+
+```{r}
+ggplot(data = posterior_samples(wt_brm)) + 
+  geom_density(aes(x = b_Intercept))
+```
+
