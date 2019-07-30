@@ -258,15 +258,14 @@ knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, me
 <p>Here’s a list of all html files in the notebook.</p>
 <pre class="r"><code>library(htmltools)
 
-base_path=&quot;https://scott-saunders.github.io/labwork/&quot;
+base_path = &quot;https://scott-saunders.github.io/labwork/&quot;
 
-files &lt;- dir(path=&quot;.&quot;, pattern = &quot;*\\.html$&quot;,include.dirs = T,recursive = T)
+files &lt;- dir(path = &quot;.&quot;, pattern = &quot;*\\.html$&quot;, include.dirs = T, 
+    recursive = T)
 
-for(link in files){
-  print(
-    tags$a(href = paste(base_path, link, sep=&#39;&#39;), link)
-    )
-  writeLines(&quot;&quot;)
+for (link in files) {
+    print(tags$a(href = paste(base_path, link, sep = &quot;&quot;), link))
+    writeLines(&quot;&quot;)
 }</code></pre>
 <p><a href="https://scott-saunders.github.io/labwork/Figures/01_30_19_fig_4.html">Figures/01_30_19_fig_4.html</a></p>
 <p><a href="https://scott-saunders.github.io/labwork/Figures/02_05_19_draft_2/code/02_05_19_fig_1_draft_2.html">Figures/02_05_19_draft_2/code/02_05_19_fig_1_draft_2.html</a></p>
@@ -282,7 +281,10 @@ for(link in files){
 <p><a href="https://scott-saunders.github.io/labwork/FRAP/05_30_19/05_30_19_PYO_FRAP_analysis_2.html">FRAP/05_30_19/05_30_19_PYO_FRAP_analysis_2.html</a></p>
 <p><a href="https://scott-saunders.github.io/labwork/FRAP/06_10_19_glycerol/06_10_19_PYO_FRAP_glycerol_analysis.html">FRAP/06_10_19_glycerol/06_10_19_PYO_FRAP_glycerol_analysis.html</a></p>
 <p><a href="https://scott-saunders.github.io/labwork/FRAP/06_13_19_glycerol_2/06_13_19_PYO_FRAP_glycerol_2_analysis.html">FRAP/06_13_19_glycerol_2/06_13_19_PYO_FRAP_glycerol_2_analysis.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/FRAP/06_13_19_glycerol_2/06_20_19_brms_sandbox.html">FRAP/06_13_19_glycerol_2/06_20_19_brms_sandbox.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/FRAP/06_13_19_glycerol_2/06_20_19_brms_sandbox.nb.html">FRAP/06_13_19_glycerol_2/06_20_19_brms_sandbox.nb.html</a></p>
 <p><a href="https://scott-saunders.github.io/labwork/FRAP/README.html">FRAP/README.html</a></p>
+<p><a href="https://scott-saunders.github.io/labwork/HPLC/07_23_19_Colonies/TOTO1_measurements/analysis/07_23_19_WT_toto1_measurements.html">HPLC/07_23_19_Colonies/TOTO1_measurements/analysis/07_23_19_WT_toto1_measurements.html</a></p>
 <p><a href="https://scott-saunders.github.io/labwork/HPLC/analysis/2018_10_30_Notebook_colonyHPLC.html">HPLC/analysis/2018_10_30_Notebook_colonyHPLC.html</a></p>
 <p><a href="https://scott-saunders.github.io/labwork/HPLC/analysis/2018_10_30_Notebook_colonyHPLC.nb.html">HPLC/analysis/2018_10_30_Notebook_colonyHPLC.nb.html</a></p>
 <p><a href="https://scott-saunders.github.io/labwork/IDA/01_03_19_Update/Dap_V1.html">IDA/01_03_19_Update/Dap_V1.html</a></p>
@@ -317,7 +319,6 @@ for(link in files){
 <p><a href="https://scott-saunders.github.io/labwork/IDA/diffusion_modeling_11_17_18.nb.html">IDA/diffusion_modeling_11_17_18.nb.html</a></p>
 <p><a href="https://scott-saunders.github.io/labwork/IDA/diffusionLayerTheory.html">IDA/diffusionLayerTheory.html</a></p>
 <p><a href="https://scott-saunders.github.io/labwork/IDA/README.html">IDA/README.html</a></p>
-<p><a href="https://scott-saunders.github.io/labwork/index.html">index.html</a></p>
 <p><a href="https://scott-saunders.github.io/labwork/potentialStep_Dap_09_16_18.html">potentialStep_Dap_09_16_18.html</a></p>
 </div>
 

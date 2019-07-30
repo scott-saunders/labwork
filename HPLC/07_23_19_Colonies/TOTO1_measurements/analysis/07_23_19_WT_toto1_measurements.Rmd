@@ -1,15 +1,17 @@
 ---
 title: "WT eDNA quantification"
-subtitle: "TOTO-1 with colony biofilms in plate reader"
 fontsize: 12pt
-date: "07_23_19 "
+date: '07_23_19 '
 output:
   html_document:
-    self_contained: false
-    toc: true
     code_folding: hide
+    self_contained: no
+    toc: yes
+  pdf_document:
+    toc: yes
   github_document:
     pandoc_args: --webtex
+subtitle: TOTO-1 with colony biofilms in plate reader
 ---
 
 
@@ -33,38 +35,117 @@ source("../../../../IDA/tools/plotting_tools.R")
 theme_set(theme_1())
 ```
 
+# Intro
+
+This experiment was first attempted as documented in this notebook, which is not in the git repository:
+
+`Documents/Winter%202018/eDNA_experiments/DNase_ctDNA_04_03_18/Reports/Notebook_DNase_ctDNA_04_03_18.html`
+
+So for a long time we have wanted to get an idea of how much eDNA is in the colony biofilms and try to understand the stoichiometry of phenazine to eDNA. We assume there is abundant eDNA and therefore that it can provide the expected binding sites for PYO and PCN in the extracellular matrix, but we needed to measure for sure. 
+
+The approach to make this measurement was to resuspend colony biofilms (as for HPLC measurement) and take some of the biofilm suspension and quantify TOTO-1 fluorescence in the plate reader. TOTO-1 should preferentially bind to the eDNA and we have an estimate of volume, so if we can calibrate the dye fluorescence with a known quantity of eDNA we should be able to extract a concentration of eDNA in the colony. I set out to repeat the original experiment with six WT colonies.
+
+# Methods
+
+The black 96 well plates were used to read fluorescence in the 'new' Tecan plate reader. Well volumes were 100uL total and the reading height was calibrated off of a well. Each well consisted of the the following:
+
+* 25uL ctDNA or biofilm sample
+* 10uL of TOTO-1 stock (10uM stock - 1uM final)
+* 65uL of PBS (137mM NaCl)
+
+TOTO-1 fluorescence was excited at 480nm and emission was read from 525 to 625nm (the em max 535 is used downstream). Gain was 75.
+
+For the calibration curve calf thymus DNA was used. A fresh 2mg/mL stock was made in PBS50 and it was diluted 2 fold serially. Therefore the well concentrations spanned from 500 ug/mL to ~7 ng/mL. 
+
+For the colony data the six biological replicates were each measured in technical triplicate with TOTO-1 and once without the dye to assess the background fluorescence. 
+
+Note that the original excel files with the plate reader output and metadata are in the data directory along with csv versions of the actual data and the well metadata. Images of the colonies are associated with the larger colony experiment performed at this data, but they looked normal and indistinguishable from each other. 
+
+Volumes of these colonies were estimated and samples were taken as normal for HPLC. 
+
+# Results
+
+First let's look at the calibration / binding curve and then we can use that to estimate the eDNA in the colonies. 
+
+## ctDNA calibration curve
+
+Let's go ahead and read in the data and metadata and combine into a nice long form to work with. 
 ```{r}
-cal_data <- read_csv("../data/07_23_19_ctDNA_calcurve_toto1_data.csv") %>% 
+cal_data <- read_csv("../pr_data/07_23_19_ctDNA_calcurve_toto1_data.csv") %>% 
   gather(key = "Well", value = "FluorInt", -Wavelength)
 
-cal_meta <- read_csv("../data/07_23_19_ctDNA_calcurve_toto1_well_metadata.csv", skip = 1, col_types = 'cd')
+cal_meta <- read_csv("../pr_data/07_23_19_ctDNA_calcurve_toto1_well_metadata.csv", skip = 1, col_types = 'cd')
 
 cal_df <- left_join(cal_data, cal_meta, by = 'Well')
 
-ggplot(cal_df, aes(x = Wavelength, y = FluorInt, color = Well)) + geom_path()
-
-ggplot(cal_df %>% filter(Wavelength==535), aes(x = DNA_conc, y = FluorInt)) + geom_point()
-
-ggplot(cal_df %>% filter(Wavelength==535) %>% filter(DNA_conc<1), aes(x = FluorInt, y = DNA_conc)) +
-  geom_point()+
-  geom_smooth(method = 'lm')
-
-cal_model <- lm(DNA_conc~FluorInt, data = cal_df %>% filter(Wavelength==535) %>% filter(DNA_conc<1))
+tail(cal_df) %>% kable() %>% kable_styling()
 ```
 
+Here's what all the data look like:
 ```{r}
-wt_data <- read_csv("../data/07_23_19_WT_colonies_toto1_data.csv") %>% 
+ggplot(cal_df, aes(x = Wavelength, y = FluorInt, color = Well)) + geom_path()
+```
+
+So you can see that we have a wide variety of intensities (despite the same amount of dye), but clearly the emission is the same shape and peak is at 535. Let's just look at the ctDNA concentration vs. Fluorescence Intensity at 535nm:
+
+```{r}
+ggplot(cal_df %>% filter(Wavelength==535), aes(x = DNA_conc, y = FluorInt)) + geom_point()
+
+ggplot(cal_df %>% filter(Wavelength==535) %>% filter(DNA_conc<5), aes(x = DNA_conc, y = FluorInt)) + geom_point()
+```
+So the higher values of the DNA definitely saturate the Dye (top), but zooming in (bottom) shows a nice binding curve like response. It's not perfectly linear at this scale, but the important part is that more DNA yields more dye fluorescence in a reasonable manner.
+
+I've taken the liberty of glancing ahead at the colony fluorescence values. They span ~5000 to 15000 fluorescence units, so let's zoom in a little further and flip the axes to see what our calibration curve looks like in that region. 
+
+```{r}
+ggplot(cal_df %>% filter(Wavelength==535) %>% filter(DNA_conc<1), aes(x = FluorInt, y = DNA_conc)) +
+  geom_smooth(method = 'lm')+
+  geom_point(shape = 21)
+```
+
+Not bad...it's a little sparse in this region and the response probably isn't truly linear, but the linear model will allow us to make a reasonable extrapolation between the datapoints. If we were feeling fancy we could probably fit an actual binding curve to this data and use that as the calibration curve model. 
+
+Anyway, here's the model we will actually use:
+
+```{r}
+cal_model <- lm(DNA_conc~FluorInt, data = cal_df %>% filter(Wavelength==535) %>% filter(DNA_conc<1))
+
+summary(cal_model)
+```
+
+So the linear model fits reasonably well even though it's probably wrong. Let's move forward using this despite its imperfections, it should allow us to make a reasonable statement about the eDNA concentration in terms of the ctDNA equivalent. 
+
+## WT colony measurements
+
+Ok, now the exciting part. Let's take a look at the colony data in the same format:
+```{r}
+wt_data <- read_csv("../pr_data/07_23_19_WT_colonies_toto1_data.csv") %>% 
   gather(key = "Well", value = "FluorInt", -Wavelength)
 
-wt_meta <- read_csv("../data/07_23_19_WT_colony_toto1_well_metadata.csv")
+wt_meta <- read_csv("../pr_data/07_23_19_WT_colony_toto1_well_metadata.csv")
 
 wt_df <- left_join(wt_data, wt_meta, by = 'Well')
 
-ggplot(wt_df %>% filter(Wavelength==535), aes(x = Colony_number, y = FluorInt, shape = Condition)) + geom_point(color = 'blue')
+tail(wt_df) %>% kable() %>% kable_styling()
 ```
 
-*4 to get to tube concentration
-* 800 / 60 to get colony concentration
+
+```{r}
+ggplot(wt_df %>% filter(Wavelength==535), aes(x = Colony_number, y = FluorInt, shape = Condition)) + geom_point() + ylim(0,15000)
+```
+
+Ok, so we can learn a vew things from this. First, there is some biological variation between the colonies, but overall they're in a pretty tight window. The other thing we can see is that there is significant technical variation within each colony from the technical triplicates. This probably makes sense as the bit of biofilm that gets resuspended in each well may be quite different. Lastly, the background fluorescence is really negligible. Overall, I think these data look pretty good!
+
+## Prediction of eDNA concentration
+
+Now let's try to convert those fluorescence intensity values into predictions for the amount of eDNA in each colony biofilm. 
+
+We can use the linear model from the calf thymus calibration curve to add predictions from the WT colony data, but that only gives us a value in terms of ug / mL of ctDNA in the well. We really want to get to uM bp dsDNA.
+
+So first we are going to multiply by 4 to get from the concentration in the well to the concentration of eDNA in the biofilm suspension tube. Then we can convert into the concentration in the biofilm by multiplying by the dilution factor 800uL / 60uL. 
+
+Lastly, we need to go from ug / mL to uM by using a conversion factor from NEB which is that 50 ug / mL DNA is equivalent to 150uM dsDNA bp, so we multiply by 150 / 50. That gives us a dataframe that looks like this:
+
 
 ```{r}
 wt_preds <- wt_df %>% filter(Wavelength==535) %>% 
@@ -72,17 +153,27 @@ wt_preds <- wt_df %>% filter(Wavelength==535) %>%
   mutate(eDNA_ug_mL = pred * 4 * 800 / 60) %>% 
   mutate(eDNA_dsDNA_uM = eDNA_ug_mL * 150 / 50)
 
-ggplot(wt_preds, aes(x = Colony_number, y = eDNA_dsDNA_uM, shape = Condition)) + geom_point()
-
-ggplot(wt_preds %>% filter(Condition=='TOTO'), aes(x = Condition, y = eDNA_dsDNA_uM, shape = Condition)) +
-  geom_boxplot()+
-  geom_jitter(shape = 21)+
-  ylim(0,NA)
-
-ggplot(wt_preds %>% filter(Condition=='TOTO'), aes( x = eDNA_dsDNA_uM, y = factor(Colony_number))) +
-  geom_density_ridges(jittered_points=TRUE, position = position_points_jitter(height = 0))
+tail(wt_preds) %>% kable() %>% kable_styling()
 ```
 
+So now we can view our WT colony measurements in terms of an estimated uM dsDNA bp:
+
+```{r}
+
+ggplot(wt_preds, aes(x = Colony_number, y = eDNA_dsDNA_uM, shape = Condition)) + geom_point()+
+  ylim(0,200)+guides(shape = 'none')
+```
+
+We can view all these measurements together with boxplot stats:
+
+```{r}
+ggplot(wt_preds %>% filter(Condition=='TOTO'), aes(x = Condition, y = eDNA_dsDNA_uM)) +
+  geom_boxplot()+
+  geom_jitter(shape = 21)+
+  ylim(0,200)
+```
+
+And if we take the mean value of each colony we get these numbers:
 
 ```{r}
 wt_means <- wt_preds %>% 
@@ -90,6 +181,12 @@ wt_means <- wt_preds %>%
   group_by(Colony_number) %>% 
   summarise(mean_eDNA=mean(eDNA_dsDNA_uM))
 
-mean(wt_means$mean_eDNA)
-
+wt_means %>% kable() %>% kable_styling()
 ```
+Finally taking the mean of those biological replicates gives a mean eDNA concentration of `r mean(wt_means$mean_eDNA)` uM dsDNA bp. 
+
+# Next steps
+
+1. Is it possible that the cationic polysaccharide Pel competes with the dye? Could compare WT to dPel strain. 
+2. Could estimate a 95% CI with brms with a two level hierarchy!!
+3. Note ctDNA is mostly dsDNA, but not entirely, how accessible is biofilm eDNA compared to standard...

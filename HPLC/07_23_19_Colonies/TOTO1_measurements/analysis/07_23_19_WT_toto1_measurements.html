@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>WT eDNA quantification</title>
+
+<script src="07_23_19_WT_toto1_measurements_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="07_23_19_WT_toto1_measurements_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="07_23_19_WT_toto1_measurements_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="07_23_19_WT_toto1_measurements_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="07_23_19_WT_toto1_measurements_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="07_23_19_WT_toto1_measurements_files/navigation-1.1/tabsets.js"></script>
+<script src="07_23_19_WT_toto1_measurements_files/navigation-1.1/codefolding.js"></script>
+<link href="07_23_19_WT_toto1_measurements_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="07_23_19_WT_toto1_measurements_files/highlightjs-9.12.0/highlight.js"></script>
+<script src="07_23_19_WT_toto1_measurements_files/kePrint-0.0.1/kePrint.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">WT eDNA quantification</h1>
+<h3 class="subtitle">TOTO-1 with colony biofilms in plate reader</h3>
+<h4 class="date">07_23_19</h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#intro">Intro</a></li>
+<li><a href="#methods">Methods</a></li>
+<li><a href="#results">Results</a><ul>
+<li><a href="#ctdna-calibration-curve">ctDNA calibration curve</a></li>
+<li><a href="#wt-colony-measurements">WT colony measurements</a></li>
+<li><a href="#prediction-of-edna-concentration">Prediction of eDNA concentration</a></li>
+</ul></li>
+<li><a href="#next-steps">Next steps</a></li>
+</ul>
+</div>
+
+<pre class="r"><code>library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+library(knitr)
+library(kableExtra)
+library(ggridges)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)
+
+
+source(&quot;../../../../IDA/tools/plotting_tools.R&quot;)
+
+theme_set(theme_1())</code></pre>
+<div id="intro" class="section level1">
+<h1>Intro</h1>
+<p>This experiment was first attempted as documented in this notebook, which is not in the git repository:</p>
+<p><code>Documents/Winter%202018/eDNA_experiments/DNase_ctDNA_04_03_18/Reports/Notebook_DNase_ctDNA_04_03_18.html</code></p>
+<p>So for a long time we have wanted to get an idea of how much eDNA is in the colony biofilms and try to understand the stoichiometry of phenazine to eDNA. We assume there is abundant eDNA and therefore that it can provide the expected binding sites for PYO and PCN in the extracellular matrix, but we needed to measure for sure.</p>
+<p>The approach to make this measurement was to resuspend colony biofilms (as for HPLC measurement) and take some of the biofilm suspension and quantify TOTO-1 fluorescence in the plate reader. TOTO-1 should preferentially bind to the eDNA and we have an estimate of volume, so if we can calibrate the dye fluorescence with a known quantity of eDNA we should be able to extract a concentration of eDNA in the colony. I set out to repeat the original experiment with six WT colonies.</p>
+</div>
+<div id="methods" class="section level1">
+<h1>Methods</h1>
+<p>The black 96 well plates were used to read fluorescence in the ‘new’ Tecan plate reader. Well volumes were 100uL total and the reading height was calibrated off of a well. Each well consisted of the the following:</p>
+<ul>
+<li>25uL ctDNA or biofilm sample</li>
+<li>10uL of TOTO-1 stock (10uM stock - 1uM final)</li>
+<li>65uL of PBS (137mM NaCl)</li>
+</ul>
+<p>TOTO-1 fluorescence was excited at 480nm and emission was read from 525 to 625nm (the em max 535 is used downstream). Gain was 75.</p>
+<p>For the calibration curve calf thymus DNA was used. A fresh 2mg/mL stock was made in PBS50 and it was diluted 2 fold serially. Therefore the well concentrations spanned from 500 ug/mL to ~7 ng/mL.</p>
+<p>For the colony data the six biological replicates were each measured in technical triplicate with TOTO-1 and once without the dye to assess the background fluorescence.</p>
+<p>Note that the original excel files with the plate reader output and metadata are in the data directory along with csv versions of the actual data and the well metadata. Images of the colonies are associated with the larger colony experiment performed at this data, but they looked normal and indistinguishable from each other.</p>
+<p>Volumes of these colonies were estimated and samples were taken as normal for HPLC.</p>
+</div>
+<div id="results" class="section level1">
+<h1>Results</h1>
+<p>First let’s look at the calibration / binding curve and then we can use that to estimate the eDNA in the colonies.</p>
+<div id="ctdna-calibration-curve" class="section level2">
+<h2>ctDNA calibration curve</h2>
+<p>Let’s go ahead and read in the data and metadata and combine into a nice long form to work with.</p>
+<pre class="r"><code>cal_data &lt;- read_csv(&quot;../pr_data/07_23_19_ctDNA_calcurve_toto1_data.csv&quot;) %&gt;% 
+    gather(key = &quot;Well&quot;, value = &quot;FluorInt&quot;, -Wavelength)
+
+cal_meta &lt;- read_csv(&quot;../pr_data/07_23_19_ctDNA_calcurve_toto1_well_metadata.csv&quot;, 
+    skip = 1, col_types = &quot;cd&quot;)
+
+cal_df &lt;- left_join(cal_data, cal_meta, by = &quot;Well&quot;)
+
+tail(cal_df) %&gt;% kable() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+Wavelength
+</th>
+<th style="text-align:left;">
+Well
+</th>
+<th style="text-align:right;">
+FluorInt
+</th>
+<th style="text-align:right;">
+DNA_conc
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+600
+</td>
+<td style="text-align:left;">
+C6
+</td>
+<td style="text-align:right;">
+211
+</td>
+<td style="text-align:right;">
+0.0076294
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+605
+</td>
+<td style="text-align:left;">
+C6
+</td>
+<td style="text-align:right;">
+189
+</td>
+<td style="text-align:right;">
+0.0076294
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+610
+</td>
+<td style="text-align:left;">
+C6
+</td>
+<td style="text-align:right;">
+172
+</td>
+<td style="text-align:right;">
+0.0076294
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+615
+</td>
+<td style="text-align:left;">
+C6
+</td>
+<td style="text-align:right;">
+155
+</td>
+<td style="text-align:right;">
+0.0076294
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+620
+</td>
+<td style="text-align:left;">
+C6
+</td>
+<td style="text-align:right;">
+141
+</td>
+<td style="text-align:right;">
+0.0076294
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+625
+</td>
+<td style="text-align:left;">
+C6
+</td>
+<td style="text-align:right;">
+134
+</td>
+<td style="text-align:right;">
+0.0076294
+</td>
+</tr>
+</tbody>
+</table>
+<p>Here’s what all the data look like:</p>
+<pre class="r"><code>ggplot(cal_df, aes(x = Wavelength, y = FluorInt, color = Well)) + 
+    geom_path()</code></pre>
+<p><img src="07_23_19_WT_toto1_measurements_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>So you can see that we have a wide variety of intensities (despite the same amount of dye), but clearly the emission is the same shape and peak is at 535. Let’s just look at the ctDNA concentration vs. Fluorescence Intensity at 535nm:</p>
+<pre class="r"><code>ggplot(cal_df %&gt;% filter(Wavelength == 535), aes(x = DNA_conc, 
+    y = FluorInt)) + geom_point()</code></pre>
+<p><img src="07_23_19_WT_toto1_measurements_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(cal_df %&gt;% filter(Wavelength == 535) %&gt;% filter(DNA_conc &lt; 
+    5), aes(x = DNA_conc, y = FluorInt)) + geom_point()</code></pre>
+<p><img src="07_23_19_WT_toto1_measurements_files/figure-html/unnamed-chunk-3-2.png" width="672" style="display: block; margin: auto;" /> So the higher values of the DNA definitely saturate the Dye (top), but zooming in (bottom) shows a nice binding curve like response. It’s not perfectly linear at this scale, but the important part is that more DNA yields more dye fluorescence in a reasonable manner.</p>
+<p>I’ve taken the liberty of glancing ahead at the colony fluorescence values. They span ~5000 to 15000 fluorescence units, so let’s zoom in a little further and flip the axes to see what our calibration curve looks like in that region.</p>
+<pre class="r"><code>ggplot(cal_df %&gt;% filter(Wavelength == 535) %&gt;% filter(DNA_conc &lt; 
+    1), aes(x = FluorInt, y = DNA_conc)) + geom_smooth(method = &quot;lm&quot;) + 
+    geom_point(shape = 21)</code></pre>
+<p><img src="07_23_19_WT_toto1_measurements_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Not bad…it’s a little sparse in this region and the response probably isn’t truly linear, but the linear model will allow us to make a reasonable extrapolation between the datapoints. If we were feeling fancy we could probably fit an actual binding curve to this data and use that as the calibration curve model.</p>
+<p>Anyway, here’s the model we will actually use:</p>
+<pre class="r"><code>cal_model &lt;- lm(DNA_conc ~ FluorInt, data = cal_df %&gt;% filter(Wavelength == 
+    535) %&gt;% filter(DNA_conc &lt; 1))
+
+summary(cal_model)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = DNA_conc ~ FluorInt, data = cal_df %&gt;% filter(Wavelength == 
+##     535) %&gt;% filter(DNA_conc &lt; 1))
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.043478 -0.015304  0.008152  0.011042  0.032752 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -3.513e-02  1.100e-02  -3.193   0.0152 *  
+## FluorInt     7.090e-05  1.967e-06  36.038 3.29e-09 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.02553 on 7 degrees of freedom
+## Multiple R-squared:  0.9946, Adjusted R-squared:  0.9939 
+## F-statistic:  1299 on 1 and 7 DF,  p-value: 3.29e-09</code></pre>
+<p>So the linear model fits reasonably well even though it’s probably wrong. Let’s move forward using this despite its imperfections, it should allow us to make a reasonable statement about the eDNA concentration in terms of the ctDNA equivalent.</p>
+</div>
+<div id="wt-colony-measurements" class="section level2">
+<h2>WT colony measurements</h2>
+<p>Ok, now the exciting part. Let’s take a look at the colony data in the same format:</p>
+<pre class="r"><code>wt_data &lt;- read_csv(&quot;../pr_data/07_23_19_WT_colonies_toto1_data.csv&quot;) %&gt;% 
+    gather(key = &quot;Well&quot;, value = &quot;FluorInt&quot;, -Wavelength)
+
+wt_meta &lt;- read_csv(&quot;../pr_data/07_23_19_WT_colony_toto1_well_metadata.csv&quot;)
+
+wt_df &lt;- left_join(wt_data, wt_meta, by = &quot;Well&quot;)
+
+tail(wt_df) %&gt;% kable() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+Wavelength
+</th>
+<th style="text-align:left;">
+Well
+</th>
+<th style="text-align:right;">
+FluorInt
+</th>
+<th style="text-align:left;">
+Condition
+</th>
+<th style="text-align:right;">
+Colony_number
+</th>
+<th style="text-align:right;">
+Replicate
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+600
+</td>
+<td style="text-align:left;">
+G6
+</td>
+<td style="text-align:right;">
+3076
+</td>
+<td style="text-align:left;">
+TOTO
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+605
+</td>
+<td style="text-align:left;">
+G6
+</td>
+<td style="text-align:right;">
+2753
+</td>
+<td style="text-align:left;">
+TOTO
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+610
+</td>
+<td style="text-align:left;">
+G6
+</td>
+<td style="text-align:right;">
+2435
+</td>
+<td style="text-align:left;">
+TOTO
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+615
+</td>
+<td style="text-align:left;">
+G6
+</td>
+<td style="text-align:right;">
+2179
+</td>
+<td style="text-align:left;">
+TOTO
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+620
+</td>
+<td style="text-align:left;">
+G6
+</td>
+<td style="text-align:right;">
+1958
+</td>
+<td style="text-align:left;">
+TOTO
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+625
+</td>
+<td style="text-align:left;">
+G6
+</td>
+<td style="text-align:right;">
+1744
+</td>
+<td style="text-align:left;">
+TOTO
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>ggplot(wt_df %&gt;% filter(Wavelength == 535), aes(x = Colony_number, 
+    y = FluorInt, shape = Condition)) + geom_point() + ylim(0, 
+    15000)</code></pre>
+<p><img src="07_23_19_WT_toto1_measurements_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Ok, so we can learn a vew things from this. First, there is some biological variation between the colonies, but overall they’re in a pretty tight window. The other thing we can see is that there is significant technical variation within each colony from the technical triplicates. This probably makes sense as the bit of biofilm that gets resuspended in each well may be quite different. Lastly, the background fluorescence is really negligible. Overall, I think these data look pretty good!</p>
+</div>
+<div id="prediction-of-edna-concentration" class="section level2">
+<h2>Prediction of eDNA concentration</h2>
+<p>Now let’s try to convert those fluorescence intensity values into predictions for the amount of eDNA in each colony biofilm.</p>
+<p>We can use the linear model from the calf thymus calibration curve to add predictions from the WT colony data, but that only gives us a value in terms of ug / mL of ctDNA in the well. We really want to get to uM bp dsDNA.</p>
+<p>So first we are going to multiply by 4 to get from the concentration in the well to the concentration of eDNA in the biofilm suspension tube. Then we can convert into the concentration in the biofilm by multiplying by the dilution factor 800uL / 60uL.</p>
+<p>Lastly, we need to go from ug / mL to uM by using a conversion factor from NEB which is that 50 ug / mL DNA is equivalent to 150uM dsDNA bp, so we multiply by 150 / 50. That gives us a dataframe that looks like this:</p>
+<pre class="r"><code>wt_preds &lt;- wt_df %&gt;% filter(Wavelength == 535) %&gt;% add_predictions(cal_model) %&gt;% 
+    mutate(eDNA_ug_mL = pred * 4 * 800/60) %&gt;% mutate(eDNA_dsDNA_uM = eDNA_ug_mL * 
+    150/50)
+
+tail(wt_preds) %&gt;% kable() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+Wavelength
+</th>
+<th style="text-align:left;">
+Well
+</th>
+<th style="text-align:right;">
+FluorInt
+</th>
+<th style="text-align:left;">
+Condition
+</th>
+<th style="text-align:right;">
+Colony_number
+</th>
+<th style="text-align:right;">
+Replicate
+</th>
+<th style="text-align:right;">
+pred
+</th>
+<th style="text-align:right;">
+eDNA_ug_mL
+</th>
+<th style="text-align:right;">
+eDNA_dsDNA_uM
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+535
+</td>
+<td style="text-align:left;">
+G1
+</td>
+<td style="text-align:right;">
+13607
+</td>
+<td style="text-align:left;">
+TOTO
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0.9295607
+</td>
+<td style="text-align:right;">
+49.57657
+</td>
+<td style="text-align:right;">
+148.72971
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+535
+</td>
+<td style="text-align:left;">
+G2
+</td>
+<td style="text-align:right;">
+8622
+</td>
+<td style="text-align:left;">
+TOTO
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0.5761404
+</td>
+<td style="text-align:right;">
+30.72749
+</td>
+<td style="text-align:right;">
+92.18247
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+535
+</td>
+<td style="text-align:left;">
+G3
+</td>
+<td style="text-align:right;">
+7151
+</td>
+<td style="text-align:left;">
+TOTO
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0.4718513
+</td>
+<td style="text-align:right;">
+25.16540
+</td>
+<td style="text-align:right;">
+75.49621
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+535
+</td>
+<td style="text-align:left;">
+G4
+</td>
+<td style="text-align:right;">
+8291
+</td>
+<td style="text-align:left;">
+TOTO
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0.5526736
+</td>
+<td style="text-align:right;">
+29.47593
+</td>
+<td style="text-align:right;">
+88.42778
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+535
+</td>
+<td style="text-align:left;">
+G5
+</td>
+<td style="text-align:right;">
+7998
+</td>
+<td style="text-align:left;">
+TOTO
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0.5319009
+</td>
+<td style="text-align:right;">
+28.36805
+</td>
+<td style="text-align:right;">
+85.10414
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+535
+</td>
+<td style="text-align:left;">
+G6
+</td>
+<td style="text-align:right;">
+8059
+</td>
+<td style="text-align:left;">
+TOTO
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0.5362256
+</td>
+<td style="text-align:right;">
+28.59870
+</td>
+<td style="text-align:right;">
+85.79609
+</td>
+</tr>
+</tbody>
+</table>
+<p>So now we can view our WT colony measurements in terms of an estimated uM dsDNA bp:</p>
+<pre class="r"><code>ggplot(wt_preds, aes(x = Colony_number, y = eDNA_dsDNA_uM, shape = Condition)) + 
+    geom_point() + ylim(0, 200) + guides(shape = &quot;none&quot;)</code></pre>
+<p><img src="07_23_19_WT_toto1_measurements_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>We can view all these measurements together with boxplot stats:</p>
+<pre class="r"><code>ggplot(wt_preds %&gt;% filter(Condition == &quot;TOTO&quot;), aes(x = Condition, 
+    y = eDNA_dsDNA_uM)) + geom_boxplot() + geom_jitter(shape = 21) + 
+    ylim(0, 200)</code></pre>
+<p><img src="07_23_19_WT_toto1_measurements_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>And if we take the mean value of each colony we get these numbers:</p>
+<pre class="r"><code>wt_means &lt;- wt_preds %&gt;% filter(Condition == &quot;TOTO&quot;) %&gt;% group_by(Colony_number) %&gt;% 
+    summarise(mean_eDNA = mean(eDNA_dsDNA_uM))
+
+wt_means %&gt;% kable() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+Colony_number
+</th>
+<th style="text-align:right;">
+mean_eDNA
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+133.48408
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+87.44090
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+79.72733
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+78.09009
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+97.20007
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+75.22019
+</td>
+</tr>
+</tbody>
+</table>
+<p>Finally taking the mean of those biological replicates gives a mean eDNA concentration of 91.860442 uM dsDNA bp.</p>
+</div>
+</div>
+<div id="next-steps" class="section level1">
+<h1>Next steps</h1>
+<ol style="list-style-type: decimal">
+<li>Is it possible that the cationic polysaccharide Pel competes with the dye? Could compare WT to dPel strain.</li>
+<li>Could estimate a 95% CI with brms with a two level hierarchy!!</li>
+<li>Note ctDNA is mostly dsDNA, but not entirely, how accessible is biofilm eDNA compared to standard…</li>
+</ol>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
