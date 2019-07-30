@@ -27,6 +27,7 @@ library(knitr)
 library(kableExtra)
 library(ggridges)
 library(brms)
+library(tidybayes)
 
 knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
 
@@ -62,10 +63,57 @@ summary(wt_brm)
 plot(wt_brm, N = 3, ask = F)
 
 plot(hypothesis(wt_brm, 'Intercept > 0'))
+
+
+```
+
+```{r}
+prior_summary(wt_brm)
+
+marginal_effects(wt_brm, conditions = data.frame(Colony_number = c(1,2,3,4,5,6)))
 ```
 
 ```{r}
 ggplot(data = posterior_samples(wt_brm)) + 
   geom_density(aes(x = b_Intercept))
+
+as_tibble(coef(wt_brm)$Colony_number, rownames = 'Colony_number')
+
+
+ggplot(wt_preds %>% filter(Condition=='TOTO'), aes(x = factor(Colony_number), y = eDNA_dsDNA_uM)) +
+  geom_hline(yintercept = as_tibble(fixef(wt_brm))$Estimate, linetype = 2)+
+  geom_hline(yintercept = as_tibble(fixef(wt_brm))$Q2.5, linetype = 2, color = 'gray')+
+  geom_hline(yintercept = as_tibble(fixef(wt_brm))$Q97.5, linetype = 2, color = 'gray')+
+  geom_jitter(height = 0, width = 0.1, shape = 21)+
+  geom_pointrange(data = as_tibble(coef(wt_brm)$Colony_number, rownames = 'Colony_number'),
+                  aes(x = factor(Colony_number), 
+                      y = Estimate.Intercept, 
+                      ymin = Q2.5.Intercept, 
+                      ymax = Q97.5.Intercept))
+
+
+
 ```
 
+# Do we actually need the bottom layer of the hierarchy...no!
+
+```{r}
+wt_brm_single_level <- brm(eDNA_dsDNA_uM ~ 1 + (1 | Colony_number),
+     data = wt_preds %>% filter(Condition=='TOTO'),
+     prior = prior(normal(100, 30), class = Intercept),
+     sample_prior = T,
+    chains = 4,
+    cores = 2,
+    iter = 10000,
+    control = list(adapt_delta = 0.95),
+    thin = 5,
+    inits = 'random',
+    file = 'wt_brm_single_level_1'
+)
+
+summary(wt_brm_single_level)
+
+posterior_samples(wt_brm_single_level)
+
+coef(wt_brm_single_level)
+```
