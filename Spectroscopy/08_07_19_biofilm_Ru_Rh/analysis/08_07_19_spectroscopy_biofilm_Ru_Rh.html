@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>DNA CT Spectroscopy with Biofilm Suspension</title>
+
+<script src="08_07_19_spectroscopy_biofilm_Ru_Rh_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="08_07_19_spectroscopy_biofilm_Ru_Rh_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="08_07_19_spectroscopy_biofilm_Ru_Rh_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="08_07_19_spectroscopy_biofilm_Ru_Rh_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="08_07_19_spectroscopy_biofilm_Ru_Rh_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="08_07_19_spectroscopy_biofilm_Ru_Rh_files/navigation-1.1/tabsets.js"></script>
+<script src="08_07_19_spectroscopy_biofilm_Ru_Rh_files/navigation-1.1/codefolding.js"></script>
+<link href="08_07_19_spectroscopy_biofilm_Ru_Rh_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="08_07_19_spectroscopy_biofilm_Ru_Rh_files/highlightjs-9.12.0/highlight.js"></script>
+<script src="08_07_19_spectroscopy_biofilm_Ru_Rh_files/kePrint-0.0.1/kePrint.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">DNA CT Spectroscopy with Biofilm Suspension</h1>
+<h3 class="subtitle">Ru quenched by Rh</h3>
+<h4 class="date">08_07_19</h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#intro">Intro</a></li>
+<li><a href="#methods">Methods</a></li>
+<li><a href="#results">Results</a><ul>
+<li><a href="#calf-thymus-dna-in-vitro">Calf Thymus DNA (<em>in vitro</em>)</a></li>
+<li><a href="#delta-phz-biofilm"><span class="math inline">\(\Delta phz*\)</span> Biofilm</a><ul>
+<li><a href="#this-may-actually-be-static-quenching">This may actually be static quenching</a></li>
+</ul></li>
+<li><a href="#wt-biofilm">WT Biofilm</a></li>
+</ul></li>
+<li><a href="#conclusions-and-next-steps">Conclusions and Next Steps</a></li>
+</ul>
+</div>
+
+<pre class="r"><code>library(tidyverse)
+library(cowplot)
+library(viridis)
+library(knitr)
+library(kableExtra)
+
+
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)
+
+source(&quot;../../../IDA/tools/plotting_tools.R&quot;)
+
+theme_set(theme_1())</code></pre>
+<div id="intro" class="section level1">
+<h1>Intro</h1>
+<p>These experiments were performed by Eric Stemp, a former Barton Lab postdoc, and long time collaborator. I prepared the biofilms and helped pipette a few things.</p>
+<p>The goal of these experiments was to assess whether or not biofilm eDNA was capable of supporting DNA CT between two known redox intercalators. My understanding of the way this works is that <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> is photoexcited by a laser, and this photoexcited state is luminescent / fluorescent so we follow this species over time. The photoexcited state can return to ground state slowly on its own or it can be quenched on different timescales by a few different processes.</p>
+<p>The two main modes of quenching we are looking for are “dynamic quenching” and “static quenching.” I think that these terms are actually rather arbitrary, because I believe the difference is determined by the time resolution of the spectroscopy. Anyway, static quenching is a process that happens faster than the time resolution of the instrument, so it appears as just a decrease in intensity with the same lifetime. Dynamic quenching occurs on the measured timescale and appears as similiar initial intensity but different shaped decays implying different lifetimes.</p>
+<p>The mechanisms of these two processes can be complicated, but for our purposes we consider static quenching to occur between the donor and quencher extremely fast, so that they are essentially behaving as one entity…the excited donor intermediate is not really there and the electron is immediately transferred to the quencher. Dynamic quenching can occur between a donor and quencher diffusing in solution, where the two molecules actually have to bump into each other to achieve quenching…and this is slow enough to observe.</p>
+<p>To make a long story short, for DNA CT the Barton lab has established that we should see static quenching as the ET between the donor and quencher happens on such a fast time scale. For this experiment we are building off a body of past work and using <span class="math inline">\(Rh(phi)_2bpy^{3+}\)</span> as the quencher / electron acceptor. See <a href="https://pubs.acs.org/doi/10.1021/ja9532998">this paper</a> for an example of the past work. The plots that we are sort of trying to replicate from this paper are shown below: The left is static quenching via DNA CT and the right is dynamic quenching in SDS micelles.</p>
+<pre class="r"><code>knitr::include_graphics(&quot;./static_dynamic_quenching_fig.jpg&quot;)</code></pre>
+<p><img src="static_dynamic_quenching_fig.jpg" width="60%" style="display: block; margin: auto;" /></p>
+<p>For this experiment I prepared WT and <span class="math inline">\(\Delta phz*\)</span> biofilms, thinking that I could resuspend them (as for LC-MS measurements) and use that suspension in a cuvette with the metal complexes. I recently estimated the dsDNA in a WT biofilm to be ~100uM. I don’t know what it is in the <span class="math inline">\(\Delta phz*\)</span> biofilms, but since we diluted ~10x it’s safe to think we are in the 10uM range of DNA concentration.</p>
+</div>
+<div id="methods" class="section level1">
+<h1>Methods</h1>
+<p>I grew WT and <span class="math inline">\(\Delta phz*\)</span> biofilms as normal for 3 days at room temp. Just before the measurements (~1 hr before) I resuspended a <span class="math inline">\(\Delta phz*\)</span> biofilm in 500uL of PBS NaCl 137mM. Later I came back and resuspended the WT biofilm in the same way, just before the measurements.</p>
+<p>Eric brought the stocks of ctDNA, <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span>, <span class="math inline">\(Rh(phi)_2bpy^{3+}\)</span>, and we performed all of the experiments in my PBS 137.</p>
+<p>First we did in vitro experiments with ctDNA (10uM) and 1uM Ru, then we tried 10uM ctDNA with 0.1uM Ru. My understanding is that 1:100 is the optimal stoichiometry…but we weren’t sure we would be able to observe that low Ru concentration.</p>
+<p>We did have some issues collecting the 0.1uM Ru scans, so we decided to use 1uM Ru with the biofilms. We acquired biofilm only background scans and then added 1uM Ru, followed by 1, 2, and 4uM Rh (final concentrations). We gently shook the cuvette before measuring each time. Scans were taken pretty quickly after mixing, and the total titrations only took ~10min, so hopefully the cells were not affected.</p>
+<p>Eric set up the laser, so I’m sure he has more details. His notes on samples and laser settings are saved as a pdf in the data directory. Also, each scan setting is saved as a header in the data files. Briefly, the Ru was excited at 532nm and emission was recorded at 620nm (or greater than 600nm?). The laser pulses were 2 mJ / pulse. The biofilm data was acquired with 9 cycles (consecutive acquisitions to improve signal to noise), with 100 shots per cycle.</p>
+<p>The data was then converted from the ns1 format to a text .dat file with Jay Winkler’s help (a matlab script). In this notebook I am using the log compressed data files, because the raw data points are taken at a very high time resolution. This filtering keeps most datapoints at short time scales, but thins at long time scales. Seems totally fine, but we also have the raw datafiles.</p>
+</div>
+<div id="results" class="section level1">
+<h1>Results</h1>
+<p>Now let’s look at the data that Eric acquired. We’ll start with the in vitro conditions, and then look at the <span class="math inline">\(\Delta phz*\)</span> and WT biofilm data.</p>
+<div id="calf-thymus-dna-in-vitro" class="section level2">
+<h2>Calf Thymus DNA (<em>in vitro</em>)</h2>
+<p>First we did some in vitro controls with calf-thymus DNA and the Ru / Rh complexes. We wanted to know how the data might look with the concentration of dsDNA we expected in the biofilm suspensions (~10uM).</p>
+<p>Let’s read in the data for 10uM ctDNA bp + 1uM and the stepwise Rh additions. I’m attaching the conditions to the data based on Eric’s notes (see pdf).</p>
+<pre class="r"><code>df_3 &lt;- read_csv(&quot;../data/80719_3_compressed.dat&quot;, skip = 16, 
+    col_names = c(&quot;time&quot;, &quot;intensity&quot;)) %&gt;% mutate(condition = &quot;10uM ctDNA + 1uM Ru -Rh&quot;)
+
+df_4 &lt;- read_csv(&quot;../data//80719_4_compressed.dat&quot;, skip = 16, 
+    col_names = c(&quot;time&quot;, &quot;intensity&quot;)) %&gt;% mutate(condition = &quot;10uM ctDNA + 1uM Ru + 0uM Rh&quot;)
+
+df_5 &lt;- read_csv(&quot;../data/80719_5_compressed.dat&quot;, skip = 16, 
+    col_names = c(&quot;time&quot;, &quot;intensity&quot;)) %&gt;% mutate(condition = &quot;10uM ctDNA + 1uM Ru + 1uM Rh&quot;)
+
+df_6 &lt;- read_csv(&quot;../data/80719_6_compressed.dat&quot;, skip = 16, 
+    col_names = c(&quot;time&quot;, &quot;intensity&quot;)) %&gt;% mutate(condition = &quot;10uM ctDNA + 1uM Ru + 2uM Rh&quot;)
+
+df_7 &lt;- read_csv(&quot;../data/80719_7_compressed.dat&quot;, skip = 16, 
+    col_names = c(&quot;time&quot;, &quot;intensity&quot;)) %&gt;% mutate(condition = &quot;10uM ctDNA + 1uM Ru + 4uM Rh&quot;)
+
+df_ctDNA &lt;- bind_rows(df_4, df_5, df_6, df_7)
+
+df_ctDNA %&gt;% head() %&gt;% kable(digits = 15) %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+time
+</th>
+<th style="text-align:right;">
+intensity
+</th>
+<th style="text-align:left;">
+condition
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+-9.939e-08
+</td>
+<td style="text-align:right;">
+-6.27461e-04
+</td>
+<td style="text-align:left;">
+10uM ctDNA + 1uM Ru + 0uM Rh
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-9.779e-08
+</td>
+<td style="text-align:right;">
+1.83761e-04
+</td>
+<td style="text-align:left;">
+10uM ctDNA + 1uM Ru + 0uM Rh
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-9.559e-08
+</td>
+<td style="text-align:right;">
+-1.59634e-04
+</td>
+<td style="text-align:left;">
+10uM ctDNA + 1uM Ru + 0uM Rh
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-9.339e-08
+</td>
+<td style="text-align:right;">
+3.83416e-05
+</td>
+<td style="text-align:left;">
+10uM ctDNA + 1uM Ru + 0uM Rh
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-9.119e-08
+</td>
+<td style="text-align:right;">
+-4.81367e-04
+</td>
+<td style="text-align:left;">
+10uM ctDNA + 1uM Ru + 0uM Rh
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-8.909e-08
+</td>
+<td style="text-align:right;">
+5.33984e-05
+</td>
+<td style="text-align:left;">
+10uM ctDNA + 1uM Ru + 0uM Rh
+</td>
+</tr>
+</tbody>
+</table>
+<p>You can see that the text files are two columns with time and intensity. I added the condition column. Also note that the acquisition parameters are in the header of each file (hence the “skip = 16” lines).</p>
+<p>Let’s see what the data look like:</p>
+<pre class="r"><code>ggplot(df_ctDNA, aes(x = time, y = intensity, color = condition)) + 
+    geom_path() + scale_color_viridis_d()</code></pre>
+<p><img src="08_07_19_spectroscopy_biofilm_Ru_Rh_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Ok, it looks like one of the traces is obviously different from the others. Let’s zoom in.</p>
+<pre class="r"><code>ggplot(df_ctDNA, aes(x = time, y = intensity, color = condition)) + 
+    geom_path() + xlim(NA, 1e-06) + ylim(NA, 0.02) + scale_color_viridis_d()</code></pre>
+<p><img src="08_07_19_spectroscopy_biofilm_Ru_Rh_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The one trace that is different from the others is the no Rh condition. However, it isn’t clear that there’s static quenching going on here. It may be useful to acquire an instrument response background scan with just buffer, so that we can background subtract these curves. It also looks like the curves may be saturated, so there may be an effect that’s just hard to see. Either way, the Rh gives an effect, but it does not increase in a stepwise manner. Not sure what to make of that.</p>
+<p>One potential issue that Eric brought up was the stoichiometry of Ru/Rh to DNA bp. Not sure if that would explain the patterns, but let’s move forward to look at a lower stoichiometry with 10uM ctDNA and 0.1uM Ru.</p>
+<p>First I’ll read in the data in the same way.</p>
+<pre class="r"><code>df_14 &lt;- read_csv(&quot;../data/80719_14_compressed.dat&quot;, skip = 16, 
+    col_names = c(&quot;time&quot;, &quot;intensity&quot;)) %&gt;% mutate(condition = &quot;10uM ctDNA + 0.1uM Ru -Rh&quot;)
+
+df_15 &lt;- read_csv(&quot;../data//80719_15_compressed.dat&quot;, skip = 16, 
+    col_names = c(&quot;time&quot;, &quot;intensity&quot;)) %&gt;% mutate(condition = &quot;10uM ctDNA + 0.1uM Ru + 0.0uM Rh&quot;)
+
+df_16 &lt;- read_csv(&quot;../data/80719_16_compressed.dat&quot;, skip = 16, 
+    col_names = c(&quot;time&quot;, &quot;intensity&quot;)) %&gt;% mutate(condition = &quot;10uM ctDNA + 0.1uM Ru + 0.1uM Rh&quot;)
+
+df_17 &lt;- read_csv(&quot;../data/80719_17_compressed.dat&quot;, skip = 16, 
+    col_names = c(&quot;time&quot;, &quot;intensity&quot;)) %&gt;% mutate(condition = &quot;10uM ctDNA + 0.1uM Ru + 0.2uM Rh&quot;)
+
+df_18 &lt;- read_csv(&quot;../data/80719_18_compressed.dat&quot;, skip = 16, 
+    col_names = c(&quot;time&quot;, &quot;intensity&quot;)) %&gt;% mutate(condition = &quot;10uM ctDNA + 0.1uM Ru + 0.4uM Rh&quot;)
+
+df_ctDNA_lowRu &lt;- bind_rows(df_14, df_15, df_16, df_17, df_18)
+
+df_ctDNA_lowRu %&gt;% head() %&gt;% kable(digits = 15) %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+time
+</th>
+<th style="text-align:right;">
+intensity
+</th>
+<th style="text-align:left;">
+condition
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+-9.939e-08
+</td>
+<td style="text-align:right;">
+-5.58203e-05
+</td>
+<td style="text-align:left;">
+10uM ctDNA + 0.1uM Ru -Rh
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-9.779e-08
+</td>
+<td style="text-align:right;">
+1.16410e-04
+</td>
+<td style="text-align:left;">
+10uM ctDNA + 0.1uM Ru -Rh
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-9.559e-08
+</td>
+<td style="text-align:right;">
+-2.25210e-04
+</td>
+<td style="text-align:left;">
+10uM ctDNA + 0.1uM Ru -Rh
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-9.339e-08
+</td>
+<td style="text-align:right;">
+-9.55930e-05
+</td>
+<td style="text-align:left;">
+10uM ctDNA + 0.1uM Ru -Rh
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-9.119e-08
+</td>
+<td style="text-align:right;">
+1.20316e-04
+</td>
+<td style="text-align:left;">
+10uM ctDNA + 0.1uM Ru -Rh
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-8.909e-08
+</td>
+<td style="text-align:right;">
+3.74648e-04
+</td>
+<td style="text-align:left;">
+10uM ctDNA + 0.1uM Ru -Rh
+</td>
+</tr>
+</tbody>
+</table>
+<p>The data structure is the same as before. Let’s look at it plotted:</p>
+<pre class="r"><code>ggplot(df_ctDNA_lowRu, aes(x = time, y = intensity, color = condition)) + 
+    geom_path() + scale_color_viridis_d()</code></pre>
+<p><img src="08_07_19_spectroscopy_biofilm_Ru_Rh_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Ok, this looks a little weird. The one curve that looks like the highest intensity should have the most Rh quencher. Perhaps I added the wrong molecule (Ru and Rh look very similar…) or the scan was weird. That said part of the dataset makes sense if we just look at the 0uM - 0.2uM Rh conditions:</p>
+<pre class="r"><code>df_ctDNA_lowRu_2 &lt;- bind_rows(df_15, df_16, df_17)
+
+ggplot(df_ctDNA_lowRu_2, aes(x = time, y = intensity, color = condition)) + 
+    geom_path() + scale_color_viridis_d() + facet_wrap(~condition) + 
+    guides(color = &quot;none&quot;)</code></pre>
+<p><img src="08_07_19_spectroscopy_biofilm_Ru_Rh_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Here you can see that the Ru only sample is quenched by the addition of the Rh. That said, it’s not a nice obvious stepwise thing. Eric mentioned that could also be because we are getting to concentrations that are probably below the Kd for Rh complex binding DNA…making it a much weaker quencher. In general though, it would be nice to background subtract out the instrument response to make sure that we are really only looking at the Ru emission…</p>
+</div>
+<div id="delta-phz-biofilm" class="section level2">
+<h2><span class="math inline">\(\Delta phz*\)</span> Biofilm</h2>
+<p>Now for the real deal. Here we basically just repeated the 1uM Ru experiment from above, but this time with my biofilm suspension added directly to the cuvette (instead of ctDNA).</p>
+<p>Let’s read in the data:</p>
+<pre class="r"><code>df_19 &lt;- read_csv(&quot;../data/80719_19_compressed.dat&quot;, skip = 16, 
+    col_names = c(&quot;time&quot;, &quot;intensity&quot;)) %&gt;% mutate(condition = &quot;dPHZ -Ru -Rh&quot;)
+
+df_20 &lt;- read_csv(&quot;../data//80719_20_compressed.dat&quot;, skip = 16, 
+    col_names = c(&quot;time&quot;, &quot;intensity&quot;)) %&gt;% mutate(condition = &quot;dPHZ + 1uM Ru -Rh&quot;)
+
+df_21 &lt;- read_csv(&quot;../data/80719_21_compressed.dat&quot;, skip = 16, 
+    col_names = c(&quot;time&quot;, &quot;intensity&quot;)) %&gt;% mutate(condition = &quot;dPHZ + 1uM Ru 1uM Rh&quot;)
+
+df_22 &lt;- read_csv(&quot;../data/80719_22_compressed.dat&quot;, skip = 16, 
+    col_names = c(&quot;time&quot;, &quot;intensity&quot;)) %&gt;% mutate(condition = &quot;dPHZ + 1uM Ru 2uM Rh&quot;)
+
+df_23 &lt;- read_csv(&quot;../data/80719_23_compressed.dat&quot;, skip = 16, 
+    col_names = c(&quot;time&quot;, &quot;intensity&quot;)) %&gt;% mutate(condition = &quot;dPHZ + 1uM Ru 4uM Rh&quot;)
+
+df_dphz &lt;- bind_rows(df_19, df_20, df_21, df_22, df_23)
+
+df_dphz %&gt;% head() %&gt;% kable(digits = 15) %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+time
+</th>
+<th style="text-align:right;">
+intensity
+</th>
+<th style="text-align:left;">
+condition
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+-9.939e-08
+</td>
+<td style="text-align:right;">
+3.97908e-04
+</td>
+<td style="text-align:left;">
+dPHZ -Ru -Rh
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-9.779e-08
+</td>
+<td style="text-align:right;">
+2.58198e-04
+</td>
+<td style="text-align:left;">
+dPHZ -Ru -Rh
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-9.559e-08
+</td>
+<td style="text-align:right;">
+-1.65492e-04
+</td>
+<td style="text-align:left;">
+dPHZ -Ru -Rh
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-9.339e-08
+</td>
+<td style="text-align:right;">
+-2.84336e-04
+</td>
+<td style="text-align:left;">
+dPHZ -Ru -Rh
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-9.119e-08
+</td>
+<td style="text-align:right;">
+-2.03292e-04
+</td>
+<td style="text-align:left;">
+dPHZ -Ru -Rh
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-8.909e-08
+</td>
+<td style="text-align:right;">
+-8.58594e-05
+</td>
+<td style="text-align:left;">
+dPHZ -Ru -Rh
+</td>
+</tr>
+</tbody>
+</table>
+<p>First let’s just look at the biofilm only scan compared to biofilm + 1uM Ru.</p>
+<pre class="r"><code>df_dphz %&gt;% filter(condition %in% c(&quot;dPHZ -Ru -Rh&quot;, &quot;dPHZ + 1uM Ru -Rh&quot;)) %&gt;% 
+    ggplot(data = ., aes(x = time, y = intensity, color = condition)) + 
+    geom_path() + scale_color_viridis_d()</code></pre>
+<p><img src="08_07_19_spectroscopy_biofilm_Ru_Rh_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Here we can see two things. First, the biofilm by itself has significant fluorescence emission with these settings with a lifetime that happens on this timescale. Second, the Ru fluorescence / lifetime is actually visible above that background. So let’s look at the whole dataset:</p>
+<pre class="r"><code>ggplot(df_dphz, aes(x = time, y = intensity, color = condition)) + 
+    geom_path() + scale_color_viridis_d()</code></pre>
+<p><img src="08_07_19_spectroscopy_biofilm_Ru_Rh_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># ggplot(df_dphz, aes(x = time, y = intensity, color =
+# condition)) + geom_path() + xlim(NA, 1e-6)+ylim(NA,0.04) +
+# scale_color_viridis_d()</code></pre>
+<p>Ok, it sort of look like something is happening there with the addition of the Rh. Let’s subtract the background of the biofilm only fluorescence and see how that looks. To do this we are just going to subtract the minimum value at each datapoint (which will be the biofilm only condition).</p>
+<div id="this-may-actually-be-static-quenching" class="section level3">
+<h3>This may actually be static quenching</h3>
+<pre class="r"><code>df_dphz_bg &lt;- df_dphz %&gt;% 
+  group_by(time) %&gt;% 
+  mutate(min = min(intensity)) %&gt;% 
+  mutate(bg_sub = intensity - min)
+  
+
+ggplot(df_dphz_bg, aes(x = time, y = bg_sub, color = condition)) + geom_path() + #xlim(NA, 1e-6)+ylim(NA,0.04) +
+  scale_color_viridis_d()</code></pre>
+<p><img src="08_07_19_spectroscopy_biofilm_Ru_Rh_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /> Woah!!</p>
+<p>First, it looks like our background subtraction worked well. The biofilm only condition now pretty much looks like a flat line at zero. Second the real crazy thing is it looks like static quenching as we add more Rh. Let’s zoom in a little more to make it nice and pretty:</p>
+<pre class="r"><code>ggplot(df_dphz_bg, aes(x = time, y = bg_sub, color = condition)) + 
+    geom_path() + xlim(0, 1e-06) + ylim(NA, 0.02) + scale_color_viridis_d()</code></pre>
+<p><img src="08_07_19_spectroscopy_biofilm_Ru_Rh_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Nice! Now the last thing we should check is if the shapes of the curves are actually different or not. Remember different shape means different lifetime means dynamic quenching. Same shape (different intensity) means static quenching.</p>
+<p>To do this, I’m just going to normalize by the max intensity within each condition (from the background subtracted intensities).</p>
+<pre class="r"><code>df_dphz_bg_norm &lt;- df_dphz_bg %&gt;% 
+  filter(time&gt;0) %&gt;% 
+  group_by(condition) %&gt;% 
+  mutate(max = max(bg_sub)) %&gt;% 
+  mutate(norm_intensity = bg_sub / max)
+
+
+ggplot(df_dphz_bg_norm, aes(x = time, y = norm_intensity, color = condition)) + geom_path() + #xlim(NA, 1e-6)+ylim(NA,0.04) +
+  scale_color_viridis_d()</code></pre>
+<p><img src="08_07_19_spectroscopy_biofilm_Ru_Rh_files/figure-html/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Looks like the exact same shape to me! This is really interesting and I think it’s pretty good evidence of static quenching in the biofilm suspension. See the end of the document for caveats and next steps.</p>
+</div>
+</div>
+<div id="wt-biofilm" class="section level2">
+<h2>WT Biofilm</h2>
+<p>We had a little time leftover, so we decided to try a different condition - a WT biofilm. I reasoned that this biofilm may have more eDNA than the dPHZ…but it could also be more complicated if any of the phenazines quench the Ru fluorescence (instead of the Rh quenching).</p>
+<p>Let’s read in the data:</p>
+<pre class="r"><code>df_25 &lt;- read_csv(&quot;../data/80719_25_compressed.dat&quot;, skip = 16, 
+    col_names = c(&quot;time&quot;, &quot;intensity&quot;)) %&gt;% mutate(condition = &quot;WT + 0uM Ru + 0uM Rh&quot;)
+
+df_26 &lt;- read_csv(&quot;../data/80719_26_compressed.dat&quot;, skip = 16, 
+    col_names = c(&quot;time&quot;, &quot;intensity&quot;)) %&gt;% mutate(condition = &quot;WT + 1uM Ru + 0uM Rh&quot;)
+
+df_27 &lt;- read_csv(&quot;../data/80719_27_compressed.dat&quot;, skip = 16, 
+    col_names = c(&quot;time&quot;, &quot;intensity&quot;)) %&gt;% mutate(condition = &quot;WT + 1uM Ru + 1uM Rh&quot;)
+
+df_28 &lt;- read_csv(&quot;../data/80719_28_compressed.dat&quot;, skip = 16, 
+    col_names = c(&quot;time&quot;, &quot;intensity&quot;)) %&gt;% mutate(condition = &quot;WT + 1uM Ru + 2uM Rh&quot;)
+
+df_29 &lt;- read_csv(&quot;../data/80719_29_compressed.dat&quot;, skip = 16, 
+    col_names = c(&quot;time&quot;, &quot;intensity&quot;)) %&gt;% mutate(condition = &quot;WT + 1uM Ru + 4uM Rh&quot;)
+
+df_wt &lt;- bind_rows(df_25, df_26, df_27, df_28, df_29)
+
+df_wt %&gt;% head() %&gt;% kable(digits = 15) %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+time
+</th>
+<th style="text-align:right;">
+intensity
+</th>
+<th style="text-align:left;">
+condition
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+-9.939e-08
+</td>
+<td style="text-align:right;">
+-2.25339e-04
+</td>
+<td style="text-align:left;">
+WT + 0uM Ru + 0uM Rh
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-9.779e-08
+</td>
+<td style="text-align:right;">
+1.52250e-04
+</td>
+<td style="text-align:left;">
+WT + 0uM Ru + 0uM Rh
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-9.559e-08
+</td>
+<td style="text-align:right;">
+-1.20494e-05
+</td>
+<td style="text-align:left;">
+WT + 0uM Ru + 0uM Rh
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-9.339e-08
+</td>
+<td style="text-align:right;">
+-2.24802e-04
+</td>
+<td style="text-align:left;">
+WT + 0uM Ru + 0uM Rh
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-9.119e-08
+</td>
+<td style="text-align:right;">
+-1.02643e-04
+</td>
+<td style="text-align:left;">
+WT + 0uM Ru + 0uM Rh
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-8.909e-08
+</td>
+<td style="text-align:right;">
+-1.59453e-04
+</td>
+<td style="text-align:left;">
+WT + 0uM Ru + 0uM Rh
+</td>
+</tr>
+</tbody>
+</table>
+<p>Let’s look at all the data together:</p>
+<pre class="r"><code>ggplot(df_wt, aes(x = time, y = intensity, color = condition)) + geom_path() + xlim(NA, 1e-6)+ #ylim(NA,NA) +
+  scale_color_viridis_d()</code></pre>
+<p><img src="08_07_19_spectroscopy_biofilm_Ru_Rh_files/figure-html/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>As for dPHZ, it is clear that the biofilm has a background fluorescence, but it’s also clear that we can see the Ru signal above that background. It’s not obvious if we are seeing any difference with the Rh added.</p>
+<p>Let’s go ahead and background subtract out the biofilm only signal in the same was as above (since that was very useful).</p>
+<pre class="r"><code>df_wt_bg &lt;- df_wt %&gt;% group_by(time) %&gt;% mutate(min = min(intensity)) %&gt;% 
+    mutate(bg_sub = intensity - min)
+
+
+ggplot(df_wt_bg, aes(x = time, y = bg_sub, color = condition)) + 
+    geom_path() + ylim(NA, 0.01) + scale_color_viridis_d()</code></pre>
+<p><img src="08_07_19_spectroscopy_biofilm_Ru_Rh_files/figure-html/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Ok, the background subtraction seems to have worked well (biofilm is flat line). The Ru signal looks a little noisier than the dPHZ (it’s less than half the intensity), and that may be due to some effect of the phenazine? More importantly, it looks like there is an effect from adding the Rh here as well. Let’s zoom in a little more and smooth to see a prettier view:</p>
+<pre class="r"><code>ggplot(df_wt_bg, aes(x = time, y = bg_sub, color = condition)) + 
+    geom_point(shape = 21) + geom_smooth(span = 0.1, se = F) + 
+    ylim(NA, 0.0075) + xlim(0, 7.5e-07) + scale_color_viridis_d()</code></pre>
+<p><img src="08_07_19_spectroscopy_biofilm_Ru_Rh_files/figure-html/unnamed-chunk-17-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>It’s still noisy, but it looks like the peaks for the 1 and 2uM Rh are lower than the 0uM Rh. The obvious decrease comes with the 4uM Rh. Surely we could get nicer fits by actual fitting a relevant model here…but that seems overkill for now.</p>
+<p>The only other question for the WT data is - are the peaks the same shape? Let’s normalize as before and plot:</p>
+<pre class="r"><code>df_wt_bg_norm &lt;- df_wt_bg %&gt;% 
+  filter(time&gt;3e-8) %&gt;% 
+  group_by(condition) %&gt;% 
+  mutate(max = max(bg_sub)) %&gt;% 
+  mutate(norm_intensity = bg_sub / max)
+
+ggplot(df_wt_bg_norm, aes(x = time, y = norm_intensity, color = condition)) + geom_path() + #xlim(NA, 1e-6)+ylim(NA,0.04) +
+  scale_color_viridis_d()</code></pre>
+<p><img src="08_07_19_spectroscopy_biofilm_Ru_Rh_files/figure-html/unnamed-chunk-18-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>When we normalize by the max in this time interval to focus on the peaks and not the noise beforehand we get this plot. This looks pretty good…for now I think it’s reasonable to think that these are the same shape and represent the same lifetime.</p>
+</div>
+</div>
+<div id="conclusions-and-next-steps" class="section level1">
+<h1>Conclusions and Next Steps</h1>
+<p>I take this experiment to be reasonable preliminary data that static quenching does occur between our <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> and <span class="math inline">\(Rh(phi)_2bpy^{3+}\)</span> complexes in DNA associated with the biofilms. Based on Jackie’s work it is reasonable to speculate that the static quenching is occuring through DNA CT.</p>
+<p>One caveat that I think we may want to address if this type of data actually goes in the paper - is the DNA mediating the effect extracellular DNA that existed in the biofilm, or is it genomic DNA from live or recently killed cells. In order to know this we would like to know how much the complexes are getting into live cells and how fast (if at all) the complexes might kill the biofilm cells.</p>
+<p>Broadly, this biofilm suspension isn’t really a biofilm anymore, and so that is a caveat because we’ve taken away all the structure. If we ever had a way to perform these measurements in situ (e.g. time resolved fluorescence microscopy) that would be very cool.</p>
+<p>The final data analysis caveat - by background subtracting we are assuming that the biofilm autofluorescence isn’t interacting at all with the Ru emission…and I don’t think we can know that for sure.</p>
+<p>If we want to continue a few more experiments down this path I think that we should acquire some replicate biofilm measurements with WT and dPHZ as well as exponentially growing cells. We should try to image the Ru fluorescence in the biofilm suspension and measure eDNA concentration via TOTO-1 fluorescence. We should also do some toxicity tests incubating the biofilm suspensions with the metal complexes for different amounts of time and performing CFUs. The other interesting avenue to pursue is whether PYO can actually quench <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span>. Eric seemed to have tried a few things with this and it didn’t sound straightforward…but who knows. A possible in vivo experiment to try would be to look at a <span class="math inline">\(\Delta phz*\)</span> biofilm + / - PYO (in the agar) as a potential quencher.</p>
+<hr />
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
