@@ -501,7 +501,7 @@ library(tidybayes)
 library(tidyverse)
 library(brms)
 library(ggridges)
-
+library(viridis)
 get_variables(frap_model_0pct)
 
 frap_model_dists <- bind_rows(
@@ -516,10 +516,17 @@ ggplot(frap_model_dists, aes(x = b_tau_Intercept, y = factor(Condition))) + geom
 
 
 ggplot(frap_model_dists, aes(x = b_tau_Intercept, y = Condition)) + 
-  geom_density_ridges(quantile_lines = T,quantiles = c(0.025,0.1,0.5,0.9, 0.975), jittered_points = T, position = 'raincloud', point_alpha = 0.01) +
+  geom_density_ridges(quantile_lines = T,
+                      quantiles = c(0.025,0.1,0.5,0.9, 0.975), 
+                      jittered_points = T, 
+                      position = 'raincloud', 
+                      point_alpha = 0.01,
+                      scale = 1, calc_ecdf = T) +
   theme_ridges(grid = FALSE, center_axis_labels = TRUE) +
   labs(x = expression("Half recovery time ("*tau[1/2]*" - sec)"), y = '% Glycerol', title = 'Posterior probabilities for FRAP parameter estimate') + 
   xlim(0,11)
+
+#   ggplot(aes(fill = 0.5 - abs(0.5-..ecdf..)) + stat_density_ridges(geom = "density_ridges_gradient", calc_ecdf = TRUE) + scale_fill_viridis() for filled densities based on quantile / ecdf
 ```
 
 

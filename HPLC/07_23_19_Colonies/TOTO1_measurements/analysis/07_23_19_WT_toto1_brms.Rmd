@@ -113,7 +113,19 @@ wt_brm_single_level <- brm(eDNA_dsDNA_uM ~ 1 + (1 | Colony_number),
 
 summary(wt_brm_single_level)
 
-posterior_samples(wt_brm_single_level)
+plot(wt_brm_single_level)
 
 coef(wt_brm_single_level)
+
+prior_summary(wt_brm_single_level)
+
+priorPostSamples <- bind_rows(
+  posterior_samples(wt_brm_single_level) %>% select(b_Intercept) %>% mutate(dist = 'posterior'),
+  tibble(b_Intercept = rnorm(4000, 100, 30)) %>% mutate(dist = 'prior')
+)
+
+ggplot(priorPostSamples, aes(x = b_Intercept, y = dist)) + geom_density_ridges(jittered_points = T, position = 'raincloud', point_alpha = 0.02)+
+  theme_ridges()
 ```
+
+

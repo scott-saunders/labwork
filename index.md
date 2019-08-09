@@ -120,6 +120,8 @@ for (link in files) {
 
 <a href="https://scott-saunders.github.io/labwork/Figures/README.html">Figures/README.html</a>
 
+<a href="https://scott-saunders.github.io/labwork/Figures/Spectroscopy_first_look.nb.html">Figures/Spectroscopy\_first\_look.nb.html</a>
+
 <a href="https://scott-saunders.github.io/labwork/FRAP/05_30_19/05_30_19_PYO_FRAP_analysis_2.html">FRAP/05\_30\_19/05\_30\_19\_PYO\_FRAP\_analysis\_2.html</a>
 
 <a href="https://scott-saunders.github.io/labwork/FRAP/06_10_19_glycerol/06_10_19_PYO_FRAP_glycerol_analysis.html">FRAP/06\_10\_19\_glycerol/06\_10\_19\_PYO\_FRAP\_glycerol\_analysis.html</a>
@@ -137,6 +139,8 @@ for (link in files) {
 <a href="https://scott-saunders.github.io/labwork/HPLC/analysis/2018_10_30_Notebook_colonyHPLC.html">HPLC/analysis/2018\_10\_30\_Notebook\_colonyHPLC.html</a>
 
 <a href="https://scott-saunders.github.io/labwork/HPLC/analysis/2018_10_30_Notebook_colonyHPLC.nb.html">HPLC/analysis/2018\_10\_30\_Notebook\_colonyHPLC.nb.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/HPLC/README.html">HPLC/README.html</a>
 
 <a href="https://scott-saunders.github.io/labwork/IDA/01_03_19_Update/Dap_V1.html">IDA/01\_03\_19\_Update/Dap\_V1.html</a>
 
@@ -205,3 +209,7 @@ for (link in files) {
 <a href="https://scott-saunders.github.io/labwork/index.html">index.html</a>
 
 <a href="https://scott-saunders.github.io/labwork/potentialStep_Dap_09_16_18.html">potentialStep\_Dap\_09\_16\_18.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/Spectroscopy/08_07_19_biofilm_Ru_Rh/analysis/08_07_19_spectroscopy_biofilm_Ru_Rh.html">Spectroscopy/08\_07\_19\_biofilm\_Ru\_Rh/analysis/08\_07\_19\_spectroscopy\_biofilm\_Ru\_Rh.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/Spectroscopy/README.html">Spectroscopy/README.html</a>
