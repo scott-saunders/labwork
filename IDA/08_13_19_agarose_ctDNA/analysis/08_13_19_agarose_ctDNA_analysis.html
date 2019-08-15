@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Scott Saunders" />
+
+
+<title>Agarose ctDNA</title>
+
+<script src="08_13_19_agarose_ctDNA_analysis_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="08_13_19_agarose_ctDNA_analysis_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="08_13_19_agarose_ctDNA_analysis_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="08_13_19_agarose_ctDNA_analysis_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="08_13_19_agarose_ctDNA_analysis_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="08_13_19_agarose_ctDNA_analysis_files/navigation-1.1/tabsets.js"></script>
+<script src="08_13_19_agarose_ctDNA_analysis_files/navigation-1.1/codefolding.js"></script>
+<link href="08_13_19_agarose_ctDNA_analysis_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="08_13_19_agarose_ctDNA_analysis_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Agarose ctDNA</h1>
+<h3 class="subtitle">Analysis</h3>
+<h4 class="author">Scott Saunders</h4>
+<h4 class="date">08_13_19</h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#data">Data</a></li>
+<li><a href="#gc-time-course">GC time course</a><ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#transfer-runs">Transfer runs</a></li>
+<li><a href="#soak-runs">Soak Runs</a></li>
+</ul></li>
+<li><a href="#swv-time-course">SWV time course</a><ul>
+<li><a href="#overview-1">Overview</a></li>
+<li><a href="#transfer-runs-1">Transfer Runs</a></li>
+<li><a href="#soak-runs-1">Soak Runs</a></li>
+</ul></li>
+<li><a href="#swv-vs.gc">SWV vs. GC</a><ul>
+<li><a href="#overview-2">Overview</a></li>
+</ul></li>
+<li><a href="#conclusions">Conclusions</a></li>
+</ul>
+</div>
+
+<pre class="r"><code>library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+library(knitr)
+library(kableExtra)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)
+
+source(&quot;../../tools/echem_processing_tools.R&quot;)
+source(&quot;../../tools/plotting_tools.R&quot;)
+
+theme_set(theme_1())</code></pre>
+<div id="data" class="section level1">
+<h1>Data</h1>
+<pre class="r"><code># Agarose
+gc_agarose &lt;- read_csv(&quot;../../06_06_19_agarose_PYO_2/Processing/06_06_19_processed_gc_max_agarose.csv&quot;)
+swv_agarose &lt;- read_csv(&quot;../../06_06_19_agarose_PYO_2/Processing/06_06_19_processed_swv_max_agarose.csv&quot;)
+swvGC_agarose &lt;- read_csv(&quot;../../06_06_19_agarose_PYO_2/Processing/06_06_19_processed_swvGC_agarose.csv&quot;)
+
+# Agarose + ctDNA
+
+gc_ctDNA &lt;- read_csv(&quot;../processing/08_13_19_processed_gc_max_ctDNA.csv&quot;)
+swv_ctDNA &lt;- read_csv(&quot;../processing/08_13_19_processed_swv_max_ctDNA.csv&quot;)
+swvGC_ctDNA &lt;- read_csv(&quot;../processing/08_13_19_processed_swvGC_ctDNA.csv&quot;)</code></pre>
+</div>
+<div id="gc-time-course" class="section level1">
+<h1>GC time course</h1>
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<pre class="r"><code>df_gc &lt;- bind_rows(gc_agarose %&gt;% mutate(condition = &quot;agarose&quot;), 
+    gc_ctDNA %&gt;% mutate(condition = &quot;ctDNA&quot;)) %&gt;% group_by(condition, 
+    reactor) %&gt;% mutate(min_time = min(minutes)) %&gt;% mutate(norm_time = minutes - 
+    min_time)
+
+ggplot(df_gc, aes(x = norm_time, y = max_current, color = reactor, 
+    shape = electrode)) + geom_point() + facet_wrap(~condition)</code></pre>
+<p><img src="08_13_19_agarose_ctDNA_analysis_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="transfer-runs" class="section level2">
+<h2>Transfer runs</h2>
+<pre class="r"><code>ggplot(df_gc %&gt;% filter(norm_time &lt; 100) %&gt;% filter(reactor != 
+    &quot;soak&quot; &amp; reactor != &quot;soak_2&quot;), aes(x = norm_time, y = max_current, 
+    color = condition, shape = electrode)) + geom_point() + facet_wrap(~electrode)</code></pre>
+<p><img src="08_13_19_agarose_ctDNA_analysis_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /> Looks like their may actually be a small difference especially when normalizing by the starting values…</p>
+</div>
+<div id="soak-runs" class="section level2">
+<h2>Soak Runs</h2>
+<pre class="r"><code>ggplot(df_gc %&gt;% filter(norm_time &lt; 100) %&gt;% filter(reactor == 
+    &quot;soak&quot; | reactor == &quot;soak_2&quot;), aes(x = norm_time, y = max_current, 
+    color = condition, shape = electrode)) + geom_point() + facet_wrap(~electrode)</code></pre>
+<p><img src="08_13_19_agarose_ctDNA_analysis_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /> Hard to tell without normalization / letting it go longer…but ctDNA may actually be slower.</p>
+</div>
+</div>
+<div id="swv-time-course" class="section level1">
+<h1>SWV time course</h1>
+<div id="overview-1" class="section level2">
+<h2>Overview</h2>
+<pre class="r"><code>df_swv &lt;- bind_rows(swv_agarose %&gt;% mutate(condition = &quot;agarose&quot;), 
+    swv_ctDNA %&gt;% mutate(condition = &quot;ctDNA&quot;)) %&gt;% group_by(condition, 
+    reactor) %&gt;% mutate(min_time = min(minutes)) %&gt;% mutate(norm_time = minutes - 
+    min_time)
+
+ggplot(df_swv, aes(x = norm_time, y = max_current, color = reactor, 
+    shape = electrode)) + geom_point() + facet_wrap(~condition)</code></pre>
+<p><img src="08_13_19_agarose_ctDNA_analysis_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="transfer-runs-1" class="section level2">
+<h2>Transfer Runs</h2>
+<pre class="r"><code>ggplot(df_swv %&gt;% filter(reactor != &quot;soak&quot; &amp; reactor != &quot;soak_2&quot;) %&gt;% 
+    filter(norm_time &lt; 100), aes(x = norm_time, y = max_current, 
+    color = reactor, shape = electrode)) + geom_point() + facet_wrap(~electrode)</code></pre>
+<p><img src="08_13_19_agarose_ctDNA_analysis_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /> Again, looks like the ctDNA may actually be slower, especially after normalizing. Transfer 2 / 3 are replicates and look pretty similar, so that’s good.</p>
+</div>
+<div id="soak-runs-1" class="section level2">
+<h2>Soak Runs</h2>
+<pre class="r"><code>ggplot(df_swv %&gt;% filter(reactor == &quot;soak&quot; | reactor == &quot;soak_2&quot;), 
+    aes(x = norm_time, y = max_current, color = reactor, shape = electrode)) + 
+    geom_point() + facet_wrap(~electrode)</code></pre>
+<p><img src="08_13_19_agarose_ctDNA_analysis_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Same as before…a little hard to tell without normalization or running longer. ctDNA is possibly slower.</p>
+</div>
+</div>
+<div id="swv-vs.gc" class="section level1">
+<h1>SWV vs. GC</h1>
+<div id="overview-2" class="section level2">
+<h2>Overview</h2>
+<pre class="r"><code>df_swv_gc &lt;- bind_rows(swvGC_agarose %&gt;% mutate(condition = &quot;agarose&quot;), 
+    swvGC_ctDNA %&gt;% mutate(condition = &quot;ctDNA&quot;))
+
+ggplot(df_swv_gc, aes(x = max_current_swv, y = max_current_gc, 
+    color = reactor)) + geom_point() + facet_wrap(~electrode_swv) + 
+    scale_color_viridis_d() + geom_smooth(data = df_swv_gc %&gt;% 
+    filter(rep &lt;= 10), method = &quot;lm&quot;)</code></pre>
+<p><img src="08_13_19_agarose_ctDNA_analysis_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Overall slopes look pretty similar. Transfer_2 is an obvious outlier with a shallower slope.</p>
+</div>
+</div>
+<div id="conclusions" class="section level1">
+<h1>Conclusions</h1>
+<ul>
+<li>Need to actually perform Dphys and Dap calculations.</li>
+<li>Probably need to repeat both experiments (and maybe glycerol condition too)…acquisitions take a while though. How long to run??</li>
+</ul>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

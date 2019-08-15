@@ -28,6 +28,7 @@ library(kableExtra)
 library(ggridges)
 library(brms)
 library(tidybayes)
+library(mice)
 
 knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
 
@@ -128,4 +129,97 @@ ggplot(priorPostSamples, aes(x = b_Intercept, y = dist)) + geom_density_ridges(j
   theme_ridges()
 ```
 
+```{r}
+ ggplot(wt_preds %>% filter(Condition=='TOTO'), aes(x = factor(Colony_number), y = eDNA_dsDNA_uM)) +
+  geom_hline(yintercept = as_tibble(fixef(wt_brm_single_level))$Estimate, linetype = 2)+
+  geom_hline(yintercept = as_tibble(fixef(wt_brm_single_level))$Q2.5, linetype = 2, color = 'gray')+
+  geom_hline(yintercept = as_tibble(fixef(wt_brm_single_level))$Q97.5, linetype = 2, color = 'gray')+
+  geom_jitter(height = 0, width = 0.1, shape = 21)+
+  geom_pointrange(data = as_tibble(coef(wt_brm_single_level)$Colony_number, rownames = 'Colony_number'),
+                  aes(x = factor(Colony_number), 
+                      y = Estimate.Intercept, 
+                      ymin = Q2.5.Intercept, 
+                      ymax = Q97.5.Intercept))
 
+
+
+
+
+```
+
+```{r}
+wt_brm_no_level <- brm(eDNA_dsDNA_uM ~ 1,
+     data = wt_preds %>% filter(Condition=='TOTO'),
+     prior = prior(normal(100, 30), class = Intercept),
+     sample_prior = T,
+    chains = 4,
+    cores = 2,
+    iter = 10000,
+    control = list(adapt_delta = 0.95),
+    thin = 5,
+    inits = 'random',
+    file = 'wt_brm_no_level_1'
+)
+
+summary(wt_brm_no_level)
+```
+
+```{r}
+no_one_level_Samples <- bind_rows(
+  posterior_samples(wt_brm_single_level) %>% select(b_Intercept) %>% mutate(dist = 'one level'),
+  posterior_samples(wt_brm_no_level) %>% select(b_Intercept) %>% mutate(dist = 'no level'),
+  tibble(b_Intercept = rnorm(4000, 100, 30)) %>% mutate(dist = 'prior')
+)
+
+ggplot(no_one_level_Samples, aes(x = b_Intercept, y = dist)) + geom_density_ridges(jittered_points = T, position = 'raincloud', point_alpha = 0.02)+
+  theme_ridges()
+```
+
+```{r}
+wt_preds_list <- wt_preds %>% filter(Condition =='TOTO') %>% group_split(Colony_number)
+
+wt_brm_multi_flat <- brm_multiple(eDNA_dsDNA_uM ~ 1,
+     data = wt_preds_list,
+     prior = prior(normal(100, 30), class = Intercept),
+     sample_prior = T,
+    chains = 4,
+    cores = 2,
+    iter = 4000,
+    control = list(adapt_delta = 0.95),
+    inits = 'random',
+    combine = F
+)
+as_tibble(
+fixef(wt_brm_multi_flat[[1]])
+)
+```
+
+```{r}
+wt_no_level_coef <- bind_rows(as_tibble(fixef(wt_brm_multi_flat[[1]])),
+          as_tibble(fixef(wt_brm_multi_flat[[2]]),),
+          as_tibble(fixef(wt_brm_multi_flat[[3]])),
+          as_tibble(fixef(wt_brm_multi_flat[[4]])),
+          as_tibble(fixef(wt_brm_multi_flat[[5]])),
+          as_tibble(fixef(wt_brm_multi_flat[[6]]))
+) %>% mutate(Colony_number = 1:6)
+
+ ggplot(wt_preds %>% filter(Condition=='TOTO'), aes(x = factor(Colony_number), y = eDNA_dsDNA_uM)) +
+  geom_hline(yintercept = as_tibble(fixef(wt_brm_single_level))$Estimate, linetype = 2)+
+  geom_hline(yintercept = as_tibble(fixef(wt_brm_single_level))$Q2.5, linetype = 2, color = 'gray')+
+  geom_hline(yintercept = as_tibble(fixef(wt_brm_single_level))$Q97.5, linetype = 2, color = 'gray')+
+  geom_hline(yintercept = as_tibble(fixef(wt_brm_no_level))$Estimate, linetype = 2, color = 'red')+
+  geom_hline(yintercept = as_tibble(fixef(wt_brm_no_level))$Q2.5, linetype = 2, color = 'pink')+
+  geom_hline(yintercept = as_tibble(fixef(wt_brm_no_level))$Q97.5, linetype = 2, color = 'pink')+
+  geom_jitter(height = 0, width = 0.1, shape = 21)+
+  geom_pointrange(data = wt_no_level_coef,
+                  aes(x = factor(Colony_number), 
+                      y = Estimate, 
+                      ymin = Q2.5, 
+                      ymax = Q97.5), color = 'red', position = position_nudge(x = -0.1) )+
+     geom_pointrange(data = as_tibble(coef(wt_brm_single_level)$Colony_number, rownames = 'Colony_number'),
+                  aes(x = factor(Colony_number), 
+                      y = Estimate.Intercept, 
+                      ymin = Q2.5.Intercept, 
+                      ymax = Q97.5.Intercept),
+                  position = position_nudge(x = +0.1))
+```

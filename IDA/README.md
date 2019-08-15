@@ -64,6 +64,12 @@ for(link in files){
 
 <a href="https://scott-saunders.github.io/labwork/IDA/06_06_19_agarose_PYO_2/README.html">06\_06\_19\_agarose\_PYO\_2/README.html</a>
 
+<a href="https://scott-saunders.github.io/labwork/IDA/08_13_19_agarose_ctDNA/analysis/08_13_19_agarose_ctDNA_analysis.html">08\_13\_19\_agarose\_ctDNA/analysis/08\_13\_19\_agarose\_ctDNA\_analysis.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/IDA/08_13_19_agarose_ctDNA/processing/08_13_19_agarose_ctDNA_processing.html">08\_13\_19\_agarose\_ctDNA/processing/08\_13\_19\_agarose\_ctDNA\_processing.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/IDA/08_13_19_agarose_ctDNA/README.html">08\_13\_19\_agarose\_ctDNA/README.html</a>
+
 <a href="https://scott-saunders.github.io/labwork/IDA/09_11_18_DapEstimation.html">09\_11\_18\_DapEstimation.html</a>
 
 <a href="https://scott-saunders.github.io/labwork/IDA/11_28_18_blank_IDA/Analysis/11_28_18_blank_IDA_Analysis.html">11\_28\_18\_blank\_IDA/Analysis/11\_28\_18\_blank\_IDA\_Analysis.html</a>

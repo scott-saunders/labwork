@@ -281,4 +281,33 @@ lm_tran <- tidy(lm(max_current_gc ~ max_current_swv, data = tran_max_comb_i2 %>%
     mutate(dataset = "SWVvsGC")
 ```
 
+# Output Files
+
+```{r}
+#SWV
+swv_max_agarose <- bind_rows(
+  swv_tran_max %>% mutate(reactor = 'transfer'),
+  swv_soak_max %>% mutate(reactor = 'soak')
+)
+
+#write_csv(swv_max_agarose, "06_06_19_processed_swv_max_agarose.csv")
+
+#GC
+gc_max_agarose <- bind_rows(
+  gc_tran_max %>% mutate(reactor = 'transfer'),
+  gc_soak_max %>% mutate(reactor = 'soak')
+)
+
+#write_csv(gc_max_agarose, "06_06_19_processed_gc_max_agarose.csv")
+
+#SWV - GC
+swvGC_agarose <- bind_rows(
+  tran_max_comb_i1 %>% mutate(reactor = 'transfer'),
+  tran_max_comb_i2 %>% mutate(reactor = 'transfer'),
+  soak_max_comb_i1 %>% mutate(reactor = 'soak'),
+  soak_max_comb_i2 %>% mutate(reactor = 'soak')
+)
+
+#write_csv(swvGC_agarose, "06_06_19_processed_swvGC_agarose.csv")
+```
 

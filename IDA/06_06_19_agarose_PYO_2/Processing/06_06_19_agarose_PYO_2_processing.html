@@ -70,9 +70,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -103,8 +101,6 @@ summary {
 </style>
 
 
-
-<div class="container-fluid main-container">
 
 <!-- tabsets -->
 
@@ -187,6 +183,15 @@ $(document).ready(function () {
 
 
 
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
 
 <div class="fluid-row" id="header">
 
@@ -201,7 +206,7 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">Agarose PYO 2 Processing</h1>
-<h4 class="date"><em>06_07_19</em></h4>
+<h4 class="date">06_07_19</h4>
 
 </div>
 
@@ -209,6 +214,7 @@ $(document).ready(function () {
 <ul>
 <li><a href="#soak">Soak</a></li>
 <li><a href="#transfer">Transfer</a></li>
+<li><a href="#output-files">Output Files</a></li>
 </ul>
 </div>
 
@@ -226,6 +232,7 @@ source(&quot;../../tools/echem_processing_tools.R&quot;)
 source(&quot;../../tools/plotting_tools.R&quot;)
 
 theme_set(theme_1())</code></pre>
+<p>I was worried about the adsorbed PYO signal from the last run, so I decided to redo the experiment on another IDA. This time I tried the SWV GC measurement scheme during the soak as well as the transfer.</p>
 <div id="soak" class="section level1">
 <h1>Soak</h1>
 <pre class="r"><code>soak_data_path = &quot;../Data/Soak/&quot;
@@ -251,7 +258,7 @@ swv_soak_data &lt;- echem_import_to_df(filenames = SWV_soak_filenames,
 ggplot(swv_soak_data, aes(x = E, y = current, color = rep, group = rep)) + 
     geom_path() + facet_wrap(~electrode, scales = &quot;free&quot;) + scale_color_viridis() + 
     scale_x_reverse()</code></pre>
-<p><img src="06_06_19_agarose_PYO_2_processing_files/figure-html/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="06_06_19_agarose_PYO_2_processing_files/figure-html/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /> Here you can clearly see a second peak that arises later on around -400mV</p>
 <pre class="r"><code>swv_soak_max &lt;- swv_soak_data %&gt;% group_by(rep, electrode) %&gt;% 
     filter(E &lt; -0.15 &amp; E &gt; -0.35) %&gt;% mutate(max_current = max(abs(current))) %&gt;% 
     filter(abs(current) == max_current)
@@ -435,6 +442,30 @@ ggplot(tran_max_comb_i1, aes(x = max_current_swv, y = max_current_gc)) +
     filter(rep &lt; 10)), conf.int = T) %&gt;% filter(term == &quot;max_current_swv&quot;) %&gt;% 
     mutate(dap = dap_from_swvGC(m = estimate)) %&gt;% mutate(dap_high = dap_from_swvGC(m = conf.high)) %&gt;% 
     mutate(dap_low = dap_from_swvGC(m = conf.low)) %&gt;% mutate(dataset = &quot;SWVvsGC&quot;)</code></pre>
+</div>
+<div id="output-files" class="section level1">
+<h1>Output Files</h1>
+<pre class="r"><code># SWV
+swv_max_agarose &lt;- bind_rows(swv_tran_max %&gt;% mutate(reactor = &quot;transfer&quot;), 
+    swv_soak_max %&gt;% mutate(reactor = &quot;soak&quot;))
+
+# write_csv(swv_max_ctDNA,
+# &#39;06_06_19_processed_swv_max_agarose.csv&#39;)
+
+# GC
+gc_max_agarose &lt;- bind_rows(gc_tran_max %&gt;% mutate(reactor = &quot;transfer&quot;), 
+    gc_soak_max %&gt;% mutate(reactor = &quot;soak&quot;))
+
+# write_csv(gc_max_ctDNA,
+# &#39;06_06_19_processed_gc_max_agarose.csv&#39;)
+
+# SWV - GC
+swvGC_agarose &lt;- bind_rows(tran_max_comb_i1 %&gt;% mutate(reactor = &quot;transfer&quot;), 
+    tran_max_comb_i2 %&gt;% mutate(reactor = &quot;transfer&quot;), soak_max_comb_i1 %&gt;% 
+        mutate(reactor = &quot;soak&quot;), soak_max_comb_i2 %&gt;% mutate(reactor = &quot;soak&quot;))
+
+# write_csv(swvGC_ctDNA,
+# &#39;06_06_19_processed_swvGC_agarose.csv&#39;)</code></pre>
 </div>
 
 
