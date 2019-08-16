@@ -1,6 +1,7 @@
 ---
 title: "DNA CT Spectroscopy with Biofilm Suspension"
 subtitle: "Ru quenched by Rh"
+author: "Scott Saunders"
 fontsize: 12pt
 date: '08_07_19 '
 output:
