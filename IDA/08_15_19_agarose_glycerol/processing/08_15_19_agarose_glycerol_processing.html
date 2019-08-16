@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Scott Saunders" />
+
+
+<title>Agarose Glycerol</title>
+
+<script src="08_15_19_agarose_glycerol_processing_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="08_15_19_agarose_glycerol_processing_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="08_15_19_agarose_glycerol_processing_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="08_15_19_agarose_glycerol_processing_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="08_15_19_agarose_glycerol_processing_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="08_15_19_agarose_glycerol_processing_files/navigation-1.1/tabsets.js"></script>
+<script src="08_15_19_agarose_glycerol_processing_files/navigation-1.1/codefolding.js"></script>
+<link href="08_15_19_agarose_glycerol_processing_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="08_15_19_agarose_glycerol_processing_files/highlightjs-9.12.0/highlight.js"></script>
+<script src="08_15_19_agarose_glycerol_processing_files/kePrint-0.0.1/kePrint.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Agarose Glycerol</h1>
+<h3 class="subtitle">Processing</h3>
+<h4 class="author">Scott Saunders</h4>
+<h4 class="date">08_15_19</h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#all-swvs">All SWVs</a></li>
+<li><a href="#all-gcs">All GCs</a></li>
+<li><a href="#swv-vs.gc">SWV vs. GC</a></li>
+</ul>
+</div>
+
+<pre class="r"><code>library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+library(knitr)
+library(kableExtra)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)
+
+source(&quot;../../tools/echem_processing_tools.R&quot;)
+source(&quot;../../tools/plotting_tools.R&quot;)
+
+theme_set(theme_1())</code></pre>
+<pre class="r"><code>soak_1_path = &quot;../data/soak_1/&quot;
+
+tran_1_path = &quot;../data/transfer_1/&quot;
+
+data_cols &lt;- c(&quot;E&quot;, &quot;i1&quot;, &quot;i2&quot;)
+
+swv_skip_rows = 18
+
+gc_skip_rows = 21</code></pre>
+<div id="all-swvs" class="section level1">
+<h1>All SWVs</h1>
+<pre class="r"><code># Add &#39;reactor&#39; to file name so it is parsed into column
+filename_cols = c(&quot;reactor&quot;, &quot;echem&quot;, &quot;rep&quot;)
+
+swv_tran_1_names &lt;- dir(path = tran_1_path, pattern = &quot;[swv]+.+[txt]$&quot;) %&gt;% 
+    paste(&quot;tran1&quot;, ., sep = &quot;_&quot;)
+swv_soak_1_names &lt;- dir(path = soak_1_path, pattern = &quot;[swv]+.+[txt]$&quot;) %&gt;% 
+    paste(&quot;soak1&quot;, ., sep = &quot;_&quot;)
+
+# Add correct paths separate from filenames
+swv_tran_1_paths &lt;- dir(path = tran_1_path, pattern = &quot;[swv]+.+[txt]$&quot;) %&gt;% 
+    paste(tran_1_path, ., sep = &quot;&quot;)
+swv_soak_1_paths &lt;- dir(path = soak_1_path, pattern = &quot;[swv]+.+[txt]$&quot;) %&gt;% 
+    paste(soak_1_path, ., sep = &quot;&quot;)
+
+# Combine all SWVs into single vector
+swv_names &lt;- c(swv_tran_1_names, swv_soak_1_names)
+swv_paths &lt;- c(swv_tran_1_paths, swv_soak_1_paths)
+
+# Read in all SWVs with one function call
+swv_data &lt;- echem_import_to_df(filenames = swv_names, file_paths = swv_paths, 
+    data_cols = data_cols, skip_rows = swv_skip_rows, filename_cols = filename_cols, 
+    rep = T, PHZadded = F)
+
+swv_data %&gt;% head() %&gt;% kable() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+reactor
+</th>
+<th style="text-align:left;">
+echem
+</th>
+<th style="text-align:right;">
+rep
+</th>
+<th style="text-align:right;">
+minutes
+</th>
+<th style="text-align:right;">
+E
+</th>
+<th style="text-align:left;">
+electrode
+</th>
+<th style="text-align:right;">
+current
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+tran1
+</td>
+<td style="text-align:left;">
+swv
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1334.583
+</td>
+<td style="text-align:right;">
+0.099
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+2.1e-06
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+tran1
+</td>
+<td style="text-align:left;">
+swv
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1334.583
+</td>
+<td style="text-align:right;">
+0.098
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+3.1e-06
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+tran1
+</td>
+<td style="text-align:left;">
+swv
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1334.583
+</td>
+<td style="text-align:right;">
+0.097
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+3.1e-06
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+tran1
+</td>
+<td style="text-align:left;">
+swv
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1334.583
+</td>
+<td style="text-align:right;">
+0.096
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+3.1e-06
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+tran1
+</td>
+<td style="text-align:left;">
+swv
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1334.583
+</td>
+<td style="text-align:right;">
+0.095
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+3.1e-06
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+tran1
+</td>
+<td style="text-align:left;">
+swv
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1334.583
+</td>
+<td style="text-align:right;">
+0.094
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+3.1e-06
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>swv_data %&gt;% filter(reactor == &quot;soak1&quot;) %&gt;% ggplot(., aes(x = E, 
+    y = current, color = rep, group = rep)) + geom_path() + facet_wrap(~electrode, 
+    scales = &quot;free&quot;) + scale_color_viridis() + scale_x_reverse()</code></pre>
+<p><img src="08_15_19_agarose_glycerol_processing_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>swv_data %&gt;% filter(reactor == &quot;tran1&quot;) %&gt;% ggplot(., aes(x = E, 
+    y = current, color = rep, group = rep)) + geom_path() + facet_wrap(~electrode, 
+    scales = &quot;free&quot;) + scale_color_viridis() + scale_x_reverse()</code></pre>
+<p><img src="08_15_19_agarose_glycerol_processing_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>swv_max &lt;- swv_data %&gt;% mutate(minutes = ifelse(minutes &lt; 1000, 
+    minutes + 1440, minutes)) %&gt;% 
+group_by(reactor) %&gt;% mutate(min_time = min(minutes)) %&gt;% mutate(norm_time = minutes - 
+    min_time) %&gt;% 
+group_by(reactor, rep, electrode) %&gt;% filter(E &lt; -0.15 &amp; E &gt; 
+    -0.35) %&gt;% mutate(max_current = max(abs(current))) %&gt;% filter(abs(current) == 
+    max_current)
+
+ggplot(swv_max, aes(x = norm_time, y = max_current, color = electrode)) + 
+    geom_point() + facet_wrap(~reactor, scales = &quot;free&quot;) + xlim(0, 
+    300)</code></pre>
+<p><img src="08_15_19_agarose_glycerol_processing_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="all-gcs" class="section level1">
+<h1>All GCs</h1>
+<pre class="r"><code># Add &#39;reactor&#39; to file name so it is parsed into column
+filename_cols = c(&quot;reactor&quot;, &quot;echem&quot;, &quot;rep&quot;)
+
+gc_tran_1_names &lt;- dir(path = tran_1_path, pattern = &quot;[gc]+.+[txt]$&quot;) %&gt;% 
+    paste(&quot;tran1&quot;, ., sep = &quot;_&quot;)
+gc_soak_1_names &lt;- dir(path = soak_1_path, pattern = &quot;[gc]+.+[txt]$&quot;) %&gt;% 
+    paste(&quot;soak1&quot;, ., sep = &quot;_&quot;)
+
+# Add correct paths separate from filenames
+gc_tran_1_paths &lt;- dir(path = tran_1_path, pattern = &quot;[gc]+.+[txt]$&quot;) %&gt;% 
+    paste(tran_1_path, ., sep = &quot;&quot;)
+gc_soak_1_paths &lt;- dir(path = soak_1_path, pattern = &quot;[gc]+.+[txt]$&quot;) %&gt;% 
+    paste(soak_1_path, ., sep = &quot;&quot;)
+
+# Combine all SWVs into single vector
+gc_names &lt;- c(gc_tran_1_names, gc_soak_1_names)
+gc_paths &lt;- c(gc_tran_1_paths, gc_soak_1_paths)
+
+# Read in all SWVs with one function call
+gc_data &lt;- echem_import_to_df(filenames = gc_names, file_paths = gc_paths, 
+    data_cols = data_cols, skip_rows = gc_skip_rows, filename_cols = filename_cols, 
+    rep = T, PHZadded = F)
+
+gc_data %&gt;% head() %&gt;% kable(digits = 9) %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+reactor
+</th>
+<th style="text-align:left;">
+echem
+</th>
+<th style="text-align:right;">
+rep
+</th>
+<th style="text-align:right;">
+minutes
+</th>
+<th style="text-align:right;">
+E
+</th>
+<th style="text-align:left;">
+electrode
+</th>
+<th style="text-align:right;">
+current
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+tran1
+</td>
+<td style="text-align:left;">
+gc
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1336.9
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+-4.1e-08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+tran1
+</td>
+<td style="text-align:left;">
+gc
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1336.9
+</td>
+<td style="text-align:right;">
+-0.001
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+-3.5e-08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+tran1
+</td>
+<td style="text-align:left;">
+gc
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1336.9
+</td>
+<td style="text-align:right;">
+-0.002
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+-3.3e-08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+tran1
+</td>
+<td style="text-align:left;">
+gc
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1336.9
+</td>
+<td style="text-align:right;">
+-0.003
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+-2.8e-08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+tran1
+</td>
+<td style="text-align:left;">
+gc
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1336.9
+</td>
+<td style="text-align:right;">
+-0.004
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+-2.7e-08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+tran1
+</td>
+<td style="text-align:left;">
+gc
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1336.9
+</td>
+<td style="text-align:right;">
+-0.005
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+-2.3e-08
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>gc_data %&gt;% filter(reactor == &quot;soak1&quot;) %&gt;% ggplot(., aes(x = E, 
+    y = current, color = rep, group = rep)) + geom_path() + facet_wrap(~electrode, 
+    scales = &quot;free&quot;) + scale_color_viridis() + scale_x_reverse()</code></pre>
+<p><img src="08_15_19_agarose_glycerol_processing_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>gc_data %&gt;% filter(reactor == &quot;tran1&quot;) %&gt;% ggplot(., aes(x = E, 
+    y = current, color = rep, group = rep)) + geom_path() + facet_wrap(~electrode, 
+    scales = &quot;free&quot;) + scale_color_viridis() + scale_x_reverse()</code></pre>
+<p><img src="08_15_19_agarose_glycerol_processing_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>gc_max &lt;- gc_data %&gt;% mutate(minutes = ifelse(minutes &lt; 1000, 
+    minutes + 1440, minutes)) %&gt;% 
+group_by(reactor) %&gt;% mutate(min_time = min(minutes)) %&gt;% mutate(norm_time = minutes - 
+    min_time) %&gt;% 
+group_by(reactor, rep, electrode) %&gt;% filter(E &lt; -0.2) %&gt;% mutate(max_current = max(abs(current))) %&gt;% 
+    filter(abs(current) == max_current)
+
+ggplot(gc_max, aes(x = norm_time, y = max_current, color = electrode)) + 
+    geom_point() + facet_wrap(~reactor, scales = &quot;free&quot;) + xlim(0, 
+    300)</code></pre>
+<p><img src="08_15_19_agarose_glycerol_processing_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="swv-vs.gc" class="section level1">
+<h1>SWV vs. GC</h1>
+<pre class="r"><code>swv_gc_max &lt;- left_join(swv_max %&gt;% ungroup() %&gt;% mutate(rep = rep - 
+    1), gc_max, by = c(&quot;reactor&quot;, &quot;rep&quot;), suffix = c(&quot;_swv&quot;, 
+    &quot;_gc&quot;))
+
+ggplot(swv_gc_max, aes(x = max_current_swv, y = max_current_gc, 
+    color = electrode_gc)) + geom_point() + geom_smooth(data = swv_gc_max %&gt;% 
+    filter(max_current_swv &gt; 5e-06), method = &quot;lm&quot;, fullrange = T) + 
+    facet_wrap(c(&quot;reactor&quot;, &quot;electrode_swv&quot;), scales = &quot;free&quot;)</code></pre>
+<p><img src="08_15_19_agarose_glycerol_processing_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(swv_gc_max %&gt;% filter(electrode_gc == &quot;i2&quot;), aes(x = max_current_swv, 
+    y = max_current_gc, color = reactor, shape = electrode_swv)) + 
+    geom_point()</code></pre>
+<p><img src="08_15_19_agarose_glycerol_processing_files/figure-html/unnamed-chunk-10-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(swv_gc_max %&gt;% filter(electrode_gc == &quot;i2&quot; &amp; reactor == 
+    &quot;soak1&quot;), aes(x = max_current_swv, y = max_current_gc, color = reactor, 
+    shape = electrode_swv)) + geom_point() + geom_smooth(data = swv_gc_max %&gt;% 
+    filter(electrode_gc == &quot;i2&quot; &amp; reactor == &quot;soak1&quot; &amp; rep &gt; 
+        30), method = &quot;lm&quot;, fullrange = T)</code></pre>
+<p><img src="08_15_19_agarose_glycerol_processing_files/figure-html/unnamed-chunk-10-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(swv_gc_max %&gt;% filter(electrode_gc == &quot;i2&quot; &amp; reactor == 
+    &quot;tran1&quot;), aes(x = max_current_swv, y = max_current_gc, color = reactor, 
+    shape = electrode_swv)) + geom_point() + geom_smooth(data = swv_gc_max %&gt;% 
+    filter(electrode_gc == &quot;i2&quot; &amp; reactor == &quot;tran1&quot; &amp; rep &lt; 
+        50), method = &quot;lm&quot;, fullrange = T)</code></pre>
+<p><img src="08_15_19_agarose_glycerol_processing_files/figure-html/unnamed-chunk-10-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>dap_from_swvGC &lt;- function(m, t_p = 1/(2 * 300)) {
+    
+    psi &lt;- 0.7
+    # psi &lt;- 0.75 A &lt;- 0.013 #cm^2
+    A &lt;- 0.025  #cm^2
+    S &lt;- 18.4  #cm
+    d_ap &lt;- (m * A * psi)^2/(S^2 * pi * t_p)
+    
+    d_ap
+}</code></pre>
+<pre class="r"><code>lms &lt;- swv_gc_max %&gt;% filter(rep &gt; 0 &amp; max_current_swv &gt; 5e-06) %&gt;% 
+    group_by(reactor, electrode_swv, electrode_gc) %&gt;% do(tidy(lm(max_current_gc ~ 
+    max_current_swv, data = .), conf.int = T)) %&gt;% filter(term == 
+    &quot;max_current_swv&quot;) %&gt;% mutate(dap = dap_from_swvGC(m = estimate)) %&gt;% 
+    mutate(dap_high = dap_from_swvGC(m = conf.high)) %&gt;% mutate(dap_low = dap_from_swvGC(m = conf.low)) %&gt;% 
+    mutate(dataset = &quot;SWVvsGC&quot;)
+
+lms %&gt;% kable() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+reactor
+</th>
+<th style="text-align:left;">
+electrode_swv
+</th>
+<th style="text-align:left;">
+electrode_gc
+</th>
+<th style="text-align:left;">
+term
+</th>
+<th style="text-align:right;">
+estimate
+</th>
+<th style="text-align:right;">
+std.error
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+<th style="text-align:right;">
+conf.low
+</th>
+<th style="text-align:right;">
+conf.high
+</th>
+<th style="text-align:right;">
+dap
+</th>
+<th style="text-align:right;">
+dap_high
+</th>
+<th style="text-align:right;">
+dap_low
+</th>
+<th style="text-align:left;">
+dataset
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+soak1
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:left;">
+max_current_swv
+</td>
+<td style="text-align:right;">
+0.0679339
+</td>
+<td style="text-align:right;">
+0.0003857
+</td>
+<td style="text-align:right;">
+176.11233
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.0671629
+</td>
+<td style="text-align:right;">
+0.0687050
+</td>
+<td style="text-align:right;">
+8.0e-07
+</td>
+<td style="text-align:right;">
+8.0e-07
+</td>
+<td style="text-align:right;">
+8.0e-07
+</td>
+<td style="text-align:left;">
+SWVvsGC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+soak1
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:left;">
+i2
+</td>
+<td style="text-align:left;">
+max_current_swv
+</td>
+<td style="text-align:right;">
+0.0669625
+</td>
+<td style="text-align:right;">
+0.0005771
+</td>
+<td style="text-align:right;">
+116.02347
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.0658088
+</td>
+<td style="text-align:right;">
+0.0681162
+</td>
+<td style="text-align:right;">
+8.0e-07
+</td>
+<td style="text-align:right;">
+8.0e-07
+</td>
+<td style="text-align:right;">
+7.0e-07
+</td>
+<td style="text-align:left;">
+SWVvsGC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+soak1
+</td>
+<td style="text-align:left;">
+i2
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:left;">
+max_current_swv
+</td>
+<td style="text-align:right;">
+0.0795563
+</td>
+<td style="text-align:right;">
+0.0023490
+</td>
+<td style="text-align:right;">
+33.86869
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.0747826
+</td>
+<td style="text-align:right;">
+0.0843300
+</td>
+<td style="text-align:right;">
+1.1e-06
+</td>
+<td style="text-align:right;">
+1.2e-06
+</td>
+<td style="text-align:right;">
+1.0e-06
+</td>
+<td style="text-align:left;">
+SWVvsGC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+soak1
+</td>
+<td style="text-align:left;">
+i2
+</td>
+<td style="text-align:left;">
+i2
+</td>
+<td style="text-align:left;">
+max_current_swv
+</td>
+<td style="text-align:right;">
+0.0675213
+</td>
+<td style="text-align:right;">
+0.0018069
+</td>
+<td style="text-align:right;">
+37.36832
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.0638493
+</td>
+<td style="text-align:right;">
+0.0711934
+</td>
+<td style="text-align:right;">
+8.0e-07
+</td>
+<td style="text-align:right;">
+9.0e-07
+</td>
+<td style="text-align:right;">
+7.0e-07
+</td>
+<td style="text-align:left;">
+SWVvsGC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+tran1
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:left;">
+max_current_swv
+</td>
+<td style="text-align:right;">
+0.1237482
+</td>
+<td style="text-align:right;">
+0.0017951
+</td>
+<td style="text-align:right;">
+68.93727
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.1201563
+</td>
+<td style="text-align:right;">
+0.1273402
+</td>
+<td style="text-align:right;">
+2.6e-06
+</td>
+<td style="text-align:right;">
+2.8e-06
+</td>
+<td style="text-align:right;">
+2.5e-06
+</td>
+<td style="text-align:left;">
+SWVvsGC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+tran1
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:left;">
+i2
+</td>
+<td style="text-align:left;">
+max_current_swv
+</td>
+<td style="text-align:right;">
+0.1085590
+</td>
+<td style="text-align:right;">
+0.0012016
+</td>
+<td style="text-align:right;">
+90.34606
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.1061546
+</td>
+<td style="text-align:right;">
+0.1109634
+</td>
+<td style="text-align:right;">
+2.0e-06
+</td>
+<td style="text-align:right;">
+2.1e-06
+</td>
+<td style="text-align:right;">
+1.9e-06
+</td>
+<td style="text-align:left;">
+SWVvsGC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+tran1
+</td>
+<td style="text-align:left;">
+i2
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:left;">
+max_current_swv
+</td>
+<td style="text-align:right;">
+0.1687697
+</td>
+<td style="text-align:right;">
+0.0032219
+</td>
+<td style="text-align:right;">
+52.38178
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.1620878
+</td>
+<td style="text-align:right;">
+0.1754515
+</td>
+<td style="text-align:right;">
+4.9e-06
+</td>
+<td style="text-align:right;">
+5.3e-06
+</td>
+<td style="text-align:right;">
+4.5e-06
+</td>
+<td style="text-align:left;">
+SWVvsGC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+tran1
+</td>
+<td style="text-align:left;">
+i2
+</td>
+<td style="text-align:left;">
+i2
+</td>
+<td style="text-align:left;">
+max_current_swv
+</td>
+<td style="text-align:right;">
+0.1351031
+</td>
+<td style="text-align:right;">
+0.0025761
+</td>
+<td style="text-align:right;">
+52.44495
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.1297606
+</td>
+<td style="text-align:right;">
+0.1404456
+</td>
+<td style="text-align:right;">
+3.2e-06
+</td>
+<td style="text-align:right;">
+3.4e-06
+</td>
+<td style="text-align:right;">
+2.9e-06
+</td>
+<td style="text-align:left;">
+SWVvsGC
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>ggplot(lms, aes(x = reactor, y = dap, color = electrode_swv, 
+    shape = electrode_gc)) + geom_pointrange(aes(ymin = dap_low, 
+    ymax = dap_high))</code></pre>
+<p><img src="08_15_19_agarose_glycerol_processing_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>lm_soak &lt;- swv_gc_max %&gt;% filter(reactor == &quot;soak1&quot;) %&gt;% filter(rep &gt; 
+    0 &amp; rep &gt; 30) %&gt;% group_by(reactor, electrode_swv, electrode_gc) %&gt;% 
+    do(tidy(lm(max_current_gc ~ max_current_swv, data = .), conf.int = T)) %&gt;% 
+    filter(term == &quot;max_current_swv&quot;) %&gt;% mutate(dap = dap_from_swvGC(m = estimate)) %&gt;% 
+    mutate(dap_high = dap_from_swvGC(m = conf.high)) %&gt;% mutate(dap_low = dap_from_swvGC(m = conf.low)) %&gt;% 
+    mutate(dataset = &quot;SWVvsGC&quot;)
+
+lm_tran &lt;- swv_gc_max %&gt;% filter(reactor == &quot;tran1&quot;) %&gt;% filter(rep &gt; 
+    0 &amp; max_current_swv &lt; 50) %&gt;% group_by(reactor, electrode_swv, 
+    electrode_gc) %&gt;% do(tidy(lm(max_current_gc ~ max_current_swv, 
+    data = .), conf.int = T)) %&gt;% filter(term == &quot;max_current_swv&quot;) %&gt;% 
+    mutate(dap = dap_from_swvGC(m = estimate)) %&gt;% mutate(dap_high = dap_from_swvGC(m = conf.high)) %&gt;% 
+    mutate(dap_low = dap_from_swvGC(m = conf.low)) %&gt;% mutate(dataset = &quot;SWVvsGC&quot;)
+
+bind_rows(lm_soak, lm_tran) %&gt;% ggplot(., aes(x = reactor, y = dap, 
+    color = electrode_swv, shape = electrode_gc)) + geom_hline(yintercept = 7e-06, 
+    linetype = 2) + geom_pointrange(aes(ymin = dap_low, ymax = dap_high), 
+    position = position_jitter(width = 0.1, height = 0)) + ylim(0, 
+    NA)</code></pre>
+<p><img src="08_15_19_agarose_glycerol_processing_files/figure-html/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

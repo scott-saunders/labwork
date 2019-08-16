@@ -62,4 +62,8 @@ for(link in files){
 }
 ```
 
+<a href="https://scott-saunders.github.io/labwork/IDA/08_13_19_agarose_ctDNA/analysis/08_13_19_agarose_ctDNA_analysis.html">analysis/08\_13\_19\_agarose\_ctDNA\_analysis.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/IDA/08_13_19_agarose_ctDNA/processing/08_13_19_agarose_ctDNA_processing.html">processing/08\_13\_19\_agarose\_ctDNA\_processing.html</a>
+
 <a href="https://scott-saunders.github.io/labwork/IDA/08_13_19_agarose_ctDNA/README.html">README.html</a>
