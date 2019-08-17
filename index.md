@@ -194,6 +194,10 @@ for (link in files) {
 
 <a href="https://scott-saunders.github.io/labwork/IDA/08_13_19_agarose_ctDNA/README.html">IDA/08\_13\_19\_agarose\_ctDNA/README.html</a>
 
+<a href="https://scott-saunders.github.io/labwork/IDA/08_15_19_agarose_glycerol/analysis/08_15_19_agarose_glycerol_analysis.html">IDA/08\_15\_19\_agarose\_glycerol/analysis/08\_15\_19\_agarose\_glycerol\_analysis.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/IDA/08_15_19_agarose_glycerol/processing/08_15_19_agarose_glycerol_processing.html">IDA/08\_15\_19\_agarose\_glycerol/processing/08\_15\_19\_agarose\_glycerol\_processing.html</a>
+
 <a href="https://scott-saunders.github.io/labwork/IDA/09_11_18_DapEstimation.html">IDA/09\_11\_18\_DapEstimation.html</a>
 
 <a href="https://scott-saunders.github.io/labwork/IDA/11_28_18_blank_IDA/Analysis/11_28_18_blank_IDA_Analysis.html">IDA/11\_28\_18\_blank\_IDA/Analysis/11\_28\_18\_blank\_IDA\_Analysis.html</a>

@@ -1,7 +1,6 @@
 library(ggplot2)
-#library(extrafont)
 
-#base_family = "Calibri"
+# Theme
 
 theme_1 <- function () { 
   theme_classic( ) %+replace% 
@@ -16,6 +15,18 @@ theme_1 <- function () {
       legend.text.align=0
     )
 }
+
+# Color palette
+
+colorblind_palette <- c("#E69F00", "#56B4E9", "#000000","#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+scale_colour_discrete <- function(...) scale_colour_manual(values = colorblind_palette)
+scale_fill_discrete <- function(...) scale_fill_manual(values = colorblind_palette)
+
+scale_colour_continuous <- scale_colour_viridis
+scale_fill_continuous <- scale_fill_viridis
+
+# Custom axis labels
 
 nA_label <- function(x){
 # from A to nA
