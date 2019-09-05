@@ -132,8 +132,64 @@ ggplot(swv_gc_df %>% filter(electrode_swv=='i1'), aes(x = max_current_swv, y = m
 
 Here we see mostly the expected linear behavior, but there are some significant deviations. There is a particularly strong deviation for the glycerol soak condition and I don't really known why. You can see in the first overview plot that the SWV current rises sharply - more sharply than GC, perhaps it's some weird thing with the glycerol gel equilibrating (this was the initial soak). Anyway the slopes of the plots are not radically different, but there may be some differences. Particularly there is a linear region of the glycerol soak that is clearly a lower slope than the others. We would expect that to be true in this condition. We will have to quantify these plots to better explore this. 
 
+```{r}
+ggplot(swv_gc_df %>% filter(electrode_swv=='i1' & condition == 'glycerol'), aes(x = max_current_swv, y = max_current_gc, color = rep)) + 
+  geom_point()+ facet_wrap(condition~reactor_type, scales = 'free') + 
+  geom_smooth(data = swv_gc_df %>% filter(electrode_swv=='i1' & condition == 'glycerol') %>% filter(rep>30),method = 'lm', fullrange = T) 
+  
+ggplot(swv_gc_df %>% filter(electrode_swv=='i1' & condition == 'glycerol'), aes(x = max_current_swv, y = max_current_gc, color = rep)) + 
+  geom_point()+ facet_wrap(condition~reactor_type, scales = 'free') + 
+  geom_smooth(data = swv_gc_df %>% filter(electrode_swv=='i1' & condition == 'glycerol') %>% filter(rep<40),method = 'lm', fullrange = F) 
+
+ggplot(swv_gc_df %>% filter(electrode_swv=='i1' & condition == 'ctDNA'), aes(x = max_current_swv, y = max_current_gc, color = rep)) + 
+  geom_point()+ facet_wrap(condition~reactor, scales = 'free') + 
+  geom_smooth(data = swv_gc_df %>% filter(electrode_swv=='i1' & condition == 'ctDNA') %>% filter(rep>15),method = 'lm', fullrange = T) 
 
 
+ggplot(swv_gc_df %>% filter(electrode_swv=='i1' & reactor_type == 'soak'), 
+       aes(x = max_current_swv, y = max_current_gc, color = condition, shape = reactor)) +
+  geom_point()+ #facet_wrap(condition~reactor, scales = 'free') + 
+  geom_smooth(data = swv_gc_df %>% filter(electrode_swv=='i1' & reactor_type == 'soak') %>% filter(max_current_swv < 1.25e-5 & max_current_swv > 5e-6), method = 'lm', fullrange = T) 
+
+ggplot(swv_gc_df %>% filter(electrode_swv=='i1' & reactor_type == 'transfer'), 
+       aes(x = max_current_swv, y = max_current_gc, color = condition, shape = reactor)) +
+  geom_point()+ #facet_wrap(condition~reactor, scales = 'free') + 
+  geom_smooth(data = swv_gc_df %>% filter(electrode_swv=='i1' & reactor_type == 'transfer') %>% filter(max_current_swv < 1.5e-5 & max_current_swv > 6e-6), method = 'lm', fullrange = T) 
+```
+# Dphys estimation
+
+```{r}
+ggplot(swv_gc_df %>% filter(electrode_swv=='i1' & reactor_type == 'transfer') %>% filter(condition != 'glycerol' & rep > 0) , aes(x = norm_time_swv, y = max_current_swv, color = reactor)) + 
+  geom_point()+ 
+ # facet_wrap(~reactor) + 
+  geom_smooth(method='nls', formula=y~b*(x)^-0.5+a, method.args=list(start=c(b=0.01,a=1e-6)),
+              se=F)
+
+
+ ggplot(swv_gc_df %>% filter(electrode_swv=='i1' & reactor_type == 'transfer') %>% filter(condition != 'glycerol' & rep > 0) , aes(x = norm_time_gc, y = max_current_gc, color = reactor)) + 
+  geom_point()+ 
+ facet_wrap(~reactor) + 
+  geom_smooth(method='nls', formula=y~b*(x)^-0.5+a, method.args=list(start=c(b=1e-5,a=1e-6)), se=F)
+
+
+ggplot(swv_gc_df %>% filter(electrode_swv=='i1' & reactor_type == 'transfer') %>% filter(condition != 'glycerol' & rep > 0) , aes(x = norm_time_swv, y = max_current_swv, color = reactor)) + 
+  geom_point()+ 
+  facet_wrap(~reactor) + 
+  geom_smooth(method='nls', formula=y~(a*(x)^-0.5)*(2+e^(b*(x)^-0.5))+c, method.args=list(start=c(a=0.1,b=0.1,c=0)))
+
+nls(formula = max_current_swv ~ ((b * (norm_time_swv)^(-0.5)) + a), 
+    data = swv_gc_df %>% filter(electrode_swv=='i1') %>% filter(reactor == 'transfer') %>% filter(rep>0),
+    start = list(b = 0.1, a = 1e-5))
+
+nls(formula = max_current_swv ~ ((b * (norm_time_swv)^(-0.5)) + a), 
+    data = swv_gc_df %>% filter(electrode_swv=='i1') %>% filter(reactor == 'transfer_2') %>% filter(rep>0),
+    start = list(b = 0.1, a = 1e-5))
+
+nls(formula = max_current_swv ~ ((b * (norm_time_swv)^(-0.5)) + a), 
+    data = swv_gc_df %>% filter(electrode_swv=='i1') %>% filter(reactor == 'transfer_3') %>% filter(rep>0),
+    start = list(b = 0.1, a = 1e-5))
+
+```
 
 # Extra Plots
 
