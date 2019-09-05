@@ -56,15 +56,15 @@ We tried all of the experiments above with the help of Eric Stemp and Nirit. Nir
 
 ∆phz* biofilms were grown as normal for 5 days. Plates were a little more humid than usual, but colony morphology looked relatively normal. Six replicate biofilms were grown in a 6 well plate as shown below:
 
-![](../data/photos/∆phzstar_biofilms.jpg){width=40%}
+![](./photos/∆phzstar_biofilms.jpg){width=40%}
 
 Colonies on membranes were placed in eppendorf tubes with 500uL of PBS 137mM NaCl, then vortexed for 1 min to resuspend. Membranes were removed and came out almost entirely clean as shown below. 
 
-![](../data/photos/membrane_preVortex.jpg){width=20%} ![](../data/photos/membrane_postVortex.jpg){width=20%} ![](../data/photos/tube_no_membrane.jpg){width=20%} ![](../data/photos/blank_membrane.jpg){width=20%}
+![](./photos/membrane_preVortex.jpg){width=20%} ![](./photos/membrane_postVortex.jpg){width=20%} ![](./photos/tube_no_membrane.jpg){width=20%} ![](./photos/blank_membrane.jpg){width=20%}
 
 Within 10 min of resuspension 400uL of the biofilm slurry was transferred to a cuvette:
 
-![](../data/photos/cuvette.jpg){width=40%}
+![](./photos/cuvette.jpg){width=40%}
 
 Background scans were taken with the biofilm only, which exbited a signficant signal, although the $Ru(phen)_2dppz^{2+}$ was clearly visible above this at 5uM (at 1uM it was barely visible). $Ru(phen)_2dppz^{2+}$ was excited at 532nm and emission was recorded at 620nm. Other spectroscopic information is recorded in the header of each data file, but after data file 3 (rep 3) the exact same settings were used throughout.
 
