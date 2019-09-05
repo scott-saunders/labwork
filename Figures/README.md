@@ -1,8 +1,7 @@
 Figures README
 ================
 
-Links to all the IDA notebook htmls
-===================================
+# Links to all the IDA notebook htmls
 
 ``` r
 library(htmltools)
@@ -40,3 +39,5 @@ for(link in files){
 <a href="https://scott-saunders.github.io/labwork/Figures/draft1/2018_11_01_figure4.nb.html">draft1/2018\_11\_01\_figure4.nb.html</a>
 
 <a href="https://scott-saunders.github.io/labwork/Figures/README.html">README.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/Figures/Spectroscopy_first_look.nb.html">Spectroscopy\_first\_look.nb.html</a>

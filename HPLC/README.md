@@ -23,3 +23,5 @@ for(link in files){
 <a href="https://scott-saunders.github.io/labwork/HPLC/analysis/2018_10_30_Notebook_colonyHPLC.html">analysis/2018\_10\_30\_Notebook\_colonyHPLC.html</a>
 
 <a href="https://scott-saunders.github.io/labwork/HPLC/analysis/2018_10_30_Notebook_colonyHPLC.nb.html">analysis/2018\_10\_30\_Notebook\_colonyHPLC.nb.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/HPLC/README.html">README.html</a>
