@@ -1,0 +1,53 @@
+---
+output: html_document
+params: 
+    set_title: "README"
+title: "`r params$set_title`"
+---
+
+# Programmatically generate notebook website
+
+1. Call a function to generate a standard README.rmd within a new experiment folder. Basically copy some template doc like this one to the directory.
+2. Knit READMEs with parameters, passing the folder name as the title etc. 
+3. Abstract to generate and knit READMEs for every folder in directory. Implement links to directories within current directories (not recursive), so that it's easy to navigate between the different folder levels with READMEs. Or implement some nested output of the directory / file structure with links.
+
+Perhaps nested output could take the form of a grouped Kable containing cells with links??
+
+# `r params$set_title` Html Files
+
+```{r, results='asis'}
+library(htmltools)
+
+home_url <- "https://scott-saunders.github.io/"
+
+wd <- str_extract(getwd(), pattern = 'labwork.*$')
+
+base_url = paste(home_url,wd,'/', sep = '')
+
+files <- dir(path=".", pattern = "*\\.html$",include.dirs = T,recursive = T)
+
+for(link in files){
+  print(
+    tags$a(href = paste(base_url, link, sep=''), link)
+    )
+  writeLines("")
+}
+```
+
+```{r, results='asis'}
+
+home_url <- "https://scott-saunders.github.io/"
+
+wd <- str_extract(getwd(), pattern = 'labwork.*$')
+
+base_url = paste(home_url,wd,'/', sep = '')
+
+folders <- list.dirs(".", recursive = F, full.names = F)
+
+for(link in folders){
+  print(
+    tags$a(href = paste(base_url, link, '/README.html', sep=''), link)
+    )
+  writeLines("")
+}
+```
