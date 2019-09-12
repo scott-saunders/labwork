@@ -34,6 +34,8 @@ theme_set(theme_1())
 
 # Intro
 
+
+
 # Methods
 
 In duplicate (biofilms A and B) an IDA biofilm was exposed to three different conditions sequentially:
@@ -47,4 +49,63 @@ Note that biofilm B was dropped facedown prior to imaging.
 
 # Results
 
+```{r}
+first_reps <- read_csv("../processing/09_09_19_first_transfer_reps.csv")
+
+soak_data <- read_csv("../processing/09_09_19_soak_data.csv")
+
+swv_gc_max <- read_csv("../processing/09_09_19_swv_gc_max_processed.csv")
+```
+
+```{r}
+ggplot(soak_data %>% filter(echem == 'SWV' & electrode =='i1' & PHZadded == '75uM' & rep == 2), aes(x = E, y = current, color = factor(reactor_num))) + 
+  geom_path() + facet_wrap(~biofilm) + scale_x_reverse()+
+  labs(title = 'SWV - Soak')
+```
+
+```{r}
+ggplot(soak_data %>% filter(electrode == 'i2' & echem == 'GC' & PHZadded == '75uM'), aes(x = E, y = current, color = factor(reactor_num))) + 
+  geom_path() + facet_wrap(~biofilm) + scale_x_reverse() + 
+  labs(title = 'GC - Soak')
+```
+
+```{r}
+ggplot(first_reps %>% filter(echem == 'swv' & electrode == 'i1'), aes(x = E, y = pred, color = condition, group = condition)) + 
+  geom_path() + facet_wrap(rep~biofilm, scales = 'free') + scale_x_reverse() + 
+  labs(title = 'SWV - First transfer reps')
+```
+
+```{r}
+ggplot(first_reps %>% filter(echem == 'gc' & electrode == 'i2'), aes(x = E, y = current, color = condition, group = condition)) + 
+  geom_path() + facet_wrap(rep~biofilm, scales = 'free') + scale_x_reverse() + 
+  labs(title = 'GC - First transfer reps')
+```
+
+```{r}
+ggplot(swv_gc_max %>% filter(electrode_from_gc == 'i2' & electrode_from_swv == 'i1'), aes(x = max_current_from_swv, y = max_current_from_gc, color = condition)) + 
+  geom_point() + facet_wrap(~biofilm, scales = 'free')
+```
+
+```{r}
+ggplot(swv_gc_max %>% filter(electrode_from_gc == 'i2' & electrode_from_swv == 'i1'), aes(x = max_current_from_swv, y = max_current_from_gc, color = condition)) + 
+  geom_smooth(method = 'lm')+
+  geom_point(shape = 21) + facet_wrap(~biofilm, scales = 'free')
+```
+
+```{r}
+ggplot(swv_gc_max %>% filter(electrode_from_swv == 'i1'), aes(x = norm_time_from_swv, y = max_current_from_swv, color = condition)) + geom_point() + facet_wrap(~biofilm, scales = 'free')
+```
+
+```{r}
+ggplot(swv_gc_max %>% filter(electrode_from_gc == 'i2'), aes(x = norm_time_from_gc, y = max_current_from_gc, color = condition)) + geom_point() + facet_wrap(~biofilm, scales = 'free')
+```
+
+Biofilm B was very thick, probably went anaerobic when gas tube got clogged.
+
+
 # Next steps
+
+-------
+```{r}
+sessionInfo()
+```

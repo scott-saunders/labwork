@@ -8,9 +8,12 @@ extract_minutes <- function(filename,line=1) {
   #Date format is month-day-year_hour_minute_second
   #Converts to minutes
   
+  # apparently parse_date_time2() can deal with abnormal month abbreviations like Sept. instead of Sep.
+  # replaced ymd_hms()
+  
   file = file(filename)
   time_line = readLines(file,n=line)
-  timestamp = mdy_hms(time_line)
+  timestamp = parse_date_time2(time_line, 'mdY HMS')
   minutes=as.numeric(hms::as.hms(timestamp))/(60)
   minutes
 }
