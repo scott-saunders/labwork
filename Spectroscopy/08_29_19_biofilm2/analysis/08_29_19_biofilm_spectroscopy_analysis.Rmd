@@ -6,6 +6,7 @@ fontsize: 12pt
 date: '08_29_19'
 output:
   html_document:
+    theme: cosmo
     code_folding: hide
     self_contained: no
     toc: yes

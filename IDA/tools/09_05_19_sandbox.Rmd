@@ -17,6 +17,7 @@ Perhaps nested output could take the form of a grouped Kable containing cells wi
 
 ```{r, results='asis'}
 library(htmltools)
+library(tidyverse)
 
 home_url <- "https://scott-saunders.github.io/"
 

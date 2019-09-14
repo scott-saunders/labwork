@@ -8,6 +8,9 @@ This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute
 Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
 
 ```{r}
+library(tidyverse)
+library(viridis)
+
 c_x_t <- function(x,t){
   m_0=1
   A=0.05
@@ -169,7 +172,7 @@ ggplot(multi_D_norm %>% filter(x==0),aes(x=t^-0.5,color=t))+
   geom_point(aes(y=slow_norm),color='blue')
 ```
 
-```{r}
+```{r eval = F}
 cmax_t <- function(t,m0=1,D=10^-5){
   m0=m0
   A=1
@@ -222,7 +225,7 @@ lm_fast <- lm(slow_norm~tHalf,data=multi_D_lm)
 summary(lm_fast)
 ```
 
-```{r}
+```{r eval = F}
 generate_Iswv <- function(t,I0,D_ap,D_m,t_s){
   Iswv <- I0*(sqrt(D_ap*t_s)/sqrt(4*D_m*t))
   Iswv
