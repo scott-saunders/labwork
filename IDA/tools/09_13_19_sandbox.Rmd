@@ -7,6 +7,7 @@ output:
     toc_float: true
     includes:
       before_body: header.html
+      after_body: footer.html
   
 ---
 
@@ -37,6 +38,48 @@ Extracellular electron transfer (EET) enables metabolic activity by microorganis
 
 <br>
 
+# Summary {.tabset}
+
+We have found a few things merp derp:
+
+## 1
+
+Colony biofilms retain certain phenazines
+
+[some data and narrative here]
+
+## 2
+
+Phenazines bind extracellular DNA
+
+[some more data]
+
+## 3
+
+Electron transfer can occur in three ways
+
+1. Solution ET
+2. Self-exchange
+3. DNA mediated self-exchange
+
+## 4
+
+Growing biofilms on electrodes
+
+[some more data]
+
+## 5
+
+Electron transfer mechanisms in vivo
+
+[merp]
+
+## 6
+
+A model
+
+[merp]
+
 # Notebooks {.tabset}
 
 ## Figure 1
@@ -51,4 +94,8 @@ a whole notebook here??
 
 more stuff here?
 
-##
+#
+
+------
+
+

@@ -1,0 +1,80 @@
+---
+title: "Inter phenazine electron transfer in solution"
+author: "Scott Saunders"
+fontsize: 12pt
+date: '09_17_19'
+output:
+  html_document:
+    code_folding: hide
+    self_contained: no
+    toc: yes
+  github_document:
+    pandoc_args: --webtex
+---
+
+# Intro
+
+
+
+# Methods
+
+## Reduced phenazine prep
+
+100uM of PCA, PYO and PCN were reduced in PBS 50 (100mL) in the survival assay chambers. Electrolysis was performed overnight and the expected color changes were observed. Reduced phenazines were transferred into stoppered serum bottles. Serum bottles were transferred to the anaerobic chamber housing the plate reader.
+
+## Plate reader measurements
+
+Black walled, clear bottomed fluorescence 96 well plates were transferred 48 hrs in advance. Oxidized phenazines (100uM in PBS 50), and buffer (PBS 50), were transferred into the chamber 24 hours in advance and were shaken repeatedly to remove oxygen. 
+
+Wells were measured in two fluorescence channels 360ex,410em and 480ex, 560em and absorbance scans were taken from 300nm - 700nm in increments of 10nm. Wells were scanned with oxidized phenazines before mixing, and then repeatedly scanned in a timecourse following mixing.
+
+## Experimental design
+
+Mixing 75uL of reduced phz (or buffer) with 75uL of oxidized phz (or buffer)
+
+**1. Buffer**
+
+  * Buffer --> Buffer
+  * Buffer --> $PCA_{ox}$
+  * Buffer --> $PCN_{ox}$
+  * Buffer --> $PYO_{ox}$
+  
+**2. $PCA_{red}$**
+
+  * $PCA_{red}$ --> Buffer
+  * $PCA_{red}$ --> $PYO_{ox}$
+  * $PCA_{red}$ --> $PCN_{ox}$
+  
+**3. $PCN_{red}$**
+
+  * $PCN_{red}$ --> Buffer
+  * $PCN_{red}$ --> $PYO_{ox}$
+  * $PCN_{red}$ --> $PCA_{ox}$
+  
+**4. $PYO_{red}$**
+
+  * $PYO_{red}$ --> Buffer
+  * $PYO_{red}$ --> $PCA_{ox}$
+  * $PYO_{red}$ --> $PCN_{ox}$
+  
+In this way we acquired spectra in the measured channels for all of the oxidized and reduced phenazines in isolation and in combination.
+
+# Results
+
+# Next steps
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(viridis)
+library(knitr)
+library(kableExtra)
+
+
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+source("../../IDA/tools/plotting_tools.R")
+
+theme_set(theme_1())
+```

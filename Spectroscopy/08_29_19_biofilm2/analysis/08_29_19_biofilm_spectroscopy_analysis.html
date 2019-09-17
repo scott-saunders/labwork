@@ -270,17 +270,11 @@ theme_set(theme_1())</code></pre>
 <div id="biofilms" class="section level2">
 <h2>Biofilms</h2>
 <p>∆phz* biofilms were grown as normal for 5 days. Plates were a little more humid than usual, but colony morphology looked relatively normal. Six replicate biofilms were grown in a 6 well plate as shown below:</p>
-<div class="figure">
-<img src="photos/%E2%88%86phzstar_biofilms.jpg" style="width:40.0%" />
-
-</div>
+<p><img src="photos/%E2%88%86phzstar_biofilms.jpg" style="width:40.0%" /></p>
 <p>Colonies on membranes were placed in eppendorf tubes with 500uL of PBS 137mM NaCl, then vortexed for 1 min to resuspend. Membranes were removed and came out almost entirely clean as shown below.</p>
 <p><img src="photos/membrane_preVortex.jpg" style="width:20.0%" /> <img src="photos/membrane_postVortex.jpg" style="width:20.0%" /> <img src="photos/tube_no_membrane.jpg" style="width:20.0%" /> <img src="photos/blank_membrane.jpg" style="width:20.0%" /></p>
 <p>Within 10 min of resuspension 400uL of the biofilm slurry was transferred to a cuvette:</p>
-<div class="figure">
-<img src="photos/cuvette.jpg" style="width:40.0%" />
-
-</div>
+<p><img src="photos/cuvette.jpg" style="width:40.0%" /></p>
 <p>Background scans were taken with the biofilm only, which exbited a signficant signal, although the <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> was clearly visible above this at 5uM (at 1uM it was barely visible). <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> was excited at 532nm and emission was recorded at 620nm. Other spectroscopic information is recorded in the header of each data file, but after data file 3 (rep 3) the exact same settings were used throughout.</p>
 </div>
 <div id="liquid-cells" class="section level2">
@@ -494,38 +488,38 @@ df &lt;- left_join(compressed_data, metadata, by = &quot;rep&quot;)
 
 metadata %&gt;% kable() %&gt;% kable_styling(bootstrap_options = &quot;condensed&quot;) %&gt;% 
     scroll_box(width = &quot;100%&quot;, height = &quot;400px&quot;)</code></pre>
-<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:100%; ">
+<div style="border: 1px solid #ddd; padding: 5px; overflow-y: scroll; height:400px; overflow-x: scroll; width:100%; ">
 <table class="table table-condensed" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:right;">
 rep
 </th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:left;">
 material
 </th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:right;">
 material_id
 </th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:right;">
 ruphen_conc
 </th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:right;">
 quencher_conc
 </th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:right;">
 quencher_eq
 </th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:left;">
 quencher_id
 </th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:left;">
 comment
 </th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:right;">
 run
 </th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:right;">
 exp_num
 </th>
 </tr>
@@ -2426,6 +2420,10 @@ NA
 <pre class="r"><code>df_bg &lt;- df %&gt;% group_by(material, material_id, time) %&gt;% mutate(min = min(intensity)) %&gt;% 
     mutate(bg_sub = intensity - min)
 
+df_biofilm_bg &lt;- df %&gt;% group_by(material, material_id, time) %&gt;% 
+    mutate(min = min(ifelse(run == 1, intensity, NA), na.rm = T)) %&gt;% 
+    mutate(bg_sub = intensity - min)
+
 df_bg_norm &lt;- df_bg %&gt;% filter(time &gt; 0) %&gt;% group_by(material, 
     material_id, run) %&gt;% mutate(max = max(bg_sub)) %&gt;% mutate(norm_intensity = bg_sub/max)</code></pre>
 <p>Now, let’s walk through the experiments chronologically.</p>
@@ -2457,13 +2455,19 @@ df_bg_norm &lt;- df_bg %&gt;% filter(time &gt; 0) %&gt;% group_by(material,
     2 &amp; ruphen_conc == 0), color = &quot;gray&quot;, size = 3) + geom_path() + 
     xlim(NA, 5e-07)</code></pre>
 <p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>Here I’ve highlighted the biofilm only control in gray. You can see that it is basically the same as the highest quencher concentrations. Let’s see how the background subtraction looks:</p>
+<p>Here I’ve highlighted the biofilm only control in gray. You can see that it is basically the same as the highest quencher concentrations. Let’s see how the background subtraction looks if we subtract from the biofilm only control:</p>
+<pre class="r"><code>ggplot(df_biofilm_bg %&gt;% filter(exp_num == 2), aes(x = time, 
+    y = bg_sub, color = quencher_eq)) + geom_path(data = df_biofilm_bg %&gt;% 
+    filter(exp_num == 2 &amp; ruphen_conc == 0), color = &quot;gray&quot;, 
+    size = 3) + geom_path() + xlim(NA, 5e-07)</code></pre>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>And now let’s just subtract from the minimum value:</p>
 <pre class="r"><code>ggplot(df_bg %&gt;% filter(exp_num == 2), aes(x = time, y = bg_sub, 
     color = quencher_eq)) + geom_path(data = df_bg %&gt;% filter(exp_num == 
     2 &amp; ruphen_conc == 0), color = &quot;gray&quot;, size = 3) + geom_path() + 
     xlim(NA, 5e-07)</code></pre>
-<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>Again, the biofilm only control is highlighted in gray. Here you can see that unfortunately the biofilm only sample is not the lowest intensity signal, meaning that the quenched signal is actually lower in certain places than the biofilm alone. I tried background subtracting from the biofilm only control, and the data looks weird, so this is where Nirit’s suggestion may come in…maybe we should have background subtracted from a biofilm + <span class="math inline">\(Rh(phi)_2bpy^{3+}\)</span> control or maybe we should just be fine background subracting from the lowest value. Not sure what the best practice would be here.</p>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Again, the biofilm only control is highlighted in gray. Here you can see that unfortunately the biofilm only sample is not the lowest intensity signal, meaning that the quenched signal is actually lower in certain places than the biofilm alone. Background subtracting from the biofilm only control yields weird results, so this is where Nirit’s suggestion may come in…maybe we should have background subtracted from a biofilm + <span class="math inline">\(Rh(phi)_2bpy^{3+}\)</span> control or maybe we should just be fine background subracting from the lowest value. Not sure what the best practice would be here.</p>
 <p>That said, if we just background subtract from the lowest value, it looks like pretty good static quenching…let’s see how the normalization looks:</p>
 <pre class="r"><code># Excluding the highest quencher concentration, because that
 # was bg_sub
@@ -2473,7 +2477,7 @@ ggplot(df_bg_norm %&gt;% filter(exp_num == 2 &amp; quencher_conc &lt; 60),
     geom_path(data = df_bg_norm %&gt;% filter(exp_num == 2 &amp; ruphen_conc == 
         0), color = &quot;gray&quot;, size = 3) + geom_path() + xlim(NA, 
     5e-07)</code></pre>
-<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>It’s not perfect, but the shapes look pretty similar. The only obviously different one is the background only signal (highlighted in gray).</p>
 </div>
 <div id="liquid-grown-cells---5um-ruphen_2dppz2-rhphi_2bpy3" class="section level2">
@@ -2481,11 +2485,11 @@ ggplot(df_bg_norm %&gt;% filter(exp_num == 2 &amp; quencher_conc &lt; 60),
 <p>Remember, this condition was to assess whether cells (containing genomic DNA) were sufficient to give the strong static quenching signal. If yes, that would suggest the metal complexes enter the cell and the signal could come from gDNA. If no, that suggests the signal is specific to extracellular DNA. Let’s look at the raw data:</p>
 <pre class="r"><code>ggplot(df %&gt;% filter(exp_num == 7), aes(x = time, y = intensity, 
     color = factor(run))) + geom_path() + xlim(NA, 5e-07)</code></pre>
-<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>So, all the runs look almost identical. Run 1 is biofilm only, Run 2 is + <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> , and Runs 3,4,and 5 add increasing <span class="math inline">\(Rh(phi)_2bpy^{3+}\)</span>. This is already pretty clear…there’s barely any signal from the <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span>, which only emits when it is bound to DNA. Therefore, this data suggests that the complex is not bound to DNA when incubated with the liquid grown cells…and so the signal probably isn’t coming from gDNA. Because there’s basically no signal, we don’t expect to see much quenching, but here’s what the background subtraction looks like:</p>
 <pre class="r"><code>ggplot(df_bg %&gt;% filter(exp_num == 7), aes(x = time, y = bg_sub, 
     color = factor(run))) + geom_path() + xlim(NA, 5e-07)</code></pre>
-<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Maybe there’s a tiny <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> signal (blue run 2) that is quenched, but it’s super noisy and I don’t think that really matters.</p>
 </div>
 <div id="biofilm-3---5um-ruphen_2dppz2-ruhex" class="section level2">
@@ -2493,16 +2497,16 @@ ggplot(df_bg_norm %&gt;% filter(exp_num == 2 &amp; quencher_conc &lt; 60),
 <p>Next we tried a different quencher, that should not be capable of fast DNA CT. In vitro this quencher should cause dynamic quenching (see intro), but Eric did express some concern that we may not see any quenching if RuHex binding were strongly inhibited by the extra NaCl in the buffer (137mM)…so we weren’t sure what to expect. Here’s the raw data:</p>
 <pre class="r"><code>ggplot(df %&gt;% filter(exp_num == 3), aes(x = time, y = intensity, 
     color = quencher_eq)) + geom_path() + xlim(NA, 5e-07)</code></pre>
-<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>The biofilm only background is in gray and the RuHex equivalents are shown as colors. You can see the signal does change a little bit at the higher concentrations, but it’s hard to tell. Here’s the background subtraction:</p>
 <pre class="r"><code>ggplot(df_bg %&gt;% filter(exp_num == 3), aes(x = time, y = bg_sub, 
     color = quencher_eq)) + geom_path() + xlim(NA, 5e-07)</code></pre>
-<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Here the background subtraction mainly worked as intended, although you can see at short times &gt; 0 the gray line is non zero. It looks like the signal did change upon addition of RuHex, but it’s not really clear whether it’s static or dynamic type quenching…and it’s a little noisy.</p>
 <p>If we normalize it looks like this:</p>
 <pre class="r"><code>ggplot(df_bg_norm %&gt;% filter(exp_num == 3), aes(x = time, y = norm_intensity, 
     color = quencher_eq)) + geom_path() + xlim(NA, 5e-07)</code></pre>
-<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-17-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Still very noisy…but the curves look like mostly the same shape to me. Let’s try normalizing by a slightly later timepoint when the background subtraction is perfect:</p>
 <pre class="r"><code>df_bg_norm_2 &lt;- df_bg %&gt;% 
   filter(time &gt; 2.5e-8) %&gt;% #Changed this number to be slightly &gt; 0
@@ -2512,7 +2516,7 @@ ggplot(df_bg_norm %&gt;% filter(exp_num == 2 &amp; quencher_conc &lt; 60),
 
 ggplot(df_bg_norm_2 %&gt;% filter(exp_num ==3), aes(x = time, y = norm_intensity, color = quencher_eq)) + 
   geom_path() + xlim(NA, 5e-7)</code></pre>
-<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-17-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-18-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Now the decay looks really identical, suggesting more of a static quenching… That said, the quenching was a little noisy / weak, and probably not as clear cut as the <span class="math inline">\(Rh(phi)_2bpy^{3+}\)</span>. Perhaps at lower salt concentrations we would see something different.</p>
 </div>
 <div id="biofilm-4---5um-ruphen_2dppz2-timecourse" class="section level2">
@@ -2521,18 +2525,18 @@ ggplot(df_bg_norm_2 %&gt;% filter(exp_num ==3), aes(x = time, y = norm_intensity
 <p>Here’s the data:</p>
 <pre class="r"><code>ggplot(df %&gt;% filter(exp_num == 4), aes(x = time, y = intensity, 
     color = factor(run))) + geom_path() + xlim(NA, 5e-07)</code></pre>
-<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-18-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Looks pretty clear cut from here. Run 1 was the biofilm only and runs 2,3,4,5, and 15 were subsequent scans of the same cuvette. Run 15 was taken an additional 15 min after run 5. There seems to be no change in the signal.</p>
 <p>Here’s the background subtraction:</p>
 <pre class="r"><code>ggplot(df_bg %&gt;% filter(exp_num == 4), aes(x = time, y = bg_sub, 
     color = factor(run))) + geom_path() + xlim(NA, 5e-07)</code></pre>
-<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-20-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Run 15, might have a slightly higher signal than the others pointing to toxicity or cell permeability given longer times, but almost all experiments were conducted within the amount of time it took to reach run 5.</p>
 <p>Note that without the quencher and good background subtraction from the biofilm only control, the <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> is only about 0.015 as opposed to 0.04 for biofilms 1 and 2. To me that suggests the quenched samples in the first two really are quenching the signal to be significantly less than the biofilm only control…</p>
 <p>Here’s the normalization:</p>
 <pre class="r"><code>ggplot(df_bg_norm %&gt;% filter(exp_num == 4), aes(x = time, y = norm_intensity, 
     color = factor(run))) + geom_path() + xlim(NA, 5e-07)</code></pre>
-<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-20-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-21-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Same shape as expected. This plot also gives us a sense of the variability in shape of the <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> emission. Considering this, some of the earlier biofilm data with quencher looks pretty good.</p>
 </div>
 <div id="biofilm-5---10um-ruphen_2dppz2-rhphi_2bpy3" class="section level2">
@@ -2542,20 +2546,20 @@ ggplot(df_bg_norm_2 %&gt;% filter(exp_num ==3), aes(x = time, y = norm_intensity
     color = quencher_eq)) + geom_path(data = df %&gt;% filter(exp_num == 
     5 &amp; ruphen_conc == 0), color = &quot;gray&quot;, size = 3) + geom_path() + 
     xlim(NA, 5e-07)</code></pre>
-<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-21-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-22-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Here the biofilm only control is highlighted in gray. We can see a strong signal and strong quenching. Let’s look at the background subtraction:</p>
 <pre class="r"><code>ggplot(df_bg %&gt;% filter(exp_num == 5), aes(x = time, y = bg_sub, 
     color = quencher_eq)) + geom_path(data = df_bg %&gt;% filter(exp_num == 
     5 &amp; ruphen_conc == 0), color = &quot;gray&quot;, size = 3) + geom_path() + 
     xlim(NA, 5e-07)</code></pre>
-<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-22-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-23-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>As for the 5uM condition, we see what appears to be static quenching, although again the biofilm only background is not actually the lowest signal. Let’s normalize:</p>
 <pre class="r"><code>ggplot(df_bg_norm %&gt;% filter(exp_num == 5 &amp; quencher_eq &lt; 10), 
     aes(x = time, y = norm_intensity, color = quencher_eq)) + 
     geom_path(data = df_bg_norm %&gt;% filter(exp_num == 5 &amp; ruphen_conc == 
         0), color = &quot;gray&quot;, size = 3) + geom_path() + xlim(NA, 
     5e-07)</code></pre>
-<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-23-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-24-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Interestingly, here we see that the curves do seem to have different shapes. Perhaps at this concentration of <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> we are seeing a combination of static and dynamic quenching.</p>
 </div>
 <div id="calf-thymus-dna-500um-nucleotides---5um-ruphen_2dppz2-rhphi_2bpy3" class="section level2">
@@ -2565,20 +2569,20 @@ ggplot(df_bg_norm_2 %&gt;% filter(exp_num ==3), aes(x = time, y = norm_intensity
     color = quencher_eq)) + geom_path(data = df %&gt;% filter(exp_num == 
     6 &amp; ruphen_conc == 0), color = &quot;gray&quot;, size = 3) + geom_path() + 
     xlim(NA, 5e-07)</code></pre>
-<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-24-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-25-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Wow, here we see a super strong signal that is quenched very well. The biggest difference is actually that the in vitro cuvette has basically no background emission (gray). Let’s look at the background subtraction:</p>
 <pre class="r"><code>ggplot(df_bg %&gt;% filter(exp_num == 6), aes(x = time, y = bg_sub, 
     color = quencher_eq)) + geom_path(data = df_bg %&gt;% filter(exp_num == 
     6 &amp; ruphen_conc == 0), color = &quot;gray&quot;, size = 3) + geom_path() + 
     xlim(NA, 5e-07)</code></pre>
-<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-25-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-26-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Looks like pretty strong static quenching.</p>
 <p>This also gives us a feeling for how much of the metal complexes are bound by DNA in our biofilms. The max signal in the biofilm is about 0.04, suggesting that the eDNA concentration or solution conditions may be limiting DNA binding a little bit.</p>
 <p>Here’s the normalized curves:</p>
 <pre class="r"><code>ggplot(df_bg_norm %&gt;% filter(exp_num == 6 &amp; ruphen_conc &gt; 0), 
     aes(x = time, y = norm_intensity, color = quencher_eq)) + 
     geom_path() + xlim(NA, 5e-07)</code></pre>
-<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-26-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-27-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Again, interesting. The curves are not the exact same shape, even though the background subtraction here is almost perfect. This suggests that there may be some dynamic quenching in addition to the strong static quenching.</p>
 </div>
 </div>
@@ -2607,7 +2611,7 @@ ggplot(df_bg_norm_2 %&gt;% filter(exp_num ==3), aes(x = time, y = norm_intensity
 </ol>
 <hr />
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.5.3 (2019-03-11)
+<pre><code>## R version 3.5.2 (2018-12-20)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
 ## Running under: macOS Mojave 10.14.6
 ## 
@@ -2622,25 +2626,25 @@ ggplot(df_bg_norm_2 %&gt;% filter(exp_num ==3), aes(x = time, y = norm_intensity
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] kableExtra_1.1.0  knitr_1.23        viridis_0.5.1    
-##  [4] viridisLite_0.3.0 cowplot_0.9.4     forcats_0.4.0    
-##  [7] stringr_1.4.0     dplyr_0.8.1       purrr_0.3.2      
-## [10] readr_1.3.1       tidyr_0.8.3       tibble_2.1.3     
+##  [1] kableExtra_1.0.1  knitr_1.23        viridis_0.5.1    
+##  [4] viridisLite_0.3.0 cowplot_0.9.4     forcats_0.3.0    
+##  [7] stringr_1.3.1     dplyr_0.8.1       purrr_0.2.5      
+## [10] readr_1.3.1       tidyr_0.8.2       tibble_2.1.3     
 ## [13] ggplot2_3.2.0     tidyverse_1.2.1  
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_0.2.5 xfun_0.7         haven_2.1.0      lattice_0.20-38 
-##  [5] colorspace_1.4-1 generics_0.0.2   htmltools_0.3.6  yaml_2.2.0      
-##  [9] rlang_0.3.4      pillar_1.4.1     glue_1.3.1       withr_2.1.2     
-## [13] modelr_0.1.4     readxl_1.3.1     munsell_0.5.0    gtable_0.3.0    
-## [17] cellranger_1.1.0 rvest_0.3.4      evaluate_0.14    labeling_0.3    
-## [21] highr_0.8        broom_0.5.2      Rcpp_1.0.1       scales_1.0.0    
-## [25] backports_1.1.4  formatR_1.7      webshot_0.5.1    jsonlite_1.6    
-## [29] gridExtra_2.3    hms_0.4.2        digest_0.6.19    stringi_1.4.3   
-## [33] grid_3.5.3       cli_1.1.0        tools_3.5.3      magrittr_1.5    
-## [37] lazyeval_0.2.2   crayon_1.3.4     pkgconfig_2.0.2  xml2_1.2.0      
+##  [1] tidyselect_0.2.5 xfun_0.7         haven_2.0.0      lattice_0.20-38 
+##  [5] colorspace_1.4-0 generics_0.0.2   htmltools_0.3.6  yaml_2.2.0      
+##  [9] rlang_0.3.4      pillar_1.3.1     glue_1.3.1       withr_2.1.2     
+## [13] modelr_0.1.2     readxl_1.2.0     munsell_0.5.0    gtable_0.2.0    
+## [17] cellranger_1.1.0 rvest_0.3.2      evaluate_0.14    labeling_0.3    
+## [21] highr_0.7        broom_0.5.1      Rcpp_1.0.1       scales_1.0.0    
+## [25] backports_1.1.3  formatR_1.5      webshot_0.5.1    jsonlite_1.6    
+## [29] gridExtra_2.3    hms_0.4.2        digest_0.6.18    stringi_1.2.4   
+## [33] grid_3.5.2       cli_1.0.1        tools_3.5.2      magrittr_1.5    
+## [37] lazyeval_0.2.1   crayon_1.3.4     pkgconfig_2.0.2  xml2_1.2.0      
 ## [41] lubridate_1.7.4  assertthat_0.2.1 rmarkdown_1.13   httr_1.4.0      
-## [45] rstudioapi_0.10  R6_2.4.0         nlme_3.1-137     compiler_3.5.3</code></pre>
+## [45] rstudioapi_0.9.0 R6_2.4.0         nlme_3.1-140     compiler_3.5.2</code></pre>
 </div>
 </div>
 
