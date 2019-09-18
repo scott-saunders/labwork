@@ -190,6 +190,8 @@ df_bg_norm <- df_bg %>%
   group_by(material, material_id, run) %>% 
   mutate(max = max(bg_sub)) %>% 
   mutate(norm_intensity = bg_sub / max)
+
+#write_csv(df_bg, "2019_08_29_spectroscopy_RuRh_dphz.csv")
 ```
 
 Now, let's walk through the experiments chronologically.

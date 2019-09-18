@@ -16,7 +16,7 @@
 
 <script src="2019_09_17_solution_ET_analysis_files/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="2019_09_17_solution_ET_analysis_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<link href="2019_09_17_solution_ET_analysis_files/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
 <script src="2019_09_17_solution_ET_analysis_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="2019_09_17_solution_ET_analysis_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="2019_09_17_solution_ET_analysis_files/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -232,12 +232,18 @@ $(document).ready(function () {
 <h1>Methods</h1>
 <div id="reduced-phenazine-prep" class="section level2">
 <h2>Reduced phenazine prep</h2>
-<p>100uM of PCA, PYO and PCN were reduced in PBS 50 (100mL) in the survival assay chambers. Electrolysis was performed overnight and the expected color changes were observed. Reduced phenazines were transferred into stoppered serum bottles. Serum bottles were transferred to the anaerobic chamber housing the plate reader.</p>
+<p>100uM of PCA, PYO and PCN were reduced in PBS 50 (50mL) in the survival assay chambers. Electrolysis was performed overnight and the expected color changes were observed. Reduced phenazines were transferred into stoppered serum bottles. Serum bottles were transferred to the anaerobic chamber housing the plate reader.</p>
+<p>Pre electrolysis (left) &amp; post electrolysis (right)</p>
+<p><img src="photos/pre_e_1.jpg" style="width:30.0%" /> <img src="photos/post_e_1.jpg" style="width:30.0%" /></p>
+<p>Clockwise from the bottom right the chambers are PYO, PCA and PCN.</p>
+<p>Electrolysis curves (left) &amp; serum bottles (right)</p>
+<p><img src="photos/electrolysis_curves.jpg" style="width:30.0%" /> <img src="photos/serum_bottles.jpg" style="width:30.0%" /></p>
+<p>Electrolysis seemed to go to completion and the color changes remained in the serum bottles upon transfer to the other chamber.</p>
 </div>
 <div id="plate-reader-measurements" class="section level2">
 <h2>Plate reader measurements</h2>
 <p>Black walled, clear bottomed fluorescence 96 well plates were transferred 48 hrs in advance. Oxidized phenazines (100uM in PBS 50), and buffer (PBS 50), were transferred into the chamber 24 hours in advance and were shaken repeatedly to remove oxygen.</p>
-<p>Wells were measured in two fluorescence channels 360ex,410em and 480ex, 560em and absorbance scans were taken from 300nm - 700nm in increments of 10nm. Wells were scanned with oxidized phenazines before mixing, and then repeatedly scanned in a timecourse following mixing.</p>
+<p>Wells were measured in two fluorescence channels 360/40ex,460/40 em and 360/40ex, 528/40 em and absorbance scans were taken from 300nm - 700nm in increments of 10nm. Wells were scanned with oxidized phenazines before mixing, and then repeatedly scanned in a timecourse following mixing.</p>
 </div>
 <div id="experimental-design" class="section level2">
 <h2>Experimental design</h2>
@@ -267,7 +273,7 @@ $(document).ready(function () {
 <li><span class="math inline">\(PYO_{red}\)</span> –&gt; <span class="math inline">\(PCA_{ox}\)</span></li>
 <li><span class="math inline">\(PYO_{red}\)</span> –&gt; <span class="math inline">\(PCN_{ox}\)</span></li>
 </ul>
-<p>In this way we acquired spectra in the measured channels for all of the oxidized and reduced phenazines in isolation and in combination.</p>
+<p>In this way we acquired spectra in the measured channels for all of the oxidized and reduced phenazines in isolation and in combination. Well conditions were repeated in triplicate.</p>
 </div>
 </div>
 <div id="results" class="section level1">
@@ -288,6 +294,103 @@ knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, me
 source(&quot;../../IDA/tools/plotting_tools.R&quot;)
 
 theme_set(theme_1())</code></pre>
+<pre class="r"><code>df_endpoints &lt;- read_csv(&quot;data/2019_09_17_solution_ET_endpoints.csv&quot;)
+
+df_bg_sub &lt;- df_endpoints %&gt;% gather(key = &quot;wavelength&quot;, value = &quot;intensity&quot;, 
+    em460, em528, abs310, abs360, abs690, abs500) %&gt;% group_by(wavelength) %&gt;% 
+    mutate(min = min(intensity)) %&gt;% mutate(bg_sub = intensity - 
+    min)
+
+ggplot(df_endpoints, aes(x = red_ox, y = em460)) + geom_point() + 
+    facet_wrap(~ox, drop = T, scales = &quot;free&quot;)</code></pre>
+<p><img src="2019_09_17_solution_ET_analysis_files/figure-html/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(df_endpoints, aes(x = red_ox, y = em528)) + geom_point() + 
+    facet_wrap(~ox, drop = T, scales = &quot;free&quot;)</code></pre>
+<p><img src="2019_09_17_solution_ET_analysis_files/figure-html/unnamed-chunk-1-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(df_endpoints, aes(x = red_ox, y = em528)) + geom_point()</code></pre>
+<p><img src="2019_09_17_solution_ET_analysis_files/figure-html/unnamed-chunk-1-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(df_bg_sub, aes(x = red_ox, y = bg_sub)) + geom_point() + 
+    facet_wrap(~wavelength, scales = &quot;free&quot;)</code></pre>
+<p><img src="2019_09_17_solution_ET_analysis_files/figure-html/unnamed-chunk-1-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>predicted_values &lt;- df_bg_sub %&gt;% filter(red == &quot;PBS&quot; | ox == 
+    &quot;PBS&quot;) %&gt;% filter(red_ox != &quot;PBS_PBS&quot;)
+
+ggplot(predicted_values %&gt;% filter(red == &quot;PBS&quot;), aes(x = red_ox, 
+    y = intensity)) + geom_point() + facet_wrap(~wavelength, 
+    scales = &quot;free&quot;)</code></pre>
+<p><img src="2019_09_17_solution_ET_analysis_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(predicted_values %&gt;% filter(ox == &quot;PBS&quot;), aes(x = red_ox, 
+    y = intensity)) + geom_point() + facet_wrap(~wavelength, 
+    scales = &quot;free&quot;)</code></pre>
+<p><img src="2019_09_17_solution_ET_analysis_files/figure-html/unnamed-chunk-2-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>metadata &lt;- df_endpoints %&gt;% select(well, red, ox, red_ox, rep)
+
+df_spectra &lt;- read_csv(&quot;data/2019_09_17_solution_ET_abs_spectra.csv&quot;) %&gt;% 
+    gather(key = &quot;well&quot;, value = &quot;intensity&quot;, -Wavelength)
+
+df_spectra_meta &lt;- left_join(df_spectra, metadata, by = c(&quot;well&quot;)) %&gt;% 
+    mutate(phz = ifelse(red == &quot;PYO&quot; | ox == &quot;PYO&quot;, &quot;PYO&quot;, NA)) %&gt;% 
+    mutate(phz = ifelse(red == &quot;PCA&quot; | ox == &quot;PCA&quot;, &quot;PCA&quot;, phz)) %&gt;% 
+    mutate(phz = ifelse(red == &quot;PCN&quot; | ox == &quot;PCN&quot;, &quot;PCN&quot;, phz)) %&gt;% 
+    mutate(phz_redox = ifelse(red == &quot;PBS&quot;, &quot;phz_ox&quot;, &quot;phz_red&quot;))
+
+ggplot(df_spectra_meta %&gt;% filter(red == &quot;PBS&quot; | ox == &quot;PBS&quot;), 
+    aes(x = Wavelength, y = intensity, color = phz_redox)) + 
+    geom_path() + facet_wrap(~phz, scales = &quot;free&quot;)</code></pre>
+<p><img src="2019_09_17_solution_ET_analysis_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(df_spectra_meta %&gt;% filter(red == &quot;PBS&quot; | ox == &quot;PBS&quot;), 
+    aes(x = Wavelength, y = intensity, color = phz)) + geom_path() + 
+    facet_wrap(~phz_redox)</code></pre>
+<p><img src="2019_09_17_solution_ET_analysis_files/figure-html/unnamed-chunk-3-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(df_spectra_meta, aes(x = Wavelength, y = intensity, color = red)) + 
+    geom_point() + facet_wrap(~ox)</code></pre>
+<p><img src="2019_09_17_solution_ET_analysis_files/figure-html/unnamed-chunk-3-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(df_spectra_meta, aes(x = Wavelength, y = intensity, color = ox)) + 
+    geom_point() + facet_wrap(~red)</code></pre>
+<p><img src="2019_09_17_solution_ET_analysis_files/figure-html/unnamed-chunk-3-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>pred_red &lt;- left_join(df_bg_sub %&gt;% filter(red != &quot;PBS&quot; &amp; ox != 
+    &quot;PBS&quot;), predicted_values, by = c(&quot;red&quot;, &quot;wavelength&quot;), suffix = c(&quot;&quot;, 
+    &quot;_from_red&quot;))
+
+pred_red_ox &lt;- left_join(pred_red, predicted_values, by = c(&quot;ox&quot;, 
+    &quot;wavelength&quot;), suffix = c(&quot;&quot;, &quot;_from_ox&quot;)) %&gt;% mutate(pred = bg_sub_from_red + 
+    bg_sub_from_ox)
+
+ggplot(pred_red_ox %&gt;% filter(ox == &quot;PYO&quot;), aes(x = red_ox, y = pred)) + 
+    geom_point(shape = 21, size = 3) + geom_point(aes(y = bg_sub), 
+    color = &quot;red&quot;) + facet_wrap(~wavelength, scales = &quot;free&quot;)</code></pre>
+<p><img src="2019_09_17_solution_ET_analysis_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(pred_red_ox %&gt;% filter(ox == &quot;PCA&quot;), aes(x = red_ox, y = pred)) + 
+    geom_point(shape = 21, size = 3) + geom_point(aes(y = bg_sub), 
+    color = &quot;red&quot;) + facet_wrap(~wavelength, scales = &quot;free&quot;)</code></pre>
+<p><img src="2019_09_17_solution_ET_analysis_files/figure-html/unnamed-chunk-4-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(pred_red_ox %&gt;% filter(ox == &quot;PCN&quot;), aes(x = red_ox, y = pred)) + 
+    geom_point(shape = 21, size = 3) + geom_point(aes(y = bg_sub), 
+    color = &quot;red&quot;) + facet_wrap(~wavelength, scales = &quot;free&quot;)</code></pre>
+<p><img src="2019_09_17_solution_ET_analysis_files/figure-html/unnamed-chunk-4-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Maybe we can get even better bg_sub by averaging the three PBS only measurements…?</p>
+<pre class="r"><code>ggplot(pred_red_ox %&gt;% filter(ox == &quot;PYO&quot;), aes(x = red_ox, y = intensity)) + 
+    geom_point() + geom_point(aes(y = intensity_from_red), shape = 21, 
+    size = 2, color = &quot;gray&quot;) + geom_point(aes(y = intensity_from_ox), 
+    shape = 3, size = 2, color = &quot;gray&quot;) + geom_point(aes(y = intensity_from_ox + 
+    intensity_from_red), shape = 5, size = 2, color = &quot;gray&quot;) + 
+    geom_point(aes(y = min), shape = 6, size = 2, color = &quot;gray&quot;) + 
+    facet_wrap(~wavelength, scales = &quot;free&quot;) + ylim(0, NA)</code></pre>
+<p><img src="2019_09_17_solution_ET_analysis_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(pred_red_ox %&gt;% filter(ox == &quot;PCA&quot;), aes(x = red_ox, y = intensity)) + 
+    geom_point() + geom_point(aes(y = intensity_from_red), shape = 21, 
+    size = 2, color = &quot;gray&quot;) + geom_point(aes(y = intensity_from_ox), 
+    shape = 3, size = 2, color = &quot;gray&quot;) + geom_point(aes(y = intensity_from_ox + 
+    intensity_from_red), shape = 5, size = 2, color = &quot;gray&quot;) + 
+    facet_wrap(~wavelength, scales = &quot;free&quot;) + ylim(0, NA)</code></pre>
+<p><img src="2019_09_17_solution_ET_analysis_files/figure-html/unnamed-chunk-5-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(pred_red_ox %&gt;% filter(ox == &quot;PCN&quot;), aes(x = red_ox, y = intensity)) + 
+    geom_point() + geom_point(aes(y = intensity_from_red), shape = 21, 
+    size = 2, color = &quot;gray&quot;) + geom_point(aes(y = intensity_from_ox), 
+    shape = 3, size = 2, color = &quot;gray&quot;) + geom_point(aes(y = intensity_from_ox + 
+    intensity_from_red), shape = 5, size = 2, color = &quot;gray&quot;) + 
+    facet_wrap(~wavelength, scales = &quot;free&quot;) + ylim(0, NA)</code></pre>
+<p><img src="2019_09_17_solution_ET_analysis_files/figure-html/unnamed-chunk-5-3.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 
 
