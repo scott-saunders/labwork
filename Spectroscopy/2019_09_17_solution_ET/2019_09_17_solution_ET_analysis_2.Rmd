@@ -138,7 +138,7 @@ ggplot(df_spectra_meta %>% filter(rep == 1) %>% filter(exp == 'ref' & red_ox != 
   labs(color = NULL, y = "Absorbance")
 ```
 
-Gray is the PBS background
+Gray is the PBS background and the dashed gray lines are the wavelengths I measured over time (not including the fluorescence channels).
 
 ### Comparing spectra {.tabset}
 
@@ -252,8 +252,6 @@ ggplot(df_ref_4 %>% filter(rep == 1 & red_ox == 'PCA_PCN'), aes(x = Wavelength))
   facet_wrap(~red_ox, scales = 'free') + 
     spectra_legend + legend_labs
 ```
-
-### 
 
 
 ## Kinetic run {.tabset}
@@ -389,7 +387,7 @@ Note that the red dot is the initial prediction, blue dot is the final predictio
 
 #### abs 310
 
-```{r out.width='85%'}
+```{r}
 ggplot(bg_sub_redox %>% filter(wavelength == 'abs310'), aes(x = red_ox)) + 
   geom_point(aes(y = pred_init), color = 'red') +
   geom_point(aes(y = pred_final), color = 'blue') +
@@ -461,7 +459,7 @@ ggplot(bg_sub_redox %>% filter(wavelength == 'em528'), aes(x = red_ox)) +
 ```
 
 
-## Normalizing for reaction completion
+## Normalizing for reaction completion {.tabset}
 
 Now let's normalize!
 ```{r}
@@ -472,11 +470,85 @@ df_rxn_pct <- bg_sub_redox %>%
 
 ```
 
-Another tabset here??
+Here's what all the data look like together.
 
 ```{r}
-ggplot(df_rxn_pct, aes(x = red_ox, y = rxn_pct, color = wavelength)) + geom_pointrange(aes(ymin = rxn_pct_low, ymax = rxn_pct_high), position = position_jitter(height = 0, width = 0.1))
+ggplot(df_rxn_pct, aes(x = red_ox, y = rxn_pct, color = wavelength)) + 
+  geom_pointrange(aes(ymin = rxn_pct_low, ymax = rxn_pct_high), position = position_jitter(height = 0, width = 0.1)) + 
+  scale_x_discrete(labels = red_ox_labs, name = NULL) + 
+  scale_y_continuous(labels = scales::percent)+
+  labs(y = 'Reaction progress')
+```
 
+It's a little hard to parse, especially because certain wavelengths were better for measuring certain phenazines. Here's the individual wavelengths:
+
+### abs310
+
+```{r}
+ggplot(df_rxn_pct %>% filter(wavelength == 'abs310'), aes(x = red_ox, y = rxn_pct)) + 
+  geom_pointrange(aes(ymin = rxn_pct_low, ymax = rxn_pct_high), position = position_jitter(height = 0, width = 0.1)) + 
+  scale_x_discrete(labels = red_ox_labs, name = NULL) + 
+  scale_y_continuous(labels = scales::percent)+
+  facet_wrap(~wavelength, scales = 'free') + 
+  labs(y = 'Reaction progress')
+```
+
+### abs360
+
+```{r}
+ggplot(df_rxn_pct %>% filter(wavelength == 'abs360'), aes(x = red_ox, y = rxn_pct)) + 
+  geom_pointrange(aes(ymin = rxn_pct_low, ymax = rxn_pct_high), position = position_jitter(height = 0, width = 0.1)) + 
+  scale_x_discrete(labels = red_ox_labs, name = NULL) + 
+  scale_y_continuous(labels = scales::percent)+
+  facet_wrap(~wavelength, scales = 'free') + 
+  labs(y = 'Reaction progress')
+```
+
+### abs690
+
+```{r}
+ggplot(df_rxn_pct %>% filter(wavelength == 'abs690'), aes(x = red_ox, y = rxn_pct)) + 
+  geom_pointrange(aes(ymin = rxn_pct_low, ymax = rxn_pct_high), position = position_jitter(height = 0, width = 0.1)) + 
+  scale_x_discrete(labels = red_ox_labs, name = NULL) + 
+  scale_y_continuous(labels = scales::percent)+
+  facet_wrap(~wavelength, scales = 'free') + 
+  labs(y = 'Reaction progress')
+```
+
+### abs500
+
+```{r}
+ggplot(df_rxn_pct %>% filter(wavelength == 'abs500'), aes(x = red_ox, y = rxn_pct)) + 
+  geom_pointrange(aes(ymin = rxn_pct_low, ymax = rxn_pct_high), position = position_jitter(height = 0, width = 0.1)) + 
+  scale_x_discrete(labels = red_ox_labs, name = NULL) + 
+  scale_y_continuous(labels = scales::percent)+
+  facet_wrap(~wavelength, scales = 'free') + 
+  labs(y = 'Reaction progress')
+```
+
+### em460
+
+```{r}
+ggplot(df_rxn_pct %>% filter(wavelength == 'em460'), aes(x = red_ox, y = rxn_pct)) + 
+  geom_pointrange(aes(ymin = rxn_pct_low, ymax = rxn_pct_high), position = position_jitter(height = 0, width = 0.1)) + 
+  scale_x_discrete(labels = red_ox_labs, name = NULL) + 
+  scale_y_continuous(labels = scales::percent)+
+  facet_wrap(~wavelength, scales = 'free') + 
+  labs(y = 'Reaction progress')
+```
+
+### em528
+
+```{r}
+ggplot(df_rxn_pct %>% filter(wavelength == 'em528'), aes(x = red_ox, y = rxn_pct)) + 
+  geom_pointrange(aes(ymin = rxn_pct_low, ymax = rxn_pct_high), position = position_jitter(height = 0, width = 0.1)) + 
+  scale_x_discrete(labels = red_ox_labs, name = NULL) + 
+  scale_y_continuous(labels = scales::percent)+
+  facet_wrap(~wavelength, scales = 'free') + 
+  labs(y = 'Reaction progress')
+```
+
+```{r eval = F}
 ggplot(df_rxn_pct %>% filter(ox == 'PYO') %>% filter(!(wavelength %in% c('abs360', 'abs500'))), aes(x = red_ox, y = rxn_pct, color = wavelength)) + geom_pointrange(aes(ymin = rxn_pct_low, ymax = rxn_pct_high), position = position_jitter(height = 0, width = 0.1)) + ylim(0, NA)
 
 ggplot(df_rxn_pct %>% filter(red == 'PYO') %>% filter(!(wavelength %in% c('abs360', 'abs500'))), aes(x = red_ox, y = rxn_pct, color = wavelength)) + geom_pointrange(aes(ymin = rxn_pct_low, ymax = rxn_pct_high), position = position_jitter(height = 0, width = 0.1)) + ylim(0, NA)
@@ -487,7 +559,12 @@ ggplot(df_rxn_pct %>% filter(red_ox == 'PCA_PCN') %>% filter(!(wavelength %in% c
 
 ggplot(df_rxn_pct %>% filter(red_ox == 'PYO_PCN') %>% filter(!(wavelength %in% c('abs500'))), aes(x = red_ox, y = rxn_pct, color = wavelength)) + geom_pointrange(aes(ymin = rxn_pct_low, ymax = rxn_pct_high), position = position_jitter(height = 0, width = 0.1)) + ylim(0, 1)
 ```
-# Figure Draft
+
+
+# Figure draft
+
+It's hard to concisely represent all of the data, because no single wavelength quantifies all the reactions well. I think the best thing to do is show the 690nm channel tracking the wells that had PYO:
+
 ```{r}
 labels = c('PCA[red] + PYO[ox]','PCN[red] + PYO[ox]','PYO[red] + PCA[ox]','PYO[red] + PCN[ox]')
 
@@ -497,11 +574,11 @@ plot_rxn_pct <- ggplot(df_rxn_pct %>% filter(ox == 'PYO' | red == 'PYO') %>% fil
 
 plot_rxn_pct
 ```
-add predictions from nernst equation??
+We could potentially add predictions for how far each reaction should go from nernst equation...
+
+As more of a supplemental figure we could show some of the spectra like the spectra comparisons above. (black solid line is PYO_ox and dashed is PYO_red).
 
 ```{r}
-ggplot(df_spectra_meta %>% filter(red_ox == 'PBS_PYO' | red_ox == 'PYO_PBS'), aes(x = Wavelength, y = intensity, color = red_ox)) + 
-  geom_vline(xintercept = 690, color = 'gray', linetype = 2) + geom_path()
 
 plot_pyo_ox <- ggplot(df_ref_4 %>% filter(rep == 1) %>% filter(ox == 'PYO'), aes(x = Wavelength, color = red_ox, group = red_ox)) + 
   geom_vline(xintercept = 690, color = 'gray', linetype = 2)+
@@ -510,9 +587,8 @@ plot_pyo_ox <- ggplot(df_ref_4 %>% filter(rep == 1) %>% filter(ox == 'PYO'), aes
   geom_path(aes(y = intensity), size = 1) + 
   geom_segment(aes(x = 680, xend = 680, y = 0.2, yend = 0.075), arrow = arrow(length = unit(0.05, "inches"), type = 'closed'), color = 'black') + 
   scale_color_manual(labels = parse(text = c('PCA[red] + PYO[ox]', 'PCN[red] + PYO[ox]')), values = colorblind_palette, name = NULL ) +
-  labs(y = "Absorbance")
+  labs(y = "Absorbance")+ theme(legend.position = 'top')
 
-plot_pyo_ox
 
 plot_pyo_red <- ggplot(df_ref_4 %>% filter(rep == 1) %>% filter(red == 'PYO'), aes(x = Wavelength, color = red_ox, group = red_ox)) + 
   geom_vline(xintercept = 690, color = 'gray', linetype = 2)+
@@ -520,33 +596,38 @@ plot_pyo_red <- ggplot(df_ref_4 %>% filter(rep == 1) %>% filter(red == 'PYO'), a
   geom_path(aes(y = intensity_phz1_red), color = 'black', linetype = 2) +
   geom_path(aes(y = intensity), size = 1)+ 
   geom_segment(aes(x = 680, xend = 680, y = 0.2, yend = 0.075), arrow = arrow(length = unit(0.05, "inches"), type = 'closed', ends = 'first'), color = 'black')+
-  scale_color_manual(labels = parse(text = c('PYO[red] + PCA[ox]', 'PYO[red] + PCN[ox]')), values = colorblind_palette, name = NULL )+
-  labs(y = "Absorbance")
+  scale_color_manual(labels = parse(text = c('PYO[red] + PCA[ox]', 'PYO[red] + PCN[ox]')), values = colorblind_palette, name = NULL)+
+  labs(y = "Absorbance") + theme(legend.position = 'top')
 
-plot_pyo_red
+plot_grid(plot_pyo_ox,plot_pyo_red, align = 'hv', axis = 'tlbr')
 ```
+
+And here's spectra of all the oxidized and reduced phenazines
 
 ```{r}
-ggplot(df_spectra_meta %>% filter(rep == 1) %>% filter(exp == 'ref' & red_ox != 'PBS_PBS' & phz_redox == 'phz_ox'), aes(x = Wavelength, color = phz, group = red_ox)) + 
+plot_phz_ox <- ggplot(df_spectra_meta %>% filter(rep == 1) %>% filter(exp == 'ref' & red_ox != 'PBS_PBS' & phz_redox == 'phz_ox'), aes(x = Wavelength, color = phz, group = red_ox)) + 
   geom_path(data = df_spectra_meta %>% filter(rep == 1 & red_ox == 'PBS_PBS'), aes(x = Wavelength, y = intensity), color = 'gray')+
   geom_path(aes(y = intensity), size = 1) + labs(color = NULL)+
-  labs(y = "Absorbance")
+  labs(y = "Absorbance", title = "Oxidized phenazines") + theme(legend.position = 'top')
 
-ggplot(df_spectra_meta %>% filter(rep == 1) %>% filter(exp == 'ref' & red_ox != 'PBS_PBS' & phz_redox == 'phz_red'), aes(x = Wavelength, color = phz, group = red_ox)) + 
+plot_phz_red <- ggplot(df_spectra_meta %>% filter(rep == 1) %>% filter(exp == 'ref' & red_ox != 'PBS_PBS' & phz_redox == 'phz_red'), aes(x = Wavelength, color = phz, group = red_ox)) + 
   geom_path(data = df_spectra_meta %>% filter(rep == 1 & red_ox == 'PBS_PBS'), aes(x = Wavelength, y = intensity), color = 'gray')+
   geom_path(aes(y = intensity), size = 1) + labs(color = NULL)+
-  labs(y = "Absorbance")
+  labs(y = "Absorbance", title = "Reduced phenazines") + theme(legend.position = 'top')
+
+plot_grid(plot_phz_ox,plot_phz_red, align = 'hv', axis = 'tlbr')
 ```
+
+And here's a nice plot of the predictions at 690nm:
 
 ```{r}
 ggplot(bg_sub_redox %>% filter(wavelength == 'abs690'), aes(x = red_ox)) + 
   geom_point(aes(y = pred_init), color = 'red') +
   geom_point(aes(y = pred_final), color = 'blue') +
-  geom_pointrange(aes(y = bg_sub, ymin = bg_sub - 2*std_per_cond, ymax = bg_sub + 2*std_per_cond), shape = 21)
-```
-
-```{r}
-
+  geom_pointrange(aes(y = bg_sub, ymin = bg_sub - 2*std_per_cond, ymax = bg_sub + 2*std_per_cond), shape = 21) + 
+  facet_wrap(~wavelength, scales = 'free') + 
+  scale_x_discrete(labels = red_ox_labs, name = NULL) + theme(axis.text.x = element_text(size = 12)) + 
+  labs(y = 'Predicted intensity')
 ```
 
 # Conclusions
@@ -554,4 +635,9 @@ ggplot(bg_sub_redox %>% filter(wavelength == 'abs690'), aes(x = red_ox)) +
 1. PYO is rapidly reduced by PCA and PCN in solution
 2. PCN can kinda reduce PCA and vice versa
 3. PYO can reduce PCN and PCA a little...as expected from thermodynamics
-3. 
+
+----
+
+```{r}
+sessionInfo()
+```

@@ -224,7 +224,6 @@ $(document).ready(function () {
 <li><a href="#results">Results</a><ul>
 <li><a href="#reference-spectra-values">Reference Spectra / values</a><ul>
 <li><a href="#comparing-spectra">Comparing spectra</a></li>
-<li><a href="#section"></a></li>
 </ul></li>
 <li><a href="#kinetic-run">Kinetic run</a><ul>
 <li><a href="#em460">em460</a></li>
@@ -237,8 +236,16 @@ $(document).ready(function () {
 <li><a href="#quantifying-and-predicting-rxns">Quantifying and predicting rxns</a><ul>
 <li><a href="#predicted-intensities">Predicted intensities</a></li>
 </ul></li>
-<li><a href="#normalizing-for-reaction-completion">Normalizing for reaction completion</a></li>
+<li><a href="#normalizing-for-reaction-completion">Normalizing for reaction completion</a><ul>
+<li><a href="#abs310-1">abs310</a></li>
+<li><a href="#abs360-1">abs360</a></li>
+<li><a href="#abs690-1">abs690</a></li>
+<li><a href="#abs500-1">abs500</a></li>
+<li><a href="#em460-1">em460</a></li>
+<li><a href="#em528-1">em528</a></li>
 </ul></li>
+</ul></li>
+<li><a href="#figure-draft">Figure draft</a></li>
 <li><a href="#conclusions">Conclusions</a></li>
 </ul>
 </div>
@@ -906,7 +913,7 @@ df_spectra_meta &lt;- left_join(df_spectra, metadata, by = c(&quot;well&quot;)) 
     color = &quot;gray&quot;) + geom_path(aes(y = intensity), size = 1) + 
     facet_wrap(~phz, scales = &quot;free&quot;) + labs(color = NULL, y = &quot;Absorbance&quot;)</code></pre>
 <p><img src="2019_09_17_solution_ET_analysis_2_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>Gray is the PBS background</p>
+<p>Gray is the PBS background and the dashed gray lines are the wavelengths I measured over time (not including the fluorescence channels).</p>
 <div id="comparing-spectra" class="section level3 tabset">
 <h3>Comparing spectra</h3>
 <p>Now let’s put the spectra together for each experimental well. Ideally we’d like to compare the experimentally observed spectrum to the oxidized and reduced phenazines added to the well to see how the reaction proceeded. We need to wrangle some of the data to put that all together, but now we can explore each condition:</p>
@@ -1016,9 +1023,6 @@ legend_labs &lt;- geom_text(data = legend_segments, aes(x = xlabel,
     legend_labs</code></pre>
 <p><img src="2019_09_17_solution_ET_analysis_2_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-</div>
-<div id="section" class="section level3">
-<h3></h3>
 </div>
 </div>
 <div id="kinetic-run" class="section level2 tabset">
@@ -1149,7 +1153,7 @@ red_ox_labs = c(&quot;PCA_red+\nPCN_ox&quot;, &quot;PCA_red+\nPYO_ox&quot;, &quo
     facet_wrap(~wavelength, scales = &quot;free&quot;) + scale_x_discrete(labels = red_ox_labs, 
     name = NULL) + theme(axis.text.x = element_text(size = 12)) + 
     labs(y = &quot;Predicted intensity&quot;)</code></pre>
-<p><img src="2019_09_17_solution_ET_analysis_2_files/figure-html/unnamed-chunk-22-1.png" width="85%" style="display: block; margin: auto;" /></p>
+<p><img src="2019_09_17_solution_ET_analysis_2_files/figure-html/unnamed-chunk-22-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="abs-360" class="section level4">
 <h4>abs 360</h4>
@@ -1208,7 +1212,7 @@ red_ox_labs = c(&quot;PCA_red+\nPCN_ox&quot;, &quot;PCA_red+\nPYO_ox&quot;, &quo
 </div>
 </div>
 </div>
-<div id="normalizing-for-reaction-completion" class="section level2">
+<div id="normalizing-for-reaction-completion" class="section level2 tabset">
 <h2>Normalizing for reaction completion</h2>
 <p>Now let’s normalize!</p>
 <pre class="r"><code>df_rxn_pct &lt;- bg_sub_redox %&gt;% mutate(rxn_range = abs(pred_final - 
@@ -1216,41 +1220,102 @@ red_ox_labs = c(&quot;PCA_red+\nPCN_ox&quot;, &quot;PCA_red+\nPYO_ox&quot;, &quo
     2 * std_per_cond) - pred_init), rxn_ext_low = abs((bg_sub - 
     2 * std_per_cond) - pred_init)) %&gt;% mutate(rxn_pct = rxn_ext/rxn_range, 
     rxn_pct_high = rxn_ext_high/rxn_range, rxn_pct_low = rxn_ext_low/rxn_range)</code></pre>
-<p>Another tabset here??</p>
+<p>Here’s what all the data look like together.</p>
 <pre class="r"><code>ggplot(df_rxn_pct, aes(x = red_ox, y = rxn_pct, color = wavelength)) + 
     geom_pointrange(aes(ymin = rxn_pct_low, ymax = rxn_pct_high), 
-        position = position_jitter(height = 0, width = 0.1))</code></pre>
+        position = position_jitter(height = 0, width = 0.1)) + 
+    scale_x_discrete(labels = red_ox_labs, name = NULL) + scale_y_continuous(labels = scales::percent) + 
+    labs(y = &quot;Reaction progress&quot;)</code></pre>
 <p><img src="2019_09_17_solution_ET_analysis_2_files/figure-html/unnamed-chunk-29-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>It’s a little hard to parse, especially because certain wavelengths were better for measuring certain phenazines. Here’s the individual wavelengths:</p>
+<div id="abs310-1" class="section level3">
+<h3>abs310</h3>
+<pre class="r"><code>ggplot(df_rxn_pct %&gt;% filter(wavelength == &quot;abs310&quot;), aes(x = red_ox, 
+    y = rxn_pct)) + geom_pointrange(aes(ymin = rxn_pct_low, ymax = rxn_pct_high), 
+    position = position_jitter(height = 0, width = 0.1)) + scale_x_discrete(labels = red_ox_labs, 
+    name = NULL) + scale_y_continuous(labels = scales::percent) + 
+    facet_wrap(~wavelength, scales = &quot;free&quot;) + labs(y = &quot;Reaction progress&quot;)</code></pre>
+<p><img src="2019_09_17_solution_ET_analysis_2_files/figure-html/unnamed-chunk-30-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="abs360-1" class="section level3">
+<h3>abs360</h3>
+<pre class="r"><code>ggplot(df_rxn_pct %&gt;% filter(wavelength == &quot;abs360&quot;), aes(x = red_ox, 
+    y = rxn_pct)) + geom_pointrange(aes(ymin = rxn_pct_low, ymax = rxn_pct_high), 
+    position = position_jitter(height = 0, width = 0.1)) + scale_x_discrete(labels = red_ox_labs, 
+    name = NULL) + scale_y_continuous(labels = scales::percent) + 
+    facet_wrap(~wavelength, scales = &quot;free&quot;) + labs(y = &quot;Reaction progress&quot;)</code></pre>
+<p><img src="2019_09_17_solution_ET_analysis_2_files/figure-html/unnamed-chunk-31-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="abs690-1" class="section level3">
+<h3>abs690</h3>
+<pre class="r"><code>ggplot(df_rxn_pct %&gt;% filter(wavelength == &quot;abs690&quot;), aes(x = red_ox, 
+    y = rxn_pct)) + geom_pointrange(aes(ymin = rxn_pct_low, ymax = rxn_pct_high), 
+    position = position_jitter(height = 0, width = 0.1)) + scale_x_discrete(labels = red_ox_labs, 
+    name = NULL) + scale_y_continuous(labels = scales::percent) + 
+    facet_wrap(~wavelength, scales = &quot;free&quot;) + labs(y = &quot;Reaction progress&quot;)</code></pre>
+<p><img src="2019_09_17_solution_ET_analysis_2_files/figure-html/unnamed-chunk-32-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="abs500-1" class="section level3">
+<h3>abs500</h3>
+<pre class="r"><code>ggplot(df_rxn_pct %&gt;% filter(wavelength == &quot;abs500&quot;), aes(x = red_ox, 
+    y = rxn_pct)) + geom_pointrange(aes(ymin = rxn_pct_low, ymax = rxn_pct_high), 
+    position = position_jitter(height = 0, width = 0.1)) + scale_x_discrete(labels = red_ox_labs, 
+    name = NULL) + scale_y_continuous(labels = scales::percent) + 
+    facet_wrap(~wavelength, scales = &quot;free&quot;) + labs(y = &quot;Reaction progress&quot;)</code></pre>
+<p><img src="2019_09_17_solution_ET_analysis_2_files/figure-html/unnamed-chunk-33-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="em460-1" class="section level3">
+<h3>em460</h3>
+<pre class="r"><code>ggplot(df_rxn_pct %&gt;% filter(wavelength == &quot;em460&quot;), aes(x = red_ox, 
+    y = rxn_pct)) + geom_pointrange(aes(ymin = rxn_pct_low, ymax = rxn_pct_high), 
+    position = position_jitter(height = 0, width = 0.1)) + scale_x_discrete(labels = red_ox_labs, 
+    name = NULL) + scale_y_continuous(labels = scales::percent) + 
+    facet_wrap(~wavelength, scales = &quot;free&quot;) + labs(y = &quot;Reaction progress&quot;)</code></pre>
+<p><img src="2019_09_17_solution_ET_analysis_2_files/figure-html/unnamed-chunk-34-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="em528-1" class="section level3">
+<h3>em528</h3>
+<pre class="r"><code>ggplot(df_rxn_pct %&gt;% filter(wavelength == &quot;em528&quot;), aes(x = red_ox, 
+    y = rxn_pct)) + geom_pointrange(aes(ymin = rxn_pct_low, ymax = rxn_pct_high), 
+    position = position_jitter(height = 0, width = 0.1)) + scale_x_discrete(labels = red_ox_labs, 
+    name = NULL) + scale_y_continuous(labels = scales::percent) + 
+    facet_wrap(~wavelength, scales = &quot;free&quot;) + labs(y = &quot;Reaction progress&quot;)</code></pre>
+<p><img src="2019_09_17_solution_ET_analysis_2_files/figure-html/unnamed-chunk-35-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>ggplot(df_rxn_pct %&gt;% filter(ox == &quot;PYO&quot;) %&gt;% filter(!(wavelength %in% 
     c(&quot;abs360&quot;, &quot;abs500&quot;))), aes(x = red_ox, y = rxn_pct, color = wavelength)) + 
     geom_pointrange(aes(ymin = rxn_pct_low, ymax = rxn_pct_high), 
         position = position_jitter(height = 0, width = 0.1)) + 
-    ylim(0, NA)</code></pre>
-<p><img src="2019_09_17_solution_ET_analysis_2_files/figure-html/unnamed-chunk-29-2.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>ggplot(df_rxn_pct %&gt;% filter(red == &quot;PYO&quot;) %&gt;% filter(!(wavelength %in% 
+    ylim(0, NA)
+
+ggplot(df_rxn_pct %&gt;% filter(red == &quot;PYO&quot;) %&gt;% filter(!(wavelength %in% 
     c(&quot;abs360&quot;, &quot;abs500&quot;))), aes(x = red_ox, y = rxn_pct, color = wavelength)) + 
     geom_pointrange(aes(ymin = rxn_pct_low, ymax = rxn_pct_high), 
         position = position_jitter(height = 0, width = 0.1)) + 
-    ylim(0, NA)</code></pre>
-<p><img src="2019_09_17_solution_ET_analysis_2_files/figure-html/unnamed-chunk-29-3.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>ggplot(df_rxn_pct %&gt;% filter(red_ox == &quot;PCN_PCA&quot;) %&gt;% filter(!(wavelength %in% 
+    ylim(0, NA)
+
+ggplot(df_rxn_pct %&gt;% filter(red_ox == &quot;PCN_PCA&quot;) %&gt;% filter(!(wavelength %in% 
     c(&quot;abs360&quot;, &quot;abs310&quot;, &quot;abs690&quot;, &quot;abs500&quot;))), aes(x = red_ox, 
     y = rxn_pct, color = wavelength)) + geom_pointrange(aes(ymin = rxn_pct_low, 
     ymax = rxn_pct_high), position = position_jitter(height = 0, 
-    width = 0.1)) + ylim(0, NA)</code></pre>
-<p><img src="2019_09_17_solution_ET_analysis_2_files/figure-html/unnamed-chunk-29-4.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>ggplot(df_rxn_pct %&gt;% filter(red_ox == &quot;PCA_PCN&quot;) %&gt;% filter(!(wavelength %in% 
+    width = 0.1)) + ylim(0, NA)
+
+ggplot(df_rxn_pct %&gt;% filter(red_ox == &quot;PCA_PCN&quot;) %&gt;% filter(!(wavelength %in% 
     c(&quot;abs310&quot;, &quot;abs690&quot;, &quot;abs360&quot;))), aes(x = red_ox, y = rxn_pct, 
     color = wavelength)) + geom_pointrange(aes(ymin = rxn_pct_low, 
     ymax = rxn_pct_high), position = position_jitter(height = 0, 
-    width = 0.1)) + ylim(0, 1)</code></pre>
-<p><img src="2019_09_17_solution_ET_analysis_2_files/figure-html/unnamed-chunk-29-5.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>ggplot(df_rxn_pct %&gt;% filter(red_ox == &quot;PYO_PCN&quot;) %&gt;% filter(!(wavelength %in% 
+    width = 0.1)) + ylim(0, 1)
+
+ggplot(df_rxn_pct %&gt;% filter(red_ox == &quot;PYO_PCN&quot;) %&gt;% filter(!(wavelength %in% 
     c(&quot;abs500&quot;))), aes(x = red_ox, y = rxn_pct, color = wavelength)) + 
     geom_pointrange(aes(ymin = rxn_pct_low, ymax = rxn_pct_high), 
         position = position_jitter(height = 0, width = 0.1)) + 
     ylim(0, 1)</code></pre>
-<p><img src="2019_09_17_solution_ET_analysis_2_files/figure-html/unnamed-chunk-29-6.png" width="672" style="display: block; margin: auto;" /> # Figure Draft</p>
+</div>
+</div>
+</div>
+<div id="figure-draft" class="section level1">
+<h1>Figure draft</h1>
+<p>It’s hard to concisely represent all of the data, because no single wavelength quantifies all the reactions well. I think the best thing to do is show the 690nm channel tracking the wells that had PYO:</p>
 <pre class="r"><code>labels = c(&quot;PCA[red] + PYO[ox]&quot;, &quot;PCN[red] + PYO[ox]&quot;, &quot;PYO[red] + PCA[ox]&quot;, 
     &quot;PYO[red] + PCN[ox]&quot;)
 
@@ -1263,12 +1328,8 @@ plot_rxn_pct &lt;- ggplot(df_rxn_pct %&gt;% filter(ox == &quot;PYO&quot; | red =
     theme(axis.text = element_text(size = 12))
 
 plot_rxn_pct</code></pre>
-<p><img src="2019_09_17_solution_ET_analysis_2_files/figure-html/unnamed-chunk-30-1.png" width="672" style="display: block; margin: auto;" /> add predictions from nernst equation??</p>
-<pre class="r"><code>ggplot(df_spectra_meta %&gt;% filter(red_ox == &quot;PBS_PYO&quot; | red_ox == 
-    &quot;PYO_PBS&quot;), aes(x = Wavelength, y = intensity, color = red_ox)) + 
-    geom_vline(xintercept = 690, color = &quot;gray&quot;, linetype = 2) + 
-    geom_path()</code></pre>
-<p><img src="2019_09_17_solution_ET_analysis_2_files/figure-html/unnamed-chunk-31-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="2019_09_17_solution_ET_analysis_2_files/figure-html/unnamed-chunk-37-1.png" width="672" style="display: block; margin: auto;" /> We could potentially add predictions for how far each reaction should go from nernst equation…</p>
+<p>As more of a supplemental figure we could show some of the spectra like the spectra comparisons above. (black solid line is PYO_ox and dashed is PYO_red).</p>
 <pre class="r"><code>plot_pyo_ox &lt;- ggplot(df_ref_4 %&gt;% filter(rep == 1) %&gt;% filter(ox == 
     &quot;PYO&quot;), aes(x = Wavelength, color = red_ox, group = red_ox)) + 
     geom_vline(xintercept = 690, color = &quot;gray&quot;, linetype = 2) + 
@@ -1278,11 +1339,10 @@ plot_rxn_pct</code></pre>
     xend = 680, y = 0.2, yend = 0.075), arrow = arrow(length = unit(0.05, 
     &quot;inches&quot;), type = &quot;closed&quot;), color = &quot;black&quot;) + scale_color_manual(labels = parse(text = c(&quot;PCA[red] + PYO[ox]&quot;, 
     &quot;PCN[red] + PYO[ox]&quot;)), values = colorblind_palette, name = NULL) + 
-    labs(y = &quot;Absorbance&quot;)
+    labs(y = &quot;Absorbance&quot;) + theme(legend.position = &quot;top&quot;)
 
-plot_pyo_ox</code></pre>
-<p><img src="2019_09_17_solution_ET_analysis_2_files/figure-html/unnamed-chunk-31-2.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>plot_pyo_red &lt;- ggplot(df_ref_4 %&gt;% filter(rep == 1) %&gt;% filter(red == 
+
+plot_pyo_red &lt;- ggplot(df_ref_4 %&gt;% filter(rep == 1) %&gt;% filter(red == 
     &quot;PYO&quot;), aes(x = Wavelength, color = red_ox, group = red_ox)) + 
     geom_vline(xintercept = 690, color = &quot;gray&quot;, linetype = 2) + 
     geom_path(aes(y = intensity_phz1_ox), color = &quot;black&quot;, linetype = 1) + 
@@ -1292,30 +1352,38 @@ plot_pyo_ox</code></pre>
     &quot;inches&quot;), type = &quot;closed&quot;, ends = &quot;first&quot;), color = &quot;black&quot;) + 
     scale_color_manual(labels = parse(text = c(&quot;PYO[red] + PCA[ox]&quot;, 
         &quot;PYO[red] + PCN[ox]&quot;)), values = colorblind_palette, 
-        name = NULL) + labs(y = &quot;Absorbance&quot;)
+        name = NULL) + labs(y = &quot;Absorbance&quot;) + theme(legend.position = &quot;top&quot;)
 
-plot_pyo_red</code></pre>
-<p><img src="2019_09_17_solution_ET_analysis_2_files/figure-html/unnamed-chunk-31-3.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>ggplot(df_spectra_meta %&gt;% filter(rep == 1) %&gt;% filter(exp == 
-    &quot;ref&quot; &amp; red_ox != &quot;PBS_PBS&quot; &amp; phz_redox == &quot;phz_ox&quot;), aes(x = Wavelength, 
-    color = phz, group = red_ox)) + geom_path(data = df_spectra_meta %&gt;% 
-    filter(rep == 1 &amp; red_ox == &quot;PBS_PBS&quot;), aes(x = Wavelength, 
-    y = intensity), color = &quot;gray&quot;) + geom_path(aes(y = intensity), 
-    size = 1) + labs(color = NULL) + labs(y = &quot;Absorbance&quot;)</code></pre>
-<p><img src="2019_09_17_solution_ET_analysis_2_files/figure-html/unnamed-chunk-32-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>ggplot(df_spectra_meta %&gt;% filter(rep == 1) %&gt;% filter(exp == 
-    &quot;ref&quot; &amp; red_ox != &quot;PBS_PBS&quot; &amp; phz_redox == &quot;phz_red&quot;), aes(x = Wavelength, 
-    color = phz, group = red_ox)) + geom_path(data = df_spectra_meta %&gt;% 
-    filter(rep == 1 &amp; red_ox == &quot;PBS_PBS&quot;), aes(x = Wavelength, 
-    y = intensity), color = &quot;gray&quot;) + geom_path(aes(y = intensity), 
-    size = 1) + labs(color = NULL) + labs(y = &quot;Absorbance&quot;)</code></pre>
-<p><img src="2019_09_17_solution_ET_analysis_2_files/figure-html/unnamed-chunk-32-2.png" width="672" style="display: block; margin: auto;" /></p>
+plot_grid(plot_pyo_ox, plot_pyo_red, align = &quot;hv&quot;, axis = &quot;tlbr&quot;)</code></pre>
+<p><img src="2019_09_17_solution_ET_analysis_2_files/figure-html/unnamed-chunk-38-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>And here’s spectra of all the oxidized and reduced phenazines</p>
+<pre class="r"><code>plot_phz_ox &lt;- ggplot(df_spectra_meta %&gt;% filter(rep == 1) %&gt;% 
+    filter(exp == &quot;ref&quot; &amp; red_ox != &quot;PBS_PBS&quot; &amp; phz_redox == 
+        &quot;phz_ox&quot;), aes(x = Wavelength, color = phz, group = red_ox)) + 
+    geom_path(data = df_spectra_meta %&gt;% filter(rep == 1 &amp; red_ox == 
+        &quot;PBS_PBS&quot;), aes(x = Wavelength, y = intensity), color = &quot;gray&quot;) + 
+    geom_path(aes(y = intensity), size = 1) + labs(color = NULL) + 
+    labs(y = &quot;Absorbance&quot;, title = &quot;Oxidized phenazines&quot;) + theme(legend.position = &quot;top&quot;)
+
+plot_phz_red &lt;- ggplot(df_spectra_meta %&gt;% filter(rep == 1) %&gt;% 
+    filter(exp == &quot;ref&quot; &amp; red_ox != &quot;PBS_PBS&quot; &amp; phz_redox == 
+        &quot;phz_red&quot;), aes(x = Wavelength, color = phz, group = red_ox)) + 
+    geom_path(data = df_spectra_meta %&gt;% filter(rep == 1 &amp; red_ox == 
+        &quot;PBS_PBS&quot;), aes(x = Wavelength, y = intensity), color = &quot;gray&quot;) + 
+    geom_path(aes(y = intensity), size = 1) + labs(color = NULL) + 
+    labs(y = &quot;Absorbance&quot;, title = &quot;Reduced phenazines&quot;) + theme(legend.position = &quot;top&quot;)
+
+plot_grid(plot_phz_ox, plot_phz_red, align = &quot;hv&quot;, axis = &quot;tlbr&quot;)</code></pre>
+<p><img src="2019_09_17_solution_ET_analysis_2_files/figure-html/unnamed-chunk-39-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>And here’s a nice plot of the predictions at 690nm:</p>
 <pre class="r"><code>ggplot(bg_sub_redox %&gt;% filter(wavelength == &quot;abs690&quot;), aes(x = red_ox)) + 
     geom_point(aes(y = pred_init), color = &quot;red&quot;) + geom_point(aes(y = pred_final), 
     color = &quot;blue&quot;) + geom_pointrange(aes(y = bg_sub, ymin = bg_sub - 
-    2 * std_per_cond, ymax = bg_sub + 2 * std_per_cond), shape = 21)</code></pre>
-<p><img src="2019_09_17_solution_ET_analysis_2_files/figure-html/unnamed-chunk-33-1.png" width="672" style="display: block; margin: auto;" /></p>
-</div>
+    2 * std_per_cond, ymax = bg_sub + 2 * std_per_cond), shape = 21) + 
+    facet_wrap(~wavelength, scales = &quot;free&quot;) + scale_x_discrete(labels = red_ox_labs, 
+    name = NULL) + theme(axis.text.x = element_text(size = 12)) + 
+    labs(y = &quot;Predicted intensity&quot;)</code></pre>
+<p><img src="2019_09_17_solution_ET_analysis_2_files/figure-html/unnamed-chunk-40-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="conclusions" class="section level1">
 <h1>Conclusions</h1>
@@ -1323,8 +1391,44 @@ plot_pyo_red</code></pre>
 <li>PYO is rapidly reduced by PCA and PCN in solution</li>
 <li>PCN can kinda reduce PCA and vice versa</li>
 <li>PYO can reduce PCN and PCA a little…as expected from thermodynamics</li>
-<li></li>
 </ol>
+<hr />
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 3.5.3 (2019-03-11)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS Mojave 10.14.6
+## 
+## Matrix products: default
+## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] kableExtra_1.1.0  knitr_1.23        viridis_0.5.1    
+##  [4] viridisLite_0.3.0 cowplot_0.9.4     forcats_0.4.0    
+##  [7] stringr_1.4.0     dplyr_0.8.1       purrr_0.3.2      
+## [10] readr_1.3.1       tidyr_0.8.3       tibble_2.1.3     
+## [13] ggplot2_3.2.0     tidyverse_1.2.1  
+## 
+## loaded via a namespace (and not attached):
+##  [1] tidyselect_0.2.5 xfun_0.7         reshape2_1.4.3   haven_2.1.0     
+##  [5] lattice_0.20-38  colorspace_1.4-1 generics_0.0.2   htmltools_0.3.6 
+##  [9] yaml_2.2.0       rlang_0.3.4      pillar_1.4.1     glue_1.3.1      
+## [13] withr_2.1.2      modelr_0.1.4     readxl_1.3.1     plyr_1.8.4      
+## [17] munsell_0.5.0    gtable_0.3.0     cellranger_1.1.0 rvest_0.3.4     
+## [21] evaluate_0.14    labeling_0.3     highr_0.8        broom_0.5.2     
+## [25] Rcpp_1.0.1       scales_1.0.0     backports_1.1.4  formatR_1.7     
+## [29] webshot_0.5.1    jsonlite_1.6     gridExtra_2.3    hms_0.4.2       
+## [33] digest_0.6.19    stringi_1.4.3    grid_3.5.3       cli_1.1.0       
+## [37] tools_3.5.3      magrittr_1.5     lazyeval_0.2.2   crayon_1.3.4    
+## [41] pkgconfig_2.0.2  xml2_1.2.0       lubridate_1.7.4  assertthat_0.2.1
+## [45] rmarkdown_1.13   httr_1.4.0       rstudioapi_0.10  R6_2.4.0        
+## [49] nlme_3.1-137     compiler_3.5.3</code></pre>
 </div>
 
 
