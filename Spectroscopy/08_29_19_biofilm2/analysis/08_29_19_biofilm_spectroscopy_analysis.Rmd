@@ -180,11 +180,18 @@ df_bg <- df %>%
   mutate(min = min(intensity)) %>% 
   mutate(bg_sub = intensity - min)
 
+df_biofilm_bg <- df %>% 
+  group_by(material, material_id, time) %>% 
+  mutate(min = min(ifelse(run == 1, intensity, NA), na.rm = T)) %>% 
+  mutate(bg_sub = intensity - min)
+
 df_bg_norm <- df_bg %>% 
   filter(time>0) %>% 
   group_by(material, material_id, run) %>% 
   mutate(max = max(bg_sub)) %>% 
   mutate(norm_intensity = bg_sub / max)
+
+#write_csv(df_bg, "2019_08_29_spectroscopy_RuRh_dphz.csv")
 ```
 
 Now, let's walk through the experiments chronologically.
@@ -237,18 +244,26 @@ ggplot(df %>% filter(exp_num ==2), aes(x = time, y = intensity, color = quencher
 
 ```
 
-Here I've highlighted the biofilm only control in gray. You can see that it is basically the same as the highest quencher concentrations. Let's see how the background subtraction looks:
+Here I've highlighted the biofilm only control in gray. You can see that it is basically the same as the highest quencher concentrations. Let's see how the background subtraction looks if we subtract from the biofilm only control:
 
 ```{r}
 
+ggplot(df_biofilm_bg %>% filter(exp_num ==2), aes(x = time, y = bg_sub, color = quencher_eq)) + 
+  geom_path(data = df_biofilm_bg %>% filter(exp_num ==2 & ruphen_conc==0), color = 'gray', size = 3) + 
+  geom_path() + 
+  xlim(NA, 5e-7)
+```
+
+And now let's just subtract from the minimum value:
+
+```{r}
 ggplot(df_bg %>% filter(exp_num ==2), aes(x = time, y = bg_sub, color = quencher_eq)) + 
   geom_path(data = df_bg %>% filter(exp_num ==2 & ruphen_conc==0), color = 'gray', size = 3) + 
   geom_path() + 
   xlim(NA, 5e-7)
-
 ```
 
-Again, the biofilm only control is highlighted in gray. Here you can see that unfortunately the biofilm only sample is not the lowest intensity signal, meaning that the quenched signal is actually lower in certain places than the biofilm alone. I tried background subtracting from the biofilm only control, and the data looks weird, so this is where Nirit's suggestion may come in...maybe we should have background subtracted from a biofilm + $Rh(phi)_2bpy^{3+}$ control or maybe we should just be fine background subracting from the lowest value. Not sure what the best practice would be here.
+Again, the biofilm only control is highlighted in gray. Here you can see that unfortunately the biofilm only sample is not the lowest intensity signal, meaning that the quenched signal is actually lower in certain places than the biofilm alone. Background subtracting from the biofilm only control yields weird results, so this is where Nirit's suggestion may come in...maybe we should have background subtracted from a biofilm + $Rh(phi)_2bpy^{3+}$ control or maybe we should just be fine background subracting from the lowest value. Not sure what the best practice would be here.
 
 That said, if we just background subtract from the lowest value, it looks like pretty good static quenching...let's see how the normalization looks:
 

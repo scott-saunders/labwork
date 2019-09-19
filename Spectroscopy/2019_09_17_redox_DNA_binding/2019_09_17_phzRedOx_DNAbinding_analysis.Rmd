@@ -1,0 +1,39 @@
+---
+title: "DNA binding of phenazines, oxidized and reduced"
+author: "Scott Saunders"
+fontsize: 12pt
+date: '09_17_19'
+output:
+  html_document:
+    code_folding: hide
+    self_contained: no
+    toc: yes
+  github_document:
+    pandoc_args: --webtex
+---
+
+# Intro
+
+
+
+# Methods
+
+# Results
+
+# Next steps
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(viridis)
+library(knitr)
+library(kableExtra)
+
+
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+source("../../../IDA/tools/plotting_tools.R")
+
+theme_set(theme_1())
+```

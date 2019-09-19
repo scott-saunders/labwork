@@ -5,6 +5,7 @@ library(ggplot2)
 theme_1 <- function () { 
   theme_classic( ) %+replace% 
     theme(
+      axis.ticks = element_line(color = 'black'),
       axis.text = element_text( size=10),
       axis.title=element_text(size=12),
       strip.text = element_text(size = 12),
