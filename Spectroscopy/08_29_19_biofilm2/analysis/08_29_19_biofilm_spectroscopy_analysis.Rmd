@@ -195,6 +195,9 @@ Note that runs 1 - 3 for experiment 1 were done on a larger scale with 1uM Ru, w
 
 ```{r}
 
+ggplot(df %>% filter(exp_num ==1 & run<=4), aes(x = time, y = intensity, color = factor(run))) + 
+  geom_path() + xlim(NA, 5e-7)
+
 ggplot(df %>% filter(exp_num ==1 & run>=4), aes(x = time, y = intensity, color = factor(quencher_eq))) + 
   geom_path() + xlim(NA, 5e-7)
 
