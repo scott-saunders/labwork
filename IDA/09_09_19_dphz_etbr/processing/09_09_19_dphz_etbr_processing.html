@@ -1,0 +1,1672 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Scott Saunders" />
+
+
+<title>∆phz* +/- Ethidium</title>
+
+<script src="09_09_19_dphz_etbr_processing_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="09_09_19_dphz_etbr_processing_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="09_09_19_dphz_etbr_processing_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="09_09_19_dphz_etbr_processing_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="09_09_19_dphz_etbr_processing_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="09_09_19_dphz_etbr_processing_files/navigation-1.1/tabsets.js"></script>
+<script src="09_09_19_dphz_etbr_processing_files/navigation-1.1/codefolding.js"></script>
+<link href="09_09_19_dphz_etbr_processing_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="09_09_19_dphz_etbr_processing_files/highlightjs-9.12.0/highlight.js"></script>
+<script src="09_09_19_dphz_etbr_processing_files/kePrint-0.0.1/kePrint.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">∆phz* +/- Ethidium</h1>
+<h3 class="subtitle">Processing</h3>
+<h4 class="author">Scott Saunders</h4>
+<h4 class="date">09_09_19</h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#all-swvs">All SWVs</a></li>
+<li><a href="#all-gcs">All GCs</a></li>
+<li><a href="#soak-data">Soak data</a></li>
+<li><a href="#swv-vs.gc">SWV vs. GC</a></li>
+<li><a href="#outputs">Outputs</a></li>
+</ul>
+</div>
+
+<pre class="r"><code>library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+library(knitr)
+library(kableExtra)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)
+
+source(&quot;../../tools/echem_processing_tools.R&quot;)
+source(&quot;../../tools/plotting_tools.R&quot;)
+
+theme_set(theme_1())</code></pre>
+<pre class="r"><code>idaA_tran1 = &quot;../data/biofilm_A/tran_1/&quot;
+idaA_tranEtBr_2 = &quot;../data/biofilm_A/tranEtBr_2/&quot;
+idaA_tranEtBr_3 = &quot;../data/biofilm_A/tranEtBr_3/&quot;
+
+idaB_tran1 = &quot;../data/biofilm_B/tran_1/&quot;
+idaB_tranEtBr_2 = &quot;../data/biofilm_B/tranEtBr_2/&quot;
+idaB_tranEtBr_3 = &quot;../data/biofilm_B/tranEtBr_3/&quot;
+
+data_cols &lt;- c(&quot;E&quot;, &quot;i1&quot;, &quot;i2&quot;)
+
+swv_skip_rows = 18
+
+gc_skip_rows = 21</code></pre>
+<div id="all-swvs" class="section level1">
+<h1>All SWVs</h1>
+<pre class="r"><code># Add &#39;reactor&#39; to file name so it is parsed into column
+filename_cols = c(&quot;biofilm&quot;, &quot;reactor&quot;, &quot;reactor_num&quot;, &quot;condition&quot;, 
+    &quot;echem&quot;, &quot;rep&quot;)
+
+swv_idaA_tran1_names &lt;- dir(path = idaA_tran1, pattern = &quot;[swv]+.+[txt]$&quot;) %&gt;% 
+    paste(&quot;A_transfer_1_pbsPBS&quot;, ., sep = &quot;_&quot;)
+swv_idaA_tranEtBr_2_names &lt;- dir(path = idaA_tranEtBr_2, pattern = &quot;[swv]+.+[txt]$&quot;) %&gt;% 
+    paste(&quot;A_transfer_2_pbsEtBr&quot;, ., sep = &quot;_&quot;)
+swv_idaA_tranEtBr_3_names &lt;- dir(path = idaA_tranEtBr_3, pattern = &quot;[swv]+.+[txt]$&quot;) %&gt;% 
+    paste(&quot;A_transfer_3_etbrEtBr&quot;, ., sep = &quot;_&quot;)
+
+swv_idaB_tran1_names &lt;- dir(path = idaB_tran1, pattern = &quot;[swv]+.+[txt]$&quot;) %&gt;% 
+    paste(&quot;B_transfer_1_pbsPBS&quot;, ., sep = &quot;_&quot;)
+swv_idaB_tranEtBr_2_names &lt;- dir(path = idaB_tranEtBr_2, pattern = &quot;[swv]+.+[txt]$&quot;) %&gt;% 
+    paste(&quot;B_transfer_2_pbsEtBr&quot;, ., sep = &quot;_&quot;)
+swv_idaB_tranEtBr_3_names &lt;- dir(path = idaB_tranEtBr_3, pattern = &quot;[swv]+.+[txt]$&quot;) %&gt;% 
+    paste(&quot;B_transfer_3_etbrEtBr&quot;, ., sep = &quot;_&quot;)
+
+# Add correct paths separate from filenames
+swv_idaA_tran1_paths &lt;- dir(path = idaA_tran1, pattern = &quot;[swv]+.+[txt]$&quot;) %&gt;% 
+    paste(idaA_tran1, ., sep = &quot;&quot;)
+swv_idaA_tranEtBr_2_paths &lt;- dir(path = idaA_tranEtBr_2, pattern = &quot;[swv]+.+[txt]$&quot;) %&gt;% 
+    paste(idaA_tranEtBr_2, ., sep = &quot;&quot;)
+swv_idaA_tranEtBr_3_paths &lt;- dir(path = idaA_tranEtBr_3, pattern = &quot;[swv]+.+[txt]$&quot;) %&gt;% 
+    paste(idaA_tranEtBr_3, ., sep = &quot;&quot;)
+
+swv_idaB_tran1_paths &lt;- dir(path = idaB_tran1, pattern = &quot;[swv]+.+[txt]$&quot;) %&gt;% 
+    paste(idaB_tran1, ., sep = &quot;&quot;)
+swv_idaB_tranEtBr_2_paths &lt;- dir(path = idaB_tranEtBr_2, pattern = &quot;[swv]+.+[txt]$&quot;) %&gt;% 
+    paste(idaB_tranEtBr_2, ., sep = &quot;&quot;)
+swv_idaB_tranEtBr_3_paths &lt;- dir(path = idaB_tranEtBr_3, pattern = &quot;[swv]+.+[txt]$&quot;) %&gt;% 
+    paste(idaB_tranEtBr_3, ., sep = &quot;&quot;)
+
+
+# Combine all SWVs into single vector
+swv_names &lt;- c(swv_idaA_tran1_names, swv_idaA_tranEtBr_2_names, 
+    swv_idaA_tranEtBr_3_names, swv_idaB_tran1_names, swv_idaB_tranEtBr_2_names, 
+    swv_idaB_tranEtBr_3_names)
+
+swv_paths &lt;- c(swv_idaA_tran1_paths, swv_idaA_tranEtBr_2_paths, 
+    swv_idaA_tranEtBr_3_paths, swv_idaB_tran1_paths, swv_idaB_tranEtBr_2_paths, 
+    swv_idaB_tranEtBr_3_paths)
+
+
+
+# Read in all SWVs with one function call
+swv_data &lt;- echem_import_to_df(filenames = swv_names, file_paths = swv_paths, 
+    data_cols = data_cols, skip_rows = swv_skip_rows, filename_cols = filename_cols, 
+    rep = T, PHZadded = F) %&gt;% mutate(rep = rep - 1)
+
+
+swv_data %&gt;% head() %&gt;% kable() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+biofilm
+</th>
+<th style="text-align:left;">
+reactor
+</th>
+<th style="text-align:left;">
+reactor_num
+</th>
+<th style="text-align:left;">
+condition
+</th>
+<th style="text-align:left;">
+echem
+</th>
+<th style="text-align:right;">
+rep
+</th>
+<th style="text-align:right;">
+minutes
+</th>
+<th style="text-align:right;">
+E
+</th>
+<th style="text-align:left;">
+electrode
+</th>
+<th style="text-align:right;">
+current
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+A
+</td>
+<td style="text-align:left;">
+transfer
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+pbsPBS
+</td>
+<td style="text-align:left;">
+swv
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+940.4167
+</td>
+<td style="text-align:right;">
+0.099
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+2e-07
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+A
+</td>
+<td style="text-align:left;">
+transfer
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+pbsPBS
+</td>
+<td style="text-align:left;">
+swv
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+940.4167
+</td>
+<td style="text-align:right;">
+0.098
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+2e-07
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+A
+</td>
+<td style="text-align:left;">
+transfer
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+pbsPBS
+</td>
+<td style="text-align:left;">
+swv
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+940.4167
+</td>
+<td style="text-align:right;">
+0.097
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+2e-07
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+A
+</td>
+<td style="text-align:left;">
+transfer
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+pbsPBS
+</td>
+<td style="text-align:left;">
+swv
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+940.4167
+</td>
+<td style="text-align:right;">
+0.096
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+1e-07
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+A
+</td>
+<td style="text-align:left;">
+transfer
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+pbsPBS
+</td>
+<td style="text-align:left;">
+swv
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+940.4167
+</td>
+<td style="text-align:right;">
+0.095
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+A
+</td>
+<td style="text-align:left;">
+transfer
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+pbsPBS
+</td>
+<td style="text-align:left;">
+swv
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+940.4167
+</td>
+<td style="text-align:right;">
+0.094
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+1e-07
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>ggplot(swv_data %&gt;% filter(condition == &quot;pbsPBS&quot;), aes(x = E, 
+    y = current, color = rep, group = rep)) + geom_path() + facet_wrap(biofilm ~ 
+    electrode, scales = &quot;free&quot;) + scale_x_reverse() + labs(title = &quot;Transfer 1: PBS to PBS&quot;)</code></pre>
+<p><img src="09_09_19_dphz_etbr_processing_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(swv_data %&gt;% filter(condition == &quot;pbsEtBr&quot;), aes(x = E, 
+    y = current, color = rep, group = rep)) + geom_path() + facet_wrap(biofilm ~ 
+    electrode, scales = &quot;free&quot;) + scale_x_reverse() + labs(title = &quot;Transfer 2: PBS to EtBr&quot;)</code></pre>
+<p><img src="09_09_19_dphz_etbr_processing_files/figure-html/unnamed-chunk-3-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(swv_data %&gt;% filter(condition == &quot;etbrEtBr&quot;), aes(x = E, 
+    y = current, color = rep, group = rep)) + geom_path() + facet_wrap(biofilm ~ 
+    electrode, scales = &quot;free&quot;) + scale_x_reverse() + labs(title = &quot;Transfer 3: EtBr to EtBr&quot;)</code></pre>
+<p><img src="09_09_19_dphz_etbr_processing_files/figure-html/unnamed-chunk-3-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Probably need to smooth these SWVs if possible. Should look something like this:</p>
+<pre class="r"><code>ggplot(swv_data %&gt;% filter(electrode == &quot;i1&quot;), aes(x = E, y = current, 
+    color = rep, group = rep)) + geom_point(alpha = 0.5) + geom_smooth(span = 0.1, 
+    se = F) + facet_wrap(biofilm ~ condition, scales = &quot;free&quot;) + 
+    scale_x_reverse()</code></pre>
+<p><img src="09_09_19_dphz_etbr_processing_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /> Let’s do it with <code>loess()</code></p>
+<pre class="r"><code>smooth_loess &lt;- function(df) {
+    loess(current ~ E, data = df, span = 0.1)
+}
+
+swv_data_smooth &lt;- swv_data %&gt;% # filter(biofilm == &#39;A&#39; &amp; condition == &#39;pbsPBS&#39; &amp; electrode
+# == &#39;i1&#39; &amp; rep == 1) %&gt;%
+group_by(biofilm, condition, electrode, rep) %&gt;% nest() %&gt;% mutate(loess_mod = map(data, 
+    smooth_loess)) %&gt;% mutate(preds = map2(data, loess_mod, add_predictions)) %&gt;% 
+    unnest(preds)
+
+
+ggplot(swv_data_smooth %&gt;% filter(electrode == &quot;i1&quot;), aes(x = E, 
+    y = current, color = rep, group = rep)) + geom_point(alpha = 0.5) + 
+    geom_path(aes(y = pred)) + facet_wrap(biofilm ~ condition, 
+    scales = &quot;free&quot;) + scale_x_reverse()</code></pre>
+<p><img src="09_09_19_dphz_etbr_processing_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Looks good. Here’s what the max current data looks like unsmoothed:</p>
+<pre class="r"><code>swv_max &lt;- swv_data %&gt;% group_by(biofilm, condition) %&gt;% mutate(min_time = min(minutes)) %&gt;% 
+    mutate(norm_time = minutes - min_time) %&gt;% group_by(biofilm, 
+    condition, rep, electrode) %&gt;% filter(E &gt; -0.4 &amp; E &lt; -0.2) %&gt;% 
+    mutate(max_current = max(abs(current)), ) %&gt;% filter(abs(current) == 
+    max_current)
+
+ggplot(swv_data %&gt;% filter(electrode == &quot;i1&quot;), aes(x = E, y = abs(current), 
+    color = rep, group = rep)) + geom_path() + geom_point(data = swv_max %&gt;% 
+    filter(electrode == &quot;i1&quot;), color = &quot;red&quot;) + scale_x_reverse() + 
+    facet_wrap(biofilm ~ condition)</code></pre>
+<p><img src="09_09_19_dphz_etbr_processing_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># ggplot(swv_max %&gt;% filter(electrode == &#39;i1&#39;), aes(x =
+# minutes, y = max_current, color = condition)) +
+# geom_point() + facet_wrap(~biofilm, scales = &#39;free&#39;)
+
+ggplot(swv_max %&gt;% filter(electrode == &quot;i1&quot;), aes(x = norm_time, 
+    y = max_current, color = condition)) + geom_point() + facet_wrap(~biofilm, 
+    scales = &quot;free&quot;)</code></pre>
+<p><img src="09_09_19_dphz_etbr_processing_files/figure-html/unnamed-chunk-6-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>And here’s what it looks like smoothed:</p>
+<pre class="r"><code>swv_smooth_max &lt;- swv_data_smooth %&gt;% group_by(biofilm, condition) %&gt;% 
+    mutate(min_time = min(minutes)) %&gt;% mutate(norm_time = minutes - 
+    min_time) %&gt;% group_by(biofilm, condition, rep, electrode) %&gt;% 
+    filter(E &gt; -0.35 &amp; E &lt; -0.2) %&gt;% mutate(max_current = max(abs(pred))) %&gt;% 
+    filter(abs(pred) == max_current)
+
+ggplot(swv_data_smooth %&gt;% filter(electrode == &quot;i1&quot;), aes(x = E, 
+    y = abs(pred), color = rep, group = rep)) + geom_path() + 
+    geom_point(data = swv_smooth_max %&gt;% filter(electrode == 
+        &quot;i1&quot;), aes(y = max_current), color = &quot;red&quot;) + scale_x_reverse() + 
+    facet_wrap(biofilm ~ condition)</code></pre>
+<p><img src="09_09_19_dphz_etbr_processing_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(swv_smooth_max %&gt;% filter(electrode == &quot;i1&quot;), aes(x = norm_time, 
+    y = max_current, color = condition)) + geom_point() + facet_wrap(~biofilm, 
+    scales = &quot;free&quot;)</code></pre>
+<p><img src="09_09_19_dphz_etbr_processing_files/figure-html/unnamed-chunk-7-2.png" width="672" style="display: block; margin: auto;" /> Looks good, I’m going to used this smoothed data from here on.</p>
+</div>
+<div id="all-gcs" class="section level1">
+<h1>All GCs</h1>
+<pre class="r"><code># Add &#39;reactor&#39; to file name so it is parsed into column
+filename_cols = c(&quot;biofilm&quot;, &quot;reactor&quot;, &quot;reactor_num&quot;, &quot;condition&quot;, 
+    &quot;echem&quot;, &quot;rep&quot;)
+
+gc_idaA_tran1_names &lt;- dir(path = idaA_tran1, pattern = &quot;[gc]+.+[txt]$&quot;) %&gt;% 
+    paste(&quot;A_transfer_1_pbsPBS&quot;, ., sep = &quot;_&quot;)
+gc_idaA_tranEtBr_2_names &lt;- dir(path = idaA_tranEtBr_2, pattern = &quot;[gc]+.+[txt]$&quot;) %&gt;% 
+    paste(&quot;A_transfer_2_pbsEtBr&quot;, ., sep = &quot;_&quot;)
+gc_idaA_tranEtBr_3_names &lt;- dir(path = idaA_tranEtBr_3, pattern = &quot;[gc]+.+[txt]$&quot;) %&gt;% 
+    paste(&quot;A_transfer_3_etbrEtBr&quot;, ., sep = &quot;_&quot;)
+
+gc_idaB_tran1_names &lt;- dir(path = idaB_tran1, pattern = &quot;[gc]+.+[txt]$&quot;) %&gt;% 
+    paste(&quot;B_transfer_1_pbsPBS&quot;, ., sep = &quot;_&quot;)
+gc_idaB_tranEtBr_2_names &lt;- dir(path = idaB_tranEtBr_2, pattern = &quot;[gc]+.+[txt]$&quot;) %&gt;% 
+    paste(&quot;B_transfer_2_pbsEtBr&quot;, ., sep = &quot;_&quot;)
+gc_idaB_tranEtBr_3_names &lt;- dir(path = idaB_tranEtBr_3, pattern = &quot;[gc]+.+[txt]$&quot;) %&gt;% 
+    paste(&quot;B_transfer_3_etbrEtBr&quot;, ., sep = &quot;_&quot;)
+
+# Add correct paths separate from filenames
+gc_idaA_tran1_paths &lt;- dir(path = idaA_tran1, pattern = &quot;[gc]+.+[txt]$&quot;) %&gt;% 
+    paste(idaA_tran1, ., sep = &quot;&quot;)
+gc_idaA_tranEtBr_2_paths &lt;- dir(path = idaA_tranEtBr_2, pattern = &quot;[gc]+.+[txt]$&quot;) %&gt;% 
+    paste(idaA_tranEtBr_2, ., sep = &quot;&quot;)
+gc_idaA_tranEtBr_3_paths &lt;- dir(path = idaA_tranEtBr_3, pattern = &quot;[gc]+.+[txt]$&quot;) %&gt;% 
+    paste(idaA_tranEtBr_3, ., sep = &quot;&quot;)
+
+gc_idaB_tran1_paths &lt;- dir(path = idaB_tran1, pattern = &quot;[gc]+.+[txt]$&quot;) %&gt;% 
+    paste(idaB_tran1, ., sep = &quot;&quot;)
+gc_idaB_tranEtBr_2_paths &lt;- dir(path = idaB_tranEtBr_2, pattern = &quot;[gc]+.+[txt]$&quot;) %&gt;% 
+    paste(idaB_tranEtBr_2, ., sep = &quot;&quot;)
+gc_idaB_tranEtBr_3_paths &lt;- dir(path = idaB_tranEtBr_3, pattern = &quot;[gc]+.+[txt]$&quot;) %&gt;% 
+    paste(idaB_tranEtBr_3, ., sep = &quot;&quot;)
+
+
+# Combine all gcs into single vector
+gc_names &lt;- c(gc_idaA_tran1_names, gc_idaA_tranEtBr_2_names, 
+    gc_idaA_tranEtBr_3_names, gc_idaB_tran1_names, gc_idaB_tranEtBr_2_names, 
+    gc_idaB_tranEtBr_3_names)
+
+gc_paths &lt;- c(gc_idaA_tran1_paths, gc_idaA_tranEtBr_2_paths, 
+    gc_idaA_tranEtBr_3_paths, gc_idaB_tran1_paths, gc_idaB_tranEtBr_2_paths, 
+    gc_idaB_tranEtBr_3_paths)
+
+
+
+# Read in all gcs with one function call
+gc_data &lt;- echem_import_to_df(filenames = gc_names, file_paths = gc_paths, 
+    data_cols = data_cols, skip_rows = gc_skip_rows, filename_cols = filename_cols, 
+    rep = T, PHZadded = F)
+
+gc_data %&gt;% head() %&gt;% kable() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+biofilm
+</th>
+<th style="text-align:left;">
+reactor
+</th>
+<th style="text-align:left;">
+reactor_num
+</th>
+<th style="text-align:left;">
+condition
+</th>
+<th style="text-align:left;">
+echem
+</th>
+<th style="text-align:right;">
+rep
+</th>
+<th style="text-align:right;">
+minutes
+</th>
+<th style="text-align:right;">
+E
+</th>
+<th style="text-align:left;">
+electrode
+</th>
+<th style="text-align:right;">
+current
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+A
+</td>
+<td style="text-align:left;">
+transfer
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+pbsPBS
+</td>
+<td style="text-align:left;">
+gc
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+942.7333
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+A
+</td>
+<td style="text-align:left;">
+transfer
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+pbsPBS
+</td>
+<td style="text-align:left;">
+gc
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+942.7333
+</td>
+<td style="text-align:right;">
+-0.001
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+A
+</td>
+<td style="text-align:left;">
+transfer
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+pbsPBS
+</td>
+<td style="text-align:left;">
+gc
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+942.7333
+</td>
+<td style="text-align:right;">
+-0.002
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+A
+</td>
+<td style="text-align:left;">
+transfer
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+pbsPBS
+</td>
+<td style="text-align:left;">
+gc
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+942.7333
+</td>
+<td style="text-align:right;">
+-0.003
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+A
+</td>
+<td style="text-align:left;">
+transfer
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+pbsPBS
+</td>
+<td style="text-align:left;">
+gc
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+942.7333
+</td>
+<td style="text-align:right;">
+-0.004
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+A
+</td>
+<td style="text-align:left;">
+transfer
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+pbsPBS
+</td>
+<td style="text-align:left;">
+gc
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+942.7333
+</td>
+<td style="text-align:right;">
+-0.005
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>ggplot(gc_data %&gt;% filter(condition == &quot;pbsPBS&quot;), aes(x = E, 
+    y = current, color = rep, group = rep)) + geom_path() + facet_wrap(biofilm ~ 
+    electrode, scales = &quot;free&quot;) + scale_x_reverse() + labs(title = &quot;Transfer 1: PBS to PBS&quot;)</code></pre>
+<p><img src="09_09_19_dphz_etbr_processing_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(gc_data %&gt;% filter(condition == &quot;pbsEtBr&quot;), aes(x = E, 
+    y = current, color = rep, group = rep)) + geom_path() + facet_wrap(biofilm ~ 
+    electrode, scales = &quot;free&quot;) + scale_x_reverse() + labs(title = &quot;Transfer 2: PBS to EtBr&quot;)</code></pre>
+<p><img src="09_09_19_dphz_etbr_processing_files/figure-html/unnamed-chunk-9-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(gc_data %&gt;% filter(condition == &quot;etbrEtBr&quot;), aes(x = E, 
+    y = current, color = rep, group = rep)) + geom_path() + facet_wrap(biofilm ~ 
+    electrode, scales = &quot;free&quot;) + scale_x_reverse() + labs(title = &quot;Transfer 3: EtBr to EtBr&quot;)</code></pre>
+<p><img src="09_09_19_dphz_etbr_processing_files/figure-html/unnamed-chunk-9-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>There’s a little bit of noise, but it shouldn’t be an issue. When we process, we’ll just take the final datapoint from the collector:</p>
+<pre class="r"><code>gc_max &lt;- gc_data %&gt;% group_by(biofilm, condition) %&gt;% mutate(min_time = min(minutes)) %&gt;% 
+    mutate(norm_time = minutes - min_time) %&gt;% group_by(biofilm, 
+    condition, rep, electrode) %&gt;% filter(E == -0.399) %&gt;% mutate(max_current = max(abs(current)), 
+    ) %&gt;% filter(abs(current) == max_current)
+
+ggplot(gc_data %&gt;% filter(electrode == &quot;i2&quot;), aes(x = E, y = abs(current), 
+    color = rep, group = rep)) + geom_path() + geom_point(data = gc_max %&gt;% 
+    filter(electrode == &quot;i2&quot;), color = &quot;red&quot;) + scale_x_reverse() + 
+    facet_wrap(biofilm ~ condition)</code></pre>
+<p><img src="09_09_19_dphz_etbr_processing_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># ggplot(gc_max %&gt;% filter(electrode == &#39;i2&#39;), aes(x =
+# minutes, y = max_current, color = condition)) +
+# geom_point() + facet_wrap(~biofilm, scales = &#39;free&#39;)
+
+ggplot(gc_max %&gt;% filter(electrode == &quot;i2&quot;), aes(x = norm_time, 
+    y = max_current, color = condition)) + geom_point() + facet_wrap(~biofilm, 
+    scales = &quot;free&quot;)</code></pre>
+<p><img src="09_09_19_dphz_etbr_processing_files/figure-html/unnamed-chunk-10-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="soak-data" class="section level1">
+<h1>Soak data</h1>
+<pre class="r"><code># soak paths
+idaA_soak_1 = &quot;../data/biofilm_A/soak_1/&quot;
+idaA_soak_2 = &quot;../data/biofilm_A/soak_2/&quot;
+idaA_soak_3 = &quot;../data/biofilm_A/soak_3/&quot;
+
+idaB_soak_1 = &quot;../data/biofilm_B/soak_1/&quot;
+idaB_soak_2 = &quot;../data/biofilm_B/soak_2/&quot;
+idaB_soak_3 = &quot;../data/biofilm_B/soak_3/&quot;</code></pre>
+<pre class="r"><code># Add &#39;reactor&#39; to file name so it is parsed into column
+soak_filename_cols = c(&quot;PHZadded&quot;, &quot;PHZ&quot;, &quot;biofilm&quot;, &quot;reactor&quot;, 
+    &quot;reactor_num&quot;, &quot;soak_condition&quot;, &quot;echem&quot;, &quot;rep&quot;)
+
+swv_idaA_soak_1_names &lt;- dir(path = idaA_soak_1, pattern = &quot;SWV.*txt&quot;)
+swv_idaA_soak_2_names &lt;- dir(path = idaA_soak_2, pattern = &quot;SWV.*txt&quot;)
+swv_idaA_soak_3_names &lt;- dir(path = idaA_soak_3, pattern = &quot;SWV.*txt&quot;)
+
+swv_idaB_soak_1_names &lt;- dir(path = idaB_soak_1, pattern = &quot;SWV.*txt&quot;)
+swv_idaB_soak_2_names &lt;- dir(path = idaB_soak_2, pattern = &quot;SWV.*txt&quot;)
+swv_idaB_soak_3_names &lt;- dir(path = idaB_soak_3, pattern = &quot;SWV.*txt&quot;)
+
+# Add correct paths separate from filenames
+swv_idaA_soak_1_paths &lt;- paste(idaA_soak_1, swv_idaA_soak_1_names, 
+    sep = &quot;&quot;)
+swv_idaA_soak_2_paths &lt;- paste(idaA_soak_2, swv_idaA_soak_2_names, 
+    sep = &quot;&quot;)
+swv_idaA_soak_3_paths &lt;- paste(idaA_soak_3, swv_idaA_soak_3_names, 
+    sep = &quot;&quot;)
+
+swv_idaB_soak_1_paths &lt;- paste(idaB_soak_1, swv_idaB_soak_1_names, 
+    sep = &quot;&quot;)
+swv_idaB_soak_2_paths &lt;- paste(idaB_soak_2, swv_idaB_soak_2_names, 
+    sep = &quot;&quot;)
+swv_idaB_soak_3_paths &lt;- paste(idaB_soak_3, swv_idaB_soak_3_names, 
+    sep = &quot;&quot;)
+
+
+# Combine all SWVs into single vector
+swv_soak_names &lt;- c(swv_idaA_soak_1_names, swv_idaA_soak_2_names, 
+    swv_idaA_soak_3_names, swv_idaB_soak_1_names, swv_idaB_soak_2_names, 
+    swv_idaB_soak_3_names)
+
+swv_soak_paths &lt;- c(swv_idaA_soak_1_paths, swv_idaA_soak_2_paths, 
+    swv_idaA_soak_3_paths, swv_idaB_soak_1_paths, swv_idaB_soak_2_paths, 
+    swv_idaB_soak_3_paths)
+
+
+
+# Read in all SWVs with one function call
+swv_soak_data &lt;- echem_import_to_df(filenames = swv_soak_names, 
+    file_paths = swv_soak_paths, data_cols = data_cols, skip_rows = swv_skip_rows, 
+    filename_cols = soak_filename_cols, rep = T, PHZadded = F)
+
+swv_soak_data %&gt;% head() %&gt;% kable() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+PHZadded
+</th>
+<th style="text-align:left;">
+PHZ
+</th>
+<th style="text-align:left;">
+biofilm
+</th>
+<th style="text-align:left;">
+reactor
+</th>
+<th style="text-align:left;">
+reactor_num
+</th>
+<th style="text-align:left;">
+soak_condition
+</th>
+<th style="text-align:left;">
+echem
+</th>
+<th style="text-align:right;">
+rep
+</th>
+<th style="text-align:right;">
+minutes
+</th>
+<th style="text-align:right;">
+E
+</th>
+<th style="text-align:left;">
+electrode
+</th>
+<th style="text-align:right;">
+current
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+A
+</td>
+<td style="text-align:left;">
+soak
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+SWV
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+910.7333
+</td>
+<td style="text-align:right;">
+0.099
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+1e-07
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+A
+</td>
+<td style="text-align:left;">
+soak
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+SWV
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+910.7333
+</td>
+<td style="text-align:right;">
+0.098
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+1e-07
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+A
+</td>
+<td style="text-align:left;">
+soak
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+SWV
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+910.7333
+</td>
+<td style="text-align:right;">
+0.097
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+1e-07
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+A
+</td>
+<td style="text-align:left;">
+soak
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+SWV
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+910.7333
+</td>
+<td style="text-align:right;">
+0.096
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+1e-07
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+A
+</td>
+<td style="text-align:left;">
+soak
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+SWV
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+910.7333
+</td>
+<td style="text-align:right;">
+0.095
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+1e-07
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+A
+</td>
+<td style="text-align:left;">
+soak
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+SWV
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+910.7333
+</td>
+<td style="text-align:right;">
+0.094
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+1e-07
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>ggplot(swv_soak_data %&gt;% filter(PHZadded == &quot;75uM&quot; &amp; rep == 2), 
+    aes(x = E, y = current, color = reactor_num)) + geom_path() + 
+    facet_wrap(biofilm ~ electrode, scales = &quot;free&quot;) + scale_x_reverse()</code></pre>
+<p><img src="09_09_19_dphz_etbr_processing_files/figure-html/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># Add &#39;reactor&#39; to file name so it is parsed into column
+soak_filename_cols = c(&quot;PHZadded&quot;, &quot;PHZ&quot;, &quot;biofilm&quot;, &quot;reactor&quot;, 
+    &quot;reactor_num&quot;, &quot;soak_condition&quot;, &quot;echem&quot;, &quot;rep&quot;)
+
+gc_idaA_soak_1_names &lt;- dir(path = idaA_soak_1, pattern = &quot;GC.*txt&quot;)
+gc_idaA_soak_2_names &lt;- dir(path = idaA_soak_2, pattern = &quot;GC.*txt&quot;)
+gc_idaA_soak_3_names &lt;- dir(path = idaA_soak_3, pattern = &quot;GC.*txt&quot;)
+
+gc_idaB_soak_1_names &lt;- dir(path = idaB_soak_1, pattern = &quot;GC.*txt&quot;)
+gc_idaB_soak_2_names &lt;- dir(path = idaB_soak_2, pattern = &quot;GC.*txt&quot;)
+gc_idaB_soak_3_names &lt;- dir(path = idaB_soak_3, pattern = &quot;GC.*txt&quot;)
+
+# Add correct paths separate from filenames
+gc_idaA_soak_1_paths &lt;- paste(idaA_soak_1, gc_idaA_soak_1_names, 
+    sep = &quot;&quot;)
+gc_idaA_soak_2_paths &lt;- paste(idaA_soak_2, gc_idaA_soak_2_names, 
+    sep = &quot;&quot;)
+gc_idaA_soak_3_paths &lt;- paste(idaA_soak_3, gc_idaA_soak_3_names, 
+    sep = &quot;&quot;)
+
+gc_idaB_soak_1_paths &lt;- paste(idaB_soak_1, gc_idaB_soak_1_names, 
+    sep = &quot;&quot;)
+gc_idaB_soak_2_paths &lt;- paste(idaB_soak_2, gc_idaB_soak_2_names, 
+    sep = &quot;&quot;)
+gc_idaB_soak_3_paths &lt;- paste(idaB_soak_3, gc_idaB_soak_3_names, 
+    sep = &quot;&quot;)
+
+
+# Combine all gcs into single vector
+gc_soak_names &lt;- c(gc_idaA_soak_1_names, gc_idaA_soak_2_names, 
+    gc_idaA_soak_3_names, gc_idaB_soak_1_names, gc_idaB_soak_2_names, 
+    gc_idaB_soak_3_names)
+
+gc_soak_paths &lt;- c(gc_idaA_soak_1_paths, gc_idaA_soak_2_paths, 
+    gc_idaA_soak_3_paths, gc_idaB_soak_1_paths, gc_idaB_soak_2_paths, 
+    gc_idaB_soak_3_paths)
+
+
+
+# Read in all gcs with one function call
+gc_soak_data &lt;- echem_import_to_df(filenames = gc_soak_names, 
+    file_paths = gc_soak_paths, data_cols = data_cols, skip_rows = gc_skip_rows, 
+    filename_cols = soak_filename_cols, rep = T, PHZadded = F)
+
+gc_soak_data %&gt;% head() %&gt;% kable() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+PHZadded
+</th>
+<th style="text-align:left;">
+PHZ
+</th>
+<th style="text-align:left;">
+biofilm
+</th>
+<th style="text-align:left;">
+reactor
+</th>
+<th style="text-align:left;">
+reactor_num
+</th>
+<th style="text-align:left;">
+soak_condition
+</th>
+<th style="text-align:left;">
+echem
+</th>
+<th style="text-align:right;">
+rep
+</th>
+<th style="text-align:right;">
+minutes
+</th>
+<th style="text-align:right;">
+E
+</th>
+<th style="text-align:left;">
+electrode
+</th>
+<th style="text-align:right;">
+current
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+A
+</td>
+<td style="text-align:left;">
+soak
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+GC
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+915.1167
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+A
+</td>
+<td style="text-align:left;">
+soak
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+GC
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+915.1167
+</td>
+<td style="text-align:right;">
+-0.001
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+A
+</td>
+<td style="text-align:left;">
+soak
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+GC
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+915.1167
+</td>
+<td style="text-align:right;">
+-0.002
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+A
+</td>
+<td style="text-align:left;">
+soak
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+GC
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+915.1167
+</td>
+<td style="text-align:right;">
+-0.003
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+A
+</td>
+<td style="text-align:left;">
+soak
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+GC
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+915.1167
+</td>
+<td style="text-align:right;">
+-0.004
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+A
+</td>
+<td style="text-align:left;">
+soak
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+GC
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+915.1167
+</td>
+<td style="text-align:right;">
+-0.005
+</td>
+<td style="text-align:left;">
+i1
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>ggplot(gc_soak_data %&gt;% filter(PHZadded == &quot;75uM&quot;), aes(x = E, 
+    y = current, color = reactor_num)) + geom_path() + facet_wrap(biofilm ~ 
+    electrode, scales = &quot;free&quot;) + scale_x_reverse()</code></pre>
+<p><img src="09_09_19_dphz_etbr_processing_files/figure-html/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="swv-vs.gc" class="section level1">
+<h1>SWV vs. GC</h1>
+<pre class="r"><code>swv_gc_max &lt;- left_join(gc_max, swv_smooth_max, by = c(&quot;biofilm&quot;, 
+    &quot;condition&quot;, &quot;rep&quot;, &quot;reactor&quot;, &quot;reactor_num&quot;), suffix = c(&quot;_from_gc&quot;, 
+    &quot;_from_swv&quot;))
+
+ggplot(swv_gc_max %&gt;% filter(electrode_from_gc == &quot;i2&quot; &amp; electrode_from_swv == 
+    &quot;i1&quot;), aes(x = max_current_from_swv, y = max_current_from_gc, 
+    color = condition)) + geom_point() + geom_smooth(method = &quot;lm&quot;) + 
+    facet_wrap(~biofilm, scales = &quot;free&quot;)</code></pre>
+<p><img src="09_09_19_dphz_etbr_processing_files/figure-html/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="outputs" class="section level1">
+<h1>Outputs</h1>
+<p>Paired SWV and GC maxes with time info etc:</p>
+<pre class="r"><code># write_csv(swv_gc_max, &#39;09_09_19_swv_gc_max_processed.csv&#39;)</code></pre>
+<p>The first SWV and GC from all the transfers:</p>
+<pre class="r"><code>first_scans &lt;- bind_rows(swv_data_smooth %&gt;% filter(rep &lt;= 1), 
+    gc_data %&gt;% filter(rep &lt;= 1))
+
+# write_csv(first_scans, &#39;09_09_19_first_transfer_reps.csv&#39;)</code></pre>
+<p>Let’s save a file with the soak data all together:</p>
+<pre class="r"><code>soak_data &lt;- bind_rows(swv_soak_data, gc_soak_data)
+
+# write_csv(soak_data, &#39;09_09_19_soak_data.csv&#39;)</code></pre>
+<hr />
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 3.5.2 (2018-12-20)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS Mojave 10.14.6
+## 
+## Matrix products: default
+## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] kableExtra_1.0.1  knitr_1.23        hms_0.4.2        
+##  [4] lubridate_1.7.4   viridis_0.5.1     viridisLite_0.3.0
+##  [7] modelr_0.1.2      broom_0.5.1       cowplot_0.9.4    
+## [10] forcats_0.3.0     stringr_1.3.1     dplyr_0.8.1      
+## [13] purrr_0.2.5       readr_1.3.1       tidyr_0.8.2      
+## [16] tibble_2.1.3      ggplot2_3.2.0     tidyverse_1.2.1  
+## 
+## loaded via a namespace (and not attached):
+##  [1] tidyselect_0.2.5 xfun_0.7         haven_2.0.0      lattice_0.20-38 
+##  [5] colorspace_1.4-0 generics_0.0.2   htmltools_0.3.6  yaml_2.2.0      
+##  [9] rlang_0.3.4      pillar_1.3.1     glue_1.3.1       withr_2.1.2     
+## [13] readxl_1.2.0     munsell_0.5.0    gtable_0.2.0     cellranger_1.1.0
+## [17] rvest_0.3.2      evaluate_0.14    labeling_0.3     highr_0.7       
+## [21] Rcpp_1.0.1       scales_1.0.0     backports_1.1.3  formatR_1.5     
+## [25] webshot_0.5.1    jsonlite_1.6     gridExtra_2.3    digest_0.6.18   
+## [29] stringi_1.2.4    grid_3.5.2       cli_1.0.1        tools_3.5.2     
+## [33] magrittr_1.5     lazyeval_0.2.1   crayon_1.3.4     pkgconfig_2.0.2 
+## [37] xml2_1.2.0       assertthat_0.2.1 rmarkdown_1.13   httr_1.4.0      
+## [41] rstudioapi_0.9.0 R6_2.4.0         nlme_3.1-140     compiler_3.5.2</code></pre>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

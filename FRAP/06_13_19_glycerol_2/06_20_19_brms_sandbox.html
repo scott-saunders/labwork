@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>BRMS hierarchical model sandbox FRAP</title>
+
+<script src="06_20_19_brms_sandbox_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="06_20_19_brms_sandbox_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="06_20_19_brms_sandbox_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="06_20_19_brms_sandbox_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="06_20_19_brms_sandbox_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="06_20_19_brms_sandbox_files/navigation-1.1/tabsets.js"></script>
+<script src="06_20_19_brms_sandbox_files/navigation-1.1/codefolding.js"></script>
+<link href="06_20_19_brms_sandbox_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="06_20_19_brms_sandbox_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">BRMS hierarchical model sandbox FRAP</h1>
+<h4 class="date">06_24_19</h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#glycerol">0 % Glycerol</a></li>
+<li><a href="#glycerol-1">10% Glycerol</a></li>
+<li><a href="#glycerol-2">50% Glycerol</a></li>
+<li><a href="#comparing-4-conditions">Comparing 4 conditions</a></li>
+</ul>
+</div>
+
+<p>This is an <a href="http://rmarkdown.rstudio.com">R Markdown</a> Notebook. When you execute code within the notebook, the results appear beneath the code.</p>
+<p>Try executing this chunk by clicking the <em>Run</em> button within the chunk or by placing your cursor inside it and pressing <em>Cmd+Shift+Enter</em>.</p>
+<pre class="r"><code>library(nlme)
+
+fm1 &lt;- nlme(height ~ SSasymp(age, Asym, R0, lrc),
+            data = Loblolly,
+            fixed = Asym + R0 + lrc ~ 1,
+            random = Asym ~ 1,
+            start = c(Asym = 103, R0 = -8.5, lrc = -3.3))
+summary(fm1)
+fm2 &lt;- update(fm1, random = pdDiag(Asym + lrc ~ 1))
+summary(fm2)</code></pre>
+<pre class="r"><code>library(brms)</code></pre>
+<pre><code>## Loading required package: Rcpp</code></pre>
+<pre><code>## Loading &#39;brms&#39; package (version 2.9.0). Useful instructions
+## can be found by typing help(&#39;brms&#39;). A more detailed introduction
+## to the package is available through vignette(&#39;brms_overview&#39;).</code></pre>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ✔ ggplot2 3.2.0     ✔ purrr   0.2.5
+## ✔ tibble  2.1.3     ✔ dplyr   0.8.1
+## ✔ tidyr   0.8.2     ✔ stringr 1.3.1
+## ✔ readr   1.3.1     ✔ forcats 0.3.0</code></pre>
+<pre><code>## ── Conflicts ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>df &lt;- tibble(x = c(rnorm(100,mean = seq(1,100,1)), rnorm(100,mean = seq(1,100,1)), rnorm(100,mean = seq(1,100,1))), y = c(rnorm(100,mean = seq(1,100,1)), rnorm(100,mean = seq(1,200,2)), rnorm(100,mean = seq(1,300,3))), id = c(rep(&#39;a&#39;,100),rep(&#39;b&#39;,100),rep(&#39;c&#39;,100)))
+
+ggplot(df, aes(x,y,color = id)) + geom_point()+ geom_smooth(method = &#39;lm&#39;) + facet_grid(~id)</code></pre>
+<p><img src="06_20_19_brms_sandbox_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<pre class="r"><code>model_1 &lt;- brm(y ~ x + 1 + (1|id), data = df, warmup = 1000, iter = 3000, chains = 2, inits= &quot;random&quot;, cores=2)
+
+summary(model_1)
+
+marginal_effects(model_1)
+
+me_loss_1 &lt;- marginal_effects(
+  model_1, conditions = data.frame(id = c(&#39;a&#39;,&#39;b&#39;,&#39;c&#39;)), 
+  re_formula = NULL, method = &quot;predict&quot;
+)
+
+plot(me_loss_1, plot = F, points = T)[[1]] + ggtitle(&quot;My custom ggplot here!&quot;)</code></pre>
+<pre class="r"><code>model_2 &lt;- brm(y ~ x + 1 + (x+1|id), data = df, warmup = 1000, iter = 3000, chains = 2, inits= &quot;random&quot;, cores=2)
+
+summary(model_2)
+
+marginal_effects(model_2)
+
+me_loss_2 &lt;- marginal_effects(
+  model_2, conditions = data.frame(id = c(&#39;a&#39;,&#39;b&#39;,&#39;c&#39;)), 
+  re_formula = NULL, method = &quot;predict&quot;
+)
+
+plot(me_loss_2, plot = F, points = T)[[1]] + ggtitle(&quot;My custom ggplot here!&quot;)</code></pre>
+<pre class="r"><code>model_3 &lt;- brm(y ~ x + 1 + (x|id), data = df, warmup = 1000, iter = 3000, chains = 2, inits= &quot;random&quot;, cores=2)
+
+summary(model_3)
+
+marginal_effects(model_3)
+
+me_loss_3 &lt;- marginal_effects(
+  model_3, conditions = data.frame(id = c(&#39;a&#39;,&#39;b&#39;,&#39;c&#39;)), 
+  re_formula = NULL, method = &quot;predict&quot;
+)
+
+plot(me_loss_3, plot = F, points = T)[[1]] + ggtitle(&quot;My custom ggplot here!&quot;)</code></pre>
+<pre class="r"><code>df &lt;- read_csv(&quot;06_13_19_PYO_FRAP_glycerol_full_norm.csv&quot;) </code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_double(),
+##   filename = col_character(),
+##   condition = col_character(),
+##   agarose = col_character(),
+##   PYO = col_character(),
+##   objective = col_character(),
+##   frames = col_character(),
+##   excitation = col_character(),
+##   bleach = col_character(),
+##   fast = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre class="r"><code>df_fast_1 &lt;- df %&gt;% filter(fast == &#39;repFAST&#39; &amp; id==1)
+
+df_fast &lt;- df %&gt;% filter(fast == &#39;repFAST&#39;)
+
+ggplot(df_fast_1, aes(x = norm_time, y = full_norm_int, color = condition)) + 
+  geom_point(shape = 21)+
+  scale_color_viridis_d() + 
+  facet_wrap(~condition)</code></pre>
+<p><img src="06_20_19_brms_sandbox_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<pre class="r"><code>prior1 &lt;- prior(normal(0.8, 0.2), nlpar = &quot;I0&quot;) +
+  prior(normal(0.6, 0.2), nlpar = &quot;a&quot;)+
+  prior(normal(0.2, 0.1), nlpar = &quot;B&quot;)
+
+frap_model_1 &lt;- brm(bf(full_norm_int~I0 - a*exp(-B * norm_time), I0 + a + B~1+(1|condition), nl = T),
+     data = df_fast_1,
+     prior = prior1,
+    chains = 2,
+    cores = 2,
+    iter = 500
+)
+     
+     
+summary(frap_model_1)
+
+marginal_effects(frap_model_1)
+
+me_frap_model_1 &lt;- marginal_effects(
+  frap_model_1, conditions = data.frame(condition = c(&#39;0pctGlyc&#39;,&#39;10pctGlyc&#39;,&#39;20pctGlyc&#39;,&#39;50pctGlyc&#39;)), 
+  re_formula = NULL, method = &quot;predict&quot;
+)
+
+plot(me_frap_model_1, plot = F, points = T)[[1]] + ggtitle(&quot;My custom ggplot here!&quot;)</code></pre>
+<pre class="r"><code>frap_model_2 &lt;- brm(bf(full_norm_int~I0 - a*exp(-B * norm_time), I0 + a + B~1+(1|condition), nl = T),
+     data = df_fast_1,
+     prior = prior1,
+    chains = 4,
+    cores = 2
+)
+     
+     
+summary(frap_model_2)
+
+marginal_effects(frap_model_2)
+
+me_frap_model_2 &lt;- marginal_effects(
+  frap_model_2, conditions = data.frame(condition = c(&#39;0pctGlyc&#39;,&#39;10pctGlyc&#39;,&#39;20pctGlyc&#39;,&#39;50pctGlyc&#39;)), 
+  re_formula = NULL, method = &quot;predict&quot;
+)
+
+plot(me_frap_model_2, plot = F, points = T)[[1]] + ggtitle(&quot;My custom ggplot here!&quot;)
+
+plot(frap_model_2)</code></pre>
+<p>Can we set a group level parameter that doesn’t have a hyperparameter by doing:</p>
+<pre class="r"><code>#leave out intercept in parameter specification. Only depends on group level intercept?...
+
+frap_model_3 &lt;- brm(bf(full_norm_int~I0 - a*exp(-B * norm_time), I0 + a + B~(1|condition), nl = T),
+     data = df_fast_1,
+     prior = prior1,
+    chains = 4,
+    cores = 2
+)
+     
+     
+summary(frap_model_3)
+
+marginal_effects(frap_model_3)
+
+me_frap_model_3 &lt;- marginal_effects(
+  frap_model_3, conditions = data.frame(condition = c(&#39;0pctGlyc&#39;,&#39;10pctGlyc&#39;,&#39;20pctGlyc&#39;,&#39;50pctGlyc&#39;)), 
+  re_formula = NULL, method = &quot;predict&quot;
+)
+
+plot(me_frap_model_3, plot = F, points = T)[[1]] + ggtitle(&quot;My custom ggplot here!&quot;)
+
+plot(frap_model_3)</code></pre>
+<p>Prior predictive check:</p>
+<pre class="r"><code>prior1 &lt;- prior(normal(0.8, 0.2), nlpar = &quot;I0&quot;) +
+  prior(normal(0.6, 0.2), nlpar = &quot;a&quot;)+
+  prior(normal(0.2, 0.1), nlpar = &quot;B&quot;)
+
+frap_prior_pc &lt;- brm(bf(full_norm_int~I0 - a*exp(-B * norm_time), I0 + a + B~(1|condition), nl = T),
+     data = df_fast_1,
+     prior = prior1,
+    chains = 4,
+    cores = 2,
+    iter = 500,
+    sample_prior = &#39;only&#39;
+)
+
+plot(frap_prior_pc, N = 3)</code></pre>
+<p>Really what we want is to have each condition in its own hierarchical model, then we compare the hyperparameter estimates from each hierarchy to compare the conditions. This is because we don’t think there’s a true hyperparameter that controls the FRAPS in the different conditions…but there should be ones among the replicates</p>
+<pre class="r"><code>frap_model_0pct &lt;- brm(bf(full_norm_int~I0 - a*exp(-B * norm_time), I0 + a + B~1+(1|id), nl = T),
+     data = df_fast %&gt;% filter(condition== &#39;0pctGlyc&#39;),
+     prior = prior1,
+    chains = 4,
+    cores = 2,
+    control = list(adapt_delta = 0.95, max_treedepth = 15)
+)
+
+
+
+marginal_effects(frap_model_0pct)
+
+me_frap_model_0pct &lt;- marginal_effects(
+  frap_model_0pct, conditions = data.frame(id = c(1,2,3)), 
+  re_formula = NULL, method = &quot;predict&quot;
+)
+
+plot(me_frap_model_0pct, plot = F, points = T)[[1]] + ggtitle(&quot;My custom ggplot here!&quot;) + ylim(-2,2)
+
+plot(frap_model_0pct, N = 3)</code></pre>
+<pre class="r"><code>frap_model_10pct &lt;- brm(bf(full_norm_int~I0 - a*exp(-B * norm_time), I0 + a + B~1+(1|id), nl = T),
+     data = df_fast %&gt;% filter(condition== &#39;10pctGlyc&#39;),
+     prior = prior1,
+    chains = 4,
+    cores = 2,
+    control = list(adapt_delta = 0.9, max_treedepth = 12)
+)
+
+
+  summary(frap_model_0pct)
+  
+summary(frap_model_10pct)
+
+me_frap_model_10pct &lt;- marginal_effects(
+  frap_model_10pct, conditions = data.frame(id = c(1,2,3)), 
+  re_formula = NULL, method = &quot;predict&quot;
+)
+
+plot(me_frap_model_10pct, plot = F, points = T)[[1]] + ggtitle(&quot;My custom ggplot here!&quot;) + ylim(-2,2)
+
+plot(frap_model_10pct, N = 3)</code></pre>
+<p>For some reason I started with 20 percent glycerol. After a lot of troubleshooting, going back and fitting a single curve changing priors etc, I think the main issue was that I needed to set the lower bound (lb) for the priors to zero to avoid getting negative parameter values…now the model seems to be working pretty well and giving reasonable parameter estimates:</p>
+<p>Let’s walk through what worked here.</p>
+<p>First, the models were running very slowly…because this is essentially controlling stan that could be for a lot of reasons. The internet suggested two specific commands to speed up performance in rstan:</p>
+<pre class="r"><code>library(rstan)</code></pre>
+<pre><code>## Loading required package: StanHeaders</code></pre>
+<pre><code>## rstan (Version 2.18.2, GitRev: 2e1f913d3ca3)</code></pre>
+<pre><code>## For execution on a local, multicore CPU with excess RAM we recommend calling
+## options(mc.cores = parallel::detectCores()).
+## To avoid recompilation of unchanged Stan programs, we recommend calling
+## rstan_options(auto_write = TRUE)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;rstan&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:tidyr&#39;:
+## 
+##     extract</code></pre>
+<pre class="r"><code>rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())</code></pre>
+<p>Next, I played around with the priors a good bit, since I had the estimates from the nls fits. We could make these more weakly informative, but comparing to the posterior shows that I think the data informed the model pretty well:</p>
+<pre class="r"><code>prior20 &lt;- prior(normal(0.75, 0.2), nlpar = &quot;I0&quot;, lb = 0) +
+  prior(normal(0.6, 0.1), nlpar = &quot;a&quot;, lb = 0)+
+  prior(normal(0.15, 0.05), nlpar = &quot;B&quot;, lb = 0)</code></pre>
+<p>The nice thing is that this syntax is actually really straightforward and similar to how Justin Bois taught us to write out priors and models…Note that there are some parameters / priors that are sort of implied and not explicit (e.g. sigma for gaussian process?), but the core of it is that my model has three nonlinear parameters and we specify a simple prior for each one.</p>
+<p>Finally, we can actually call the <code>brm</code> function which writes the stan file / model compiles (in C++) and runs the model we write. Note that this command will take a while to run (but significantly faster than before) - I think it was less than 10 min. It is definitely worth starting on a smaller dataset with fewer chains and iterations when trying to get the model up and running well. Also, note that there is a file option to save the model / run in an external file for later use (either with ‘file’ parameter or with <code>save</code> command):</p>
+<pre class="r"><code>frap_model_20pct &lt;- brm(bf(full_norm_int~I0 - a*exp(-B * norm_time), I0 + a + B~1+(1|id), nl = T),
+     data = df_fast %&gt;% filter(condition== &#39;20pctGlyc&#39;),
+     prior = prior20,
+    chains = 4,
+    cores = 2,
+    iter = 2000,
+    inits = &#39;0&#39;,
+    control = list(adapt_delta = 0.99, max_treedepth = 20)
+)
+
+save(frap_model_20pct, file = &quot;frap_20pct_hier_fit_1.rda&quot;)</code></pre>
+<p>This should produce some helpful status updates about how the chains are running and how long it takes…and probably some warnings about divergences or more serious problems (e.g. uninformative chains).</p>
+<p>Next, I think the first thing to do is look at the summary of the run:</p>
+<pre class="r"><code>load(&quot;frap_20pct_hier_fit_1.rda&quot;)
+
+summary(frap_model_20pct)</code></pre>
+<pre><code>## Warning: There were 20 divergent transitions after warmup. Increasing adapt_delta above 0.99 may help.
+## See http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup</code></pre>
+<pre><code>##  Family: gaussian 
+##   Links: mu = identity; sigma = identity 
+## Formula: full_norm_int ~ I0 - a * exp(-B * norm_time) 
+##          I0 ~ 1 + (1 | id)
+##          a ~ 1 + (1 | id)
+##          B ~ 1 + (1 | id)
+##    Data: df_fast %&gt;% filter(condition == &quot;20pctGlyc&quot;) (Number of observations: 1440) 
+## Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+##          total post-warmup samples = 4000
+## 
+## Group-Level Effects: 
+## ~id (Number of levels: 3) 
+##                  Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
+## sd(I0_Intercept)     0.05      0.07     0.01     0.25        815 1.01
+## sd(a_Intercept)      0.10      0.12     0.01     0.42       1794 1.00
+## sd(B_Intercept)      0.02      0.05     0.00     0.12        734 1.00
+## 
+## Population-Level Effects: 
+##              Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
+## I0_Intercept     0.73      0.03     0.66     0.80        714 1.00
+## a_Intercept      0.58      0.05     0.48     0.69       1750 1.00
+## B_Intercept      0.13      0.02     0.10     0.17        742 1.00
+## 
+## Family Specific Parameters: 
+##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
+## sigma     0.09      0.00     0.08     0.09       3684 1.00
+## 
+## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
+## is a crude measure of effective sample size, and Rhat is the potential 
+## scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
+<p>Here you can see some really nice information. First, there are notable warnings about the run - here we had a few divergences, which is not that serious, but these warnings can be very helpful for more serious problems. Next brms tells us the full formula of the model we specified - Note that there is some shorthand to how the parameters / grouping can be specified, so this let’s you make sure you’re on the same page with the brms formula parsing.</p>
+<p>Next there are three groups of effects: <em>group-level</em> effects, <em>population level</em> effects and <em>family specific</em> effects.</p>
+<p>Let’s start with the ‘Population-Level’ - these are the <strong>hyperparameters</strong>, brms just uses a slightly different terminology to refer to them. For each parameter you can see the estimate, confidence interval, effective samples (may be much lower than you think!) and Rhat (diagnostic of convergence). These parameter estimates look great! They have lots of effective samples, nice convergence and reasonable confidence intervals / estimates.</p>
+<p>Then we have the ‘Group-Level’ - these are parameters in the hierarchy that connect the hyperparameters to the group specific subset of that parameter. Therefore these are all the standard deviations of the group parameters from the population parameters. It does seem kinda weird to me that the actual parameters (not just sd) for each group are not reported, but the model definitely has that information as we will see below (although I need to figure out how to extract this in table form).</p>
+<p>Lastly we have the ‘family specific’ parameter <em>sigma</em>. The family of this model is gaussian (by default). I interpret that to mean that a gaussian process / model describes the actual datapoints connecting them to the specified mathematical model. From JB’s class, we would explicity write this out and give it priors etc, but here I think it’s implicit and it essentially uses a single sigma to describe the noise in all the data (no hierarchy).</p>
+<p>Now that we sort of understand the ideal output from the model, let’s look at the diagnostics that further help us decide whether this run was totally nonsensical or actually useful. Below are the traceplots for each chain as well as the histogram of parameter values from the samples along those chains.</p>
+<pre class="r"><code>plot(frap_model_20pct, N = 3, ask = F)</code></pre>
+<p><img src="06_20_19_brms_sandbox_files/figure-html/unnamed-chunk-17-1.png" width="672" /><img src="06_20_19_brms_sandbox_files/figure-html/unnamed-chunk-17-2.png" width="672" /><img src="06_20_19_brms_sandbox_files/figure-html/unnamed-chunk-17-3.png" width="672" /></p>
+<p>So these traceplots look beautiful and is what we want to see. The 4 chains are very well mixed - they have converged on similar values. All of the chains are moving - they are not stuck, and so the samples coming from the chains are relatively independent (important for getting “effective samples”). You can see that the estimates for sd at the group level have kinda wide distributions, but the “samples” for these parameters are only the three replicate frap curves, this also probably effects the confidence of the hyperparameters we care about. On the other hand you can see the sigma estimates are extremely tight, which likely comes from the high number of datapoints that this parameter is estimated on (~400 datapoints per replicate X 3 reps).</p>
+<p>You can also compare these parameter distributions (for a, B and I0) to the priors we set. You can see that they have all shifted at least some, with a and B shifting significantly. That’s good, because it should mean that the data really did inform the posterior distribution and we’re not just getting back our prior. There should be a way to overlay the priors and posteriors, but we’ll save that for another time.</p>
+<p>Also note, that we can do a prior predictive check with <code>brm</code></p>
+<p>Finally, we can actually visualize the model fits for each group within our hierarchy. I believe the best fit line is just the median sampled value for each parameter and the shaded area is the 95% confidence interval for the data points?</p>
+<p>First here’s the actual parameter estimates for each replicate (group)!</p>
+<pre class="r"><code>frap_model_20pct_table &lt;- coef(frap_model_20pct, summary = T, robust = T)
+
+frap_model_20pct_table</code></pre>
+<pre><code>## $id
+## , , I0_Intercept
+## 
+##    Estimate   Est.Error      Q2.5     Q97.5
+## 1 0.7453687 0.004986916 0.7359148 0.7550766
+## 2 0.7372406 0.004737759 0.7281110 0.7463463
+## 3 0.7222025 0.004987149 0.7123059 0.7325901
+## 
+## , , a_Intercept
+## 
+##    Estimate  Est.Error      Q2.5     Q97.5
+## 1 0.6123333 0.02460473 0.5677048 0.6593948
+## 2 0.5721523 0.02244596 0.5284341 0.6189857
+## 3 0.5418665 0.02405789 0.4946067 0.5869938
+## 
+## , , B_Intercept
+## 
+##    Estimate   Est.Error      Q2.5     Q97.5
+## 1 0.1289537 0.007316051 0.1146116 0.1451590
+## 2 0.1297877 0.007829621 0.1148376 0.1488467
+## 3 0.1271142 0.008011565 0.1095685 0.1439614</code></pre>
+<p>Now we can visualize those estimates with our data:</p>
+<pre class="r"><code>me_frap_model_20pct &lt;- marginal_effects(
+  frap_model_20pct, 
+  conditions = data.frame(id = c(1,2,3)),
+  re_formula = NULL, method = &quot;predict&quot;
+)
+
+
+plot(me_frap_model_20pct, points = T )</code></pre>
+<p><img src="06_20_19_brms_sandbox_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p>These fits look great! You can see that there are differences between the three replicates - especially obvious in I0 (the recovery baseline value). We can also see the individual estimates for within the groups. For some reason brms calls all of this “marginal effects” which I find somewhat confusing…but it seems to work in a reasonable manner.</p>
+<p>We can also do more stuff like from JBs class like look at the pairs plots for the different parameters:</p>
+<pre class="r"><code>pairs(frap_model_20pct,pars = c(&#39;b_I0_Intercept&#39;,&#39;b_a_Intercept&#39;,&#39;b_B_Intercept&#39;))</code></pre>
+<p><img src="06_20_19_brms_sandbox_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p>Ok! Now let’s move forward and try to run models for our four glycerol FRAP conditions and compare the parameter estimates. For now I’ll only work with the ‘FAST’ dataset, because from the nls fits it seemed more informative…maybe we’ll go back and try to fit the fast and slow acquisitions as part of the same hierarchy and see how it looks.</p>
+<div id="glycerol" class="section level2">
+<h2>0 % Glycerol</h2>
+<pre class="r"><code>frap_model_0pct &lt;- brm(bf(full_norm_int~I0 - a*exp(-B * norm_time), I0 + a + B~1+(1|id), nl = T),
+     data = df_fast %&gt;% filter(condition== &#39;0pctGlyc&#39;),
+     prior = prior20,
+    chains = 4,
+    cores = 2,
+    iter = 2000,
+    inits = &#39;0&#39;,
+    control = list(adapt_delta = 0.99, max_treedepth = 20)
+)
+
+save(frap_model_0pct, file = &quot;frap_0pct_hier_fit_1.rda&quot;)</code></pre>
+<pre class="r"><code>load(&quot;frap_0pct_hier_fit_1.rda&quot;)
+
+summary(frap_model_0pct)</code></pre>
+<pre><code>## Warning: There were 8 divergent transitions after warmup. Increasing adapt_delta above 0.99 may help.
+## See http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup</code></pre>
+<pre><code>##  Family: gaussian 
+##   Links: mu = identity; sigma = identity 
+## Formula: full_norm_int ~ I0 - a * exp(-B * norm_time) 
+##          I0 ~ 1 + (1 | id)
+##          a ~ 1 + (1 | id)
+##          B ~ 1 + (1 | id)
+##    Data: df_fast %&gt;% filter(condition == &quot;0pctGlyc&quot;) (Number of observations: 1440) 
+## Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+##          total post-warmup samples = 4000
+## 
+## Group-Level Effects: 
+## ~id (Number of levels: 3) 
+##                  Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
+## sd(I0_Intercept)     0.16      0.15     0.04     0.59       1084 1.00
+## sd(a_Intercept)      0.08      0.13     0.00     0.40       1200 1.00
+## sd(B_Intercept)      0.04      0.07     0.00     0.19        846 1.01
+## 
+## Population-Level Effects: 
+##              Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
+## I0_Intercept     0.79      0.08     0.60     0.96       1128 1.00
+## a_Intercept      0.69      0.05     0.57     0.76       1017 1.00
+## B_Intercept      0.20      0.02     0.13     0.23        610 1.01
+## 
+## Family Specific Parameters: 
+##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
+## sigma     0.09      0.00     0.09     0.10       3890 1.00
+## 
+## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
+## is a crude measure of effective sample size, and Rhat is the potential 
+## scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
+<pre class="r"><code>plot(frap_model_0pct, N = 3, ask = F)</code></pre>
+<p><img src="06_20_19_brms_sandbox_files/figure-html/unnamed-chunk-23-1.png" width="672" /><img src="06_20_19_brms_sandbox_files/figure-html/unnamed-chunk-23-2.png" width="672" /><img src="06_20_19_brms_sandbox_files/figure-html/unnamed-chunk-23-3.png" width="672" /></p>
+<pre class="r"><code>me_frap_model_0pct &lt;- marginal_effects(
+  frap_model_0pct, 
+  conditions = data.frame(id = c(1,2,3)),
+  re_formula = NULL, method = &quot;predict&quot;
+)
+
+
+plot(me_frap_model_0pct, points = T )</code></pre>
+<p><img src="06_20_19_brms_sandbox_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p>Beautiful!</p>
+</div>
+<div id="glycerol-1" class="section level2">
+<h2>10% Glycerol</h2>
+<pre class="r"><code>frap_model_10pct &lt;- brm(bf(full_norm_int~I0 - a*exp(-B * norm_time), I0 + a + B~1+(1|id), nl = T),
+     data = df_fast %&gt;% filter(condition== &#39;10pctGlyc&#39;),
+     prior = prior20,
+    chains = 4,
+    cores = 2,
+    iter = 2000,
+    inits = &#39;0&#39;,
+    control = list(adapt_delta = 0.99, max_treedepth = 20)
+)
+
+save(frap_model_10pct, file = &quot;frap_10pct_hier_fit_1.rda&quot;)</code></pre>
+<pre class="r"><code>load(&quot;frap_10pct_hier_fit_1.rda&quot;)
+
+summary(frap_model_10pct)</code></pre>
+<pre><code>## Warning: There were 11 divergent transitions after warmup. Increasing adapt_delta above 0.99 may help.
+## See http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup</code></pre>
+<pre><code>##  Family: gaussian 
+##   Links: mu = identity; sigma = identity 
+## Formula: full_norm_int ~ I0 - a * exp(-B * norm_time) 
+##          I0 ~ 1 + (1 | id)
+##          a ~ 1 + (1 | id)
+##          B ~ 1 + (1 | id)
+##    Data: df_fast %&gt;% filter(condition == &quot;10pctGlyc&quot;) (Number of observations: 1440) 
+## Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+##          total post-warmup samples = 4000
+## 
+## Group-Level Effects: 
+## ~id (Number of levels: 3) 
+##                  Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
+## sd(I0_Intercept)     0.06      0.10     0.01     0.32        629 1.00
+## sd(a_Intercept)      0.05      0.09     0.00     0.26       1104 1.00
+## sd(B_Intercept)      0.04      0.07     0.00     0.19       1414 1.00
+## 
+## Population-Level Effects: 
+##              Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
+## I0_Intercept     0.75      0.05     0.66     0.84        630 1.01
+## a_Intercept      0.63      0.04     0.54     0.69        832 1.00
+## B_Intercept      0.17      0.02     0.11     0.21       1143 1.00
+## 
+## Family Specific Parameters: 
+##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
+## sigma     0.09      0.00     0.08     0.09       4118 1.00
+## 
+## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
+## is a crude measure of effective sample size, and Rhat is the potential 
+## scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
+<pre class="r"><code>plot(frap_model_10pct, N = 3, ask = F)</code></pre>
+<p><img src="06_20_19_brms_sandbox_files/figure-html/unnamed-chunk-27-1.png" width="672" /><img src="06_20_19_brms_sandbox_files/figure-html/unnamed-chunk-27-2.png" width="672" /><img src="06_20_19_brms_sandbox_files/figure-html/unnamed-chunk-27-3.png" width="672" /></p>
+<pre class="r"><code>me_frap_model_10pct &lt;- marginal_effects(
+  frap_model_10pct, 
+  conditions = data.frame(id = c(1,2,3)),
+  re_formula = NULL, method = &quot;predict&quot;
+)
+
+
+plot(me_frap_model_10pct, points = T )</code></pre>
+<p><img src="06_20_19_brms_sandbox_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+<p>Also looks like a very good fit.</p>
+</div>
+<div id="glycerol-2" class="section level2">
+<h2>50% Glycerol</h2>
+<pre class="r"><code>frap_model_50pct &lt;- brm(bf(full_norm_int~I0 - a*exp(-B * norm_time), I0 + a + B~1+(1|id), nl = T),
+     data = df_fast %&gt;% filter(condition== &#39;50pctGlyc&#39;),
+     prior = prior20,
+    chains = 4,
+    cores = 2,
+    iter = 2000,
+    inits = &#39;0&#39;,
+    control = list(adapt_delta = 0.99, max_treedepth = 20),
+    file = &#39;frap_50pct_hier_fit_1.rds&#39;
+)
+
+save(frap_model_50pct, file = &quot;frap_50pct_hier_fit_1.rda&quot;)</code></pre>
+<pre class="r"><code>load(&quot;frap_50pct_hier_fit_1.rda&quot;)
+
+summary(frap_model_50pct)</code></pre>
+<pre><code>## Warning: There were 22 divergent transitions after warmup. Increasing adapt_delta above 0.99 may help.
+## See http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup</code></pre>
+<pre><code>##  Family: gaussian 
+##   Links: mu = identity; sigma = identity 
+## Formula: full_norm_int ~ I0 - a * exp(-B * norm_time) 
+##          I0 ~ 1 + (1 | id)
+##          a ~ 1 + (1 | id)
+##          B ~ 1 + (1 | id)
+##    Data: df_fast %&gt;% filter(condition == &quot;50pctGlyc&quot;) (Number of observations: 1140) 
+## Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+##          total post-warmup samples = 4000
+## 
+## Group-Level Effects: 
+## ~id (Number of levels: 3) 
+##                  Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
+## sd(I0_Intercept)     0.02      0.03     0.00     0.10        811 1.00
+## sd(a_Intercept)      0.09      0.13     0.00     0.40       1109 1.00
+## sd(B_Intercept)      0.01      0.03     0.00     0.09        706 1.00
+## 
+## Population-Level Effects: 
+##              Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
+## I0_Intercept     0.68      0.02     0.65     0.71        634 1.01
+## a_Intercept      0.54      0.04     0.46     0.65        997 1.00
+## B_Intercept      0.09      0.01     0.08     0.13       1164 1.00
+## 
+## Family Specific Parameters: 
+##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
+## sigma     0.08      0.00     0.08     0.09       4011 1.00
+## 
+## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
+## is a crude measure of effective sample size, and Rhat is the potential 
+## scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
+<pre class="r"><code>plot(frap_model_50pct, N = 3, ask = F)</code></pre>
+<p><img src="06_20_19_brms_sandbox_files/figure-html/unnamed-chunk-31-1.png" width="672" /><img src="06_20_19_brms_sandbox_files/figure-html/unnamed-chunk-31-2.png" width="672" /><img src="06_20_19_brms_sandbox_files/figure-html/unnamed-chunk-31-3.png" width="672" /></p>
+<pre class="r"><code>me_frap_model_50pct &lt;- marginal_effects(
+  frap_model_50pct, 
+  conditions = data.frame(id = c(1,2,3)),
+  re_formula = NULL, method = &quot;predict&quot;
+)
+
+
+plot(me_frap_model_50pct, points = T )</code></pre>
+<p><img src="06_20_19_brms_sandbox_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
+</div>
+<div id="comparing-4-conditions" class="section level1">
+<h1>Comparing 4 conditions</h1>
+<p>Brms calls the hyperparameters ‘fixed effects’ and the lower hierarchical parameters ‘random effects’…therefore to get the table of hyperparameters you call <code>fixef()</code> and for the only the group effects you call <code>ranef()</code>, which gives you the difference from the population level (fixed effects). Then <code>coef()</code> gives you the actual estimate for the groups taking into account both levels of effects…I’m pretty sure I have this right :)</p>
+<pre class="r"><code>library(tidyverse)
+
+frap_model_ests &lt;- bind_rows(
+  as_tibble(fixef(frap_model_0pct),rownames = &#39;Term&#39;) %&gt;% mutate(Condition = 0),
+  as_tibble(fixef(frap_model_10pct),rownames = &#39;Term&#39;) %&gt;% mutate(Condition = 10),
+  as_tibble(fixef(frap_model_20pct),rownames = &#39;Term&#39;) %&gt;% mutate(Condition = 20),
+  as_tibble(fixef(frap_model_50pct),rownames = &#39;Term&#39;) %&gt;% mutate(Condition = 50)
+)
+
+ggplot(frap_model_ests, aes(x = factor(Condition), y = Estimate)) + geom_pointrange(aes(ymin = Q2.5, ymax = Q97.5)) + facet_wrap(~Term, scales = &#39;free&#39;)</code></pre>
+<p><img src="06_20_19_brms_sandbox_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
+<p>Let’s try to actually look at the posterior distributions here using tidybayes package.</p>
+<pre class="r"><code>library(tidybayes)
+library(tidyverse)
+library(brms)
+library(ggridges)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;ggridges&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:ggplot2&#39;:
+## 
+##     scale_discrete_manual</code></pre>
+<pre class="r"><code>get_variables(frap_model_0pct)</code></pre>
+<pre><code>##  [1] &quot;b_I0_Intercept&quot;        &quot;b_a_Intercept&quot;        
+##  [3] &quot;b_B_Intercept&quot;         &quot;sd_id__I0_Intercept&quot;  
+##  [5] &quot;sd_id__a_Intercept&quot;    &quot;sd_id__B_Intercept&quot;   
+##  [7] &quot;sigma&quot;                 &quot;r_id__I0[1,Intercept]&quot;
+##  [9] &quot;r_id__I0[2,Intercept]&quot; &quot;r_id__I0[3,Intercept]&quot;
+## [11] &quot;r_id__a[1,Intercept]&quot;  &quot;r_id__a[2,Intercept]&quot; 
+## [13] &quot;r_id__a[3,Intercept]&quot;  &quot;r_id__B[1,Intercept]&quot; 
+## [15] &quot;r_id__B[2,Intercept]&quot;  &quot;r_id__B[3,Intercept]&quot; 
+## [17] &quot;lp__&quot;                  &quot;accept_stat__&quot;        
+## [19] &quot;stepsize__&quot;            &quot;treedepth__&quot;          
+## [21] &quot;n_leapfrog__&quot;          &quot;divergent__&quot;          
+## [23] &quot;energy__&quot;</code></pre>
+<pre class="r"><code>frap_model_dists &lt;- bind_rows(
+  frap_model_0pct %&gt;% spread_draws(b_B_Intercept) %&gt;% mutate(Condition = 0),
+  frap_model_10pct %&gt;% spread_draws(b_B_Intercept) %&gt;% mutate(Condition = 10),
+  frap_model_20pct %&gt;% spread_draws(b_B_Intercept) %&gt;% mutate(Condition = 20),
+  frap_model_50pct %&gt;% spread_draws(b_B_Intercept) %&gt;% mutate(Condition = 50)
+)
+
+ggplot(frap_model_dists, aes(x = b_B_Intercept, y = factor(Condition))) + geom_halfeyeh()</code></pre>
+<p><img src="06_20_19_brms_sandbox_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
+<pre class="r"><code>ggplot(frap_model_dists, aes(x = b_B_Intercept, y = factor(Condition))) + geom_density_ridges(quantile_lines = T,quantiles = c(0.025,0.1,0.5,0.9, 0.975), jittered_points = T, position = &#39;raincloud&#39;, point_alpha = 0.01)</code></pre>
+<pre><code>## Picking joint bandwidth of 0.00208</code></pre>
+<p><img src="06_20_19_brms_sandbox_files/figure-html/unnamed-chunk-34-2.png" width="672" /></p>
+<p>asld;kfj</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

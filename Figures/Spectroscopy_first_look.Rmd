@@ -1,0 +1,83 @@
+---
+title: "Spectroscopy first look"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+library(tidyverse)
+
+df_19 <- read_csv("../../../../Volumes/NO NAME/NS1Data/80719_19_compressed.dat", skip = 16, col_names = c("time", "intensity")) %>% mutate(condition = 'biofilm')
+
+df_20 <- read_csv("../../../../Volumes/NO NAME/NS1Data/80719_20_compressed.dat", skip = 16, col_names = c("time", "intensity")) %>% mutate(condition = '1uMRu')
+
+df_21 <- read_csv("../../../../Volumes/NO NAME/NS1Data/80719_21_compressed.dat", skip = 16, col_names = c("time", "intensity")) %>% mutate(condition = '1xRh')
+
+df_22 <- read_csv("../../../../Volumes/NO NAME/NS1Data/80719_22_compressed.dat", skip = 16, col_names = c("time", "intensity")) %>% mutate(condition = '2xRh')
+
+df_23 <- read_csv("../../../../Volumes/NO NAME/NS1Data/80719_23_compressed.dat", skip = 16, col_names = c("time", "intensity")) %>% mutate(condition = '4xRh')
+
+df_dphz <- bind_rows(df_19, df_20, df_21, df_22, df_23)
+
+
+ggplot(df_dphz, aes(x = time, y = intensity, color = condition)) + geom_path() + xlim(NA, 1e-6)+ylim(NA,0.04) + scale_color_viridis_d()
+
+df_dphz_bg <- df_dphz %>% 
+  group_by(time) %>% 
+  mutate(min = min(intensity)) %>% 
+  mutate(bg_sub = intensity - min)
+  
+
+ggplot(df_dphz_bg, aes(x = time, y = bg_sub, color = condition)) + geom_path() + #xlim(NA, 1e-6)+ylim(NA,0.04) +
+  scale_color_viridis_d()
+
+df_dphz_bg_norm <- df_dphz_bg %>% 
+  filter(time>0) %>% 
+  group_by(condition) %>% 
+  mutate(max = max(bg_sub)) %>% 
+  mutate(norm_intensity = bg_sub / max)
+
+
+ggplot(df_dphz_bg_norm, aes(x = time, y = norm_intensity, color = condition)) + geom_path() + #xlim(NA, 1e-6)+ylim(NA,0.04) +
+  scale_color_viridis_d()
+```
+
+```{r}
+df_25 <- read_csv("../../../../Volumes/NO NAME/NS1Data/80719_25_compressed.dat", skip = 16, col_names = c("time", "intensity")) %>% mutate(condition = 'biofilm')
+
+df_26 <- read_csv("../../../../Volumes/NO NAME/NS1Data/80719_26_compressed.dat", skip = 16, col_names = c("time", "intensity")) %>% mutate(condition = '1uMRu')
+
+df_27 <- read_csv("../../../../Volumes/NO NAME/NS1Data/80719_27_compressed.dat", skip = 16, col_names = c("time", "intensity")) %>% mutate(condition = '1xRh')
+
+df_28 <- read_csv("../../../../Volumes/NO NAME/NS1Data/80719_28_compressed.dat", skip = 16, col_names = c("time", "intensity")) %>% mutate(condition = '2xRh')
+
+df_29 <- read_csv("../../../../Volumes/NO NAME/NS1Data/80719_29_compressed.dat", skip = 16, col_names = c("time", "intensity")) %>% mutate(condition = '4xRh')
+
+df_wt <- bind_rows(df_19, df_20, df_21, df_22, df_23)
+
+ggplot(df_wt, aes(x = time, y = intensity, color = condition)) + geom_path() + xlim(NA, 1e-6)+ #ylim(NA,NA) +
+  scale_color_viridis_d()
+
+df_wt_bg <- df_wt %>% 
+  group_by(time) %>% 
+  mutate(min = min(intensity)) %>% 
+  mutate(bg_sub = intensity - min)
+  
+
+ggplot(df_wt_bg, aes(x = time, y = bg_sub, color = condition)) + geom_path() + #xlim(NA, 1e-6)+ylim(NA,0.04) +
+  scale_color_viridis_d()
+
+df_wt_bg_norm <- df_wt_bg %>% 
+  filter(time>0) %>% 
+  group_by(condition) %>% 
+  mutate(max = max(bg_sub)) %>% 
+  mutate(norm_intensity = bg_sub / max)
+
+ggplot(df_wt_bg_norm, aes(x = time, y = norm_intensity, color = condition)) + geom_path() + #xlim(NA, 1e-6)+ylim(NA,0.04) +
+  scale_color_viridis_d()
+```
+
+

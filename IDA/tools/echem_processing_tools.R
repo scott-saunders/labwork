@@ -8,9 +8,12 @@ extract_minutes <- function(filename,line=1) {
   #Date format is month-day-year_hour_minute_second
   #Converts to minutes
   
+  # apparently parse_date_time2() can deal with abnormal month abbreviations like Sept. instead of Sep.
+  # replaced ymd_hms()
+  
   file = file(filename)
   time_line = readLines(file,n=line)
-  timestamp = mdy_hms(time_line)
+  timestamp = parse_date_time2(time_line, 'mdY HMS')
   minutes=as.numeric(hms::as.hms(timestamp))/(60)
   minutes
 }
@@ -75,7 +78,7 @@ echem_import <- function(filenames, file_paths, data_cols = c('E', 'i1', 'i2', '
   files_df
 }
 
-echem_unnest_df <- function(df, filename_cols,rep=F) {
+echem_unnest_df <- function(df, filename_cols,rep=F, PHZadded = T) {
   
   # Unnests a nested df from echem_import()
   # provide the df and the metadata from the filename to become columns
@@ -84,12 +87,16 @@ df_unnested <- df %>%
   unnest(minutes) %>% 
   unnest(file_contents)%>% 
   separate(filename, filename_cols, sep='_') %>%
-  mutate(PHZaddedInt=as.integer(str_extract(PHZadded,"^[0-9]+"))) %>% 
   gather(key=electrode,value=current,i1,i2)
 
   if(rep) {
     df_unnested <- df_unnested %>% 
       mutate(rep=as.integer(str_extract(rep,"^[0-9]+"))) 
+  }
+
+  if(PHZadded) {
+    df_unnested <- df_unnested %>% 
+      mutate(PHZaddedInt=as.integer(str_extract(PHZadded,"^[0-9]+")))
   }
 
 df_unnested
@@ -101,13 +108,13 @@ echem_import_to_df <- function(filenames,
   data_cols = c('E', 'i1', 'i2', 't'), 
   skip_rows=18,
   filename_cols,
-  rep=F){
+  rep=F, PHZadded = T){
   
   # Combine echem_import() and echem_unnest_df() into one function.
   
   df <- echem_import(filenames,  file_paths, data_cols, skip_rows)
   
-  df_unnested <- echem_unnest_df(df, filename_cols,rep)
+  df_unnested <- echem_unnest_df(df, filename_cols, rep, PHZadded)
   
   df_unnested
   

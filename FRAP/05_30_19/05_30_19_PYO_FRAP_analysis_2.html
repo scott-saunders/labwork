@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>PYO FRAP</title>
+
+<script src="05_30_19_PYO_FRAP_analysis_2_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="05_30_19_PYO_FRAP_analysis_2_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="05_30_19_PYO_FRAP_analysis_2_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="05_30_19_PYO_FRAP_analysis_2_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="05_30_19_PYO_FRAP_analysis_2_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="05_30_19_PYO_FRAP_analysis_2_files/navigation-1.1/tabsets.js"></script>
+<script src="05_30_19_PYO_FRAP_analysis_2_files/navigation-1.1/codefolding.js"></script>
+<link href="05_30_19_PYO_FRAP_analysis_2_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="05_30_19_PYO_FRAP_analysis_2_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">PYO FRAP</h1>
+<h3 class="subtitle"><em>Analysis 2</em></h3>
+<h4 class="date"><em>05_30_19</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#intro">Intro</a></li>
+<li><a href="#methods">Methods</a></li>
+<li><a href="#analysis">Analysis</a><ul>
+<li><a href="#plan">Plan</a></li>
+<li><a href="#results">Results</a></li>
+</ul></li>
+<li><a href="#conclusions">Conclusions</a><ul>
+<li><a href="#analysis-1">Analysis</a></li>
+<li><a href="#frap-acquisition">FRAP acquisition</a></li>
+</ul></li>
+</ul>
+</div>
+
+<pre class="r"><code>library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+library(knitr)
+library(kableExtra)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)
+
+
+source(&quot;../../IDA/tools/plotting_tools.R&quot;)
+
+theme_set(theme_1())</code></pre>
+<div id="intro" class="section level1">
+<h1>Intro</h1>
+<p>Ok, the idea for performing FRAP is that we could compare our echem estimates of <span class="math inline">\(D_{ap}\)</span> / <span class="math inline">\(D_{phys}\)</span> with a echem independent method. In this way we could perform echem and FRAP in vitro on reduced PYO samples to validate the echem method. This would be generally useful, but also could practically provide the foundation for a small paper we may try to submit in Sept.</p>
+<p>This data is from my third time trying FRAP with PYO during the month of May.</p>
+</div>
+<div id="methods" class="section level1">
+<h1>Methods</h1>
+<p>For this iteration of FRAP, I loaded 3mL of molten agarose + PYO solution into mattek coverslip bottom dishes. PYO was ~ 300uM and I set up the experiment to compare 1% agarose to 4% agarose or 1% agarose + ctDNA (100uL of 5mg/mL solution). This setup worked quite well - I made stocks of 1% and 4% agarose (microwave) and then poured the molten solutions into 15mL falcon tubes and left those in the 60 degree water bath. Then I pipetted the required amount of PYO stock (~145uL) into another falcon tube (and ctDNA if needed) and then pipetted 3mL of the agarose stock into the tube. I vortexed then replaced the tube in the 60 degree bath for a minute. Finally, I could just pour directly from the tube into the dish and let it solidify (&gt;10min).</p>
+<p>At this point there should be no fluorescence in the agarose pad, because all of the PYO was oxidized. To reduce the PYO I have been using the reductant TCEP. At least 5 min before imaging I spotted 90uL of TCEP stock (~3mM final - a 10 fold excess over PYO) onto the center of the pad.</p>
+<p>Before TCEP you can clearly see the blue - green oxidized PYO:</p>
+<pre class="r"><code>knitr::include_graphics(&quot;IMG_20190530_173653.jpg&quot;)</code></pre>
+<p><img src="IMG_20190530_173653.jpg" width="300" style="display: block; margin: auto;" /></p>
+<p>After TCEP addition, you can see that a clearish circle forms, which is the reduced PYO (which is fluorescent)</p>
+<pre class="r"><code>knitr::include_graphics(&quot;IMG_20190530_174341.jpg&quot;)</code></pre>
+<p><img src="IMG_20190530_174341.jpg" width="300" style="display: block; margin: auto;" /></p>
+<p>For the acquisition of the FRAP you can see the settings I used as images in this folder. Briefly, I used the HHMI 880 scope at the BIF with the 10x air objective. I zoomed into a 500um x 500um frame, which seemed to allow for faster scanning. I also used a very coarse pixel size (128px X 128px frame), so that the acquisitions could be taken very rapidly (~100ms). I setup my bleach area with the regions manager, and used the same area for all the acquisitions (100um diameter).</p>
+<p>I used the 405nm laser to excite the PYO and collected all the light above that. It also helped that I could open the pinhole as wide as possible (~70um), since the internet suggested to open the pinhole to the scale of the structure being bleached…This allowed me to get nice fluorescent signal with relatively low laser power (3% ?) and gain (700?), which can be hard since PYO is a pretty weak fluor.</p>
+<p>I took all of the FRAPS with pretty much the same parameters after playing around with the first sample. I did try a variety of bleaching times. Beyond 5 seconds there was no improvement in the bleach and shorter than that started to cause weaker bleaches (which were already very weak). Anyway, all of the data analyzed here was acquired with 20x of a speed 5 bleach.</p>
+<p>You can see the more of dataset here: <a href="https://docs.google.com/spreadsheets/d/1yVjCwfowj3CKxjMnXN-0_H9WkdC7mJEGBxIwM22kokc/edit?usp=sharing" class="uri">https://docs.google.com/spreadsheets/d/1yVjCwfowj3CKxjMnXN-0_H9WkdC7mJEGBxIwM22kokc/edit?usp=sharing</a></p>
+<p>of course the raw czi files are still on the external harddrive as well.</p>
+</div>
+<div id="analysis" class="section level1">
+<h1>Analysis</h1>
+<p>As you can see in the FRAP analysis 1 file from today, I tried a lot of random stuff that did not work particularly well. I could sort of extract <span class="math inline">\(\tau_{1/2}\)</span>, but because the data are very noisy the trend looked real, but the values were much too short…So I did some reading and I found a lot of random mostly useless information about FRAP. But finally I ran across ‘easyFRAP,’ which actually discussed how it fits the data in simple terms and apparently it even uses the ‘nls’ function, which I like. So see the plan below.</p>
+<div id="plan" class="section level2">
+<h2>Plan</h2>
+<p>Refs: <a href="https://easyfrap.vmnet.upatras.gr/GettingStarted/">easyFRAP</a>, and the <a href="https://easyfrap.vmnet.upatras.gr/easyfrap_web_manual_appendix.pdf">manual appendix</a> which has the actual equations and good stuff.</p>
+<p>Using their terminology here’s the plan:</p>
+<ol style="list-style-type: decimal">
+<li>Perform single normalization.</li>
+</ol>
+<ul>
+<li>Divide by the average pre-bleach intensity. Note that the manual refers to double normalization to correct for differences in fluorescence in the background of each image, which we could take into account later. I don’t think that is important right now though…</li>
+</ul>
+<ol start="2" style="list-style-type: decimal">
+<li>Perform full scale normalization.</li>
+</ol>
+<ul>
+<li>With the singly normalized data subtract the intensity of the first post-bleach frame from the dataset, then divide by 1 - pre-bleach normalized intensity to scale the data from 0 to about 1 (if recovery is full).</li>
+</ul>
+<ol start="3" style="list-style-type: decimal">
+<li>Before fitting the dataset, set the bleach to time zero.</li>
+</ol>
+<ul>
+<li>effectively we will set the time of the first post bleach frame to t=0.</li>
+</ul>
+<ol start="4" style="list-style-type: decimal">
+<li>Fit with a single exponential model using nls (see math below)</li>
+<li>Use estimated coefficients to infer <span class="math inline">\(\tau_{1/2}\)</span> then <span class="math inline">\(D_{ap}\)</span> etc.</li>
+</ol>
+<p>Single exponential model:</p>
+<p><span class="math display">\[ I_{fit} = I_0 - \alpha e^{- \beta t}\]</span> for this model:</p>
+<p><span class="math display">\[\tau_{1/2} = \frac{ln(2)}{\beta}\]</span></p>
+</div>
+<div id="results" class="section level2">
+<h2>Results</h2>
+<p>Ok let’s do this.</p>
+<p>First, let’s read in the csv of the frap data. All of these scans were acquired in the same way, so they should be pretty comparable. In excel I already normalized the intensity values to the average baseline intensity (before bleach), so we already have the singly normalized data.</p>
+<p>Here’s what the csv looks like.</p>
+<pre class="r"><code>df_single_norm &lt;- read_csv(&quot;05_30_19_PYO_FRAP_data.csv&quot;) %&gt;% 
+    rename(single_norm_int = scaled)
+
+
+df_single_norm</code></pre>
+<pre><code>## # A tibble: 3,500 x 12
+##    img_num  time intensity avg_baseline single_norm_int filename condition
+##      &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;           &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;    
+##  1       1 0         0.032         127.        0.000251 1percen… 1percent…
+##  2       2 0.208   128.            127.        1.00     1percen… 1percent…
+##  3       3 0.399   128.            127.        1.01     1percen… 1percent…
+##  4       4 0.591   126.            127.        0.993    1percen… 1percent…
+##  5       5 0.782   127.            127.        0.994    1percen… 1percent…
+##  6       6 0.974   127.            127.        1.000    1percen… 1percent…
+##  7       7 1.17    127.            127.        1.000    1percen… 1percent…
+##  8       8 1.39    127.            127.        0.997    1percen… 1percent…
+##  9       9 1.58    127.            127.        0.998    1percen… 1percent…
+## 10      10 1.77    128.            127.        1.01     1percen… 1percent…
+## # … with 3,490 more rows, and 5 more variables: PYO &lt;chr&gt;,
+## #   objective &lt;chr&gt;, resolution &lt;chr&gt;, bleach &lt;chr&gt;, id &lt;dbl&gt;</code></pre>
+<p>And here’s a plot of that singly normalized dataset.</p>
+<pre class="r"><code># ignore the two frames that have ~ 0 intensity (frame 1 and
+# frame post bleach)
+
+ggplot(df_single_norm %&gt;% filter(intensity &gt; 0.1), aes(x = time, 
+    y = single_norm_int, color = condition, group = id)) + geom_line(alpha = 0.5) + 
+    facet_wrap(~condition, scales = &quot;free&quot;)</code></pre>
+<p><img src="05_30_19_PYO_FRAP_analysis_2_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Now let’s perform the full scale normalization.</p>
+<pre class="r"><code>df_full_norm &lt;- df_single_norm %&gt;% filter(intensity &gt; 1) %&gt;% 
+    group_by(condition, id) %&gt;% mutate(min_single_norm_int = min(single_norm_int)) %&gt;% 
+    mutate(full_norm_int = (single_norm_int - min_single_norm_int)/(1 - 
+        min_single_norm_int))</code></pre>
+<p>And plotting that looks like this:</p>
+<pre class="r"><code>ggplot(df_full_norm, aes(x = time, y = full_norm_int, color = condition, 
+    group = id)) + geom_line(alpha = 0.5) + facet_wrap(~condition, 
+    scales = &quot;free&quot;)</code></pre>
+<p><img src="05_30_19_PYO_FRAP_analysis_2_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Now let’s normalize the time to the first post_bleach frame time. Note that the bleaches all occur between 2-6 seconds for all of the conditions, so we can find that frame by searching for the minimum timed frame that exists greater than 5 seconds.</p>
+<pre class="r"><code>df_full_fit &lt;- df_full_norm %&gt;% filter(time &gt; 5) %&gt;% group_by(condition, 
+    id) %&gt;% mutate(min_time = min(time)) %&gt;% mutate(norm_time = time - 
+    min_time)
+
+ggplot(df_full_fit, aes(x = norm_time, y = full_norm_int, color = condition, 
+    group = id)) + geom_line(alpha = 0.5) + facet_wrap(~condition, 
+    scales = &quot;free&quot;)</code></pre>
+<p><img src="05_30_19_PYO_FRAP_analysis_2_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Now we are finally read to fit! First, here’s a plot of what the fits will look like.</p>
+<pre class="r"><code>ggplot(df_full_fit, aes(x = norm_time, y = full_norm_int)) + 
+    geom_point(shape = 21) + geom_smooth(method = &quot;nls&quot;, formula = y ~ 
+    (I0 - a * exp(-B * x)), method.args = list(start = c(I0 = 0.85, 
+    a = 0.5, B = 0.563)), se = F) + facet_wrap(condition ~ id)</code></pre>
+<p><img src="05_30_19_PYO_FRAP_analysis_2_files/figure-html/unnamed-chunk-8-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p>Not too bad…seems pretty reasonable. Now let’s just perform the nls command and extract the coefficients in to a dataframe etc.</p>
+<pre class="r"><code>sing_exp_coef &lt;- df_full_fit %&gt;% group_by(condition, id) %&gt;% 
+    do(tidy(nls(formula = full_norm_int ~ I0 - a * exp(-B * norm_time), 
+        data = ., start = list(I0 = 0.85, a = 0.5, B = 0.563)), 
+        conf.int = T))
+
+ggplot(sing_exp_coef, aes(x = condition, y = estimate, color = condition)) + 
+    geom_pointrange(aes(ymin = conf.low, ymax = conf.high), position = position_jitter(height = 0)) + 
+    facet_wrap(~term, scales = &quot;free&quot;) + scale_color_viridis_d()</code></pre>
+<p><img src="05_30_19_PYO_FRAP_analysis_2_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>There are a few things to notice here. First, notice that the 95% confidence intervals are definitely the tightest for the 4% agarose condition. This makes sense, since we acquired the nicest FRAP curves with that conditions, and you can see that the nls fits those data quite well. Perhaps because the FRAPs were generally noisy, you can see that our parameter estimates definitely overlap between the different conditions for all the parameters (except maybe <span class="math inline">\(I_0\)</span>). So already, I know that there’s know statistically significant difference between the conditions for <span class="math inline">\(\beta\)</span>, which will determine the <span class="math inline">\(\tau_{1/2}\)</span>.</p>
+<p>But let’s go ahead and calculate <span class="math inline">\(\tau_{1/2}\)</span> from <span class="math inline">\(\beta\)</span> to see if the values make sense.</p>
+<pre class="r"><code>tau_est &lt;- sing_exp_coef %&gt;% filter(term == &quot;B&quot;) %&gt;% mutate(tau_mean = log(2)/estimate) %&gt;% 
+    mutate(tau_low = log(2)/conf.low) %&gt;% mutate(tau_high = log(2)/conf.high)
+
+
+ggplot(tau_est, aes(x = condition, y = tau_mean, color = condition)) + 
+    geom_pointrange(aes(ymin = tau_low, ymax = tau_high), position = position_jitter(height = 0)) + 
+    scale_color_viridis_d()</code></pre>
+<p><img src="05_30_19_PYO_FRAP_analysis_2_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /> Overall, this estimate for <span class="math inline">\(\tau_{1/2}\)</span> makes sense. It’s about what we could see by eye for these noisy curves…I think I estimated 5 seconds for my original FRAP acquisition.</p>
+<p>For the DNA sample the first run (id = 1) seems to be an outlier. Let’s look at it compared to the next acquisition.</p>
+<pre class="r"><code>ggplot(df_full_fit %&gt;% filter(condition == &quot;1pctAgaroseDNA&quot; &amp; 
+    id == 1), aes(x = norm_time, y = full_norm_int)) + geom_point(shape = 21) + 
+    geom_smooth(method = &quot;nls&quot;, formula = y ~ (I0 - a * exp(-B * 
+        x)), method.args = list(start = c(I0 = 0.85, a = 0.5, 
+        B = 0.563)), se = F)</code></pre>
+<p><img src="05_30_19_PYO_FRAP_analysis_2_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(df_full_fit %&gt;% filter(condition == &quot;1pctAgaroseDNA&quot; &amp; 
+    id == 2), aes(x = norm_time, y = full_norm_int)) + geom_point(shape = 21) + 
+    geom_smooth(method = &quot;nls&quot;, formula = y ~ (I0 - a * exp(-B * 
+        x)), method.args = list(start = c(I0 = 0.85, a = 0.5, 
+        B = 0.563)), se = F)</code></pre>
+<p><img src="05_30_19_PYO_FRAP_analysis_2_files/figure-html/unnamed-chunk-11-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>You can see that theres a weird grouping of points that do not decay following the bleach and the nls call basically ignores them giving a very shallow sloping curve. Because the recovery rises above 1 we know there was also significant TCEP equilibration happening, so I think we can safely throw this one away.</p>
+<p>Looking at some of the other FRAP curves up close you can see the fits are ok, not great. They often don’t take into account the full decay including the first few points post bleach. There may be a difference with a different analysis scheme, but I’m happy with this for now.</p>
+<pre class="r"><code>ggplot(df_full_fit %&gt;% filter(condition == &quot;1percentAgarose&quot; &amp; 
+    id == 15), aes(x = norm_time, y = full_norm_int)) + geom_point(shape = 21) + 
+    geom_smooth(method = &quot;nls&quot;, formula = y ~ (I0 - a * exp(-B * 
+        x)), method.args = list(start = c(I0 = 0.85, a = 0.5, 
+        B = 0.563)), se = F)</code></pre>
+<p><img src="05_30_19_PYO_FRAP_analysis_2_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(df_full_fit %&gt;% filter(condition == &quot;4pctAgarose&quot; &amp; id == 
+    1), aes(x = norm_time, y = full_norm_int)) + geom_point(shape = 21) + 
+    geom_smooth(method = &quot;nls&quot;, formula = y ~ (I0 - a * exp(-B * 
+        x)), method.args = list(start = c(I0 = 0.85, a = 0.5, 
+        B = 0.563)), se = F)</code></pre>
+<p><img src="05_30_19_PYO_FRAP_analysis_2_files/figure-html/unnamed-chunk-12-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Anyway, let’s end by calculating <span class="math inline">\(D_{ap}\)</span> from our <span class="math inline">\(\tau_{1/2}\)</span>. Based on the expression from this <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3731631/">paper</a> we can calculate <span class="math inline">\(D_{ap}\)</span> with the following expression:</p>
+<p><span class="math display">\[D = 0.224 \frac{r^2}{\tau_{1/2}}\]</span> where <span class="math inline">\(r\)</span> is the nominal bleach radius from the ROI we bleached. I believe the ROIs were all approximately 50um or 0.005cm. Note that there are definitely biases in the assumptions for this model, but I’m going to use it for its simplicity now. (for example it assumes instantaneous bleach)</p>
+<pre class="r"><code>r = 0.005
+
+d_est &lt;- tau_est %&gt;% mutate(d_mean = (0.224 * r^2)/tau_mean) %&gt;% 
+    mutate(d_low = (0.224 * r^2)/tau_low) %&gt;% mutate(d_high = (0.224 * 
+    r^2)/tau_high)
+
+
+ggplot(d_est, aes(x = condition, y = d_mean, color = condition)) + 
+    geom_pointrange(aes(ymin = d_low, ymax = d_high), position = position_jitter(height = 0)) + 
+    scale_color_viridis_d()</code></pre>
+<p><img src="05_30_19_PYO_FRAP_analysis_2_files/figure-html/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>These values are a little lower than expected, just barely in the <span class="math inline">\(10^{-6} cm^2 / sec\)</span> range. Perhaps this error is due to the poor assumptions mentioned in the paper. Unfortunately it was not possible to correct using the effective bleach radius as they describe…</p>
+<p>“Failure to take this into account can lead to underestimation of D when the Soumpasis or Axelrod equations are used to analyze confocal FRAP data, especially for fast diffusing soluble proteins”</p>
+</div>
+</div>
+<div id="conclusions" class="section level1">
+<h1>Conclusions</h1>
+<div id="analysis-1" class="section level2">
+<h2>Analysis</h2>
+<p>Using this analysis scheme, I think we have a reasonable first pass quantifying the FRAP data. Unfortunately we don’t see evidence that the diffusion of the reduced PYO is different (slower) in high percentage agarose or agarose with DNA. That said, this is very good to know before starting the in vitro echem. Moving forward I have the highest confidence in the 4% agarose FRAP estimates, so that may be useful down the road. Now we need to think about what other perturbations we can perform in the agarose to perturb the diffusion of reduced PYO…</p>
+</div>
+<div id="frap-acquisition" class="section level2">
+<h2>FRAP acquisition</h2>
+<p>I think I have now optimized the acquisition settings as much as possible. We are acquiring as fast as possible, and we are sensitively measuring PYO fluorescence. The part of this FRAP that is still not great is the bleach. I can think of three reasons that may be:</p>
+<ol style="list-style-type: decimal">
+<li>For some unknown reason PYO is difficult to bleach.</li>
+<li>PYOred doesn’t absorb well at 405 and would be better bleached at a lower wavelength.</li>
+<li>We are bleaching PYO effectively, but because bleaching often causes photooxidation, PYO may be almost instantly re-reduced by the abundant TCEP.</li>
+</ol>
+<p>Obviously these explanations lend themselves to different solutions, so in thinking of what to try next I would say we could: * Try FRAP with the adjustable 2-photon laser on the LSM-880, which can be adjusted down into the 300’s nm range. * Use electrochemically reduced PYO. Either generated from the survival chambers or in situ with the ITO coverslips I ordered.</p>
+<hr />
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

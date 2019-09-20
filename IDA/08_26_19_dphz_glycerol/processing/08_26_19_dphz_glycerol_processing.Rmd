@@ -1,0 +1,165 @@
+---
+title: "∆phz* +/- Glycerol"
+subtitle: "Processing"
+author: "Scott Saunders"
+fontsize: 12pt
+date: "08_26_19 "
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
+---
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+library(knitr)
+library(kableExtra)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+source("../../tools/echem_processing_tools.R")
+source("../../tools/plotting_tools.R")
+
+theme_set(theme_1())
+```
+
+
+
+Link to biofilm images:
+
+https://drive.google.com/open?id=1tkhDHwDxaAGnP895KeTSwYJ5lFNBw_WT
+
+```{r}
+
+idaA_pbs_tran1 = '../data/biofilm_A/PBS_50/tran_1/'
+idaA_pbs_tran2 = '../data/biofilm_A/PBS_50/tran_2/'
+idaA_pbsGlycerol_tran1 = '../data/biofilm_A/PBS_glycerol/tran_1/'
+
+idaB_pbs_tran1 = '../data/biofilm_B/PBS_50/tran_1/'
+idaB_pbsGlycerol_tran1 = '../data/biofilm_B/PBS_glycerol/tran_1/'
+
+data_cols <-  c('E','i1','i2')
+
+swv_skip_rows=18
+
+gc_skip_rows=21
+
+```
+
+# All SWVs
+
+```{r}
+# Add 'reactor' to file name so it is parsed into column
+filename_cols = c('biofilm','condition','reactor','echem','rep')
+
+swv_idaA_pbs_tran1_names <-  dir(path=idaA_pbs_tran1, pattern = "[swv]+.+[txt]$") %>% paste("A_pbs_tran1", ., sep = '_')
+swv_idaA_pbs_tran2_names <-  dir(path=idaA_pbs_tran2, pattern = "[swv]+.+[txt]$") %>% paste("A_pbs_tran2", ., sep = '_')
+swv_idaA_pbsGlycerol_tran1_names <-  dir(path=idaA_pbsGlycerol_tran1, pattern = "[swv]+.+[txt]$") %>% paste("A_pbsGlycerol_tran1", ., sep = '_')
+
+swv_idaB_pbs_tran1_names <- dir(path=idaB_pbs_tran1, pattern = "[swv]+.+[txt]$") %>% paste("B_pbs_tran1", ., sep = '_')
+swv_idaB_pbsGlycerol_tran1_names <- dir(path=idaB_pbsGlycerol_tran1, pattern = "[swv]+.+[txt]$") %>% paste("B_pbsGlycerol_tran1", ., sep = '_')
+
+# Add correct paths separate from filenames
+swv_idaA_pbs_tran1_paths <-  dir(path=idaA_pbs_tran1, pattern = "[swv]+.+[txt]$") %>% paste(idaA_pbs_tran1, ., sep='')
+swv_idaA_pbs_tran2_paths <-   dir(path=idaA_pbs_tran2, pattern = "[swv]+.+[txt]$") %>% paste(idaA_pbs_tran2, ., sep='')
+swv_idaA_pbsGlycerol_tran1_paths <-   dir(path=idaA_pbsGlycerol_tran1, pattern = "[swv]+.+[txt]$") %>% paste(idaA_pbsGlycerol_tran1, ., sep='')
+
+swv_idaB_pbs_tran1_paths <-  dir(path=idaB_pbs_tran1, pattern = "[swv]+.+[txt]$") %>% paste(idaB_pbs_tran1, ., sep='')
+swv_idaB_pbsGlycerol_tran1_paths <-  dir(path=idaB_pbsGlycerol_tran1, pattern = "[swv]+.+[txt]$") %>% paste(idaB_pbsGlycerol_tran1, ., sep='')
+
+# Combine all SWVs into single vector
+swv_names <- c(swv_idaA_pbs_tran1_names, 
+               swv_idaA_pbs_tran2_names, 
+               swv_idaA_pbsGlycerol_tran1_names, 
+               swv_idaB_pbs_tran1_names, 
+               swv_idaB_pbsGlycerol_tran1_names)
+
+swv_paths <- c(swv_idaA_pbs_tran1_paths, 
+               swv_idaA_pbs_tran2_paths, 
+               swv_idaA_pbsGlycerol_tran1_paths, 
+               swv_idaB_pbs_tran1_paths, 
+               swv_idaB_pbsGlycerol_tran1_paths)
+
+
+# Read in all SWVs with one function call 
+swv_data <- echem_import_to_df(filenames = swv_names, file_paths = swv_paths, data_cols = data_cols, skip_rows = swv_skip_rows, filename_cols = filename_cols, rep = T, PHZadded = F)
+
+swv_data %>% head() %>% kable() %>% kable_styling()
+
+```
+
+```{r}
+ggplot(swv_data %>% filter(condition =='pbs' & reactor =='tran1'), aes(x = E, y = current, color = rep)) + geom_path() +
+  facet_wrap(biofilm~electrode, scales = 'free')+
+  scale_x_reverse()
+
+ggplot(swv_data %>% filter(condition =='pbsGlycerol'), aes(x = E, y = current, color = rep)) + geom_path() +
+  facet_wrap(biofilm~electrode, scales = 'free')+
+  scale_x_reverse()
+    
+```
+
+# All gc's
+
+```{r}
+# Add 'reactor' to file name so it is parsed into column
+filename_cols = c('biofilm','condition','reactor','echem','rep')
+
+gc_idaA_pbs_tran1_names <-  dir(path=idaA_pbs_tran1, pattern = "[gc]+.+[txt]$") %>% paste("A_pbs_tran1", ., sep = '_')
+gc_idaA_pbs_tran2_names <-  dir(path=idaA_pbs_tran2, pattern = "[gc]+.+[txt]$") %>% paste("A_pbs_tran2", ., sep = '_')
+gc_idaA_pbsGlycerol_tran1_names <-  dir(path=idaA_pbsGlycerol_tran1, pattern = "[gc]+.+[txt]$") %>% paste("A_pbsGlycerol_tran1", ., sep = '_')
+
+gc_idaB_pbs_tran1_names <- dir(path=idaB_pbs_tran1, pattern = "[gc]+.+[txt]$") %>% paste("B_pbs_tran1", ., sep = '_')
+gc_idaB_pbsGlycerol_tran1_names <- dir(path=idaB_pbsGlycerol_tran1, pattern = "[gc]+.+[txt]$") %>% paste("B_pbsGlycerol_tran1", ., sep = '_')
+
+# Add correct paths separate from filenames
+gc_idaA_pbs_tran1_paths <-  dir(path=idaA_pbs_tran1, pattern = "[gc]+.+[txt]$") %>% paste(idaA_pbs_tran1, ., sep='')
+gc_idaA_pbs_tran2_paths <-   dir(path=idaA_pbs_tran2, pattern = "[gc]+.+[txt]$") %>% paste(idaA_pbs_tran2, ., sep='')
+gc_idaA_pbsGlycerol_tran1_paths <-   dir(path=idaA_pbsGlycerol_tran1, pattern = "[gc]+.+[txt]$") %>% paste(idaA_pbsGlycerol_tran1, ., sep='')
+
+gc_idaB_pbs_tran1_paths <-  dir(path=idaB_pbs_tran1, pattern = "[gc]+.+[txt]$") %>% paste(idaB_pbs_tran1, ., sep='')
+gc_idaB_pbsGlycerol_tran1_paths <-  dir(path=idaB_pbsGlycerol_tran1, pattern = "[gc]+.+[txt]$") %>% paste(idaB_pbsGlycerol_tran1, ., sep='')
+
+# Combine all gcs into single vector
+gc_names <- c(gc_idaA_pbs_tran1_names, 
+               gc_idaA_pbs_tran2_names, 
+               gc_idaA_pbsGlycerol_tran1_names, 
+               gc_idaB_pbs_tran1_names, 
+               gc_idaB_pbsGlycerol_tran1_names)
+
+gc_paths <- c(gc_idaA_pbs_tran1_paths, 
+               gc_idaA_pbs_tran2_paths, 
+               gc_idaA_pbsGlycerol_tran1_paths, 
+               gc_idaB_pbs_tran1_paths, 
+               gc_idaB_pbsGlycerol_tran1_paths)
+
+
+# Read in all gcs with one function call 
+gc_data <- echem_import_to_df(filenames = gc_names, file_paths = gc_paths, data_cols = data_cols, skip_rows = gc_skip_rows, filename_cols = filename_cols, rep = T, PHZadded = F)
+
+gc_data %>% head() %>% kable() %>% kable_styling()
+
+```
+
+```{r}
+ggplot(gc_data %>% filter(condition =='pbs' & reactor =='tran1'), aes(x = E, y = current, color = rep)) + geom_point() +
+  facet_wrap(biofilm~electrode, scales = 'free')+
+  scale_x_reverse()
+
+ggplot(gc_data %>% filter(condition =='pbsGlycerol'), aes(x = E, y = current, color = rep)) + geom_point() +
+  facet_wrap(biofilm~electrode, scales = 'free')+
+  scale_x_reverse() 
+    
+
+```
+
+

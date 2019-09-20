@@ -1,0 +1,133 @@
+---
+title: "PYO FRAP"
+subtitle: "Analysis"
+fontsize: 12pt
+date: "05_30_19 "
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
+---
+
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+library(knitr)
+library(kableExtra)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+
+source("../../IDA/tools/plotting_tools.R")
+
+theme_set(theme_1())
+```
+
+# Intro
+
+Some motivation about why we're doing FRAP etc. 
+
+
+# Methods
+
+How were the data acquired etc. 
+
+
+# Analysis
+
+First, let's read in the csv of the frap data. All of these scans were acquired in the same way, so they should be pretty comparable. In excel I already normalized the intensity values to the average baseline intensity (before bleach).
+
+```{r}
+
+df <- read_csv("05_30_19_PYO_FRAP_data.csv")
+
+df
+```
+
+Now let's look at some overview plots.
+
+```{r}
+ggplot(df %>% filter(scaled > 0.1), aes(x = time, y = scaled, color = condition)) + geom_point(shape = 21) 
+
+ggplot(df %>% filter(scaled > 0.1), aes(x = time, y = scaled, color = condition, group = id)) + geom_line(alpha = 0.5) + facet_wrap(~condition)
+```
+
+```{r}
+  
+avg_max <- df %>% 
+  filter(img_num >= 240) %>% 
+  group_by(condition,id) %>% 
+  mutate(avg_max = mean(intensity)) %>% 
+  select(condition, id, avg_max) %>% 
+  distinct()
+
+df_norm <- left_join(df, avg_max, by = c('condition', 'id')) %>% 
+  filter(intensity > 1) %>% 
+  group_by(condition, id) %>% 
+  mutate(min = min(intensity)) %>% 
+  mutate(bg_intensity = intensity - min) %>% 
+  mutate(bg_avg_max = avg_max - min) %>% 
+  mutate(bg_scaled = bg_intensity / bg_avg_max)
+
+ggplot(df_norm, aes(x = time, y = bg_scaled, color = condition, group = id)) + geom_line(alpha = 0.5) + facet_wrap(~condition)
+
+ggplot(df_norm %>% filter(condition=='1pctAgaroseDNA'), aes(x = time, y = bg_scaled, color = factor(id))) + geom_line()
+
+ggplot(df_norm, aes(x = time, y = bg_scaled, color = condition)) + geom_point(shape = 21) + geom_hline(yintercept = 0.5)+scale_color_viridis_d()
+```
+
+```{r}
+df_thresh <- df_norm %>% 
+  group_by(condition,id) %>% 
+  filter(bg_scaled > 0.5 & time > 5) %>% 
+  filter(time == min(time)) %>% 
+  mutate(half_time = time) %>% 
+  select(condition, id, half_time)
+
+df_bleach <- df_norm %>% 
+  group_by(condition,id) %>% 
+  filter(time > 5) %>% 
+  filter(time == min(time)) %>% 
+  mutate(bleach_time = time) %>% 
+  select(condition, id, bleach_time)
+
+df_tau <- left_join(df_thresh, df_bleach, by = c('condition', 'id')) %>% 
+  mutate(tau = half_time - bleach_time) %>% 
+  group_by(condition) %>% 
+  mutate(mean = mean(tau))
+
+ggplot(df_thresh, aes(x = condition, y = half_time)) + geom_point() + geom_point(data = df_bleach, aes(x = condition, y = bleach_time), color = 'red')
+
+ggplot(df_tau, aes(x = condition, y = tau)) + geom_point() + geom_point(aes(y = mean), color = 'red')
+```
+
+```{r}
+soumpasis_fit <- function(t_d, t){
+  exp(1)^((-2*t_d) / t) * (besselI(t,0,expon.scaled = T) + besselI(t,1,expon.scaled = T))
+}
+
+df_frap = tibble(frap = soumpasis_fit(t_d = 5, t = seq(1,25, 0.1)), t = seq(1,25, 0.1))
+
+ggplot(df_frap, aes(x = t, y = frap )) + geom_point()
+```
+
+```{r}
+df_4pct_1 <- df_norm %>% filter(condition == '4pctAgarose' & id ==1) %>% filter(time>5) %>% mutate(time = time - 6.2)
+
+ggplot(df_4pct_1, aes(x = time, y = bg_scaled)) + geom_point() + 
+    geom_smooth(method='nls',formula=y~(I0 - a*exp(-B * x)), method.args=list(start=c(I0 = 0.85, a = 0.5, B = 0.563)),se=F)
+                
+
+nls(formula = bg_scaled~I0 - a*exp(-B * time), data = df_4pct_1, start = list(I0 = 0.85, a = 0.5, B = 0.563) )
+                
+log(2) / 0.14 
+```

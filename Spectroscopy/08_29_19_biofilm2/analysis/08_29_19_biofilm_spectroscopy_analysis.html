@@ -1,0 +1,2680 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Scott Saunders" />
+
+
+<title>DNA CT Spectroscopy</title>
+
+<script src="08_29_19_biofilm_spectroscopy_analysis_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="08_29_19_biofilm_spectroscopy_analysis_files/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="08_29_19_biofilm_spectroscopy_analysis_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="08_29_19_biofilm_spectroscopy_analysis_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="08_29_19_biofilm_spectroscopy_analysis_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="08_29_19_biofilm_spectroscopy_analysis_files/navigation-1.1/tabsets.js"></script>
+<script src="08_29_19_biofilm_spectroscopy_analysis_files/navigation-1.1/codefolding.js"></script>
+<link href="08_29_19_biofilm_spectroscopy_analysis_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="08_29_19_biofilm_spectroscopy_analysis_files/highlightjs-9.12.0/highlight.js"></script>
+<script src="08_29_19_biofilm_spectroscopy_analysis_files/kePrint-0.0.1/kePrint.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">DNA CT Spectroscopy</h1>
+<h3 class="subtitle">Biofilm, Liquid culture, and In vitro</h3>
+<h4 class="author">Scott Saunders</h4>
+<h4 class="date">08_29_19</h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#intro">Intro</a></li>
+<li><a href="#methods">Methods</a><ul>
+<li><a href="#biofilms">Biofilms</a></li>
+<li><a href="#liquid-cells">Liquid Cells</a></li>
+<li><a href="#in-vitro">In vitro</a></li>
+</ul></li>
+<li><a href="#results">Results</a><ul>
+<li><a href="#biofilm-1---ruphen_2dppz2-rhphi_2bpy3"><strong>Biofilm 1</strong> - <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> &amp; <span class="math inline">\(Rh(phi)_2bpy^{3+}\)</span></a></li>
+<li><a href="#biofilm-2---5um-ruphen_2dppz2-rhphi_2bpy3"><strong>Biofilm 2</strong> - 5uM <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> &amp; <span class="math inline">\(Rh(phi)_2bpy^{3+}\)</span></a></li>
+<li><a href="#liquid-grown-cells---5um-ruphen_2dppz2-rhphi_2bpy3"><strong>Liquid grown cells</strong> - 5uM <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> &amp; <span class="math inline">\(Rh(phi)_2bpy^{3+}\)</span></a></li>
+<li><a href="#biofilm-3---5um-ruphen_2dppz2-ruhex"><strong>Biofilm 3</strong> - 5uM <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> &amp; RuHex</a></li>
+<li><a href="#biofilm-4---5um-ruphen_2dppz2-timecourse"><strong>Biofilm 4</strong> - 5uM <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> Timecourse</a></li>
+<li><a href="#biofilm-5---10um-ruphen_2dppz2-rhphi_2bpy3"><strong>Biofilm 5</strong> - 10uM <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> &amp; <span class="math inline">\(Rh(phi)_2bpy^{3+}\)</span></a></li>
+<li><a href="#calf-thymus-dna-500um-nucleotides---5um-ruphen_2dppz2-rhphi_2bpy3"><strong>Calf thymus DNA</strong> (500uM nucleotides) - 5uM <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> &amp; <span class="math inline">\(Rh(phi)_2bpy^{3+}\)</span></a></li>
+</ul></li>
+<li><a href="#conclusions">Conclusions</a><ul>
+<li><a href="#next-steps">Next Steps</a></li>
+</ul></li>
+</ul>
+</div>
+
+<pre class="r"><code>library(tidyverse)
+library(cowplot)
+library(viridis)
+library(knitr)
+library(kableExtra)
+
+
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)
+
+source(&quot;../../../IDA/tools/plotting_tools.R&quot;)
+
+theme_set(theme_1())</code></pre>
+<div id="intro" class="section level1">
+<h1>Intro</h1>
+<p>This set of experiments is the next iteration from this previous set <a href="https://scott-saunders.github.io/labwork/Spectroscopy/08_07_19_biofilm_Ru_Rh/analysis/08_07_19_spectroscopy_biofilm_Ru_Rh.html#this-may-actually-be-static-quenching">see this notebook</a>. The idea was to use time resolved spectroscopy with well-characterized metal complexes to test whether biofilm eDNA could support DNA CT. Ultimately, we were looking for evidence of DNA CT in the form of ‘static quenching,’ which occurs when fluorophore quenching occurs on the extremely fast time scales expected for DNA CT. See this figure below, which shows the difference between static quenching and dynamic quenching.</p>
+<pre class="r"><code>knitr::include_graphics(&quot;../../08_07_19_biofilm_Ru_Rh/analysis/static_dynamic_quenching_fig.jpg&quot;)</code></pre>
+<p><img src="../../08_07_19_biofilm_Ru_Rh/analysis/static_dynamic_quenching_fig.jpg" width="60%" style="display: block; margin: auto;" /></p>
+<p>The previous experiments suggested that we were seeing static quenching with <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> and <span class="math inline">\(Rh(phi)_2bpy^{3+}\)</span> in resuspended colony biofilms. For this set of experiments we wanted to perform several controls to further test this result.</p>
+<ol style="list-style-type: decimal">
+<li>Repeat ∆phz* biofilm experiments with more concentrations of quencher.</li>
+<li>Liquid grown (exponential phase) cells to determine if metal complexes were reacting with intracellular gDNA.</li>
+<li>RuHex quencher to look for non DNA CT static quenching in biofilm.</li>
+<li>Time dependence of <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> signal - is it stable in the biofilm or reacting with cells.</li>
+<li>In vitro experiment as positive control.</li>
+</ol>
+<p>We tried all of the experiments above with the help of Eric Stemp and Nirit. Nirit did suggest one experiment that we were not able to try: determine if <span class="math inline">\(Rh(phi)_2bpy^{3+}\)</span> quencher affects biofilm background signal in the absence of <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span>.</p>
+</div>
+<div id="methods" class="section level1">
+<h1>Methods</h1>
+<div id="biofilms" class="section level2">
+<h2>Biofilms</h2>
+<p>∆phz* biofilms were grown as normal for 5 days. Plates were a little more humid than usual, but colony morphology looked relatively normal. Six replicate biofilms were grown in a 6 well plate as shown below:</p>
+<p><img src="photos/%E2%88%86phzstar_biofilms.jpg" style="width:40.0%" /></p>
+<p>Colonies on membranes were placed in eppendorf tubes with 500uL of PBS 137mM NaCl, then vortexed for 1 min to resuspend. Membranes were removed and came out almost entirely clean as shown below.</p>
+<p><img src="photos/membrane_preVortex.jpg" style="width:20.0%" /> <img src="photos/membrane_postVortex.jpg" style="width:20.0%" /> <img src="photos/tube_no_membrane.jpg" style="width:20.0%" /> <img src="photos/blank_membrane.jpg" style="width:20.0%" /></p>
+<p>Within 10 min of resuspension 400uL of the biofilm slurry was transferred to a cuvette:</p>
+<p><img src="photos/cuvette.jpg" style="width:40.0%" /></p>
+<p>Background scans were taken with the biofilm only, which exbited a signficant signal, although the <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> was clearly visible above this at 5uM (at 1uM it was barely visible). <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> was excited at 532nm and emission was recorded at 620nm. Other spectroscopic information is recorded in the header of each data file, but after data file 3 (rep 3) the exact same settings were used throughout.</p>
+</div>
+<div id="liquid-cells" class="section level2">
+<h2>Liquid Cells</h2>
+<p>A fresh LB plate of ∆phz* was streaked out the night before, and a 50mL flask of LB was inoculated on the morning of the experiment. After about 5hrs of growth the culture reached an OD of ~0.4, which was considered to be in the middle of exponential phase. In order to match the cell density of the biofilm suspension, the OD500 of the biofilm slurry was measured to be about 20. Therefore the liquid grown cells were concentrated ~50x by spinning down 24mL of culture and resuspending in 500uL of PBS 137. To the naked eye, the resuspended cells were quite opaque and of similar density.</p>
+</div>
+<div id="in-vitro" class="section level2">
+<h2>In vitro</h2>
+<p>A calf thymus DNA stock was diluted to 500uM nucleotides and 400uL was transferred to a cuvette.</p>
+<p>Generally, the <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> and <span class="math inline">\(Rh(phi)_2bpy^{3+}\)</span> were added to the cuvettes from 200uM stocks, although for quencher eq &gt; ~6 <span class="math inline">\(Rh(phi)_2bpy^{3+}\)</span> was added from a 1.5mM stock to avoid changing the volume dramatically. <span class="math inline">\(Ru(NH_3)_6\)</span> (aka Ruthenium hexamine aka RuHex) was added from a similarly dilute stock for the low equivalents and from a 20mM? stock for the higher equivalents.</p>
+<p>Metal complexes were added directly the cuvette, pipetted up and down 10-15 times and then the cuvette was shaken gently to ensure complete mixing. Measurements were taken immediately following.</p>
+</div>
+</div>
+<div id="results" class="section level1">
+<h1>Results</h1>
+<p>First let’s read in all the data. We’ll start with the compressed version of the data, as Jay suggested. They worked fine last time.</p>
+<pre class="r"><code># Functions modified from echem import to read in
+# spectroscopy data
+
+import_data &lt;- function(filenames, file_paths, data_cols = c(&quot;time&quot;, 
+    &quot;intensity&quot;), skip_rows = 16) {
+    
+    # Adapted from echem_import() in /IDA/tools
+    
+    files_df &lt;- data_frame(filename = filenames) %&gt;% mutate(file_contents = map(file_paths, 
+        ~read_csv(., col_names = data_cols, skip = skip_rows)))
+    
+    files_df
+}
+
+unnest_df &lt;- function(df, filename_cols, rep = F) {
+    
+    # Adapted from echem_unnest_df() in /IDA/tools
+    
+    df_unnested &lt;- df %&gt;% unnest(file_contents) %&gt;% separate(filename, 
+        filename_cols, sep = &quot;_&quot;)
+    
+    if (rep) {
+        df_unnested &lt;- df_unnested %&gt;% mutate(rep = as.integer(str_extract(rep, 
+            &quot;^[0-9]+&quot;)))
+    }
+    
+    df_unnested
+    
+}
+
+import_to_df &lt;- function(filenames, file_paths, data_cols = c(&quot;time&quot;, 
+    &quot;intensity&quot;), skip_rows = 16, filename_cols, rep = F) {
+    
+    # Combine echem_import() and echem_unnest_df() into one
+    # function.
+    
+    df &lt;- import_data(filenames, file_paths, data_cols, skip_rows)
+    
+    df_unnested &lt;- unnest_df(df, filename_cols, rep)
+    
+    df_unnested
+    
+}</code></pre>
+<pre class="r"><code>data_path = &quot;../data/compressed/&quot;
+
+data_cols &lt;- c(&quot;time&quot;, &quot;intensity&quot;)
+
+skip_rows = 16
+
+# Add &#39;reactor&#39; to file name so it is parsed into column
+filename_cols = c(&quot;date&quot;, &quot;rep&quot;, &quot;compressed&quot;)
+
+data_names &lt;- dir(path = data_path, pattern = &quot;.+[dat]$&quot;)
+
+# Add correct paths separate from filenames
+data_paths &lt;- data_names %&gt;% paste(data_path, ., sep = &quot;&quot;)
+
+# Read in all SWVs with one function call
+compressed_data &lt;- import_to_df(filenames = data_names, file_paths = data_paths, 
+    data_cols = data_cols, skip_rows = skip_rows, filename_cols = filename_cols, 
+    rep = T)
+
+compressed_data %&gt;% head() %&gt;% kable(digits = 10) %&gt;% kable_styling(bootstrap_options = &quot;condensed&quot;)</code></pre>
+<table class="table table-condensed" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+date
+</th>
+<th style="text-align:right;">
+rep
+</th>
+<th style="text-align:left;">
+compressed
+</th>
+<th style="text-align:right;">
+time
+</th>
+<th style="text-align:right;">
+intensity
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+82919
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+compressed.dat
+</td>
+<td style="text-align:right;">
+-9.94e-08
+</td>
+<td style="text-align:right;">
+2.03066e-04
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+82919
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+compressed.dat
+</td>
+<td style="text-align:right;">
+-9.78e-08
+</td>
+<td style="text-align:right;">
+-2.25840e-04
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+82919
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+compressed.dat
+</td>
+<td style="text-align:right;">
+-9.56e-08
+</td>
+<td style="text-align:right;">
+-1.34819e-05
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+82919
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+compressed.dat
+</td>
+<td style="text-align:right;">
+-9.34e-08
+</td>
+<td style="text-align:right;">
+2.57582e-05
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+82919
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+compressed.dat
+</td>
+<td style="text-align:right;">
+-9.12e-08
+</td>
+<td style="text-align:right;">
+3.67667e-05
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+82919
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+compressed.dat
+</td>
+<td style="text-align:right;">
+-8.91e-08
+</td>
+<td style="text-align:right;">
+-5.19785e-04
+</td>
+</tr>
+</tbody>
+</table>
+<p>You can see that we have a file “rep” (i.e. ID number) and intensity vs. time data. There are about 63 files, so I’m going to write out the metadata in excel and merge it in so I don’t have to split up the different experiments manually. Here’s what the metadata look like:</p>
+<pre class="r"><code>metadata &lt;- read_csv(&quot;../data/08_29_19_spectroscopy_metadata.csv&quot;) %&gt;% 
+    group_by(material, material_id) %&gt;% mutate(run = rep - min(rep) + 
+    1) %&gt;% mutate(exp_num = group_indices())
+
+df &lt;- left_join(compressed_data, metadata, by = &quot;rep&quot;)
+
+metadata %&gt;% kable() %&gt;% kable_styling(bootstrap_options = &quot;condensed&quot;) %&gt;% 
+    scroll_box(width = &quot;100%&quot;, height = &quot;400px&quot;)</code></pre>
+<div style="border: 1px solid #ddd; padding: 5px; overflow-y: scroll; height:400px; overflow-x: scroll; width:100%; ">
+<table class="table table-condensed" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+rep
+</th>
+<th style="text-align:left;">
+material
+</th>
+<th style="text-align:right;">
+material_id
+</th>
+<th style="text-align:right;">
+ruphen_conc
+</th>
+<th style="text-align:right;">
+quencher_conc
+</th>
+<th style="text-align:right;">
+quencher_eq
+</th>
+<th style="text-align:left;">
+quencher_id
+</th>
+<th style="text-align:left;">
+comment
+</th>
+<th style="text-align:right;">
+run
+</th>
+<th style="text-align:right;">
+exp_num
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+20
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+17
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+18
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+20
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+19
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+20
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+21
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+22
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+60
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+39
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+60
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+1 hr later
+</td>
+<td style="text-align:right;">
+27
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+23
+</td>
+<td style="text-align:left;">
+liquid_cells
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+24
+</td>
+<td style="text-align:left;">
+liquid_cells
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+25
+</td>
+<td style="text-align:left;">
+liquid_cells
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+26
+</td>
+<td style="text-align:left;">
+liquid_cells
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+27
+</td>
+<td style="text-align:left;">
+liquid_cells
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+20
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+28
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+RuHex
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+29
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+RuHex
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+RuHex
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+31
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+RuHex
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+32
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+20
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:left;">
+RuHex
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+33
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:left;">
+RuHex
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+34
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+80
+</td>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:left;">
+RuHex
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+24
+</td>
+<td style="text-align:left;">
+RuHex
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+36
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+32
+</td>
+<td style="text-align:left;">
+RuHex
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+37
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+200
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:left;">
+RuHex
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+38
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+500
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:left;">
+RuHex
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+none
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+41
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+none
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+42
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+none
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+43
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+none
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+44
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+none
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+54
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+none
+</td>
+<td style="text-align:left;">
+15 min later
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+45
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+46
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+47
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+48
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+20
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+49
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+51
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+60
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+52
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+80
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+53
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+55
+</td>
+<td style="text-align:left;">
+ctDNA
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+500uM nucleotides
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+56
+</td>
+<td style="text-align:left;">
+ctDNA
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+57
+</td>
+<td style="text-align:left;">
+ctDNA
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+58
+</td>
+<td style="text-align:left;">
+ctDNA
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+59
+</td>
+<td style="text-align:left;">
+ctDNA
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+60
+</td>
+<td style="text-align:left;">
+ctDNA
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+20
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+61
+</td>
+<td style="text-align:left;">
+ctDNA
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+62
+</td>
+<td style="text-align:left;">
+ctDNA
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+63
+</td>
+<td style="text-align:left;">
+ctDNA
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>As described above you can see that we varied a good number of parameters. I’ll generate the background subtractions and normalizations, because I know we will want to look at those. Note that background subtraction is simply subtracting the minimum value at each time point, not necessarily the biofilm only scan - we’ll come back to this.</p>
+<pre class="r"><code>df_bg &lt;- df %&gt;% group_by(material, material_id, time) %&gt;% mutate(min = min(intensity)) %&gt;% 
+    mutate(bg_sub = intensity - min)
+
+df_biofilm_bg &lt;- df %&gt;% group_by(material, material_id, time) %&gt;% 
+    mutate(min = min(ifelse(run == 1, intensity, NA), na.rm = T)) %&gt;% 
+    mutate(bg_sub = intensity - min)
+
+df_bg_norm &lt;- df_bg %&gt;% filter(time &gt; 0) %&gt;% group_by(material, 
+    material_id, run) %&gt;% mutate(max = max(bg_sub)) %&gt;% mutate(norm_intensity = bg_sub/max)</code></pre>
+<p>Now, let’s walk through the experiments chronologically.</p>
+<div id="biofilm-1---ruphen_2dppz2-rhphi_2bpy3" class="section level2">
+<h2><strong>Biofilm 1</strong> - <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> &amp; <span class="math inline">\(Rh(phi)_2bpy^{3+}\)</span></h2>
+<p>Note that runs 1 - 3 for experiment 1 were done on a larger scale with 1uM Ru, which was not really visible. So, we moved up to 5uM Ru starting with run 4. Here’s what the data looks like from here (we don’t have a great biofilm only control):</p>
+<pre class="r"><code>ggplot(df %&gt;% filter(exp_num == 1 &amp; run &gt;= 4), aes(x = time, 
+    y = intensity, color = factor(quencher_eq))) + geom_path() + 
+    xlim(NA, 5e-07)</code></pre>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Here you can see that the raw signal does seem to change as we added the <span class="math inline">\(Rh(phi)_2bpy^{3+}\)</span>. If we background subtract from the minimum value it looks like this:</p>
+<pre class="r"><code>ggplot(df_bg %&gt;% filter(exp_num == 1 &amp; run &gt;= 4), aes(x = time, 
+    y = bg_sub, color = factor(quencher_eq))) + geom_path() + 
+    xlim(NA, 5e-07)</code></pre>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Note that this is kinda messed up, because it’s just background subtract from the lowest value, which in this case is run 8…not the biofilm only control. That said, it looks like static quenching.</p>
+<p>Let’s see if the normalized curves have the same shape (and therefore lifetime):</p>
+<pre class="r"><code>ggplot(df_bg_norm %&gt;% filter(exp_num == 1 &amp; run &gt;= 4), aes(x = time, 
+    y = norm_intensity, color = factor(quencher_eq))) + geom_path() + 
+    xlim(NA, 5e-07)</code></pre>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>So again, it’s a little wild, because we’ve background subtracted with run 8, but the first few runs seems to overlay well, suggesting that they exhibit similar lifetimes.</p>
+</div>
+<div id="biofilm-2---5um-ruphen_2dppz2-rhphi_2bpy3" class="section level2">
+<h2><strong>Biofilm 2</strong> - 5uM <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> &amp; <span class="math inline">\(Rh(phi)_2bpy^{3+}\)</span></h2>
+<p>This next condition was basically a better version of biofilm 1. Let’s look at the raw data:</p>
+<pre class="r"><code>ggplot(df %&gt;% filter(exp_num == 2), aes(x = time, y = intensity, 
+    color = quencher_eq)) + geom_path(data = df %&gt;% filter(exp_num == 
+    2 &amp; ruphen_conc == 0), color = &quot;gray&quot;, size = 3) + geom_path() + 
+    xlim(NA, 5e-07)</code></pre>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Here I’ve highlighted the biofilm only control in gray. You can see that it is basically the same as the highest quencher concentrations. Let’s see how the background subtraction looks if we subtract from the biofilm only control:</p>
+<pre class="r"><code>ggplot(df_biofilm_bg %&gt;% filter(exp_num == 2), aes(x = time, 
+    y = bg_sub, color = quencher_eq)) + geom_path(data = df_biofilm_bg %&gt;% 
+    filter(exp_num == 2 &amp; ruphen_conc == 0), color = &quot;gray&quot;, 
+    size = 3) + geom_path() + xlim(NA, 5e-07)</code></pre>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>And now let’s just subtract from the minimum value:</p>
+<pre class="r"><code>ggplot(df_bg %&gt;% filter(exp_num == 2), aes(x = time, y = bg_sub, 
+    color = quencher_eq)) + geom_path(data = df_bg %&gt;% filter(exp_num == 
+    2 &amp; ruphen_conc == 0), color = &quot;gray&quot;, size = 3) + geom_path() + 
+    xlim(NA, 5e-07)</code></pre>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Again, the biofilm only control is highlighted in gray. Here you can see that unfortunately the biofilm only sample is not the lowest intensity signal, meaning that the quenched signal is actually lower in certain places than the biofilm alone. Background subtracting from the biofilm only control yields weird results, so this is where Nirit’s suggestion may come in…maybe we should have background subtracted from a biofilm + <span class="math inline">\(Rh(phi)_2bpy^{3+}\)</span> control or maybe we should just be fine background subracting from the lowest value. Not sure what the best practice would be here.</p>
+<p>That said, if we just background subtract from the lowest value, it looks like pretty good static quenching…let’s see how the normalization looks:</p>
+<pre class="r"><code># Excluding the highest quencher concentration, because that
+# was bg_sub
+
+ggplot(df_bg_norm %&gt;% filter(exp_num == 2 &amp; quencher_conc &lt; 60), 
+    aes(x = time, y = norm_intensity, color = quencher_eq)) + 
+    geom_path(data = df_bg_norm %&gt;% filter(exp_num == 2 &amp; ruphen_conc == 
+        0), color = &quot;gray&quot;, size = 3) + geom_path() + xlim(NA, 
+    5e-07)</code></pre>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>It’s not perfect, but the shapes look pretty similar. The only obviously different one is the background only signal (highlighted in gray).</p>
+</div>
+<div id="liquid-grown-cells---5um-ruphen_2dppz2-rhphi_2bpy3" class="section level2">
+<h2><strong>Liquid grown cells</strong> - 5uM <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> &amp; <span class="math inline">\(Rh(phi)_2bpy^{3+}\)</span></h2>
+<p>Remember, this condition was to assess whether cells (containing genomic DNA) were sufficient to give the strong static quenching signal. If yes, that would suggest the metal complexes enter the cell and the signal could come from gDNA. If no, that suggests the signal is specific to extracellular DNA. Let’s look at the raw data:</p>
+<pre class="r"><code>ggplot(df %&gt;% filter(exp_num == 7), aes(x = time, y = intensity, 
+    color = factor(run))) + geom_path() + xlim(NA, 5e-07)</code></pre>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>So, all the runs look almost identical. Run 1 is biofilm only, Run 2 is + <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> , and Runs 3,4,and 5 add increasing <span class="math inline">\(Rh(phi)_2bpy^{3+}\)</span>. This is already pretty clear…there’s barely any signal from the <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span>, which only emits when it is bound to DNA. Therefore, this data suggests that the complex is not bound to DNA when incubated with the liquid grown cells…and so the signal probably isn’t coming from gDNA. Because there’s basically no signal, we don’t expect to see much quenching, but here’s what the background subtraction looks like:</p>
+<pre class="r"><code>ggplot(df_bg %&gt;% filter(exp_num == 7), aes(x = time, y = bg_sub, 
+    color = factor(run))) + geom_path() + xlim(NA, 5e-07)</code></pre>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Maybe there’s a tiny <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> signal (blue run 2) that is quenched, but it’s super noisy and I don’t think that really matters.</p>
+</div>
+<div id="biofilm-3---5um-ruphen_2dppz2-ruhex" class="section level2">
+<h2><strong>Biofilm 3</strong> - 5uM <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> &amp; RuHex</h2>
+<p>Next we tried a different quencher, that should not be capable of fast DNA CT. In vitro this quencher should cause dynamic quenching (see intro), but Eric did express some concern that we may not see any quenching if RuHex binding were strongly inhibited by the extra NaCl in the buffer (137mM)…so we weren’t sure what to expect. Here’s the raw data:</p>
+<pre class="r"><code>ggplot(df %&gt;% filter(exp_num == 3), aes(x = time, y = intensity, 
+    color = quencher_eq)) + geom_path() + xlim(NA, 5e-07)</code></pre>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The biofilm only background is in gray and the RuHex equivalents are shown as colors. You can see the signal does change a little bit at the higher concentrations, but it’s hard to tell. Here’s the background subtraction:</p>
+<pre class="r"><code>ggplot(df_bg %&gt;% filter(exp_num == 3), aes(x = time, y = bg_sub, 
+    color = quencher_eq)) + geom_path() + xlim(NA, 5e-07)</code></pre>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Here the background subtraction mainly worked as intended, although you can see at short times &gt; 0 the gray line is non zero. It looks like the signal did change upon addition of RuHex, but it’s not really clear whether it’s static or dynamic type quenching…and it’s a little noisy.</p>
+<p>If we normalize it looks like this:</p>
+<pre class="r"><code>ggplot(df_bg_norm %&gt;% filter(exp_num == 3), aes(x = time, y = norm_intensity, 
+    color = quencher_eq)) + geom_path() + xlim(NA, 5e-07)</code></pre>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-17-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Still very noisy…but the curves look like mostly the same shape to me. Let’s try normalizing by a slightly later timepoint when the background subtraction is perfect:</p>
+<pre class="r"><code>df_bg_norm_2 &lt;- df_bg %&gt;% 
+  filter(time &gt; 2.5e-8) %&gt;% #Changed this number to be slightly &gt; 0
+  group_by(material, material_id, run) %&gt;% 
+  mutate(max = max(bg_sub)) %&gt;% 
+  mutate(norm_intensity = bg_sub / max)
+
+ggplot(df_bg_norm_2 %&gt;% filter(exp_num ==3), aes(x = time, y = norm_intensity, color = quencher_eq)) + 
+  geom_path() + xlim(NA, 5e-7)</code></pre>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-18-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Now the decay looks really identical, suggesting more of a static quenching… That said, the quenching was a little noisy / weak, and probably not as clear cut as the <span class="math inline">\(Rh(phi)_2bpy^{3+}\)</span>. Perhaps at lower salt concentrations we would see something different.</p>
+</div>
+<div id="biofilm-4---5um-ruphen_2dppz2-timecourse" class="section level2">
+<h2><strong>Biofilm 4</strong> - 5uM <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> Timecourse</h2>
+<p>This condition was to test whether the <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> emission was changing over time. If strong changes were observed that could suggest the ‘quenching’ we observed was an artifact, or that the metal complex was slowly getting inside the cell or causing lysis.</p>
+<p>Here’s the data:</p>
+<pre class="r"><code>ggplot(df %&gt;% filter(exp_num == 4), aes(x = time, y = intensity, 
+    color = factor(run))) + geom_path() + xlim(NA, 5e-07)</code></pre>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Looks pretty clear cut from here. Run 1 was the biofilm only and runs 2,3,4,5, and 15 were subsequent scans of the same cuvette. Run 15 was taken an additional 15 min after run 5. There seems to be no change in the signal.</p>
+<p>Here’s the background subtraction:</p>
+<pre class="r"><code>ggplot(df_bg %&gt;% filter(exp_num == 4), aes(x = time, y = bg_sub, 
+    color = factor(run))) + geom_path() + xlim(NA, 5e-07)</code></pre>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-20-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Run 15, might have a slightly higher signal than the others pointing to toxicity or cell permeability given longer times, but almost all experiments were conducted within the amount of time it took to reach run 5.</p>
+<p>Note that without the quencher and good background subtraction from the biofilm only control, the <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> is only about 0.015 as opposed to 0.04 for biofilms 1 and 2. To me that suggests the quenched samples in the first two really are quenching the signal to be significantly less than the biofilm only control…</p>
+<p>Here’s the normalization:</p>
+<pre class="r"><code>ggplot(df_bg_norm %&gt;% filter(exp_num == 4), aes(x = time, y = norm_intensity, 
+    color = factor(run))) + geom_path() + xlim(NA, 5e-07)</code></pre>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-21-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Same shape as expected. This plot also gives us a sense of the variability in shape of the <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> emission. Considering this, some of the earlier biofilm data with quencher looks pretty good.</p>
+</div>
+<div id="biofilm-5---10um-ruphen_2dppz2-rhphi_2bpy3" class="section level2">
+<h2><strong>Biofilm 5</strong> - 10uM <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> &amp; <span class="math inline">\(Rh(phi)_2bpy^{3+}\)</span></h2>
+<p>To try to get a stronger signal, we also tried a biofilm with double the concentration of metal complexes:</p>
+<pre class="r"><code>ggplot(df %&gt;% filter(exp_num == 5), aes(x = time, y = intensity, 
+    color = quencher_eq)) + geom_path(data = df %&gt;% filter(exp_num == 
+    5 &amp; ruphen_conc == 0), color = &quot;gray&quot;, size = 3) + geom_path() + 
+    xlim(NA, 5e-07)</code></pre>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-22-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Here the biofilm only control is highlighted in gray. We can see a strong signal and strong quenching. Let’s look at the background subtraction:</p>
+<pre class="r"><code>ggplot(df_bg %&gt;% filter(exp_num == 5), aes(x = time, y = bg_sub, 
+    color = quencher_eq)) + geom_path(data = df_bg %&gt;% filter(exp_num == 
+    5 &amp; ruphen_conc == 0), color = &quot;gray&quot;, size = 3) + geom_path() + 
+    xlim(NA, 5e-07)</code></pre>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-23-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>As for the 5uM condition, we see what appears to be static quenching, although again the biofilm only background is not actually the lowest signal. Let’s normalize:</p>
+<pre class="r"><code>ggplot(df_bg_norm %&gt;% filter(exp_num == 5 &amp; quencher_eq &lt; 10), 
+    aes(x = time, y = norm_intensity, color = quencher_eq)) + 
+    geom_path(data = df_bg_norm %&gt;% filter(exp_num == 5 &amp; ruphen_conc == 
+        0), color = &quot;gray&quot;, size = 3) + geom_path() + xlim(NA, 
+    5e-07)</code></pre>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-24-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Interestingly, here we see that the curves do seem to have different shapes. Perhaps at this concentration of <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> we are seeing a combination of static and dynamic quenching.</p>
+</div>
+<div id="calf-thymus-dna-500um-nucleotides---5um-ruphen_2dppz2-rhphi_2bpy3" class="section level2">
+<h2><strong>Calf thymus DNA</strong> (500uM nucleotides) - 5uM <span class="math inline">\(Ru(phen)_2dppz^{2+}\)</span> &amp; <span class="math inline">\(Rh(phi)_2bpy^{3+}\)</span></h2>
+<p>The last condition we tried was in vitro with the same concentration of metal complexes as before with calf thymus DNA. here’s the data:</p>
+<pre class="r"><code>ggplot(df %&gt;% filter(exp_num == 6), aes(x = time, y = intensity, 
+    color = quencher_eq)) + geom_path(data = df %&gt;% filter(exp_num == 
+    6 &amp; ruphen_conc == 0), color = &quot;gray&quot;, size = 3) + geom_path() + 
+    xlim(NA, 5e-07)</code></pre>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-25-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Wow, here we see a super strong signal that is quenched very well. The biggest difference is actually that the in vitro cuvette has basically no background emission (gray). Let’s look at the background subtraction:</p>
+<pre class="r"><code>ggplot(df_bg %&gt;% filter(exp_num == 6), aes(x = time, y = bg_sub, 
+    color = quencher_eq)) + geom_path(data = df_bg %&gt;% filter(exp_num == 
+    6 &amp; ruphen_conc == 0), color = &quot;gray&quot;, size = 3) + geom_path() + 
+    xlim(NA, 5e-07)</code></pre>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-26-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Looks like pretty strong static quenching.</p>
+<p>This also gives us a feeling for how much of the metal complexes are bound by DNA in our biofilms. The max signal in the biofilm is about 0.04, suggesting that the eDNA concentration or solution conditions may be limiting DNA binding a little bit.</p>
+<p>Here’s the normalized curves:</p>
+<pre class="r"><code>ggplot(df_bg_norm %&gt;% filter(exp_num == 6 &amp; ruphen_conc &gt; 0), 
+    aes(x = time, y = norm_intensity, color = quencher_eq)) + 
+    geom_path() + xlim(NA, 5e-07)</code></pre>
+<p><img src="08_29_19_biofilm_spectroscopy_analysis_files/figure-html/unnamed-chunk-27-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Again, interesting. The curves are not the exact same shape, even though the background subtraction here is almost perfect. This suggests that there may be some dynamic quenching in addition to the strong static quenching.</p>
+</div>
+</div>
+<div id="conclusions" class="section level1">
+<h1>Conclusions</h1>
+<p>Overall, I think this set of experiments was quite helpful. As far as whether we are truly observing DNA CT based static quenching I have a few feelings:</p>
+<p>Reassuring that:</p>
+<ol style="list-style-type: decimal">
+<li>static quenching essentially repeated</li>
+<li>ru signal is not time dependent</li>
+<li>liquid cells show basically no signal.</li>
+</ol>
+<p>Slightly concerning that:</p>
+<ol style="list-style-type: decimal">
+<li>biofilm only background is not minimum value in most cases</li>
+<li>RuHex quenching looks kinda static</li>
+<li>10uM Ru / Rh quenching looks like combo of static and dynamic as does in vitro</li>
+</ol>
+<p>Ultimately, I think the static quenching is real. I think that the whole static vs. dynamic quenching is not super clear cut and that tossing in the biofilm background signal makes it a little messier. According to the past papers, the static quenching indicates DNA CT. This result is really to be expected I think, although it is nice to know. What we are really testing here is - is eDNA intact enough to support DNA CT between these two metal complexes? We always assumed it was, because you can do PCR and restriction digest etc just like genomic DNA. Therefore, this data really suggests that the eDNA is relatively intact and not full of abasic sites and falling apart etc.</p>
+<div id="next-steps" class="section level2">
+<h2>Next Steps</h2>
+<ol style="list-style-type: decimal">
+<li>Background subtraction - is it ok to subtract from the most quenched sample? Should we do Nirit’s experiment and test quenching of biofilm background with <span class="math inline">\(Rh(phi)_2bpy^{3+}\)</span>?</li>
+<li>Should we fit all of the decays to get lifetimes? What do we learn?</li>
+<li>What is the best way to concisely present this data for the paper?</li>
+</ol>
+<hr />
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 3.5.2 (2018-12-20)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS Mojave 10.14.6
+## 
+## Matrix products: default
+## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] kableExtra_1.0.1  knitr_1.23        viridis_0.5.1    
+##  [4] viridisLite_0.3.0 cowplot_0.9.4     forcats_0.3.0    
+##  [7] stringr_1.3.1     dplyr_0.8.1       purrr_0.2.5      
+## [10] readr_1.3.1       tidyr_0.8.2       tibble_2.1.3     
+## [13] ggplot2_3.2.0     tidyverse_1.2.1  
+## 
+## loaded via a namespace (and not attached):
+##  [1] tidyselect_0.2.5 xfun_0.7         haven_2.0.0      lattice_0.20-38 
+##  [5] colorspace_1.4-0 generics_0.0.2   htmltools_0.3.6  yaml_2.2.0      
+##  [9] rlang_0.3.4      pillar_1.3.1     glue_1.3.1       withr_2.1.2     
+## [13] modelr_0.1.2     readxl_1.2.0     munsell_0.5.0    gtable_0.2.0    
+## [17] cellranger_1.1.0 rvest_0.3.2      evaluate_0.14    labeling_0.3    
+## [21] highr_0.7        broom_0.5.1      Rcpp_1.0.1       scales_1.0.0    
+## [25] backports_1.1.3  formatR_1.5      webshot_0.5.1    jsonlite_1.6    
+## [29] gridExtra_2.3    hms_0.4.2        digest_0.6.18    stringi_1.2.4   
+## [33] grid_3.5.2       cli_1.0.1        tools_3.5.2      magrittr_1.5    
+## [37] lazyeval_0.2.1   crayon_1.3.4     pkgconfig_2.0.2  xml2_1.2.0      
+## [41] lubridate_1.7.4  assertthat_0.2.1 rmarkdown_1.13   httr_1.4.0      
+## [45] rstudioapi_0.9.0 R6_2.4.0         nlme_3.1-140     compiler_3.5.2</code></pre>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

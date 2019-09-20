@@ -1,0 +1,661 @@
+---
+title: "BRMS hierarchical model sandbox FRAP"
+subtitle: 
+fontsize: 12pt
+date: "06_24_19 "
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r eval = F}
+library(nlme)
+
+fm1 <- nlme(height ~ SSasymp(age, Asym, R0, lrc),
+            data = Loblolly,
+            fixed = Asym + R0 + lrc ~ 1,
+            random = Asym ~ 1,
+            start = c(Asym = 103, R0 = -8.5, lrc = -3.3))
+summary(fm1)
+fm2 <- update(fm1, random = pdDiag(Asym + lrc ~ 1))
+summary(fm2)
+```
+
+
+```{r}
+library(brms)
+library(tidyverse)
+
+df <- tibble(x = c(rnorm(100,mean = seq(1,100,1)), rnorm(100,mean = seq(1,100,1)), rnorm(100,mean = seq(1,100,1))), y = c(rnorm(100,mean = seq(1,100,1)), rnorm(100,mean = seq(1,200,2)), rnorm(100,mean = seq(1,300,3))), id = c(rep('a',100),rep('b',100),rep('c',100)))
+
+ggplot(df, aes(x,y,color = id)) + geom_point()+ geom_smooth(method = 'lm') + facet_grid(~id)
+```
+
+```{r eval = F}
+model_1 <- brm(y ~ x + 1 + (1|id), data = df, warmup = 1000, iter = 3000, chains = 2, inits= "random", cores=2)
+
+summary(model_1)
+
+marginal_effects(model_1)
+
+me_loss_1 <- marginal_effects(
+  model_1, conditions = data.frame(id = c('a','b','c')), 
+  re_formula = NULL, method = "predict"
+)
+
+plot(me_loss_1, plot = F, points = T)[[1]] + ggtitle("My custom ggplot here!")
+```
+
+```{r eval = F}
+model_2 <- brm(y ~ x + 1 + (x+1|id), data = df, warmup = 1000, iter = 3000, chains = 2, inits= "random", cores=2)
+
+summary(model_2)
+
+marginal_effects(model_2)
+
+me_loss_2 <- marginal_effects(
+  model_2, conditions = data.frame(id = c('a','b','c')), 
+  re_formula = NULL, method = "predict"
+)
+
+plot(me_loss_2, plot = F, points = T)[[1]] + ggtitle("My custom ggplot here!")
+```
+
+```{r eval= F}
+
+model_3 <- brm(y ~ x + 1 + (x|id), data = df, warmup = 1000, iter = 3000, chains = 2, inits= "random", cores=2)
+
+summary(model_3)
+
+marginal_effects(model_3)
+
+me_loss_3 <- marginal_effects(
+  model_3, conditions = data.frame(id = c('a','b','c')), 
+  re_formula = NULL, method = "predict"
+)
+
+plot(me_loss_3, plot = F, points = T)[[1]] + ggtitle("My custom ggplot here!")
+```
+
+```{r}
+df <- read_csv("06_13_19_PYO_FRAP_glycerol_full_norm.csv") 
+
+df_fast_1 <- df %>% filter(fast == 'repFAST' & id==1)
+
+df_fast <- df %>% filter(fast == 'repFAST')
+
+ggplot(df_fast_1, aes(x = norm_time, y = full_norm_int, color = condition)) + 
+  geom_point(shape = 21)+
+  scale_color_viridis_d() + 
+  facet_wrap(~condition)
+
+```
+
+```{r eval = F}
+prior1 <- prior(normal(0.8, 0.2), nlpar = "I0") +
+  prior(normal(0.6, 0.2), nlpar = "a")+
+  prior(normal(0.2, 0.1), nlpar = "B")
+
+frap_model_1 <- brm(bf(full_norm_int~I0 - a*exp(-B * norm_time), I0 + a + B~1+(1|condition), nl = T),
+     data = df_fast_1,
+     prior = prior1,
+    chains = 2,
+    cores = 2,
+    iter = 500
+)
+     
+     
+summary(frap_model_1)
+
+marginal_effects(frap_model_1)
+
+me_frap_model_1 <- marginal_effects(
+  frap_model_1, conditions = data.frame(condition = c('0pctGlyc','10pctGlyc','20pctGlyc','50pctGlyc')), 
+  re_formula = NULL, method = "predict"
+)
+
+plot(me_frap_model_1, plot = F, points = T)[[1]] + ggtitle("My custom ggplot here!")
+
+```
+
+```{r eval = F}
+frap_model_2 <- brm(bf(full_norm_int~I0 - a*exp(-B * norm_time), I0 + a + B~1+(1|condition), nl = T),
+     data = df_fast_1,
+     prior = prior1,
+    chains = 4,
+    cores = 2
+)
+     
+     
+summary(frap_model_2)
+
+marginal_effects(frap_model_2)
+
+me_frap_model_2 <- marginal_effects(
+  frap_model_2, conditions = data.frame(condition = c('0pctGlyc','10pctGlyc','20pctGlyc','50pctGlyc')), 
+  re_formula = NULL, method = "predict"
+)
+
+plot(me_frap_model_2, plot = F, points = T)[[1]] + ggtitle("My custom ggplot here!")
+
+plot(frap_model_2)
+```
+
+
+
+Can we set a group level parameter that doesn't have a hyperparameter by doing:
+```{r eval = F}
+#leave out intercept in parameter specification. Only depends on group level intercept?...
+
+frap_model_3 <- brm(bf(full_norm_int~I0 - a*exp(-B * norm_time), I0 + a + B~(1|condition), nl = T),
+     data = df_fast_1,
+     prior = prior1,
+    chains = 4,
+    cores = 2
+)
+     
+     
+summary(frap_model_3)
+
+marginal_effects(frap_model_3)
+
+me_frap_model_3 <- marginal_effects(
+  frap_model_3, conditions = data.frame(condition = c('0pctGlyc','10pctGlyc','20pctGlyc','50pctGlyc')), 
+  re_formula = NULL, method = "predict"
+)
+
+plot(me_frap_model_3, plot = F, points = T)[[1]] + ggtitle("My custom ggplot here!")
+
+plot(frap_model_3)
+```
+
+
+Prior predictive check:
+
+```{r eval = F}
+
+prior1 <- prior(normal(0.8, 0.2), nlpar = "I0") +
+  prior(normal(0.6, 0.2), nlpar = "a")+
+  prior(normal(0.2, 0.1), nlpar = "B")
+
+frap_prior_pc <- brm(bf(full_norm_int~I0 - a*exp(-B * norm_time), I0 + a + B~(1|condition), nl = T),
+     data = df_fast_1,
+     prior = prior1,
+    chains = 4,
+    cores = 2,
+    iter = 500,
+    sample_prior = 'only'
+)
+
+plot(frap_prior_pc, N = 3)
+```
+
+Really what we want is to have each condition in its own hierarchical model, then we compare the hyperparameter estimates from each hierarchy to compare the conditions. This is because we don't think there's a true hyperparameter that controls the FRAPS in the different conditions...but there should be ones among the replicates
+
+```{r eval = F}
+frap_model_0pct <- brm(bf(full_norm_int~I0 - a*exp(-B * norm_time), I0 + a + B~1+(1|id), nl = T),
+     data = df_fast %>% filter(condition== '0pctGlyc'),
+     prior = prior1,
+    chains = 4,
+    cores = 2,
+    control = list(adapt_delta = 0.95, max_treedepth = 15)
+)
+
+
+
+marginal_effects(frap_model_0pct)
+
+me_frap_model_0pct <- marginal_effects(
+  frap_model_0pct, conditions = data.frame(id = c(1,2,3)), 
+  re_formula = NULL, method = "predict"
+)
+
+plot(me_frap_model_0pct, plot = F, points = T)[[1]] + ggtitle("My custom ggplot here!") + ylim(-2,2)
+
+plot(frap_model_0pct, N = 3)
+
+```
+
+```{r eval = F}
+frap_model_10pct <- brm(bf(full_norm_int~I0 - a*exp(-B * norm_time), I0 + a + B~1+(1|id), nl = T),
+     data = df_fast %>% filter(condition== '10pctGlyc'),
+     prior = prior1,
+    chains = 4,
+    cores = 2,
+    control = list(adapt_delta = 0.9, max_treedepth = 12)
+)
+
+
+  summary(frap_model_0pct)
+  
+summary(frap_model_10pct)
+
+me_frap_model_10pct <- marginal_effects(
+  frap_model_10pct, conditions = data.frame(id = c(1,2,3)), 
+  re_formula = NULL, method = "predict"
+)
+
+plot(me_frap_model_10pct, plot = F, points = T)[[1]] + ggtitle("My custom ggplot here!") + ylim(-2,2)
+
+plot(frap_model_10pct, N = 3)
+
+```
+
+For some reason I started with 20 percent glycerol. After a lot of troubleshooting, going back and fitting a single curve changing priors etc, I think the main issue was that I needed to set the lower bound (lb) for the priors to zero to avoid getting negative parameter values...now the model seems to be working pretty well and giving reasonable parameter estimates: 
+
+Let's walk through what worked here. 
+
+First, the models were running very slowly...because this is essentially controlling stan that could be for a lot of reasons. The internet suggested two specific commands to speed up performance in rstan:
+
+```{r}
+library(rstan)
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
+
+```
+
+Next, I played around with the priors a good bit, since I had the estimates from the nls fits. We could make these more weakly informative, but comparing to the posterior shows that I think the data informed the model pretty well:
+
+```{r}
+prior20 <- prior(normal(0.75, 0.2), nlpar = "I0", lb = 0) +
+  prior(normal(0.6, 0.1), nlpar = "a", lb = 0)+
+  prior(normal(0.15, 0.05), nlpar = "B", lb = 0)
+```
+
+The nice thing is that this syntax is actually really straightforward and similar to how Justin Bois taught us to write out priors and models...Note that there are some parameters / priors that are sort of implied and not explicit (e.g. sigma for gaussian process?), but the core of it is that my model has three nonlinear parameters and we specify a simple prior for each one.
+
+Finally, we can actually call the `brm` function which writes the stan file / model compiles (in C++) and runs the model we write. Note that this command will take a while to run (but significantly faster than before) - I think it was less than 10 min. It is definitely worth starting on a smaller dataset with fewer chains and iterations when trying to get the model up and running well. Also, note that there is a file option to save the model / run in an external file for later use (either with 'file' parameter or with `save` command):
+```{r eval = F}
+frap_model_20pct <- brm(bf(full_norm_int~I0 - a*exp(- (log(2) / tau) * norm_time), I0 + a + tau~1+(1|id), nl = T),
+     data = df_fast %>% filter(condition== '20pctGlyc'),
+     prior = priorTau,
+    chains = 4,
+    cores = 2,
+    iter = 2000,
+    inits = '0',
+    control = list(adapt_delta = 0.99, max_treedepth = 20),
+    file = "frap_20pct_hier_fit_wTau_1"
+)
+
+#save(frap_model_20pct, file = "frap_20pct_hier_fit_1.rda")
+```
+
+This should produce some helpful status updates about how the chains are running and how long it takes...and probably some warnings about divergences or more serious problems (e.g. uninformative chains). 
+
+Next, I think the first thing to do is look at the summary of the run:
+```{r}
+#load("frap_20pct_hier_fit_1.rda")
+
+summary(frap_model_20pct)
+```
+
+Here you can see some really nice information. First, there are notable warnings about  the run - here we had a few divergences, which is not that serious, but these warnings can be very helpful for more serious problems. Next brms tells us the full formula of the model we specified - Note that there is some shorthand to how the parameters / grouping can be specified, so this let's you make sure you're on the same page with the brms formula parsing. 
+
+Next there are three groups of effects: *group-level* effects, *population level* effects and *family specific* effects. 
+
+Let's start with the 'Population-Level' - these are the **hyperparameters**, brms just uses a slightly different terminology to refer to them. For each parameter you can see the estimate, confidence interval, effective samples (may be much lower than you think!) and Rhat (diagnostic of convergence). These parameter estimates look great! They have lots of effective samples, nice convergence and reasonable confidence intervals / estimates.
+
+Then we have the 'Group-Level' - these are parameters in the hierarchy that connect the hyperparameters to the group specific subset of that parameter. Therefore these are all the standard deviations of the group parameters from the population parameters. It does seem kinda weird to me that the actual parameters (not just sd) for each group are not reported, but the model definitely has that information as we will see below (although I need to figure out how to extract this in table form).
+
+Lastly we have the 'family specific' parameter *sigma*. The family of this model is gaussian (by default). I interpret that to mean that a gaussian process / model describes the actual datapoints connecting them to the specified mathematical model. From JB's class, we would explicity write this out and give it priors etc, but here I think it's implicit and it essentially uses a single sigma to describe the noise in all the data (no hierarchy).
+
+Now that we sort of understand the ideal output from the model, let's look at the diagnostics that further help us decide whether this run was totally nonsensical or actually useful. Below are the traceplots for each chain as well as the histogram of parameter values from the samples along those chains. 
+
+```{r}
+plot(frap_model_20pct, N = 3, ask = F)
+```
+
+So these traceplots look beautiful and is what we want to see. The 4 chains are very well mixed - they have converged on similar values. All of the chains are moving - they are not stuck, and so the samples coming from the chains are relatively independent (important for getting "effective samples"). You can see that the estimates for sd at the group level have kinda wide distributions, but the "samples" for these parameters are only the three replicate frap curves, this also probably effects the confidence of the hyperparameters we care about. On the other hand you can see the sigma estimates are extremely tight, which likely comes from the high number of datapoints that this parameter is estimated on (~400 datapoints per replicate X 3 reps).
+
+You can also compare these parameter distributions (for a, B and I0) to the priors we set. You can see that they have all shifted at least some, with a and B shifting significantly. That's good, because it should mean that the data really did inform the posterior distribution and we're not just getting back our prior. There should be a way to overlay the priors and posteriors, but we'll save that for another time. 
+
+Also note, that we can do a prior predictive check with `brm`
+
+Finally, we can actually visualize the model fits for each group within our hierarchy. I believe the best fit line is just the median sampled value for each parameter and the shaded area is the 95% confidence interval for the data points?
+
+First here's the actual parameter estimates for each replicate (group)!
+```{r}
+
+frap_model_20pct_table <- coef(frap_model_20pct, summary = T, robust = T)
+
+frap_model_20pct_table
+```
+
+Now we can visualize those estimates with our data:
+```{r}
+me_frap_model_20pct <- marginal_effects(
+  frap_model_20pct, 
+  conditions = data.frame(id = c(1,2,3)),
+  re_formula = NULL, method = "predict"
+)
+
+
+plot(me_frap_model_20pct, points = T )
+
+```
+
+These fits look great! You can see that there are differences between the three replicates - especially obvious in I0 (the recovery baseline value). We can also see the individual estimates for within the groups. For some reason brms calls all of this "marginal effects" which I find somewhat confusing...but it seems to work in a reasonable manner.
+
+We can also do more stuff like from JBs class like look at the pairs plots for the different parameters:
+```{r}
+pairs(frap_model_20pct,pars = c('b_I0_Intercept','b_a_Intercept','b_B_Intercept'))
+```
+
+Ok! Now let's move forward and try to run models for our four glycerol FRAP conditions and compare the parameter estimates. For now I'll only work with the 'FAST' dataset, because from the nls fits it seemed more informative...maybe we'll go back and try to fit the fast and slow acquisitions as part of the same hierarchy and see how it looks. 
+
+## 0 % Glycerol
+
+```{r eval = F}
+frap_model_0pct <- brm(bf(full_norm_int~I0 - a*exp(- (log(2) / tau) * norm_time), I0 + a + tau~1+(1|id), nl = T),
+     data = df_fast %>% filter(condition== '0pctGlyc'),
+     prior = priorTau,
+    chains = 4,
+    cores = 2,
+    iter = 2000,
+    inits = '0',
+    control = list(adapt_delta = 0.99, max_treedepth = 20),
+    file = 'frap_0pct_hier_fit_wTau_1'
+)
+
+#save(frap_model_0pct, file = "frap_0pct_hier_fit_1.rda")
+```
+
+```{r}
+#load("frap_0pct_hier_fit_1.rda")
+
+summary(frap_model_0pct)
+```
+
+```{r}
+plot(frap_model_0pct, N = 3, ask = F)
+```
+
+
+```{r}
+me_frap_model_0pct <- marginal_effects(
+  frap_model_0pct, 
+  conditions = data.frame(id = c(1,2,3)),
+  re_formula = NULL, method = "predict"
+)
+
+
+plot(me_frap_model_0pct, points = T )
+
+```
+
+Beautiful!
+
+## 10% Glycerol
+
+```{r eval = F}
+
+
+frap_model_10pct <- brm(bf(full_norm_int~I0 - a*exp(- (log(2) / tau) * norm_time), I0 + a + tau~1+(1|id), nl = T),
+     data = df_fast %>% filter(condition== '10pctGlyc'),
+     prior = priorTau,
+    chains = 4,
+    cores = 2,
+    iter = 2000,
+    inits = '0',
+    sample_prior = T,
+    control = list(adapt_delta = 0.99, max_treedepth = 20),
+    file = 'frap_10pct_hier_fit_wTau_1'
+)
+
+#save(frap_model_10pct, file = "frap_10pct_hier_fit_1.rda")
+```
+
+```{r}
+#load("frap_10pct_hier_fit_1.rda")
+
+summary(frap_model_10pct)
+```
+
+```{r}
+plot(frap_model_10pct, N = 3, ask = F)
+```
+
+```{r}
+me_frap_model_10pct <- marginal_effects(
+  frap_model_10pct, 
+  conditions = data.frame(id = c(1,2,3)),
+  re_formula = NULL, method = "predict"
+)
+
+
+plot(me_frap_model_10pct, points = T )
+
+```
+
+Also looks like a very good fit.
+
+## 50% Glycerol
+
+```{r eval = F}
+frap_model_50pct <- brm(bf(full_norm_int~I0 - a*exp(- (log(2) / tau) * norm_time), I0 + a + tau~1+(1|id), nl = T),
+     data = df_fast %>% filter(condition== '50pctGlyc'),
+     prior = priorTau,
+    chains = 4,
+    cores = 2,
+    iter = 2000,
+    inits = '0',
+    control = list(adapt_delta = 0.99, max_treedepth = 20),
+    file = 'frap_50pct_hier_fit_wTau_1'
+)
+
+save(frap_model_50pct, file = "frap_50pct_hier_fit_1.rda")
+```
+
+```{r}
+#load("frap_50pct_hier_fit_1.rda")
+
+summary(frap_model_50pct)
+```
+
+
+```{r}
+plot(frap_model_50pct, N = 3, ask = F)
+```
+
+```{r}
+me_frap_model_50pct <- marginal_effects(
+  frap_model_50pct, 
+  conditions = data.frame(id = c(1,2,3)),
+  re_formula = NULL, method = "predict"
+)
+
+
+plot(me_frap_model_50pct, points = T )
+
+```
+
+# Comparing 4 conditions
+
+Brms calls the hyperparameters 'fixed effects' and the lower hierarchical parameters 'random effects'...therefore to get the table of hyperparameters you call `fixef()` and for the only the group effects you call `ranef()`, which gives you the difference from the population level (fixed effects). Then `coef()` gives you the actual estimate for the groups taking into account both levels of effects...I'm pretty sure I have this right :)
+
+```{r}
+library(tidyverse)
+
+frap_model_ests <- bind_rows(
+  as_tibble(fixef(frap_model_0pct),rownames = 'Term') %>% mutate(Condition = 0),
+  as_tibble(fixef(frap_model_10pct),rownames = 'Term') %>% mutate(Condition = 10),
+  as_tibble(fixef(frap_model_20pct),rownames = 'Term') %>% mutate(Condition = 20),
+  as_tibble(fixef(frap_model_50pct),rownames = 'Term') %>% mutate(Condition = 50)
+)
+
+ggplot(frap_model_ests, aes(x = factor(Condition), y = Estimate)) + geom_pointrange(aes(ymin = Q2.5, ymax = Q97.5)) + facet_wrap(~Term, scales = 'free')
+```
+
+Let's try to actually look at the posterior distributions here using tidybayes package.
+
+```{r}
+library(tidybayes)
+library(tidyverse)
+library(brms)
+library(ggridges)
+library(viridis)
+get_variables(frap_model_0pct)
+
+frap_model_dists <- bind_rows(
+  frap_model_0pct %>% spread_draws(b_tau_Intercept) %>% mutate(Condition = '0'),
+  frap_model_10pct %>% spread_draws(b_tau_Intercept) %>% mutate(Condition = '10'),
+  frap_model_20pct %>% spread_draws(b_tau_Intercept) %>% mutate(Condition = '20'),
+  frap_model_50pct %>% spread_draws(b_tau_Intercept) %>% mutate(Condition = '50'),
+  frap_model_10pct %>% spread_draws(prior_b_tau) %>% mutate(Condition = 'Prior') %>% mutate(b_tau_Intercept = prior_b_tau, Condition, .chain, .iteration, .draw)
+)
+
+ggplot(frap_model_dists, aes(x = b_tau_Intercept, y = factor(Condition))) + geom_halfeyeh() + xlim(0,12)
+
+
+ggplot(frap_model_dists, aes(x = b_tau_Intercept, y = Condition)) + 
+  geom_density_ridges(quantile_lines = T,
+                      quantiles = c(0.025,0.1,0.5,0.9, 0.975), 
+                      jittered_points = T, 
+                      position = 'raincloud', 
+                      point_alpha = 0.01,
+                      scale = 1, calc_ecdf = T) +
+  theme_ridges(grid = FALSE, center_axis_labels = TRUE) +
+  labs(x = expression("Half recovery time ("*tau[1/2]*" - sec)"), y = '% Glycerol', title = 'Posterior probabilities for FRAP parameter estimate') + 
+  xlim(0,11)
+
+#   ggplot(aes(fill = 0.5 - abs(0.5-..ecdf..)) + stat_density_ridges(geom = "density_ridges_gradient", calc_ecdf = TRUE) + scale_fill_viridis() for filled densities based on quantile / ecdf
+```
+
+
+# Next steps
+
+  * I would like to learn how to add the conversion from B to $\tau_{1/2}$ directly into the model so we can get posterior of half recovery directly. 
+  * Can we add another level to the hierarchy and add the data from the slow acquisitions - how does this affect the estimates??
+  
+
+```{r eval = F}
+stancode(frap_model_0pct)
+
+stanvars <- stanvar(name = "tau", scode = " vector tau = log(2) / b_B; ", block = 'tparameters')
+
+make_stancode(data = df_fast %>% filter(condition== '0pctGlyc'),bf(full_norm_int~I0 - a*exp(-B * norm_time), I0 + a + B~1+(1|id), nl = T),prior = prior20,stanvars = stanvars )
+
+priorTau <- prior(normal(0.75, 0.2), nlpar = "I0", lb = 0) +
+  prior(normal(0.6, 0.1), nlpar = "a", lb = 0)+
+  prior(normal(5, 5), nlpar = "tau", lb = 0)
+
+frap_model_0pct_wTau <- brm(bf(full_norm_int~I0 - a*exp(- (log(2) / tau) * norm_time), I0 + a + tau~1+(1|id), nl = T),
+     data = df_fast %>% filter(condition== '0pctGlyc'),
+     prior = priorTau,
+    chains = 4,
+    cores = 2,
+    iter = 2000,
+    inits = '0',
+    control = list(adapt_delta = 0.99, max_treedepth = 20),
+    file = 'frap_0pct_hier_fit_wTau_1'
+)
+
+
+summary(frap_model_0pct_wTau)
+```
+
+```{r}
+pct_prior_post <- bind_rows(
+  posterior_samples(frap_model_10pct, pars = c('b_tau_Intercept','prior_b_tau')) %>% gather(key = dist, value = val)
+  
+  %>% mutate(condition = 10, dist = 'posterior'),
+  prior_samples(frap_model_10pct) %>% mutate(condition = 10, dist = 'prior')
+)
+
+ggplot() + 
+  geom_density(data = posterior_samples(frap_model_10pct), aes(x = b_tau_Intercept)) + 
+  geom_density(data = prior_samples(frap_model_10pct), aes(x = b_tau), fill = 'gray')
+
+ggplot(data = posterior_samples(frap_model_10pct)) + 
+  geom_density(aes(x = b_tau_Intercept)) + 
+  geom_density(aes(x = prior_b_tau), fill = 'gray')
+
+
+posterior_samples(frap_model_10pct, pars = c('b_tau_Intercept','prior_b_tau')) %>% 
+  gather(key = dist, value = val) %>% 
+  mutate(dist = fct_relevel(dist,c('prior_b_tau','b_tau_Intercept'))) %>% 
+  ggplot(.) + 
+  geom_density(aes(x = val, fill = dist))
+
+
+
+```
+
+For other applications we should be able to add another level to the hierarchy using `(1 | level_1 / level_2)`. Let's try it:
+
+```{r}
+priorTau <- prior(normal(0.75, 0.2), nlpar = "I0", lb = 0) +
+  prior(normal(0.6, 0.1), nlpar = "a", lb = 0)+
+  prior(normal(5, 5), nlpar = "tau", lb = 0)
+
+frap_model_0_10pct_wTau <- brm(bf(full_norm_int~I0 - a*exp(- (log(2) / tau) * norm_time), I0 + a + tau~1+(1 | condition / id), nl = T),
+     data = df_fast %>% filter(condition== '0pctGlyc' | condition =='10pctGlyc'),
+     prior = priorTau,
+    chains = 2,
+    cores = 2,
+    iter = 500,
+    inits = '0',
+    control = list(adapt_delta = 0.99, max_treedepth = 20),
+    file = 'frap_0_10pct_hier_fit_wTau_1'
+)
+
+summary(frap_model_0_10pct_wTau)
+
+ggplot() + 
+  geom_density(data = prior_samples(frap_model_10pct), aes(x = b_tau), fill = 'gray')+
+  geom_density(data = posterior_samples(frap_model_0_10pct_wTau), aes(x = b_tau_Intercept), color = 'red')+
+  geom_density(data = posterior_samples(frap_model_10pct), aes(x = b_tau_Intercept), color = 'blue') +
+  geom_density(data = posterior_samples(frap_model_0pct), aes(x = b_tau_Intercept), color = 'blue', linetype =2) +
+  xlim(0,15)
+```
+
+Note, that this model took about 25min to run with only 2 chains and 500 iter! That means with 4 chains 2000 iter, it's probably ~3 hours to fit the whole thing. There are a lot of datapoints in the individual FRAP curves, which may not help, but this was only with 2 conditions...it will be interesting to see how long bigger models take. But it's not so bad to leave running overnight once it's tested.
+
+Could we try the `Future` package to speed this up at all...? Let's find out. Answer is no - It seems that we might get a benefit if we do this using brms_multiple for fitting the same model with different datasets...each model runs in its own rsession.
+
+```{r}
+library(future)
+plan(multiprocess)
+
+# 4min w / multiprocess
+# 2.5 min w/ sequential 
+frap_model_0_10pct_wFuture <- brm(bf(full_norm_int~I0 - a*exp(- (log(2) / tau) * norm_time), I0 + a + tau~1+(1 | condition / id), nl = T),
+     data = df_fast %>% filter(condition== '0pctGlyc' | condition =='10pctGlyc'),
+     prior = priorTau,
+    chains = 2,
+    cores = 2,
+    iter = 50,
+    inits = '0',
+    control = list(adapt_delta = 0.99, max_treedepth = 20)
+)
+
+# file = 'frap_0_10pct_hier_fit_wFuture_1'
+
+```
+
+```{r}
+plan(multiprocess)
+
+frap_model_all_wFuture <- brm_multiple(bf(full_norm_int~I0 - a*exp(- (log(2) / tau) * norm_time), I0 + a + tau~1+(1 | id), nl = T),
+     data = df_fast %>% group_by(condition) %>% group_split(),
+     prior = priorTau,
+    chains = 2,
+    cores = 2,
+    iter = 50,
+    inits = '0',
+    control = list(adapt_delta = 0.99, max_treedepth = 20),
+    future = T
+)
+
+summary(frap_model_all_wFuture)
+```
+
+

@@ -1,0 +1,163 @@
+---
+title: "Colony EtBr Displacement"
+subtitle: ""
+fontsize: 12pt
+date: "07_03_19 "
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
+---
+
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+source("../../IDA/tools/plotting_tools.R")
+
+theme_set(theme_1())
+```
+
+# EtBr Displacement
+
+From 10/25/17
+
+```{r}
+etbr <- read_csv("10_25_17_etbr_colony_data.csv") %>% 
+  mutate(phzConc = ifelse(Material == "cells", Amount * (1000/60), Amount * (8/5)))
+
+ggplot(etbr, aes(x = factor(Concentration), y = Amount)) + geom_point() + 
+facet_wrap(Material~Phenazine, scale = 'free')
+```
+
+
+
+```{r}
+etbr_cells <- etbr %>% filter(Material=='cells')
+
+etbr_agar <- etbr %>% filter(Material=='agar')
+
+etbr_ratio <- left_join(etbr_cells, etbr_agar, by = c('Phenazine','Inhibitor','Concentration','Replicate'), suffix = c('_cells', '_agar')) %>% 
+  mutate(ratio = phzConc_cells / phzConc_agar) %>% 
+  group_by(Phenazine, Concentration) %>% 
+  mutate(mean_ratio = ifelse(Replicate==3,mean(ratio,na.rm = T),NA))
+
+ggplot(etbr_ratio, aes(x = factor(Concentration), y = ratio)) + geom_point() + facet_wrap(~Phenazine, scales = 'free')
+```
+
+Let's make a figure
+
+```{r}
+ggplot(etbr_ratio %>% filter(Phenazine =='PYO'), aes(x = factor(Concentration), y = ratio)) + 
+  geom_col(aes(y = mean_ratio), fill = 'light gray') + geom_jitter(width = 0.1, height = 0, shape = 21) + 
+  labs(x = expression("Ethidium concentration "~ (mu*M )), y = 'Ratio ( [Biofilm] / [Agar] )')
+
+ggplot(etbr_ratio, aes(x = factor(Concentration), y = ratio)) + 
+  geom_col(aes(y = mean_ratio), fill = 'light gray') + geom_jitter(width = 0.1, height = 0, shape = 21) + 
+  labs(x = expression("Ethidium concentration "~ (mu*M )), y = 'Ratio ( [Biofilm] / [Agar] )') + 
+  facet_wrap(~Phenazine, scales = 'free')
+
+ggplot(etbr_ratio %>% filter(Concentration <= 500), aes(x = factor(Concentration), y = ratio)) + 
+  geom_col(aes(y = mean_ratio), fill = 'light gray') + geom_jitter(width = 0.1, height = 0, shape = 21) + 
+  labs(x = expression("Ethidium concentration "~ (mu*M )), y = 'Ratio ( [Biofilm] / [Agar] )') + 
+  facet_wrap(~Phenazine, scales = 'free')
+```
+
+Could use propidium instead!?
+
+# Echem
+
+```{r}
+pca_soak_gc <- read_csv("75uM_PCA_dPHZstar_GC_1.txt", skip = 21, col_names = c('E','i1','i2')) %>% 
+  gather(key = 'electrode', value = 'current', i1, i2) %>% 
+  mutate(reactor = 'soak')
+
+pca_tran1_gc <- read_csv("gc_1.txt", skip = 21, col_names = c('E','i1','i2')) %>% 
+  gather(key = 'electrode', value = 'current', i1, i2)%>% 
+  mutate(reactor = 'transfer')
+
+pca_gc <- bind_rows(pca_soak_gc, pca_tran1_gc)
+
+pca_plot <- ggplot() + 
+  geom_vline(xintercept = -0.375, color = 'gray')+
+  geom_path(data = pca_gc %>% filter(electrode=='i1'), aes(x = E, y =current, linetype = reactor))+
+  geom_path(data = pca_gc %>% filter(electrode=='i2'), aes(x = E, y =current, linetype = reactor))+
+  scale_x_reverse(labels = mV_label)+
+  scale_y_continuous(labels = nA_label)+
+  labs(x = "E (mV vs. Ag/AgCl)", y = expression(I[gc]~(nA)), title = 'PCA')+
+  theme(legend.position = c(0.15,0.75), legend.background = element_blank(),  plot.title = element_text(hjust = 0.5))
+  
+
+pca_plot
+
+ggplot(pca_soak_gc, aes(x = E, y =current)) + geom_point()+
+  geom_point(data = pca_tran1_gc, color = 'red')+
+  scale_x_reverse()+ylim(-1e-8,+1e-8)
+```
+
+```{r}
+pyo_soak_gc <- read_csv('../../IDA/01_23_19_psoralen_nonequil_3/Data/Control/3/75uM_control_soak_3_GC_1.txt',skip = 21, col_names = c('E','i1','i2')) %>% 
+  gather(key = 'electrode', value = 'current', i1, i2) %>% 
+  mutate(reactor = 'soak')
+
+pyo_tran1_gc <- read_csv('../../IDA/01_23_19_psoralen_nonequil_3/Data/Control/3/75uM_control_transfer_3_GC_1.txt',skip = 21, col_names = c('E','i1','i2')) %>% 
+  gather(key = 'electrode', value = 'current', i1, i2) %>% 
+  mutate(reactor = 'transfer')
+
+pyo_gc <- bind_rows(pyo_soak_gc, pyo_tran1_gc)
+
+pyo_plot <- ggplot() + 
+  geom_vline(xintercept = -0.255, color = 'gray')+
+  geom_path(data = pyo_gc %>% filter(electrode=='i1'), aes(x = E, y =current, linetype = reactor))+
+  geom_path(data = pyo_gc %>% filter(electrode=='i2'), aes(x = E, y =current, linetype = reactor))+
+  scale_x_reverse(labels = mV_label)+
+  scale_y_continuous(labels = nA_label)+
+  labs(x = "E (mV vs. Ag/AgCl)", y = expression(I[gc]~(nA)), title = 'PYO')+
+  theme(legend.position = c(0.15,0.75), legend.background = element_blank(), plot.title = element_text(hjust = 0.5)) 
+
+pyo_plot
+
+
+ggplot(pyo_tran1_gc, aes(x = E, y =current)) + geom_point()+
+  scale_x_reverse()
+```
+
+```{r}
+plot_grid(pyo_plot, pca_plot, ncol = 2, align = 'hv', axis = 'tblr')
+```
+
+```{r}
+pyo_plot_zoom <- ggplot(data = pyo_gc %>% filter(electrode=='i2' & reactor=='transfer'), aes(x = E, y =current)) + 
+  geom_vline(xintercept = -0.255, color = 'gray')+
+  geom_path(linetype = 'dashed')+
+  scale_x_reverse(labels = mV_label)+
+  scale_y_continuous(labels = nA_label)+
+  labs(x = "E (mV vs. Ag/AgCl)", y = expression(I[gc]~(nA)))
+
+pyo_plot_zoom
+
+pca_plot_zoom <- ggplot(data = pca_gc %>% filter(electrode=='i2' & reactor=='transfer'), aes(x = E, y =current)) + 
+  geom_vline(xintercept = -0.375, color = 'gray')+
+  geom_path(linetype = 'dashed')+
+  scale_x_reverse(labels = mV_label)+
+  scale_y_continuous(labels = nA_label)+
+  labs(x = "E (mV vs. Ag/AgCl)", y = expression(I[gc]~(nA)))
+
+pca_plot_zoom
+```
+
+```{r}
+plot_grid(pyo_plot, pca_plot, pyo_plot_zoom, pca_plot_zoom, ncol = 2, align = 'hv', axis = 'tblr', labels = 'auto')
+```
+
