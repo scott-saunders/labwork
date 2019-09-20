@@ -8,3 +8,7 @@ data/
 *.DS_Store
 .DS_store
 *.pdf
+.DS_Store
+*.rda
+*.rds
+DS_store
