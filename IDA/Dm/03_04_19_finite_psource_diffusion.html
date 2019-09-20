@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Finite point-source diffusion model</title>
+
+<script src="03_04_19_finite_psource_diffusion_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="03_04_19_finite_psource_diffusion_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="03_04_19_finite_psource_diffusion_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="03_04_19_finite_psource_diffusion_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="03_04_19_finite_psource_diffusion_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="03_04_19_finite_psource_diffusion_files/navigation-1.1/tabsets.js"></script>
+<script src="03_04_19_finite_psource_diffusion_files/navigation-1.1/codefolding.js"></script>
+<link href="03_04_19_finite_psource_diffusion_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="03_04_19_finite_psource_diffusion_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Finite point-source diffusion model</h1>
+<h4 class="date"><em>03_04_19</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#a-new-diffusion-model">A new diffusion model</a></li>
+<li><a href="#generate-some-data">Generate some data</a></li>
+<li><a href="#fitting-for-parameters">Fitting for parameters</a></li>
+</ul>
+</div>
+
+<pre class="r"><code>library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+library(knitr)
+library(kableExtra)
+library(patchwork)
+library(VGAM)
+library(nls.multstart)
+
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)
+
+source(&quot;../tools/echem_processing_tools.R&quot;)
+source(&quot;../tools/plotting_tools.R&quot;)
+
+theme_set(theme_1())</code></pre>
+<div id="a-new-diffusion-model" class="section level1">
+<h1>A new diffusion model</h1>
+<p>Based on the explanation from this <a href="http://www.dartmouth.edu/~cushman/courses/engs43/Chapter2.pdf">Dartmouth link</a> under “Initial punctual release between two boundaries” I got the following equation for diffusion between two barriers at <span class="math inline">\(x = 0\)</span> and <span class="math inline">\(x = L\)</span> for a point source at <span class="math inline">\(x = a\)</span>.</p>
+<p><span class="math display">\[ C(x,t) = \frac{M}{\sqrt{4 \pi D t}} 
+\sum_{n = -\infty}^{\infty} \left[ \exp{ \left( \frac{-(x-2nL-a)^2}{4 D t} \right) } + 
+\exp{ \left(  \frac{-(x-2nL+a)^2}{4 D t} \right) } \right] \]</span></p>
+<p>For our system, we will assume that the point source is at <span class="math inline">\(a = 0\)</span>, so we can evaluate and simplify:</p>
+<p><span class="math display">\[ C(x,t) = \frac{M}{\sqrt{4 \pi D t}} 
+\sum_{n = -\infty}^{\infty} \left[ \exp{ \left( \frac{-(x-2nL)^2}{4 D t} \right) } + 
+\exp{ \left(  \frac{-(x-2nL)^2}{4 D t} \right) } \right] \]</span></p>
+<p><span class="math display">\[ C(x,t) = \frac{M}{\sqrt{4 \pi D t}} 
+\sum_{n = -\infty}^{\infty} \left[ 2 \exp{ \left( \frac{-(x-2nL)^2}{4 D t} \right) } \right] \]</span></p>
+<p>This expression looks a little nasty, but it’s pretty straightforward to write as a function. The function below will take in the parameters <span class="math inline">\(M_0\)</span>, <span class="math inline">\(L\)</span>, <span class="math inline">\(D\)</span>, and calculate the concentration <span class="math inline">\(C\)</span> for a range of <span class="math inline">\(x\)</span> and <span class="math inline">\(t\)</span> values.</p>
+<pre class="r"><code>finite_point_x_t &lt;- function(m0, L, D, x, t) {
+    sum = 0
+    for (n in seq(-100, 100, 1)) {
+        sum = sum + 2 * exp((-(x - 2 * n * L)^2)/(4 * D * t))
+    }
+    (m0/sqrt(4 * pi * D * t)) * sum
+}</code></pre>
+<p>So this function will calculate the concentration gradient over time! Here I’m calculating the first 200 terms, which should be sufficient.</p>
+</div>
+<div id="generate-some-data" class="section level1">
+<h1>Generate some data</h1>
+<p>Now let’s generate some a grid of time <span class="math inline">\(t\)</span> and space <span class="math inline">\(x\)</span>, and calculate the concentration gradient for some arbitrary parameters <span class="math inline">\(M_0 = 2\)</span>, <span class="math inline">\(L = 0.1\)</span>, and <span class="math inline">\(D = 5*10^{-5}\)</span>.</p>
+<pre class="r"><code>grid &lt;- expand.grid(x = seq(0, 0.1, length = 101), t = seq(0, 
+    2500, length = 25))
+
+finite_point_data &lt;- grid %&gt;% mutate(c = finite_point_x_t(m0 = 2, 
+    L = 0.1, D = 5e-06, x = x, t = t))</code></pre>
+<p>Ok, let’s see what our concentration gradients look like!</p>
+<pre class="r"><code>ggplot(finite_point_data, aes(x = x, y = c, color = t)) + geom_path(aes(group = t)) + 
+    scale_color_viridis()</code></pre>
+<p><img src="03_04_19_finite_psource_diffusion_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Cool, so this shows that the concentration starts out high at <span class="math inline">\(x = 0\)</span> and slowly equilibrates to an almost flat gradient (at longer times it will be totally flat).</p>
+<p>Ok, for our electrode system, we really only have a measurement at <span class="math inline">\(x = 0\)</span>, so let’s see what the concentration does over time at that point in space.</p>
+<pre class="r"><code>ggplot(finite_point_data %&gt;% filter(x == 0), aes(x = t, y = c, 
+    color = t)) + geom_point() + scale_color_viridis()</code></pre>
+<p><img src="03_04_19_finite_psource_diffusion_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /> Great! This looks similar to our data. This is equivalent to evaluating the expression above at <span class="math inline">\(x = 0\)</span>, which gives:</p>
+<p><span class="math display">\[ C(x,t) = \frac{M}{\sqrt{4 \pi D t}} 
+\sum_{n = -\infty}^{\infty} \left[ 2 \exp{ \left( \frac{-(-2nL)^2}{4 D t} \right) } \right] \]</span></p>
+<p>I’ll write a function to do just that math and regenerate our data for just <span class="math inline">\(x = 0\)</span>. Let’s add a little noise too, to make it more realistic and also allow us to do a nonlinear fit.</p>
+<pre class="r"><code>finite_point_x0 &lt;- function(m0, L, D, t) {
+    sum = 0
+    for (n in seq(-100, 100, 1)) {
+        sum = sum + 2 * exp((-(-2 * n * L)^2)/(4 * D * t))
+    }
+    (m0/sqrt(4 * pi * D * t)) * sum
+}
+
+finite_point_x0_data &lt;- grid %&gt;% filter(x == 0) %&gt;% mutate(c = finite_point_x0(m0 = 2, 
+    L = 0.1, D = 5e-06, t = t)) %&gt;% mutate(c_noise = rnorm(n = length((grid %&gt;% 
+    filter(x == 0))$t), mean = c, sd = 1))</code></pre>
+</div>
+<div id="fitting-for-parameters" class="section level1">
+<h1>Fitting for parameters</h1>
+<p>So here’s what the concentration looks like at <span class="math inline">\(x = 0\)</span> over time with a little noise added:</p>
+<pre class="r"><code>ggplot(finite_point_x0_data, aes(x = t, y = c_noise, color = t)) + 
+    geom_point() + scale_color_viridis()</code></pre>
+<p><img src="03_04_19_finite_psource_diffusion_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Ok, now let’s see if we can get the nonlinear least squares (nls) function to fit this data and give us back the parameters we used to generate the data.</p>
+<pre class="r"><code>suppressWarnings(fit_nls_multstart &lt;- nls_multstart(formula = c_noise ~ 
+    finite_point_x0(m0 = 2, L, D, t = t), data = finite_point_x0_data, 
+    start_lower = c(L = 0.01, D = 1e-08), start_upper = c(L = 10, 
+        D = 1e-05), lower = c(L = 0, D = 0), supp_errors = &quot;Y&quot;, 
+    iter = 250, na.action = na.omit))
+
+
+L_fit &lt;- coef(fit_nls_multstart)[1]
+D_fit &lt;- coef(fit_nls_multstart)[2]
+
+finite_point_x0_data_pred &lt;- finite_point_x0_data %&gt;% mutate(pred = finite_point_x0(m0 = 2, 
+    L = L_fit, D = D_fit, t = t))
+
+ggplot(finite_point_x0_data_pred %&gt;% filter(t &gt; 0), aes(x = t, 
+    y = c_noise, color = t)) + geom_line(aes(y = pred), color = &quot;black&quot;, 
+    linetype = 2) + geom_point() + scale_color_viridis()</code></pre>
+<p><img src="03_04_19_finite_psource_diffusion_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>summary(fit_nls_multstart)</code></pre>
+<pre><code>## 
+## Formula: c_noise ~ finite_point_x0(m0 = 2, L, D, t = t)
+## 
+## Parameters:
+##    Estimate Std. Error t value Pr(&gt;|t|)    
+## L 1.012e-01  1.499e-03   67.50   &lt;2e-16 ***
+## D 4.859e-06  1.521e-07   31.94   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1.167 on 22 degrees of freedom
+## 
+## Number of iterations to convergence: 11 
+## Achieved convergence tolerance: 1.49e-08</code></pre>
+<p>Wow, it actually works! Note that we asked the nls to find the values of D and L, but we provided <span class="math inline">\(M_0\)</span>. This is similar to the way I’m doing the analysis now, but it does depend on having an accurate guess for <span class="math inline">\(M_0\)</span>. Let’s see what estimate we get if <span class="math inline">\(M_0\)</span> is off by 2x.</p>
+<pre class="r"><code>### m0 = 1 instead of m0 = 2
+
+suppressWarnings(fit_nls_multstart &lt;- nls_multstart(formula = c_noise ~ 
+    finite_point_x0(m0 = 1, L, D, t = t), data = finite_point_x0_data, 
+    start_lower = c(L = 0.01, D = 1e-08), start_upper = c(L = 10, 
+        D = 1e-05), lower = c(L = 0, D = 0), supp_errors = &quot;Y&quot;, 
+    iter = 250, na.action = na.omit))
+
+
+L_fit &lt;- coef(fit_nls_multstart)[1]
+D_fit &lt;- coef(fit_nls_multstart)[2]
+
+finite_point_x0_data_pred &lt;- finite_point_x0_data %&gt;% mutate(pred = finite_point_x0(m0 = 1, 
+    L = L_fit, D = D_fit, t = t))
+
+ggplot(finite_point_x0_data_pred %&gt;% filter(t &gt; 0), aes(x = t, 
+    y = c_noise, color = t)) + geom_line(aes(y = pred), color = &quot;black&quot;, 
+    linetype = 2) + geom_point() + scale_color_viridis()</code></pre>
+<p><img src="03_04_19_finite_psource_diffusion_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>summary(fit_nls_multstart)</code></pre>
+<pre><code>## 
+## Formula: c_noise ~ finite_point_x0(m0 = 1, L, D, t = t)
+## 
+## Parameters:
+##    Estimate Std. Error t value Pr(&gt;|t|)    
+## L 5.061e-02  7.497e-04   67.50   &lt;2e-16 ***
+## D 1.215e-06  3.803e-08   31.94   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1.167 on 22 degrees of freedom
+## 
+## Number of iterations to convergence: 9 
+## Achieved convergence tolerance: 1.49e-08</code></pre>
+<p>So now the function still returns a nice looking best fit line, but the estimate of L is off 2x and the estimate of D is off almost 5x.</p>
+<p>I think that we can continue to deal with this in the same way as before, by estimating D with a high and low estimate of <span class="math inline">\(I_0\)</span> using the soak peak current and the first transfer SWV peak current.</p>
+<p>Now, I need to re adapt this math to the SWV current, and try to fit some of our real data!</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

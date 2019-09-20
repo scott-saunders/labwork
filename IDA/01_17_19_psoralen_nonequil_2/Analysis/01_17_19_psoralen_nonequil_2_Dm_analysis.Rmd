@@ -62,6 +62,26 @@ ggplot(dm_data_norm %>% filter(reactor=='transfer' & electrode=='i1'), aes(x = n
   geom_point()+
   geom_smooth(method='nls',formula=y~b*(x)^-0.5+a,method.args=list(start=c(b=0.1,a=1e-7)),se=F)+
   facet_wrap(~run, scales = 'free')
+
+ggplot(dm_data_norm %>% filter(reactor=='transfer' & electrode=='i1'), aes(x = norm_time, y = signal, color=factor(run), shape = reactor)) + 
+  geom_point()+
+  geom_smooth(method='nls',formula=y~b*(x)^-0.5+a,method.args=list(start=c(b=0.1,a=1e-7)),se=F)+
+  facet_wrap(~run, scales = 'free')
+
+nls(formula = signal~(5e-6)*erf(b*norm_time^-0.5)+c, start = c(b=1,c=0), 
+    data = dm_data_norm %>% filter(reactor=='transfer' & electrode=='i1' & run == '4'),
+    weights = 1/norm_time^2)
+
+nls_predictor <- function(m = 2, b,t,c){
+  m*erf(b*t^-0.5)+c
+}
+
+dm_data_norm_pred <- dm_data_norm %>% 
+  filter(reactor=='transfer' & electrode=='i1' & run == '4') %>% 
+  mutate(pred = nls_predictor(m = 5e-6,0.756, norm_time,c =-8.67e-7 ))
+  
+ggplot(dm_data_norm_pred, aes (x = norm_time, y = signal)) + geom_point() + 
+  geom_point(aes(y = pred), color = 'red')
 ```
 Well, to be honest, I think those are pretty bad fits. For this reason, I thought about another model that we could try, which would place another no flux boundary at some spot, $L$. Therefore, we would go from using a semi-infinite model above to a finite model below. Let's see how it does:
 ```{r}

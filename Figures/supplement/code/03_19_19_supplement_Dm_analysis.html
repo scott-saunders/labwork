@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>D_{phys} Analysis</title>
+
+<script src="03_19_19_supplement_Dm_analysis_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="03_19_19_supplement_Dm_analysis_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="03_19_19_supplement_Dm_analysis_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="03_19_19_supplement_Dm_analysis_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="03_19_19_supplement_Dm_analysis_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="03_19_19_supplement_Dm_analysis_files/navigation-1.1/tabsets.js"></script>
+<script src="03_19_19_supplement_Dm_analysis_files/navigation-1.1/codefolding.js"></script>
+<link href="03_19_19_supplement_Dm_analysis_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="03_19_19_supplement_Dm_analysis_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore"><span class="math inline">\(D_{phys}\)</span> Analysis</h1>
+<h4 class="date"><em>03_19_19</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#data-preparation">Data preparation</a><ul>
+<li><a href="#biofilm-data">Biofilm data</a></li>
+<li><a href="#blank-data">Blank data</a></li>
+<li><a href="#combine-data">Combine data</a></li>
+</ul></li>
+<li><a href="#fitting-data">Fitting data</a><ul>
+<li><a href="#function-for-semi-infinite-diffusion">Function for semi infinite diffusion</a></li>
+</ul></li>
+<li><a href="#useful-figures">Useful Figures</a></li>
+</ul>
+</div>
+
+<pre class="r"><code>library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+library(knitr)
+library(kableExtra)
+library(patchwork)
+library(VGAM)
+library(nls.multstart)
+
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)
+
+source(&quot;../../../IDA/tools/echem_processing_tools.R&quot;)
+source(&quot;../../../IDA/tools/plotting_tools.R&quot;)
+
+theme_set(theme_1())</code></pre>
+<p>This notebook describes how the estimates for <span class="math inline">\(D_{phys}\)</span> are calculated.</p>
+<div id="data-preparation" class="section level1">
+<h1>Data preparation</h1>
+<p>All of the data to this point was processed from raw SWV data shown elsewhere. This means that there’s a lot of extra confusing data/columns we don’t need, and some things are not conveniently organized. First let’s deal with that, then we’ll get to the interesting stuff.</p>
+<div id="biofilm-data" class="section level2">
+<h2>Biofilm data</h2>
+<p>First let’s read in the signals calculated from the SWV scans over time for the biofilms. We’ll also read in the estimates of <span class="math inline">\(D_{ap}\)</span> that we already generated for these biofilms.</p>
+<pre class="r"><code>biofilm_signals &lt;- read_csv(&quot;../../02_05_19_draft_2/data/01_28_19_aggregate_SWV_GC_signals.csv&quot;) %&gt;% 
+    filter(electrode_from_swv == &quot;i1&quot; &amp; treatment == &quot;control&quot;) %&gt;% 
+    filter(exp_id != &quot;1&quot;) %&gt;% filter(exp_id != &quot;3&quot; | run != 4)
+
+biofilm_dap_estimates &lt;- read_csv(&quot;../../02_05_19_draft_2/data/01_28_19_swv_gc_dap_estimates_aggregate_updated.csv&quot;) %&gt;% 
+    filter(treatment == &quot;control&quot; &amp; exp_id %in% c(&quot;2&quot;, &quot;3&quot;) &amp; 
+        echem_from_swv == &quot;SWV&quot;) %&gt;% select(exp_id, run, dap)</code></pre>
+<p>Now we’ll normalize the timing of the scans within each run, so that transferring the biofilm to the fresh reactor occurs at approximately norm_time = 0.</p>
+<pre class="r"><code>biofilm_signals_norm &lt;- biofilm_signals %&gt;% group_by(exp_id, 
+    reactor, run) %&gt;% mutate(min_time = min(minutes_from_swv)) %&gt;% 
+    mutate(norm_time = minutes_from_swv - min_time + 0.6)</code></pre>
+<p>Then let’s reorganize the data so that we have our estimates of <span class="math inline">\(I_0\)</span> alongside the data. For these biofilms we are estimating <span class="math inline">\(I_0\)</span> by bounding it between the soak SWV signal and the first transfer SWV signal. Here I’ll also add the <span class="math inline">\(D_{ap}\)</span> estimates to the now organized dataset.</p>
+<pre class="r"><code>biofilm_soak_i0 &lt;- biofilm_signals_norm %&gt;% ungroup() %&gt;% filter(reactor == 
+    &quot;soak&quot; &amp; rep == 0) %&gt;% mutate(i0_high = signal_from_swv) %&gt;% 
+    select(run, exp_id, i0_high)
+
+biofilm_transfer_i0 &lt;- biofilm_signals_norm %&gt;% ungroup() %&gt;% 
+    filter(reactor == &quot;transfer&quot; &amp; rep == 0) %&gt;% mutate(i0_low = signal_from_swv) %&gt;% 
+    select(run, exp_id, i0_low)
+
+biofilm_i0 &lt;- left_join(biofilm_soak_i0, biofilm_transfer_i0, 
+    by = c(&quot;exp_id&quot;, &quot;run&quot;))
+
+biofilm_signals_i0 &lt;- left_join(biofilm_signals_norm %&gt;% ungroup() %&gt;% 
+    filter(reactor == &quot;transfer&quot;) %&gt;% mutate(signal = signal_from_swv) %&gt;% 
+    select(exp_id, run, rep, signal, norm_time), biofilm_i0, 
+    by = c(&quot;exp_id&quot;, &quot;run&quot;))
+
+biofilm_signals_dap &lt;- left_join(biofilm_signals_i0, biofilm_dap_estimates, 
+    by = c(&quot;exp_id&quot;, &quot;run&quot;)) %&gt;% mutate(IDA = &quot;biofilm&quot;, run = as.character(run))
+
+head(biofilm_signals_dap)</code></pre>
+<pre><code>## # A tibble: 6 x 9
+##   exp_id run     rep    signal norm_time   i0_high   i0_low      dap IDA   
+##   &lt;chr&gt;  &lt;chr&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt; 
+## 1 2      1         0   3.67e-6       0.6   3.42e-6  3.67e-6  1.35e-5 biofi…
+## 2 2      1         9   1.68e-7      26.1   3.42e-6  3.67e-6  1.35e-5 biofi…
+## 3 2      1        10   1.67e-7      28.9   3.42e-6  3.67e-6  1.35e-5 biofi…
+## 4 2      1        11   1.42e-7      32.4   3.42e-6  3.67e-6  1.35e-5 biofi…
+## 5 2      1        12   1.49e-7      35.1   3.42e-6  3.67e-6  1.35e-5 biofi…
+## 6 2      1        13   1.33e-7      37.8   3.42e-6  3.67e-6  1.35e-5 biofi…</code></pre>
+<p>With that done let’s look at the data: The dotted lines are the high and low estimates of <span class="math inline">\(I_0\)</span>. We have two biofilms distinguished by exp_id and for each we have three replicate runs.</p>
+<pre class="r"><code>ggplot(biofilm_signals_dap, aes(x = norm_time, y = signal)) + 
+    geom_point() + geom_line(aes(y = i0_high), linetype = 2) + 
+    geom_line(aes(y = i0_low), linetype = 2, color = &quot;red&quot;) + 
+    facet_wrap(exp_id ~ run, scales = &quot;free&quot;)</code></pre>
+<p><img src="03_19_19_supplement_Dm_analysis_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="blank-data" class="section level2">
+<h2>Blank data</h2>
+<p>Now we can read in the blank data, which was processed from SWV data in the same way as the biofilm data. Note that this blank dataset has a significant background, so we background subtracted the data. Residual peaks were manually quantified above the baseline (resids), so the signal remaining at the last scan beyond the resid peak was considered background and was subtracted out from all the used currents. Also, the <span class="math inline">\(D_{ap}\)</span> measurement for the blank only has 1 replicate, so it’s value (6.8e-7 cm^2 / sec) was hard-coded in.</p>
+<pre class="r"><code>blank_signals &lt;- read_csv(&quot;../../02_05_19_draft_2/data/11_28_18_swv_decays_Processed.csv&quot;) %&gt;% 
+    filter(PHZadded != &quot;10uM&quot;)
+
+resids &lt;- tibble(PHZadded = c(&quot;100uM&quot;, &quot;75uM&quot;, &quot;50uM&quot;, &quot;25uM&quot;), 
+    resid = c(2.648e-07, 2.199e-07, 1.958e-07, 1.548e-07))
+
+blank_signals_bg &lt;- left_join(blank_signals, resids, by = c(&quot;PHZadded&quot;)) %&gt;% 
+    group_by(PHZadded) %&gt;% mutate(signal_bg = signal_from_transfer - 
+    (min(signal_from_transfer) - resid)) %&gt;% mutate(i0_bg = i0 - 
+    (min(signal_from_transfer) - resid))
+
+blank_signals_bg_org &lt;- blank_signals_bg %&gt;% ungroup() %&gt;% mutate(run = PHZadded, 
+    exp_id = &quot;1&quot;, signal = signal_bg, i0_high = i0_bg, IDA = &quot;blank&quot;) %&gt;% 
+    select(exp_id, run, rep, signal, norm_time, i0_high, IDA) %&gt;% 
+    mutate(dap = 6.8e-06)
+
+head(blank_signals_bg_org)</code></pre>
+<pre><code>## # A tibble: 6 x 8
+##   exp_id run     rep      signal norm_time   i0_high IDA         dap
+##   &lt;chr&gt;  &lt;chr&gt; &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt;
+## 1 1      100uM     1 0.00000367       0.2  0.0000115 blank 0.0000068
+## 2 1      100uM    10 0.000000523      1.5  0.0000115 blank 0.0000068
+## 3 1      100uM    11 0.000000502      1.65 0.0000115 blank 0.0000068
+## 4 1      100uM    12 0.000000504      1.78 0.0000115 blank 0.0000068
+## 5 1      100uM    13 0.000000470      1.93 0.0000115 blank 0.0000068
+## 6 1      100uM    14 0.000000457      2.07 0.0000115 blank 0.0000068</code></pre>
+<p>Now the blank data is in the same format as the biofilm data.</p>
+</div>
+<div id="combine-data" class="section level2">
+<h2>Combine data</h2>
+<p>Therefore we can now combine the datasets to make sure that we are fitting them in the same way.</p>
+<pre class="r"><code>decays_combined &lt;- bind_rows(biofilm_signals_dap, blank_signals_bg_org)</code></pre>
+<p>Let’s compare the blank data to the biofilm data.</p>
+<pre class="r"><code>ggplot(decays_combined, aes(x = norm_time, y = signal, color = IDA)) + 
+    geom_point(shape = 21)</code></pre>
+<p><img src="03_19_19_supplement_Dm_analysis_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /> This is one way to look at the data - it’s just smoothed. You can see that it take much longer for the biofilm data to decay to the point that the blank data does. Intuitively that should be attributable to different diffusion coefficients.</p>
+</div>
+</div>
+<div id="fitting-data" class="section level1">
+<h1>Fitting data</h1>
+<div id="function-for-semi-infinite-diffusion" class="section level2">
+<h2>Function for semi infinite diffusion</h2>
+<p>First, we need a function to calculate the signal over time (at x = 0) for a point source undergoing diffusion at a no-flux barrier (semi - infinite). This expression is derived elsewhere.</p>
+<pre class="r"><code>diffusion_point_semi &lt;- function(t, i0, D_ap, t_s, D_phys) {
+    
+    (i0 * sqrt(D_ap * t_s)/sqrt(4 * D_phys * t))
+}</code></pre>
+<p>So let’s fit this function with our parameters for the most important subsets of the data. We will consider the blank decays &lt; 2 min and the biofilm decays &lt; 20 min.</p>
+<p>First the data will be grouped and fit by the nls_multstart function - this is a nonlinear least squares method. Then we will use those models to predict the signal over time from the model fit so that we can plot and compare.</p>
+<pre class="r"><code>decay_data_nls &lt;- decays_combined %&gt;% filter(IDA != &quot;blank&quot; | 
+    norm_time &lt; 2) %&gt;% filter(IDA != &quot;biofilm&quot; | norm_time &lt; 
+    20) %&gt;% group_by(IDA, exp_id, run) %&gt;% do(tidy(nls_multstart(data = ., 
+    formula = signal ~ diffusion_point_semi(t = norm_time, i0 = max(i0_high), 
+        D_ap = max(dap), t_s = 0.02, D_phys = D_phys), start_lower = c(D_phys = 1e-08), 
+    start_upper = c(D_phys = 1e-05), lower = c(D_phys = 0), supp_errors = &quot;Y&quot;, 
+    iter = 250, na.action = na.omit), conf.int = T))
+
+decay_data_preds &lt;- left_join(decays_combined, decay_data_nls, 
+    by = c(&quot;IDA&quot;, &quot;exp_id&quot;, &quot;run&quot;)) %&gt;% group_by(IDA, exp_id, 
+    run) %&gt;% mutate(preds = diffusion_point_semi(t = norm_time, 
+    i0 = max(i0_high), D_ap = max(dap), t_s = 0.02, D_phys = estimate)) %&gt;% 
+    mutate(pred_high = diffusion_point_semi(t = norm_time, i0 = max(i0_high), 
+        D_ap = max(dap), t_s = 0.02, D_phys = conf.high)) %&gt;% 
+    mutate(pred_low = diffusion_point_semi(t = norm_time, i0 = max(i0_high), 
+        D_ap = max(dap), t_s = 0.02, D_phys = conf.low))
+
+plot_dm_preds &lt;- ggplot(decay_data_preds, aes(x = norm_time, 
+    y = signal)) + geom_ribbon(aes(ymin = pred_low, ymax = pred_high), 
+    fill = &quot;light gray&quot;) + geom_line(aes(y = preds), linetype = 2, 
+    color = &quot;black&quot;) + geom_point(shape = 21) + facet_wrap(vars(IDA, 
+    exp_id, run), scales = &quot;free&quot;, ncol = 3)
+
+plot_dm_preds_styled &lt;- plot_dm_preds + scale_y_continuous(labels = nA_label, 
+    limits = c(0, NA)) + labs(x = &quot;Time (min)&quot;, y = expression(I[swv] ~ 
+    (nA)))
+
+plot_dm_preds_styled</code></pre>
+<p><img src="03_19_19_supplement_Dm_analysis_files/figure-html/unnamed-chunk-9-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p>So, the fits are certainly not perfect, but they mostly capture the decay of the data. After trying out many different parameterizations and adding new terms, we concluded that it would be most appropriate to stick to the simplest model that explains most of the data.</p>
+<p>Then to get the lower bound for the biofilm <span class="math inline">\(I_0\)</span> we can fit the data again with the lower estimate - it will produce the same fits.</p>
+<pre class="r"><code>decay_data_nls_low &lt;- decays_combined %&gt;% filter(IDA == &quot;biofilm&quot;) %&gt;% 
+    group_by(IDA, exp_id, run) %&gt;% do(tidy(nls_multstart(data = ., 
+    formula = signal ~ diffusion_point_semi(t = norm_time, i0 = max(i0_low), 
+        D_ap = max(dap), t_s = 0.02, D_phys = D_phys), start_lower = c(D_phys = 1e-08), 
+    start_upper = c(D_phys = 1e-05), lower = c(D_phys = 0), supp_errors = &quot;Y&quot;, 
+    iter = 250, na.action = na.omit), conf.int = T))</code></pre>
+<p>Finally, we can plot the estimates of <span class="math inline">\(D_{phys}\)</span> for the blank and the biofilms</p>
+<pre class="r"><code>ggplot(decay_data_nls, aes(x = exp_id, y = estimate)) + geom_hline(yintercept = 6.88e-06, 
+    linetype = 2) + geom_pointrange(data = decay_data_nls_low, 
+    aes(ymin = conf.low, ymax = conf.high), color = &quot;blue&quot;, position = position_jitter(width = 0.1, 
+        height = 0)) + geom_pointrange(aes(ymin = conf.low, ymax = conf.high), 
+    position = position_jitter(width = 0.1, height = 0)) + facet_wrap(~IDA, 
+    scales = &quot;free_x&quot;) + scale_y_log10()</code></pre>
+<p><img src="03_19_19_supplement_Dm_analysis_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>It is important to note that all these values were calculated with <span class="math inline">\(t_s = 20ms\)</span>, because it gave a realistic answer. This value is within the realm of possibility, but it is higher than we suggested previously.</p>
+</div>
+</div>
+<div id="useful-figures" class="section level1">
+<h1>Useful Figures</h1>
+<p>Comparing example biofilm and blank with models</p>
+<pre class="r"><code># plot layout
+plot_compare_decays &lt;- ggplot(decay_data_preds %&gt;% filter((IDA == 
+    &quot;biofilm&quot; &amp; exp_id == 3 &amp; run == &quot;1&quot;) | (IDA == &quot;blank&quot; &amp; 
+    run == &quot;75uM&quot;)), aes(x = norm_time, y = signal)) + geom_ribbon(aes(ymin = pred_low, 
+    ymax = pred_high, group = IDA), fill = &quot;light gray&quot;) + geom_line(aes(y = preds, 
+    group = IDA), linetype = 2, color = &quot;black&quot;) + geom_point(shape = 21)
+
+# plot styling
+plot_compare_decays_styled &lt;- plot_compare_decays + scale_y_continuous(labels = nA_label, 
+    limits = c(0, NA)) + labs(x = &quot;Time (min)&quot;, y = expression(I[swv] ~ 
+    (nA)))
+
+plot_compare_decays_styled</code></pre>
+<p><img src="03_19_19_supplement_Dm_analysis_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /> Could improve this figure by generating model predictions for more points than exist in the dataset to generate smooth confidence intervals.</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

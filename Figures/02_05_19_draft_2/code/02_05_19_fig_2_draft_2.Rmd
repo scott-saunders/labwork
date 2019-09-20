@@ -60,6 +60,23 @@ pel_extracts %>%
   summarise(conf_int_low = t.test(dPel, WTpar,  alternative = 'two.sided')$conf.int[1],
             conf_int_high = t.test(dPel,WTpar, alternative = 'two.sided')$conf.int[2],
             p_value = t.test( dPel,WTpar, alternative = 'two.sided')$p.value)
+
+# Plot Layout
+plot_pel_biofilm <- ggplot(pel_extracts_means %>% filter(material=='cells') ,aes(x=strain,y=calcConc))+
+  geom_col( aes(y = mean), fill = 'light gray') +
+    geom_jitter(width=0.1,height=0,shape=21,size=1)+
+    facet_wrap(~measured_phenazine,scales='free')
+
+# Styling
+plot_pel_biofilm_styled <- plot_pel +
+  scale_x_discrete(breaks = c('WTpar','dPel'), 
+                   labels=c("WT",expression(Delta*"pel")), 
+                   limits = c('WTpar','dPel')) +
+  scale_y_continuous(labels = fold_label)+
+  labs(x=NULL, y = expression("Biofilm concentration" ~ (mu*M ))) +
+  guides(fill=F) 
+
+plot_pel_biofilm_styled
 ```
 You can see that for each phenazine the concentration differs between the strains for both the cells aka biofilm and the agar. What we actually care about is the retention ratio, so let's calculate and look at that. 
 

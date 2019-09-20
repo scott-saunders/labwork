@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Finite diffusion with SWV data</title>
+
+<script src="03_05_19_finite_diffusion_SWVdata_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="03_05_19_finite_diffusion_SWVdata_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="03_05_19_finite_diffusion_SWVdata_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="03_05_19_finite_diffusion_SWVdata_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="03_05_19_finite_diffusion_SWVdata_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="03_05_19_finite_diffusion_SWVdata_files/navigation-1.1/tabsets.js"></script>
+<script src="03_05_19_finite_diffusion_SWVdata_files/navigation-1.1/codefolding.js"></script>
+<link href="03_05_19_finite_diffusion_SWVdata_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="03_05_19_finite_diffusion_SWVdata_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Finite diffusion with SWV data</h1>
+<h4 class="date"><em>03_05_19</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#math---finite-diffusion-with-swv-data">Math - finite diffusion with SWV data</a></li>
+<li><a href="#fit-some-data">Fit some data</a></li>
+</ul>
+</div>
+
+<pre class="r"><code>library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+library(knitr)
+library(kableExtra)
+library(patchwork)
+library(VGAM)
+library(nls.multstart)
+
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)
+
+source(&quot;../tools/echem_processing_tools.R&quot;)
+source(&quot;../tools/plotting_tools.R&quot;)
+
+theme_set(theme_1())</code></pre>
+<div id="math---finite-diffusion-with-swv-data" class="section level1">
+<h1>Math - finite diffusion with SWV data</h1>
+<p>So from the 03/04/19 notebook we have an expression for the concentration at <span class="math inline">\(x = 0\)</span> over time for a system with finite boundaries at <span class="math inline">\(x = 0\)</span> and <span class="math inline">\(x = L\)</span>:</p>
+<p><span class="math display">\[ C(x=0,t) = \frac{M}{\sqrt{4 \pi D t}} 
+\sum_{n = -\infty}^{\infty} \left[ 2 \exp{ \left( \frac{-(-2nL)^2}{4 D t} \right) } \right] \]</span></p>
+<p>We’re going to adapt this slightly by normalizing by the cross sectional area to get an actual concentration in mol / cm^3 , and let’s go ahead and label M0 and Dm.</p>
+<p><span class="math display">\[ C(t) = \frac{M_0}{A \sqrt{4 \pi D_m t}} 
+\sum_{n = -\infty}^{\infty} \left[ 2 \exp{ \left( \frac{-(-2nL)^2}{4 D_m t} \right) } \right] \]</span></p>
+<p>Recall that SWV current can be defined.</p>
+<p><span class="math display">\[ I_{swv} = \frac{n F A \sqrt{D_{ap}} C}{\sqrt{\pi t_p}} \psi \]</span> and so <span class="math inline">\(C\)</span> can be defined in terms of SWV parameters/data:</p>
+<p><span class="math display">\[C = \frac{I_{swv} \sqrt{\pi t_p} }{n F A \sqrt{D_{ap}} \psi}\]</span></p>
+<p>And so can <span class="math inline">\(M_0\)</span>:</p>
+<p><span class="math display">\[C = \frac{M_0}{V} = \frac{I_0 \sqrt{\pi t_p} }{n F A \sqrt{D_{ap}} \psi}\]</span></p>
+<p><span class="math display">\[ M_0 = \frac{I_0 V \sqrt{\pi t_p} }{n F A \sqrt{D_{ap}} \psi}\]</span></p>
+<p>Now we can substitute <span class="math inline">\(C\)</span> and <span class="math inline">\(M_0\)</span> with the equivalent SWV expressions:</p>
+<p><span class="math display">\[ \frac{I_{swv} \sqrt{\pi t_p} }{n F A \sqrt{D_{ap}} \psi} = \frac{\frac{I_0 V \sqrt{\pi t_p} }{n F A \sqrt{D_{ap}} \psi}}{A \sqrt{4 \pi D_m t}} 
+\sum_{n = -\infty}^{\infty} \left[ 2 \exp{ \left( \frac{-(-2nL)^2}{4 D_m t} \right) } \right] \]</span></p>
+<p><span class="math display">\[ I_{swv}(t) = \frac{I_0 V}{A \sqrt{4 \pi D_m t}} 
+\sum_{n = -\infty}^{\infty} \left[ 2 \exp{ \left( \frac{-(-2nL)^2}{4 D_m t} \right) } \right] \]</span></p>
+<p>Recall that <span class="math inline">\(\frac{V}{A} = z\)</span>, which is the diffusion layer at the electrode.</p>
+<p><span class="math display">\[ z = \sqrt{D_{ap} t_s}\]</span></p>
+<p>So our expression is:</p>
+<p><span class="math display">\[ I_{swv}(t) = \frac{I_0 \sqrt{D_{ap} t_s}}{ \sqrt{4 \pi D_m t}} 
+\sum_{n = -\infty}^{\infty} \left[ 2 \exp{ \left( \frac{-(-2nL)^2}{4 D_m t} \right) } \right] \]</span></p>
+<p>So we will need to provide our function to calculate <span class="math inline">\(I_{swv}(t)\)</span> with <span class="math inline">\(D_{ap}\)</span>, <span class="math inline">\(t_s\)</span>, and <span class="math inline">\(I_0\)</span>. We will be fitting for unknowns <span class="math inline">\(D_m\)</span> and <span class="math inline">\(L\)</span>.</p>
+</div>
+<div id="fit-some-data" class="section level1">
+<h1>Fit some data</h1>
+<p>as;dlfjk</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

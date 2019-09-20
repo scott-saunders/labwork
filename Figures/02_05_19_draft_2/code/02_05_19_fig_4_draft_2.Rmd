@@ -156,10 +156,6 @@ nA_label <- function(x){
 
 # Plot Layout
 plot_swvsignal <- ggplot(data = biofilm_signals_norm_2_3, aes(x = norm_time, y = signal_from_swv))+
-  geom_smooth(method='nls',
-              formula=y~(a*(x)^-0.5)*(2+e^(b*(x)^-0.5))+c,
-              method.args=list(start=c(a=0.1,b=0.1,c=0)),
-              se=F, color = 'black', linetype = 'dashed', size = 0.5) +
   geom_point(shape = 21, size = 1, aes(fill = norm_time))
 
 # Plot Styling
@@ -170,15 +166,30 @@ plot_swvsignal_styled <- plot_swvsignal +
   theme(axis.text = element_text(size = 6), axis.title = element_text(size = 8))
 
 plot_swvsignal_styled
+
+# Plot Layout
+plot_swvsignal_poster <- ggplot(data = biofilm_signals_norm_2_3, aes(x = norm_time, y = signal_from_swv))+
+  geom_smooth(method='nls',
+              formula=y~(b*(x)^-0.5)+c,
+              method.args=list(start=c(b=0.1,c=0)),
+              se=F, color = 'black', linetype = 'dashed') +
+  geom_point(shape = 21, size = 2, aes(fill = norm_time))
+
+# Plot Styling
+plot_swvsignal_poster_styled <- plot_swvsignal_poster +
+  labs(x = 'Time (min)', y = expression(I[swv]~(nA)), fill = 'Time (min)') +
+  scale_fill_viridis(guide = F) +
+  scale_y_continuous(labels = nA_label)
+
+plot_swvsignal_poster_styled
+
+
+
 ```
 
 ```{r}
 # Plot Layout
 plot_gcsignal <- ggplot(data = biofilm_signals_norm_2_3, aes(x = norm_time, y = signal_from_gc))+
-  geom_smooth(method='nls',
-              formula=y~(a*(x)^-0.5)*(2+e^(b*(x)^-0.5))+c,
-              method.args=list(start=c(a=0.1,b=0.1,c=0)),
-              se=F, color = 'black', linetype = 'dashed', size = 0.5) +
   geom_point(shape = 21, size = 1, aes(fill = norm_time))
 
 # Plot Styling
@@ -340,9 +351,10 @@ d_combined_wBlank_noFlux <- bind_rows(d_combined, d_blank_noFlux) %>%
 d_combined_wBlank_OG <- bind_rows(d_combined, d_blank_og) %>% 
   filter(model=='og')
 
-ggplot(d_combined_wBlank_noFlux, 
+plot_dm_dap_poster <- ggplot(d_combined_wBlank_noFlux %>% filter(exp_id!='1'), 
        aes(x = d_cat, y = d_est, fill = exp_id)) + 
-  geom_pointrange(aes(ymin = ymin, ymax = ymax), position = position_jitter(height = 0,width=0.2),shape=21)+
+  geom_hline(yintercept = 7e-6, linetype = 2, color = 'gray')+
+  geom_pointrange(aes(ymin = ymin, ymax = ymax), position = position_jitter(height = 0,width=0.3),shape=21)+
   facet_wrap(~biofilm, scales='free') + 
   scale_y_log10(limits = c(1e-9,1e-4))+
   scale_fill_viridis(discrete = T) +
@@ -417,7 +429,31 @@ plot_biofilm_dm_dap
 # Combine
 
 ```{r}
-fig_4_insets <- plot_grid(plot_gcsignal_styled, plot_swvsignal_styled,ncol = 2,align = 'hv', axis = 'tblr')
+fig_4_insets <- plot_grid(plot_gcsignal_styled, plot_swvsignal_styled,NULL, NULL,NULL, ncol = 5,align = 'hv', axis = 'tblr', scale = 0.9)
+
+fig_4_row1 <- plot_grid(NULL, NULL, plot_compare_decays_styled, ncol = 3, scale = 0.9) 
+
+fig_4_row23 <- plot_grid(plot_SWVraw_styled,plot_GCraw_styled2,
+                         plot_swvGCsignal_styled, plot_d4_styled, 
+                         ncol = 2,align = 'hv', axis = 'tblr', scale = 0.9 )
+
+fig_4_again <- plot_grid(fig_4_row1,
+                         fig_4_row23,
+                         fig_4_insets,
+                         ncol = 1, rel_heights = c(1,2,0.4), align = 'v',axis = 'lr')
+
+save_plot("../figures/04_07_19_fig_4_2.pdf",fig_4_again, base_width = 8.5, base_height = 11)
+
+fig_4_2 <- plot_grid( plot_GCraw_styled2, plot_GCraw_styled2,        
+                   plot_SWVraw_styled, plot_swvGCsignal_styled,
+                   plot_blank_dm_dap, plot_d4_styled, 
+                   fig_4_insets, plot_d4_styled,
+                       rel_heights = c(1,1,1,0.75),
+                       rel_widths =  c(1,1), 
+                       ncol = 2,nrow = 4,
+                       align = 'hv', axis = 'tblr', scale = 0.9)
+
+save_plot("../figures/03_23_19_fig_4_draft_2.pdf",fig_4_2, base_width = 8.5, base_height = 11)
 
 fig_4 <- plot_grid( plot_GCraw_styled2, plot_GCraw_styled2,        
                    plot_SWVraw_styled, plot_swvGCsignal_styled,
@@ -464,5 +500,11 @@ fig_4_dm_dap <- plot_grid(plot_blank_dm_dap, plot_biofilm_dm_dap, ncol = 2, alig
 save_plot("../figures/02_15_19_fig_4_dm_dap.pdf",fig_4_dm_dap, base_width = 6, base_height = 2)
 
 #embed_fonts("../figures/02_12_19_fig_4_draft_2.pdf", outfile = "../figures/02_12_19_fig_4_draft_2_embedded.pdf")
+
+poster_figs_1 <- plot_grid(plot_swvsignal_poster_styled, plot_swvGCsignal_styled, ncol = 1)
+
+save_plot("../figures/02_17_19_poster_figs_1.pdf",poster_figs_1, base_width = 4, base_height = 5)
+
+save_plot("../figures/02_17_19_poster_figs_dm_dap.pdf",plot_dm_dap_poster, base_width = 5, base_height = 3)
 ```
 

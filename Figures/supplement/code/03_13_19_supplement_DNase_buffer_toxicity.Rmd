@@ -1,0 +1,59 @@
+---
+title: "SI: DNase Buffer Toxicity"
+fontsize: 12pt
+date: "03_13_19"
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
+---
+
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(viridis)
+library(knitr)
+library(kableExtra)
+library(patchwork)
+library(tidyr)
+library(broom)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+source("../../../IDA/tools/echem_processing_tools.R")
+source("../../../IDA/tools/plotting_tools.R")
+
+theme_set(theme_1())
+```
+
+```{r}
+pRdata <- read_csv('../data/TOTO_DAPI_extracts.csv') %>% rename(TOTO=`1uM_TOTO_avg_(535nm)`,DAPI=`1uM_DAPI_avg_(445nm)`) %>%  
+  gather(key='dye',value='fluor',TOTO, DAPI) %>% 
+  separate(X1,sep=' ',c('added','Treatment','Replicate')) %>% 
+  mutate(id=paste(added,Treatment,dye,sep = " ")) %>% 
+  group_by(id) %>% 
+  mutate(mean = ifelse(Replicate=='1',mean(fluor),NA))
+
+# Plot layout
+toto_plot <- ggplot(pRdata %>% filter(dye=='TOTO') %>% filter(id!="with ctDNA TOTO"),aes(x=id,y=fluor))+
+  geom_col(aes(y=mean), fill = "light gray") +
+  geom_jitter(height=0,width=0.1,shape =21)
+
+# Plot styling 
+toto_plot_styled <- toto_plot +
+  labs(x = NULL, y = 'TOTO-1 Fluorescence (A.U.)') + 
+  scale_x_discrete(breaks = c('no ctDNA TOTO','no DNase TOTO','with DNase TOTO'), 
+                   labels=c("-","+ buffer", "+ buffer\n+ DNase"))
+    
+toto_plot_styled     
+```
+
+```{r}
+save_plot("../figures/03_21_19_fig_supp_DNaseTox.pdf", toto_plot_styled ,base_width = 3, base_height = 3 )
+```
+
+
