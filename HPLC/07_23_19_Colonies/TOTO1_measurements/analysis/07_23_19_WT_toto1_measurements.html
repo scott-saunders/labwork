@@ -384,7 +384,7 @@ C6
 </table>
 <p>Here’s what all the data look like:</p>
 <pre class="r"><code>ggplot(cal_df, aes(x = Wavelength, y = FluorInt, color = Well)) + 
-    geom_path()</code></pre>
+    geom_path() + scale_color_discrete()</code></pre>
 <p><img src="07_23_19_WT_toto1_measurements_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>So you can see that we have a wide variety of intensities (despite the same amount of dye), but clearly the emission is the same shape and peak is at 535. Let’s just look at the ctDNA concentration vs. Fluorescence Intensity at 535nm:</p>
 <pre class="r"><code>ggplot(cal_df %&gt;% filter(Wavelength == 535), aes(x = DNA_conc, 
@@ -597,6 +597,9 @@ TOTO
 <pre class="r"><code>wt_preds &lt;- wt_df %&gt;% filter(Wavelength == 535) %&gt;% add_predictions(cal_model) %&gt;% 
     mutate(eDNA_ug_mL = pred * 4 * 800/60) %&gt;% mutate(eDNA_dsDNA_uM = eDNA_ug_mL * 
     150/50)
+
+# write_csv(wt_preds,
+# &#39;07_23_19_wt_TOTO_calCurve_estimates.csv&#39;)
 
 tail(wt_preds) %&gt;% kable() %&gt;% kable_styling()</code></pre>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -894,6 +897,44 @@ mean_eDNA
 <li>Could estimate a 95% CI with brms with a two level hierarchy!!</li>
 <li>Note ctDNA is mostly dsDNA, but not entirely, how accessible is biofilm eDNA compared to standard…</li>
 </ol>
+<hr />
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 3.5.2 (2018-12-20)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS Mojave 10.14.6
+## 
+## Matrix products: default
+## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] ggridges_0.5.1    kableExtra_1.0.1  knitr_1.23       
+##  [4] hms_0.4.2         lubridate_1.7.4   viridis_0.5.1    
+##  [7] viridisLite_0.3.0 modelr_0.1.2      broom_0.5.1      
+## [10] cowplot_0.9.4     forcats_0.3.0     stringr_1.3.1    
+## [13] dplyr_0.8.1       purrr_0.2.5       readr_1.3.1      
+## [16] tidyr_0.8.2       tibble_2.1.3      ggplot2_3.2.0    
+## [19] tidyverse_1.2.1  
+## 
+## loaded via a namespace (and not attached):
+##  [1] tidyselect_0.2.5 xfun_0.7         haven_2.0.0      lattice_0.20-38 
+##  [5] colorspace_1.4-0 generics_0.0.2   htmltools_0.3.6  yaml_2.2.0      
+##  [9] rlang_0.3.4      pillar_1.3.1     glue_1.3.1       withr_2.1.2     
+## [13] readxl_1.2.0     plyr_1.8.4       munsell_0.5.0    gtable_0.2.0    
+## [17] cellranger_1.1.0 rvest_0.3.2      evaluate_0.14    labeling_0.3    
+## [21] highr_0.7        Rcpp_1.0.1       formatR_1.5      scales_1.0.0    
+## [25] backports_1.1.3  webshot_0.5.1    jsonlite_1.6     gridExtra_2.3   
+## [29] digest_0.6.18    stringi_1.2.4    grid_3.5.2       cli_1.0.1       
+## [33] tools_3.5.2      magrittr_1.5     lazyeval_0.2.1   crayon_1.3.4    
+## [37] pkgconfig_2.0.2  xml2_1.2.0       assertthat_0.2.1 rmarkdown_1.13  
+## [41] httr_1.4.0       rstudioapi_0.9.0 R6_2.4.0         nlme_3.1-140    
+## [45] compiler_3.5.2</code></pre>
 </div>
 
 

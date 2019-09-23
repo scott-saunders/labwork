@@ -1,17 +1,18 @@
 ---
 title: "WT eDNA quantification"
+subtitle: 'Bayesian parameter estimation with Brms'
 fontsize: 12pt
 date: '07_23_19 '
 output:
   html_document:
-    code_folding: hide
+    theme: cosmo
+    code_folding: show
     self_contained: no
     toc: yes
   pdf_document:
     toc: yes
   github_document:
     pandoc_args: --webtex
-subtitle: 'brms statistics'
 ---
 
 
@@ -38,14 +39,41 @@ source("../../../../IDA/tools/plotting_tools.R")
 theme_set(theme_1())
 ```
 
+# Intro
+
+This notebook performs bayesian parameter estimation using `brms` on data that I acquired and processed in [this notebook](https://scott-saunders.github.io/labwork/HPLC/07_23_19_Colonies/TOTO1_measurements/analysis/07_23_19_WT_toto1_measurements.html). Essentially I quantified extracellular DNA in WT *P. aeruginosa* colony biofilms using the dye TOTO-1. I measured the fluorescence in replicate suspensions of replicate colonies and then calculated DNA content with a calibration curve of TOTO with calf thymus DNA (in vitro).
+
+This dataset is inherently hierarchical because we have one hyperparameter that we are interested in - the eDNA concentration in WT colony biofilms, with 6 biological replicates (separate colony biofilms), and each biological replicate was measured in technical triplicate. It is quite reasonable to think that variability occurs at each level, because the biofilm suspension is not very homogeneous (so each technical replicate probably varies), and naturally there's biological variability as well. 
+
+
+# Results
+
+Let's first take a look at the dataset:
+
+```{r eval = T}
+
+wt_preds <- read_csv("07_23_19_wt_TOTO_calCurve_estimates.csv")
+
+wt_preds %>% kable() %>% kable_styling(bootstrap_options = 'condensed') %>%
+    scroll_box(width = "100%", height = "400px")
+```
+
+So you can see that we have the raw data from the wells (from the platereader), as well as a prediction of the well concentration, and biofilm concentration in uM (eDNA_dsDNA_uM). Look back at the other notebook to see how this was done. Anyway, what we have is a dataset that looks like this:
+
+```{r eval = T}
+ggplot(wt_preds, aes(x = Colony_number, y = eDNA_dsDNA_uM, shape = Condition)) + geom_point()
+```
+
+You can see that the wells incubated with dye show an obvious signal. There is heterogeneity among the different colonies (biological replicates), and the technical replicates. Let's see if we can use some hierarchical models to accurately calculate an estimate for the eDNA content of the "hyper-colony"!
+
+## Model 1: 3 Levels
+
+Ok, so for this first model I wrote out the following in brms syntax: `eDNA_dsDNA_uM ~ 1 + (1 | Colony_number / Replicate)`
+
+You'll see as we work through the other models, but briefly this means estimate the intercept (e.g. the value) for this eDNA variable (`eDNA_dsDNA_uM ~ 1`), but group this intercept into a two level hierarchy with colony and then replicate (`+ (1 | Colony_number / Replicate)`). You can see that we only have to set the prior for the intercept hyperparameter $\text{Normal}(100, 30)$. This model takes a while to run, but we'll cache the results in a file. With multiple levels of hierarchy it can also be hard to estimate, so I've ramped up the iterations to 10,000 and adapt delta to 0.95.
 
 ```{r}
-wt_preds
 
-ggplot(wt_preds, aes(x = Colony_number, y = eDNA_dsDNA_uM, shape = Condition)) + geom_point()
-
-
-#need to switch to the 0 + intercept syntax to set intercept prior. may not be able to extract correct prior samples even after that...
 wt_brm <- brm(eDNA_dsDNA_uM ~ 1 + (1 | Colony_number / Replicate),
      data = wt_preds %>% filter(Condition=='TOTO'),
      prior = prior(normal(100, 30), class = Intercept),
@@ -59,26 +87,35 @@ wt_brm <- brm(eDNA_dsDNA_uM ~ 1 + (1 | Colony_number / Replicate),
     file = 'wt_brm_model_3'
 )
 
+
 summary(wt_brm)
-
-plot(wt_brm, N = 3, ask = F)
-
-plot(hypothesis(wt_brm, 'Intercept > 0'))
-
-
 ```
 
-```{r}
-prior_summary(wt_brm)
+With these settings it seems like we get nice convergence and reasonable parameter estimates. Here's the chains and posteriors:
 
-marginal_effects(wt_brm, conditions = data.frame(Colony_number = c(1,2,3,4,5,6)))
+```{r}
+plot(wt_brm, N = 4, ask = F)
 ```
 
-```{r}
-ggplot(data = posterior_samples(wt_brm)) + 
-  geom_density(aes(x = b_Intercept))
+All the chains seem to be well mixed. `b_Intercept` is the hyperparameter for the intercept and the posterior looks reasonably good. The sd and sigma variables have some weirder distributions, but I think that's to be expected for this dataset with relatively few datapoints.
 
-as_tibble(coef(wt_brm)$Colony_number, rownames = 'Colony_number')
+```{r}
+prior_summary(wt_brm) %>% kable() %>% kable_styling()
+```
+
+Just for clarity, these were the prior distributions that brms assumed for this model. So you can see there's the hyperprior I supplied, then it's a little harder to undertand. There seems to be a std.dev prior from the hyperparameter, then at the colony level there's a sd for the sd and the intercept and same thing for each replicate?
+
+I still don't fully understand what brms is doing here, but also notice that there's a sigma at bottom. My understanding is that brms has assumed that this is a gaussian process and that sigma should connect any group level parameters to the actual datapoints. Therefore, I believe, this model actually has too many levels and that each datapoint is accidentally in its own group, which is not correct. 
+
+We'll try a simpler version of this model next.
+
+Here's what the hierarchical estimates look like plotted:
+
+```{r}
+#ggplot(data = posterior_samples(wt_brm)) + 
+#  geom_density(aes(x = b_Intercept))
+
+#as_tibble(coef(wt_brm)$Colony_number, rownames = 'Colony_number')
 
 
 ggplot(wt_preds %>% filter(Condition=='TOTO'), aes(x = factor(Colony_number), y = eDNA_dsDNA_uM)) +
@@ -96,7 +133,11 @@ ggplot(wt_preds %>% filter(Condition=='TOTO'), aes(x = factor(Colony_number), y 
 
 ```
 
-# Do we actually need the bottom layer of the hierarchy...no!
+The point ranges are 95% CI for each colony, and the dotted lines are 95% CI for the hyperparameter.
+
+# Model 2: 2 Levels!
+
+Ok, with my realization on the last model, I believe we can just rewrite this hierarchy in brms syntax as `eDNA_dsDNA_uM ~ 1 + (1 | Colony_number)`. Comparing with above you can see that we have now told brms to only group the intercept values by colony number. Since brms assumes this is a gaussian model, it should connect the group level estimates from each colony to the observed datapoints with a normal distribution parameterized by sigma (as seen in the prior summary above). Let's see how it works!
 
 ```{r}
 wt_brm_single_level <- brm(eDNA_dsDNA_uM ~ 1 + (1 | Colony_number),
@@ -113,13 +154,27 @@ wt_brm_single_level <- brm(eDNA_dsDNA_uM ~ 1 + (1 | Colony_number),
 )
 
 summary(wt_brm_single_level)
+```
 
+Again, the chains seem to have mixed well. Notice that we have a lot more effective samples and fewer parameter estimates now - this looks more correct. 
+
+```{r}
 plot(wt_brm_single_level)
+```
+Again the chains look well mixed, and now the sd and sigma posteriors actually look unimodal, which is better. Let's look at the prior summary:
 
-coef(wt_brm_single_level)
 
-prior_summary(wt_brm_single_level)
+```{r}
+#coef(wt_brm_single_level)
 
+prior_summary(wt_brm_single_level) %>% kable() %>% kable_styling()
+```
+
+This looks more like what I would expect. I still need to understand exactly how brms is using the sd class priors though...
+
+Anyway, let's compare the prior and posterior for our hyperparameter:
+
+```{r}
 priorPostSamples <- bind_rows(
   posterior_samples(wt_brm_single_level) %>% select(b_Intercept) %>% mutate(dist = 'posterior'),
   tibble(b_Intercept = rnorm(4000, 100, 30)) %>% mutate(dist = 'prior')
@@ -128,6 +183,8 @@ priorPostSamples <- bind_rows(
 ggplot(priorPostSamples, aes(x = b_Intercept, y = dist)) + geom_density_ridges(jittered_points = T, position = 'raincloud', point_alpha = 0.02)+
   theme_ridges()
 ```
+
+Not bad! The data definitely informed the estimate, and the estimate seems reasonable based on the data. Let's look at the group vs overall estimates:
 
 ```{r}
  ggplot(wt_preds %>% filter(Condition=='TOTO'), aes(x = factor(Colony_number), y = eDNA_dsDNA_uM)) +
@@ -147,6 +204,12 @@ ggplot(priorPostSamples, aes(x = b_Intercept, y = dist)) + geom_density_ridges(j
 
 ```
 
+You can see that for colonies 1 and 5 the confidence interval is pulling toward the overall estimate. The effects of the hierarchy aren't super dramatic, but I think this makes a lot of sense. Just to fully vizualize the effects of the hierarchy, why don't we compare to a model with no hierarchy!?
+
+## Model 3: No hierarchy
+
+Here the model is simply `eDNA_dsDNA_uM ~ 1`:
+
 ```{r}
 wt_brm_no_level <- brm(eDNA_dsDNA_uM ~ 1,
      data = wt_preds %>% filter(Condition=='TOTO'),
@@ -164,10 +227,12 @@ wt_brm_no_level <- brm(eDNA_dsDNA_uM ~ 1,
 summary(wt_brm_no_level)
 ```
 
+The sampling seems to have gone well and the CI looks tighter. 
+
 ```{r}
 no_one_level_Samples <- bind_rows(
-  posterior_samples(wt_brm_single_level) %>% select(b_Intercept) %>% mutate(dist = 'one level'),
-  posterior_samples(wt_brm_no_level) %>% select(b_Intercept) %>% mutate(dist = 'no level'),
+  posterior_samples(wt_brm_single_level) %>% select(b_Intercept) %>% mutate(dist = 'two level'),
+  posterior_samples(wt_brm_no_level) %>% select(b_Intercept) %>% mutate(dist = 'no hier'),
   tibble(b_Intercept = rnorm(4000, 100, 30)) %>% mutate(dist = 'prior')
 )
 
@@ -175,7 +240,11 @@ ggplot(no_one_level_Samples, aes(x = b_Intercept, y = dist)) + geom_density_ridg
   theme_ridges()
 ```
 
-```{r}
+Indeed, we can see that no hierarchy model is actually more confident in a tighter region than the hierarchy - why might that be?
+
+Let's fit models for each group individually (no hierarchy, but no pooling). These models get fit in parallel as a list, so it's hard to show the output. I'll just show the parameter estimate from colony 1 to convince you it worked:
+
+```{r cache = T}
 wt_preds_list <- wt_preds %>% filter(Condition =='TOTO') %>% group_split(Colony_number)
 
 wt_brm_multi_flat <- brm_multiple(eDNA_dsDNA_uM ~ 1,
@@ -189,10 +258,16 @@ wt_brm_multi_flat <- brm_multiple(eDNA_dsDNA_uM ~ 1,
     inits = 'random',
     combine = F
 )
+
 as_tibble(
 fixef(wt_brm_multi_flat[[1]])
 )
+
 ```
+
+## Comparing Hierarchy vs. Flat
+
+Now let's do something cool Let's overlay the 2 level hierarchical estimates with the no hierarchy pooled and unpooled estimates to vizualize the effect of the hierarchy:
 
 ```{r}
 wt_no_level_coef <- bind_rows(as_tibble(fixef(wt_brm_multi_flat[[1]])),
@@ -208,8 +283,8 @@ wt_no_level_coef <- bind_rows(as_tibble(fixef(wt_brm_multi_flat[[1]])),
   geom_hline(yintercept = as_tibble(fixef(wt_brm_single_level))$Q2.5, linetype = 2, color = 'gray')+
   geom_hline(yintercept = as_tibble(fixef(wt_brm_single_level))$Q97.5, linetype = 2, color = 'gray')+
   geom_hline(yintercept = as_tibble(fixef(wt_brm_no_level))$Estimate, linetype = 2, color = 'red')+
-  geom_hline(yintercept = as_tibble(fixef(wt_brm_no_level))$Q2.5, linetype = 2, color = 'pink')+
-  geom_hline(yintercept = as_tibble(fixef(wt_brm_no_level))$Q97.5, linetype = 2, color = 'pink')+
+  geom_hline(yintercept = as_tibble(fixef(wt_brm_no_level))$Q2.5, linetype = 2, color = 'red')+
+  geom_hline(yintercept = as_tibble(fixef(wt_brm_no_level))$Q97.5, linetype = 2, color = 'red')+
   geom_jitter(height = 0, width = 0.1, shape = 21)+
   geom_pointrange(data = wt_no_level_coef,
                   aes(x = factor(Colony_number), 
@@ -222,4 +297,12 @@ wt_no_level_coef <- bind_rows(as_tibble(fixef(wt_brm_multi_flat[[1]])),
                       ymin = Q2.5.Intercept, 
                       ymax = Q97.5.Intercept),
                   position = position_nudge(x = +0.1))
+```
+
+The hierarchical model results are in black and dashed gray, and the no hier models are in red. You can see the hierarchy changes the group level estimates slightly - colony 1 and 6 are shifted down / up, colonies 2, 3, and 5 have more confident estimates. However, the hyperparameter estimates are nearly identical. In the end we had a pretty balanced dataset, so the hierarchy had a small but limited effect. However, this was a really interesting exercise that should work well on future data!
+
+---------
+
+```{r}
+sessionInfo()
 ```

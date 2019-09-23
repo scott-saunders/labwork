@@ -83,7 +83,7 @@ tail(cal_df) %>% kable() %>% kable_styling()
 
 Here's what all the data look like:
 ```{r}
-ggplot(cal_df, aes(x = Wavelength, y = FluorInt, color = Well)) + geom_path()
+ggplot(cal_df, aes(x = Wavelength, y = FluorInt, color = Well)) + geom_path()+scale_color_discrete()
 ```
 
 So you can see that we have a wide variety of intensities (despite the same amount of dye), but clearly the emission is the same shape and peak is at 535. Let's just look at the ctDNA concentration vs. Fluorescence Intensity at 535nm:
@@ -153,6 +153,8 @@ wt_preds <- wt_df %>% filter(Wavelength==535) %>%
   mutate(eDNA_ug_mL = pred * 4 * 800 / 60) %>% 
   mutate(eDNA_dsDNA_uM = eDNA_ug_mL * 150 / 50)
 
+#write_csv(wt_preds, "07_23_19_wt_TOTO_calCurve_estimates.csv")
+
 tail(wt_preds) %>% kable() %>% kable_styling()
 ```
 
@@ -190,3 +192,9 @@ Finally taking the mean of those biological replicates gives a mean eDNA concent
 1. Is it possible that the cationic polysaccharide Pel competes with the dye? Could compare WT to dPel strain. 
 2. Could estimate a 95% CI with brms with a two level hierarchy!!
 3. Note ctDNA is mostly dsDNA, but not entirely, how accessible is biofilm eDNA compared to standard...
+
+-----
+
+```{r}
+sessionInfo()
+```

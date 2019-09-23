@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Scott Saunders" />
+
+
+<title>Propidium and Ethidium with Colony Biofilms</title>
+
+<script src="2019_07_23_PI_EtBr_colonies_analysis_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="2019_07_23_PI_EtBr_colonies_analysis_files/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="2019_07_23_PI_EtBr_colonies_analysis_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="2019_07_23_PI_EtBr_colonies_analysis_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="2019_07_23_PI_EtBr_colonies_analysis_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="2019_07_23_PI_EtBr_colonies_analysis_files/navigation-1.1/tabsets.js"></script>
+<script src="2019_07_23_PI_EtBr_colonies_analysis_files/navigation-1.1/codefolding.js"></script>
+<link href="2019_07_23_PI_EtBr_colonies_analysis_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="2019_07_23_PI_EtBr_colonies_analysis_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Propidium and Ethidium with Colony Biofilms</h1>
+<h3 class="subtitle">LC-MS Quantifications from exp 07-23-19</h3>
+<h4 class="author">Scott Saunders</h4>
+<h4 class="date">09-23-2019</h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#methods">Methods</a><ul>
+<li><a href="#samples">Samples</a><ul>
+<li><a href="#wt">WT</a></li>
+<li><a href="#phz">∆phz*</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+
+<pre class="r"><code>library(tidyverse)
+library(cowplot)
+library(viridis)
+library(knitr)
+library(kableExtra)
+
+
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)
+
+source(&quot;../../../../IDA/tools/plotting_tools.R&quot;)
+
+theme_set(theme_1())</code></pre>
+<div id="methods" class="section level1">
+<h1>Methods</h1>
+<div id="samples" class="section level2">
+<h2>Samples</h2>
+<div id="wt" class="section level3">
+<h3>WT</h3>
+<p>WT colonies for TOTO measurement</p>
+<ul>
+<li>WT Toto - 6 biofilm, 6 agar</li>
+</ul>
+<p>WT controls for EtBr</p>
+<ul>
+<li>WT H2O - 3 cells, 3 agar</li>
+</ul>
+<p>WT controls for PI</p>
+<ul>
+<li>WT dmso - 3 cells, 3 agar</li>
+</ul>
+<p>WT exp w/ EtBr</p>
+<ul>
+<li><p>WT EtBr 10uM - 3 cells, 3 agar</p></li>
+<li><p>WT EtBr 100uM - 3 cells, 3 agar</p></li>
+<li><p>WT EtBr 500uM - 3 cells, 3 agar</p></li>
+</ul>
+<p>WT exp w/ PI</p>
+<ul>
+<li><p>WT PI 10uM - 3 cells, 3 agar</p></li>
+<li><p>WT PI 100uM - 3 cells, 3 agar</p></li>
+<li><p>WT PI 200uM - 3 cells, 3 agar</p></li>
+</ul>
+<p>= 60 samples</p>
+<hr />
+</div>
+<div id="phz" class="section level3">
+<h3>∆phz*</h3>
+<p>∆phz* + PYO + EtBr</p>
+<ul>
+<li><p>∆phz* + 50uM PYO + 10uM EtBr - 2 cells, 2 agar</p></li>
+<li><p>∆phz* + 50uM PYO + 100uM EtBr - 2 cells, 2 agar</p></li>
+<li><p>∆phz* + 50uM PYO + 500uM EtBr - 2 cells, 2 agar</p></li>
+</ul>
+<p>∆phz* + PCN + EtBr</p>
+<ul>
+<li><p>∆phz* + 50uM PCN + 10uM EtBr - 2 cells, 2 agar</p></li>
+<li><p>∆phz* + 50uM PCN + 100uM EtBr - 2 cells, 2 agar</p></li>
+<li><p>∆phz* + 50uM PCN + 500uM EtBr - 2 cells, 2 agar</p></li>
+</ul>
+<p>∆phz* + PYO + PI</p>
+<ul>
+<li><p>∆phz* + 50uM PYO + 10uM PI - 2 cells, 2 agar</p></li>
+<li><p>∆phz* + 50uM PYO + 100uM PI - 2 cells, 2 agar</p></li>
+<li><p>∆phz* + 50uM PYO + 200uM PI - 2 cells, 2 agar</p></li>
+</ul>
+<p>∆phz* + PCN + PI</p>
+<ul>
+<li><p>∆phz* + 50uM PCN + 10uM PI - 2 cells, 2 agar</p></li>
+<li><p>∆phz* + 50uM PCN + 100uM PI - 2 cells, 2 agar</p></li>
+<li><p>∆phz* + 50uM PCN + 200uM PI - 2 cells, 2 agar</p></li>
+</ul>
+<p>= 48 samples</p>
+<hr />
+<p>= 108 samples total</p>
+<p>First run is WT H2O and WT WT EtBr Samples</p>
+<hr />
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 3.5.2 (2018-12-20)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS Mojave 10.14.6
+## 
+## Matrix products: default
+## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] kableExtra_1.0.1  knitr_1.23        viridis_0.5.1    
+##  [4] viridisLite_0.3.0 cowplot_0.9.4     forcats_0.3.0    
+##  [7] stringr_1.3.1     dplyr_0.8.1       purrr_0.2.5      
+## [10] readr_1.3.1       tidyr_0.8.2       tibble_2.1.3     
+## [13] ggplot2_3.2.0     tidyverse_1.2.1  
+## 
+## loaded via a namespace (and not attached):
+##  [1] tidyselect_0.2.5 xfun_0.7         haven_2.0.0      lattice_0.20-38 
+##  [5] colorspace_1.4-0 generics_0.0.2   htmltools_0.3.6  yaml_2.2.0      
+##  [9] rlang_0.3.4      pillar_1.3.1     glue_1.3.1       withr_2.1.2     
+## [13] modelr_0.1.2     readxl_1.2.0     munsell_0.5.0    gtable_0.2.0    
+## [17] cellranger_1.1.0 rvest_0.3.2      evaluate_0.14    broom_0.5.1     
+## [21] Rcpp_1.0.1       scales_1.0.0     backports_1.1.3  formatR_1.5     
+## [25] webshot_0.5.1    jsonlite_1.6     gridExtra_2.3    hms_0.4.2       
+## [29] digest_0.6.18    stringi_1.2.4    grid_3.5.2       cli_1.0.1       
+## [33] tools_3.5.2      magrittr_1.5     lazyeval_0.2.1   crayon_1.3.4    
+## [37] pkgconfig_2.0.2  xml2_1.2.0       lubridate_1.7.4  assertthat_0.2.1
+## [41] rmarkdown_1.13   httr_1.4.0       rstudioapi_0.9.0 R6_2.4.0        
+## [45] nlme_3.1-140     compiler_3.5.2</code></pre>
+</div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,125 @@
+---
+title: "Propidium and Ethidium with Colony Biofilms"
+subtitle: "LC-MS Quantifications from exp 07-23-19"
+author: "Scott Saunders"
+fontsize: 12pt
+date: '09-23-2019'
+output:
+  html_document:
+    theme: cosmo
+    code_folding: hide
+    self_contained: no
+    toc: yes
+  pdf_document:
+    toc: yes
+  github_document:
+    pandoc_args: --webtex
+---
+
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(viridis)
+library(knitr)
+library(kableExtra)
+
+
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+source("../../../../IDA/tools/plotting_tools.R")
+
+theme_set(theme_1())
+```
+
+# Methods
+
+## Samples
+
+### WT
+
+WT colonies for TOTO measurement
+
+* WT Toto - 6 biofilm, 6 agar
+
+WT controls for EtBr
+
+* WT H2O - 3 cells, 3 agar
+
+WT controls for PI
+
+* WT dmso - 3 cells, 3 agar
+
+WT exp w/ EtBr
+
+* WT EtBr 10uM  - 3 cells, 3 agar
+
+* WT EtBr 100uM  - 3 cells, 3 agar
+
+* WT EtBr 500uM  - 3 cells, 3 agar
+
+WT exp w/ PI
+
+* WT PI 10uM  - 3 cells, 3 agar
+
+* WT PI 100uM  - 3 cells, 3 agar
+
+* WT PI 200uM  - 3 cells, 3 agar
+
+ = 60 samples
+ 
+------
+
+### ∆phz*
+
+∆phz* + PYO + EtBr 
+
+* ∆phz* + 50uM PYO + 10uM EtBr - 2 cells, 2 agar
+
+* ∆phz* + 50uM PYO + 100uM EtBr - 2 cells, 2 agar
+
+* ∆phz* + 50uM PYO + 500uM EtBr - 2 cells, 2 agar 
+
+∆phz* + PCN + EtBr 
+
+* ∆phz* + 50uM PCN + 10uM EtBr - 2 cells, 2 agar
+
+* ∆phz* + 50uM PCN + 100uM EtBr - 2 cells, 2 agar
+
+* ∆phz* + 50uM PCN + 500uM EtBr - 2 cells, 2 agar 
+
+∆phz* + PYO + PI 
+
+* ∆phz* + 50uM PYO + 10uM PI - 2 cells, 2 agar
+
+* ∆phz* + 50uM PYO + 100uM PI - 2 cells, 2 agar
+
+* ∆phz* + 50uM PYO + 200uM PI - 2 cells, 2 agar 
+
+∆phz* + PCN + PI 
+
+* ∆phz* + 50uM PCN + 10uM PI - 2 cells, 2 agar
+
+* ∆phz* + 50uM PCN + 100uM PI - 2 cells, 2 agar
+
+* ∆phz* + 50uM PCN + 200uM PI - 2 cells, 2 agar 
+
+ = 48 samples
+ 
+ --------
+ 
+  = 108 samples total
+  
+  First run is WT H2O and WT WT EtBr Samples
+  
+  
+  
+  
+  
+  
+  ------
+  
+```{r}
+sessionInfo()  
+```
