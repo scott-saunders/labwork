@@ -105,7 +105,8 @@ summary(
   nls(formula = c_lim_ext~2*erf(b*t^-0.5), 
             data = profile_lim_ext %>% filter(x==0.0), 
             trace = T,
-            start = c(b=5)
+            start = c(b=5),
+      weights = 1/(t+1)
             )
         )
 
@@ -117,4 +118,135 @@ profile_lim_ext_preds <- profile_lim_ext %>%
 ggplot(profile_lim_ext_preds , aes(x = t, y = c_lim_ext, color = t))+
   geom_point(aes(group = t)) +
   geom_point(aes(y = pred), color = 'red')
+```
+
+
+```{r}
+lim_ext_x_t <- function(c0, h, D, x, t){
+0.5 * c0 * ( erf((h-x) / sqrt(4*D*t)) + erf((h+x) / sqrt(4*D*t)) )
+  }
+
+lim_ext_x0 <- function(c0, h, D, t){
+c0 * erf(h/(sqrt(4*D*t)))
+}
+
+lim_ext_x_t_data <- grid %>% 
+  mutate(c=lim_ext_x_t(c0 = 2, h = 0.005, D = 5e-5, x=x, t=t )) 
+
+ggplot(lim_ext_x_t_data, aes(x = x, y = c, color = t))+
+  geom_path(aes(group = t)) 
+
+ggplot(lim_ext_x_t_data %>% filter(x==0), aes(x = t, y = c)) + geom_point()
+
+lim_ext_x0_data <- grid %>% 
+  filter(x == 0) %>% 
+  mutate(c_fast=lim_ext_x0(c0 = 2, h = 0.005, D = 5e-5, t=t )) %>% 
+  mutate(c_slow=lim_ext_x0(c0 = 2, h = 0.005, D = 5e-7, t=t )) 
+
+lim_ext_x0_noise <-  lim_ext_x0_data %>% 
+  mutate(c_fast_noise = rnorm(n=length(lim_ext_x0_data$t),mean=c_fast,sd=0.025)) %>% 
+  mutate(c_slow_noise = rnorm(n=length(lim_ext_x0_data$t),mean = c_slow,sd=0.025))
+  
+ggplot(lim_ext_x0_data, aes(x = t)) + 
+  geom_point(aes(y = c_fast), color = 'red') +
+  geom_point(aes(y = c_slow), color = 'blue')
+
+ggplot(lim_ext_x0_noise, aes(x = t)) + 
+  geom_point(aes(y = c_fast_noise), color = 'red') +
+  geom_point(aes(y = c_slow_noise), color = 'blue')
+
+ggplot(lim_ext_x0_noise %>% filter(t>5 ), aes(x = t,y = c_slow_noise)) + 
+  geom_hline(yintercept = 2.03, linetype = 2)+
+  geom_point(color = 'red') +
+  geom_smooth(method='nls',formula=y~c0*erf(0.005*(4*D*x)^-0.5),method.args=list(start=c(D=1e-7,c0=1.5)),se=F,fullrange=T)
+
+summary(
+  nls(formula = c_slow_noise~c0*erf(0.005*(4*D*t)^-0.5), 
+            data = lim_ext_x0_noise %>% filter(t>5), 
+            start = c(c0=1.5,D = 1e-7)
+            )
+        )
+
+```
+
+```{r}
+
+finite_point_x_t <- function(m0, L, D, x, t){
+  sum = 0
+  for (n in seq(-100,100,1)) {
+    sum = sum + (m0 / sqrt(4 * pi * D * t)) * 2*exp((-(x-2*n*L)^2)/(4*D*t))
+  }
+  sum
+}
+
+finite_point_x0 <- function(m0, L, D, t){
+  sum = 0
+  for (n in seq(-100,100,1)) {
+    sum = sum + (m0 / sqrt(4 * pi * D * t)) * 2*exp((-(-2*n*L)^2)/(4*D*t))
+  }
+  sum
+}
+
+finite_point_x_t(m0 = 2, L = 0.05, D = 5e-5, x=1,t=1 )
+
+finite_point_data <- grid %>% 
+  mutate(c=finite_point_x_t(m0 = 2, L = 0.1, D = 5e-5, x=x,t=t )) %>% 
+  mutate(c_noise = rnorm(n=length(grid$t),mean=c,sd=2.5)) 
+
+ggplot(finite_point_data, aes(x = x, y = c, color = t)) + geom_path(aes(group = t))
+
+ggplot(finite_point_data %>% filter(x==0), aes(x = t, y = c, color = t)) + geom_point()
+
+ggplot(finite_point_data, aes(x = x, y = c_noise, color = t)) + geom_path(aes(group = t))
+
+ggplot(finite_point_data %>% filter(x==0), aes(x = t, y = c_noise, color = t)) + geom_point()
+
+finite_point_data_x0 <- grid %>% 
+  filter(x==0) %>% 
+  mutate(c=finite_point_x0(m0 = 2, L = 0.1, D = 5e-5, t=t )) %>% 
+  mutate(c_noise = rnorm(n=length((grid %>% filter(x==0))$t),mean=c,sd=2.5)) 
+
+ggplot(finite_point_data_x0 %>% filter(x==0), aes(x = t, y = c_noise, color = t)) + geom_point()
+```
+from 
+Initial punctual release between two boundaries
+in http://www.dartmouth.edu/~cushman/courses/engs43/Chapter2.pdf
+```{r}
+
+ggplot(finite_point_data_x0 %>% filter(x==0), aes(x = t, y = c_noise, color = t)) + 
+  geom_point() + 
+  geom_smooth(method='nls',
+              formula=y~finite_point_x0(2, L, D, x),
+              method.args=list(start=c( L = 0.05, D = 1e-5)),
+              se=F,fullrange=T)
+
+summary(
+  nls(formula = c_noise~finite_point_x0(m0, L, D, t), 
+            data = finite_point_data_x0 %>% filter(x==0 & t>0) ,
+            start = c(L = 0.01, D = 5e-6),
+      control = nls.control(maxiter = 1000)
+            )
+        )
+library(minpack.lm)
+summary(
+  nlsLM(formula = c_noise~finite_point_x0(m0, L, D, t), 
+            data = finite_point_data_x0 %>% filter(x==0 & t>0) ,
+            start = c(m0 = 2.07, L = 0.09, D = 5.45e-5),
+        control = nls.lm.control(maxiter = 1000)
+            )
+        )
+
+library(nls.multstart)
+summary(
+  nls_multstart(formula = c_noise~finite_point_x0(2, L, D, t), 
+            data = finite_point_data_x0 %>% filter(x==0 & t>0) ,
+            iter = 250,
+            start_lower = c(L = 0.001,  D = 1e-7),
+            start_upper = c(L = 10,  D = 1e-4),
+            na.action = na.omit,
+            convergence_count = 100,
+            supp_errors = 'Y',
+            lower = c(L=0, D = 0)
+            )
+        )
 ```

@@ -1,0 +1,594 @@
+---
+title: "$D_{phys}$ Analysis"
+fontsize: 12pt
+date: "03_19_19"
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
+---
+
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+library(knitr)
+library(kableExtra)
+library(patchwork)
+library(VGAM)
+library(nls.multstart)
+
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60), echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+source("../../../IDA/tools/echem_processing_tools.R")
+source("../../../IDA/tools/plotting_tools.R")
+
+theme_set(theme_1())
+```
+
+This notebook describes how the estimates for $D_{phys}$ are calculated.
+
+# Data preparation
+
+All of the data to this point was processed from raw SWV data shown elsewhere. This means that there's a lot of extra confusing data/columns we don't need, and some things are not conveniently organized. First let's deal with that, then we'll get to the interesting stuff.
+
+## Biofilm data
+
+First let's read in the signals calculated from the SWV scans over time for the biofilms. We'll also read in the estimates of $D_{ap}$ that we already generated for these biofilms. 
+
+```{r}
+biofilm_signals <- read_csv('../../02_05_19_draft_2/data/01_28_19_aggregate_SWV_GC_signals.csv') %>%
+  filter(electrode_from_swv=='i1' & treatment=='control') %>% 
+  filter(exp_id != '1') %>% 
+  filter(exp_id!='3' | run!=4)
+
+biofilm_dap_estimates <- 
+  read_csv("../../02_05_19_draft_2/data/01_28_19_swv_gc_dap_estimates_aggregate_updated.csv") %>% 
+  filter(treatment=='control' & exp_id %in% c('2','3') & echem_from_swv=='SWV') %>% 
+  select(exp_id, run, dap)
+```
+
+Now we'll normalize the timing of the scans within each run, so that transferring the biofilm to the fresh reactor occurs at approximately norm_time = 0.
+```{r}
+
+biofilm_signals_norm <- biofilm_signals %>%  
+  group_by(exp_id,reactor,run) %>% 
+  mutate(min_time = min(minutes_from_swv)) %>% 
+  mutate(norm_time = minutes_from_swv - min_time + 0.6)
+
+```
+
+Then let's reorganize the data so that we have our estimates of $I_0$ alongside the data. For these biofilms we are estimating $I_0$ by bounding it between the soak SWV signal and the first transfer SWV signal. Here I'll also add the $D_{ap}$ estimates to the now organized dataset.
+```{r}
+biofilm_soak_i0 <- biofilm_signals_norm %>% 
+  ungroup() %>% 
+  filter(reactor=='soak' & rep==0) %>% 
+  mutate(i0_high = signal_from_swv) %>% 
+  select(run,exp_id, i0_high) 
+
+biofilm_transfer_i0 <- biofilm_signals_norm %>% 
+  ungroup() %>% 
+  filter(reactor=='transfer' & rep==0) %>% 
+  mutate(i0_low = signal_from_swv) %>% 
+  select(run,exp_id, i0_low) 
+
+biofilm_i0 <- left_join(biofilm_soak_i0, biofilm_transfer_i0, by = c('exp_id','run'))
+
+biofilm_signals_i0 <- left_join(biofilm_signals_norm %>% 
+                                   ungroup() %>%  
+                                   filter(reactor=='transfer') %>%
+                                   mutate(signal = signal_from_swv) %>% 
+                                   select(exp_id, run, rep, signal, norm_time), biofilm_i0, 
+                                 by = c('exp_id', 'run')) 
+
+biofilm_signals_dap <- left_join(biofilm_signals_i0, biofilm_dap_estimates, by = c('exp_id', 'run')) %>% 
+  mutate(IDA = 'biofilm', run = as.character(run)) 
+
+head(biofilm_signals_dap)
+```
+
+With that done let's look at the data: The dotted lines are the high and low estimates of $I_0$. We have two biofilms distinguished by exp_id and for each we have three replicate runs. 
+
+```{r}
+ggplot(biofilm_signals_dap, aes(x = norm_time, y = signal)) + 
+  geom_point() +
+  geom_line(aes(y = i0_high), linetype = 2)+
+  geom_line(aes(y = i0_low), linetype = 2, color = 'red')+
+  facet_wrap(exp_id~run, scales = 'free')
+```
+
+## Blank data
+
+Now we can read in the blank data, which was processed from SWV data in the same way as the biofilm data. Note that this blank dataset has a significant background, so we background subtracted the data. Residual peaks were manually quantified above the baseline (resids), so the signal remaining at the last scan beyond the resid peak was considered background and was subtracted out from all the used currents. Also, the $D_{ap}$ measurement for the blank only has 1 replicate, so it's value (6.8e-7 cm^2 / sec) was hard-coded in.
+```{r}
+blank_signals <- read_csv("../../02_05_19_draft_2/data/11_28_18_swv_decays_Processed.csv") %>% 
+  filter(PHZadded!='10uM')
+
+resids <- tibble(
+  PHZadded = c('100uM','75uM','50uM','25uM'),
+  resid = c(2.648e-7,2.199e-7,1.958e-7,1.548e-7))
+
+blank_signals_bg <- left_join(blank_signals, resids, by = c('PHZadded')) %>% 
+  group_by(PHZadded) %>% 
+  mutate(signal_bg = signal_from_transfer - (min(signal_from_transfer)-resid)) %>% 
+  mutate(i0_bg = i0-(min(signal_from_transfer)-resid))
+
+blank_signals_bg_org <- blank_signals_bg %>% 
+  ungroup() %>% 
+  mutate(run = PHZadded, exp_id = '1', signal = signal_bg, i0_high = i0_bg, IDA = 'blank') %>% 
+  select(exp_id, run, rep, signal, norm_time,i0_high, IDA ) %>% 
+  mutate(dap = 6.8e-6)
+
+head(blank_signals_bg_org)
+```
+Now the blank data is in the same format as the biofilm data.
+
+## Combine data
+
+Therefore we can now combine the datasets to make sure that we are fitting them in the same way.
+```{r}
+decays_combined <- bind_rows(biofilm_signals_dap, blank_signals_bg_org)
+```
+
+Let's compare the blank data to the biofilm data. 
+```{r}
+ggplot(decays_combined, aes(x = norm_time, y = signal, color = IDA)) +
+  geom_point(shape = 21)
+```
+This is one way to look at the data - it's just smoothed. You can see that it take much longer for the biofilm data to decay to the point that the blank data does. Intuitively that should be attributable to different diffusion coefficients. 
+
+# Fitting data
+
+## Function for semi infinite diffusion
+
+First, we need a function to calculate the signal over time (at x = 0) for a point source undergoing diffusion at a no-flux barrier (semi - infinite). This expression is derived elsewhere.
+```{r}
+diffusion_point_semi <- function(t, i0, D_ap, t_s, D_phys){
+
+  (i0 * sqrt(D_ap * t_s) / sqrt(4  * D_phys * t))
+}
+```
+
+So let's fit this function with our parameters for the most important subsets of the data. We will consider the blank decays < 2 min and the biofilm decays < 20 min. 
+
+First the data will be grouped and fit by the nls_multstart function - this is a nonlinear least squares method. Then we will use those models to predict the signal over time from the model fit so that we can plot and compare. 
+
+```{r out.width='100%', fig.asp = 1}
+decay_data_nls <- decays_combined %>% 
+  filter(IDA!='blank' | norm_time<2) %>% 
+  filter(IDA!='biofilm' | norm_time<20) %>% 
+  group_by(IDA, exp_id, run) %>% 
+  do(
+    tidy(
+      nls_multstart(data=., formula = signal~diffusion_point_semi(
+        t=norm_time, 
+        i0 = max(i0_high), 
+        D_ap = max(dap), 
+        t_s = 0.02 ,
+        D_phys = D_phys ), 
+          start_lower = c(D_phys = 1e-8),
+          start_upper = c(D_phys = 1e-5),
+          lower = c( D_phys = 0),
+          supp_errors = 'Y',
+          iter = 250,
+          na.action = na.omit),
+      conf.int=T)
+    )
+
+decay_data_preds <- left_join(decays_combined, decay_data_nls, by = c('IDA', 'exp_id','run')) %>% 
+  group_by(IDA, exp_id, run) %>% 
+  mutate(preds = diffusion_point_semi(
+    t=norm_time, 
+    i0 = max(i0_high), 
+    D_ap = max(dap),
+    t_s = 0.02 , 
+    D_phys = estimate)) %>% 
+    mutate(pred_high = diffusion_point_semi(
+      t=norm_time, 
+      i0 = max(i0_high), 
+      D_ap = max(dap),
+      t_s = 0.02 , 
+      D_phys = conf.high))  %>% 
+    mutate(pred_low = diffusion_point_semi(
+      t=norm_time, 
+      i0 = max(i0_high), 
+      D_ap = max(dap),
+      t_s = 0.02 ,
+      D_phys = conf.low)) 
+
+plot_dm_preds <- ggplot(decay_data_preds, aes(x = norm_time, y = signal)) + 
+  geom_ribbon(aes(ymin = pred_low, ymax = pred_high), fill = 'light gray')+
+  geom_line(aes(y = preds), linetype = 2, color = 'black') + 
+  geom_point(shape = 21)+
+  facet_wrap(vars(IDA,exp_id, run), scales = 'free', ncol = 3)
+
+plot_dm_preds_styled <- plot_dm_preds+
+  scale_y_continuous(labels = nA_label, limits = c(0,NA)) + 
+  labs(x = 'Time (min)', y = expression(I[swv]~(nA)))
+
+plot_dm_preds_styled
+```
+
+```{r }
+dm_from_a_OG <- function(estimate, i_0, dap, t_s=0.1){
+  
+  dm <- ( i_0^2 * dap * t_s ) / (pi* estimate^2)
+  
+  dm
+}
+
+ggplot(decay_data_preds %>% filter(IDA=='blank'), aes(x = norm_time, y = signal)) + 
+  geom_smooth(method = "nls", 
+    formula = y ~ b * (x)^-0.5 + a, method.args = list(start = c(b = 0.1, 
+        a = 1e-07)), se = F)+
+  geom_point(shape = 21)+
+  facet_wrap(vars(IDA,exp_id, run), scales = 'free', ncol = 3)
+
+ggplot(decay_data_preds %>% filter(IDA=='blank' & norm_time<2), aes(x = norm_time, y = signal)) + 
+  geom_smooth(method = "nls", 
+    formula = y ~ b * (x)^-0.5 + a, method.args = list(start = c(b = 0.1, 
+        a = 1e-07)), se = F)+
+  geom_point(data = decay_data_preds %>% filter(IDA=='blank'),shape = 21)+
+  facet_wrap(vars(IDA,exp_id, run), scales = 'free', ncol = 3)
+```
+
+```{r}
+  # filter(IDA!='blank' | norm_time<2) %>% 
+  # filter(IDA!='biofilm' | norm_time<20) %>% 
+
+decay_data_nls <- decays_combined %>%
+  group_by(IDA, exp_id, run) %>% 
+  do(
+    tidy(
+      nls(data = ., formula =  signal ~ b * (norm_time)^-0.5 + a, start = c(b = 0.1, 
+        a = 1e-07) ),
+      conf.int = T
+    )
+  )
+
+nls_estimate <- decay_data_nls %>%
+  select(-std.error, - statistic, - p.value, -conf.high, - conf.low) %>% 
+  spread(key = term, value = estimate) %>% 
+  rename(a_mean = a, b_mean = b)
+  
+nls_low <- decay_data_nls %>%
+  select(-std.error, - statistic, - p.value, -conf.high, - estimate) %>% 
+  spread(key = term, value = conf.low) %>% 
+  rename(a_low = a, b_low = b)
+
+nls_high <- decay_data_nls %>%
+  select(-std.error, - statistic, - p.value, -conf.low, - estimate) %>% 
+  spread(key = term, value = conf.high) %>% 
+  rename(a_high = a, b_high = b)
+
+nls_high_low <- left_join(nls_low, nls_high, by = c('IDA', 'exp_id', 'run'))
+
+nls_terms <- left_join(nls_estimate, nls_high_low, by = c('IDA', 'exp_id', 'run') )
+
+decays_combined_nls <- left_join(decays_combined, nls_terms, by = c('IDA', 'exp_id', 'run')) %>% 
+  mutate(dphys = dm_from_a_OG(estimate = b_mean, i_0=i0_high, dap = dap, t_s = 0.02)) %>% 
+  mutate(dphys_high = dm_from_a_OG(estimate = b_high, i_0=i0_high, dap = dap, t_s = 0.02)) %>%
+  mutate(dphys_low = dm_from_a_OG(estimate = b_low, i_0=i0_high, dap = dap, t_s = 0.02)) %>% 
+  mutate(dphys_min = dm_from_a_OG(estimate = b_mean, i_0=i0_low, dap = dap, t_s = 0.02)) %>% 
+  mutate(dphys_min_high = dm_from_a_OG(estimate = b_high, i_0=i0_low, dap = dap, t_s = 0.02)) %>%
+  mutate(dphys_min_low = dm_from_a_OG(estimate = b_low, i_0=i0_low, dap = dap, t_s = 0.02))
+
+decays_combined_nls_6ms <- left_join(decays_combined, nls_terms, by = c('IDA', 'exp_id', 'run')) %>% 
+  mutate(dphys = dm_from_a_OG(estimate = b_mean, i_0=i0_high, dap = dap, t_s = 0.006)) %>% 
+  mutate(dphys_high = dm_from_a_OG(estimate = b_high, i_0=i0_high, dap = dap, t_s = 0.006)) %>%
+  mutate(dphys_low = dm_from_a_OG(estimate = b_low, i_0=i0_high, dap = dap, t_s = 0.006)) %>% 
+  mutate(dphys_min = dm_from_a_OG(estimate = b_mean, i_0=i0_low, dap = dap, t_s = 0.006)) %>% 
+  mutate(dphys_min_high = dm_from_a_OG(estimate = b_high, i_0=i0_low, dap = dap, t_s = 0.006)) %>%
+  mutate(dphys_min_low = dm_from_a_OG(estimate = b_low, i_0=i0_low, dap = dap, t_s = 0.006))
+
+# dphys_estimates <- decays_combined_nls %>% 
+#   group_by(IDA, exp_id, run) %>% 
+#   summarise(dphys = mean(dphys),dphys_high = mean(dphys_high), dphys_low = mean(dphys_low), dap = mean(dap))
+
+biofilm_dap_estimates <- 
+  read_csv("../../02_05_19_draft_2/data/01_28_19_swv_gc_dap_estimates_aggregate_updated.csv") %>% 
+  filter(treatment=='control' & exp_id %in% c('2','3') & echem_from_swv=='SWV') %>% 
+  select(exp_id, run, dap_high, dap_low) %>% 
+  mutate(run = as.character(run))
+
+decays_combined_nls_estimates <- left_join(decays_combined_nls, biofilm_dap_estimates, by = c('exp_id', 'run')) %>% 
+   mutate(dap_high = ifelse(IDA=='blank', 7.5e-6, dap_high)) %>%
+   mutate(dap_low = ifelse(IDA=='blank', 6.2e-6, dap_low)) %>% 
+  mutate(dphys_min_low = ifelse(IDA=='blank', dphys_low, dphys_min_low))
+
+decays_combined_nls_estimates_6ms <- left_join(decays_combined_nls_6ms, biofilm_dap_estimates, 
+                                               by = c('exp_id', 'run')) %>% 
+   mutate(dap_high = ifelse(IDA=='blank', 7.5e-6, dap_high)) %>%
+   mutate(dap_low = ifelse(IDA=='blank', 6.2e-6, dap_low)) %>% 
+  mutate(dphys_min_low = ifelse(IDA=='blank', dphys_low, dphys_min_low))
+
+dphys_estimates <- decays_combined_nls_estimates %>% 
+  group_by(IDA, exp_id, run) %>% 
+  mutate(dphys_mean = mean(c(dphys, dphys_min),na.rm=T)) %>% 
+  summarise(dphys = mean(dphys_mean), low = mean(dphys_min_low), high = mean(dphys_high)) %>% 
+  gather(key = dcat, value = estimate, dphys)
+
+
+dphys_estimates_6ms <- decays_combined_nls_estimates_6ms %>% 
+  group_by(IDA, exp_id, run) %>% 
+  mutate(dphys_mean = mean(c(dphys, dphys_min),na.rm=T)) %>% 
+  summarise(dphys = mean(dphys_mean), low = mean(dphys_min_low), high = mean(dphys_high)) %>% 
+  gather(key = dcat, value = estimate, dphys)
+
+dap_estimates <- decays_combined_nls_estimates %>% 
+  group_by(IDA, exp_id, run) %>% 
+  summarise(dap = mean(dap), low = mean(dap_low), high = mean(dap_high)) %>% 
+  gather(key = dcat, value = estimate, dap)
+
+
+d_estimates <- bind_rows(dphys_estimates, dap_estimates) %>% filter(!(run!='100uM' & dcat=='dap' & IDA=='blank'))
+
+d_estimates_6ms <- bind_rows(dphys_estimates_6ms, dap_estimates) %>% filter(!(run!='100uM' & dcat=='dap' & IDA=='blank'))
+
+plot_d4 <- ggplot(d_estimates, aes(x = dcat, y = estimate, fill = exp_id)) + 
+  geom_hline(yintercept = 7e-6, linetype = 2)+
+  geom_pointrange(aes(ymin = low, ymax = high), position = position_jitter(width = 0.15, height = 0),shape = 21, size = 0.4)+
+  facet_wrap(~IDA, scales = 'free')+
+  scale_y_log10(limits = c(1e-8, 2e-5))
+
+plot_d4_styled <- plot_d4 + 
+  scale_fill_viridis(discrete = T, guide = F) + 
+  labs(x = '', y = expression(Estimate~(cm^2 / sec))) + 
+  scale_x_discrete(breaks = c('dap', 'dphys'), labels = c(expression(D[ap]), expression(D[phys]))) + 
+  theme(axis.text.x = element_text(size = 12))
+
+plot_d4_styled
+
+d_estimates %>% group_by(IDA, dcat) %>% summarise(estimate = mean(estimate))
+```
+
+
+```{r}
+plot_d4 <- ggplot(d_estimates_6ms, aes(x = dcat, y = estimate, fill = exp_id)) + 
+  geom_hline(yintercept = 7e-6, linetype = 2)+
+  geom_pointrange(aes(ymin = low, ymax = high), position = position_jitter(width = 0.15, height = 0),shape = 21, size = 0.4)+
+  facet_wrap(~IDA, scales = 'free')+
+  scale_y_log10(limits = c(1e-8, 2e-5))
+
+plot_d4_styled <- plot_d4 + 
+  scale_fill_viridis(discrete = T, guide = F) + 
+  labs(x = '', y = expression(Estimate~(cm^2 / sec))) + 
+  scale_x_discrete(breaks = c('dap', 'dphys'), labels = c(expression(D[ap]), expression(D[phys]))) + 
+  theme(axis.text.x = element_text(size = 12))
+
+plot_d4_styled
+
+d_estimates_6ms %>% group_by(IDA, dcat) %>% summarise(estimate = mean(estimate))
+
+6.4e-06 / 2.6e-8
+
+9.556401e-07 / 2.579594e-08
+```
+
+
+Dap = Dphys ts estimate
+
+```{r}
+
+t_s_estimates <- decays_combined_nls_6ms %>% filter(IDA=='blank') %>% 
+  mutate(t_s = (pi*(b_mean^2)) / i0_high^2) %>% 
+  group_by(run) %>% 
+  summarise(t_s = mean(t_s))
+  
+t_s_equal=mean(t_s_estimates$t_s)
+
+decays_combined_nls_equal <- left_join(decays_combined, nls_terms, by = c('IDA', 'exp_id', 'run')) %>% 
+  
+  mutate(dphys = dm_from_a_OG(estimate = b_mean, i_0=i0_high, dap = dap, t_s = t_s_equal)) %>% 
+  mutate(dphys_high = dm_from_a_OG(estimate = b_high, i_0=i0_high, dap = dap, t_s = t_s_equal)) %>%
+  mutate(dphys_low = dm_from_a_OG(estimate = b_low, i_0=i0_high, dap = dap, t_s = t_s_equal)) %>%
+  
+  mutate(dphys_min = dm_from_a_OG(estimate = b_mean, i_0=i0_low, dap = dap, t_s = t_s_equal)) %>% 
+  mutate(dphys_min_high = dm_from_a_OG(estimate = b_high, i_0=i0_low, dap = dap, t_s = t_s_equal)) %>%
+  mutate(dphys_min_low = dm_from_a_OG(estimate = b_low, i_0=i0_low, dap = dap, t_s = t_s_equal))
+
+decays_combined_nls_estimates_equal <- left_join(decays_combined_nls_equal, biofilm_dap_estimates, 
+                                               by = c('exp_id', 'run')) %>% 
+   mutate(dap_high = ifelse(IDA=='blank', 7.5e-6, dap_high)) %>%
+   mutate(dap_low = ifelse(IDA=='blank', 6.2e-6, dap_low)) %>% 
+  mutate(dphys_min_low = ifelse(IDA=='blank', dphys_low, dphys_min_low))
+
+
+dphys_estimates_equal <- decays_combined_nls_estimates_equal %>% 
+  group_by(IDA, exp_id, run) %>% 
+  mutate(dphys_mean = mean(c(dphys, dphys_min),na.rm=T)) %>% 
+  summarise(dphys = mean(dphys_mean), low = mean(dphys_min_low), high = mean(dphys_high)) %>% 
+  gather(key = dcat, value = estimate, dphys)
+
+dphys_estimates_equal %>% group_by(IDA) %>% summarise(mean = mean(estimate))
+
+d_estimates_equal <- bind_rows(dphys_estimates_equal, dap_estimates) %>% filter(!(run!='100uM' & dcat=='dap' & IDA=='blank'))
+
+decays_combined_nls_equal %>% filter(IDA =='blank') %>% group_by(run) %>% 
+  summarise(mean_dphys = mean(dphys)) 
+```
+
+```{r}
+plot_d4 <- ggplot(d_estimates_equal, aes(x = dcat, y = estimate, shape = exp_id)) + 
+  geom_hline(yintercept = 7e-6, linetype = 2)+
+  geom_pointrange(aes(ymin = low, ymax = high), position = position_jitter(width = 0.5, height = 0), size = 0.25)+
+  facet_wrap(~IDA, scales = 'free')+
+  scale_y_log10(limits = c(1e-8, 2e-5))
+
+plot_d4_styled <- plot_d4 + 
+  scale_shape_discrete(guide = F, solid = F) + 
+  labs(x = '', y = expression(Estimate~(cm^2 / sec))) + 
+  scale_x_discrete(breaks = c('dap', 'dphys'), labels = c(expression(D[ap]), expression(D[phys]))) + 
+  theme(axis.text.x = element_text(size = 12))
+
+plot_d4_styled
+
+d_estimates_equal %>% group_by(IDA, dcat) %>% summarise(estimate = mean(estimate))
+
+6.366616e-06 / 2.030544e-07
+
+7.522385e-06 / 2.030544e-07
+```
+Why are blank dap and dphys not exactly equal?
+
+```{r fig.asp = 1}
+
+decays_combined_preds <- decays_combined_nls %>% 
+  mutate(pred = b_mean * (norm_time^-0.5) + a_mean) %>% 
+  mutate(pred_low = b_low* (norm_time^-0.5) + a_low) %>% 
+  mutate(pred_high = b_high* (norm_time^-0.5) + a_high) %>% 
+  mutate(exp_id = ifelse(exp_id=='2', 'Biofilm 1', 'Biofilm 2')) %>% 
+  mutate(Replicate = paste('Rep ',run))
+
+
+plot_biofilm_dphys <- ggplot(decays_combined_preds %>% filter(IDA=='biofilm'), aes(x = norm_time, y = signal)) + 
+  geom_ribbon(aes(ymin = pred_low,ymax = pred_high), fill = 'light gray')+
+  geom_line(aes(y = pred), linetype = 2)+
+  geom_point(shape = 21)+
+  facet_wrap(vars(exp_id, Replicate), scales = 'free', ncol = 3)
+
+plot_biofilm_dphys_styled <- plot_biofilm_dphys+
+  scale_y_continuous(labels = nA_label) + 
+  labs(x = 'Time (min)', y = expression(I[swv]~(nA)))
+
+plot_biofilm_dphys_styled
+
+plot_blank_dphys <- ggplot(decays_combined_preds %>% filter(IDA=='blank') %>% mutate(run=factor(run, levels = c('25uM','50uM','75uM','100uM'))), aes(x = norm_time, y = signal)) + 
+  geom_ribbon(aes(ymin = pred_low,ymax = pred_high), fill = 'light gray')+
+  geom_line(aes(y = pred), linetype = 2)+
+  geom_point(shape = 21)+
+  facet_wrap(~run, scales = 'free', ncol = 2)
+
+plot_blank_dphys_styled <- plot_blank_dphys+
+  scale_y_continuous(labels = nA_label) + 
+  labs(x = 'Time (min)', y = expression(I[swv]~(nA)))
+
+plot_blank_dphys_styled
+```
+
+
+
+
+```{r}
+
+
+
+blank_spacer <- plot_grid(plot_blank_dphys_styled,NULL, ncol = 2, rel_widths = c(2.2,1))
+
+dphys_plots <- plot_grid(plot_biofilm_dphys_styled,blank_spacer, ncol=1, scale = 0.9,  align = 'v', labels = c("A","B"))
+
+save_plot("../figures/03_22_19_fig_supp_DphysFits.pdf", dphys_plots ,base_width = 7, base_height = 7 )
+
+```
+So, the fits are certainly not perfect, but they mostly capture the decay of the data. After trying out many different parameterizations and adding new terms, we concluded that it would be most appropriate to stick to the simplest model that explains most of the data. 
+
+Then to get the lower bound for the biofilm $I_0$ we can fit the data again with the lower estimate - it will produce the same fits.
+
+```{r}
+decay_data_nls_low <- decays_combined %>% 
+  filter(IDA=='biofilm') %>% 
+  group_by(IDA, exp_id, run) %>% 
+  do(
+    tidy(
+      nls_multstart(data=., 
+          formula = signal~diffusion_point_semi(
+            t=norm_time, 
+            i0 = max(i0_low), 
+            D_ap = max(dap),
+            t_s = 0.02 , 
+            D_phys = D_phys ), 
+          start_lower = c(D_phys = 1e-8),
+          start_upper = c(D_phys = 1e-5),
+          lower = c( D_phys = 0),
+          supp_errors = 'Y',
+          iter = 250,
+          na.action = na.omit),
+      conf.int=T)
+    )
+```
+
+Finally, we can plot the estimates of $D_{phys}$ for the blank and the biofilms
+
+```{r}
+
+ggplot(decay_data_nls, aes(x = exp_id, y = estimate)) + 
+  geom_hline(yintercept = 6.88e-6, linetype = 2)+
+  geom_pointrange(data= decay_data_nls_low, aes(ymin = conf.low, ymax = conf.high), color = 'blue', position = position_jitter(width = 0.1, height = 0)) + 
+  geom_pointrange( aes(ymin = conf.low, ymax = conf.high),position = position_jitter(width = 0.1, height = 0)) + 
+  facet_wrap(~IDA, scales = 'free_x') + 
+  scale_y_log10()
+```
+
+It is important to note that all these values were calculated with $t_s = 20ms$, because it gave a realistic answer. This value is within the realm of possibility, but it is higher than we suggested previously. 
+
+# Useful Figures
+
+Comparing example biofilm and blank with models
+
+```{r}
+blank_tmin = decays_combined_nls %>% filter(IDA=='blank' & run=='75uM') %>% summarise(min(norm_time))
+blank_tmax = decays_combined_nls %>% filter(IDA=='blank' & run=='75uM') %>% summarise(max(norm_time))
+
+pred_time_blank = tibble(
+  pred_time = seq(as.numeric(blank_tmin), as.numeric(blank_tmax), length.out = 100),
+  IDA = rep('blank',100)
+)
+
+biofilm_tmin = decays_combined_nls %>% filter(IDA=='biofilm' & exp_id=='3' & run=='1') %>% summarise(min(norm_time))
+biofilm_tmax = decays_combined_nls %>% filter(IDA=='biofilm' & exp_id=='3' & run=='1') %>% summarise(max(norm_time))
+
+pred_time_biofilm = tibble(
+  pred_time = seq(as.numeric(biofilm_tmin), as.numeric(biofilm_tmax), length.out = 500),
+  IDA = rep('biofilm', 500)
+)
+
+pred_times <- bind_rows(pred_time_blank, pred_time_biofilm)
+
+smooth_preds <- left_join(pred_times, nls_terms %>% 
+                            filter((exp_id=='3' & run=='1') | (exp_id=='1' & run=='75uM')), 
+                          by = c('IDA')) %>% 
+  mutate(pred = b_mean * (pred_time^-0.5) + a_mean) %>% 
+  mutate(pred_low = b_low* (pred_time^-0.5) + a_low) %>% 
+  mutate(pred_high = b_high* (pred_time^-0.5) + a_high) 
+
+
+# plot layout
+plot_compare_decays <- ggplot(data = smooth_preds,aes(x = pred_time, y = pred, group = IDA)) + 
+  geom_ribbon(aes(ymin = pred_low, ymax = pred_high), fill = 'light gray')+
+  geom_line(linetype = 2)+
+  geom_point(data = decays_combined_preds %>% 
+         filter((IDA=='biofilm' & exp_id=='Biofilm 2' & run=='1') | (IDA=='blank' & run=='75uM') ), 
+       aes(x = norm_time, y = signal, fill = norm_time),
+       shape = 21, size = 1)
+
+# ggplot(decay_data_preds %>% 
+#          filter((IDA=='biofilm' & exp_id==3 & run=='1') | (IDA=='blank' & run=='75uM') ), 
+#        aes(x = norm_time, y = signal)) + 
+#   geom_smooth(aes(group = IDA),method = "nls", 
+#     formula = y ~ b * (x)^-0.5 + a, 
+#     method.args = list(start = c(b = 0.1, a = 1e-07)), se = F,
+#     linetype = 2, color = 'black')+
+#   geom_point(shape = 21)+ylim(0,NA)
+
+# plot styling 
+plot_compare_decays_styled <- plot_compare_decays+
+  scale_y_continuous(labels = nA_label, limits = c(0,NA)) + 
+  labs(x = 'Time (min)', y = expression(I[swv]~(nA))) + 
+  scale_fill_viridis(guide = F)
+
+plot_compare_decays_styled
+```
+Could improve this figure by generating model predictions for more points than exist in the dataset to generate smooth confidence intervals. 
+
+
+
+

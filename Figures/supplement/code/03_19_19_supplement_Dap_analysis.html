@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>D_{ap} Analysis</title>
+
+<script src="03_19_19_supplement_Dap_analysis_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="03_19_19_supplement_Dap_analysis_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="03_19_19_supplement_Dap_analysis_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="03_19_19_supplement_Dap_analysis_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="03_19_19_supplement_Dap_analysis_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="03_19_19_supplement_Dap_analysis_files/navigation-1.1/tabsets.js"></script>
+<script src="03_19_19_supplement_Dap_analysis_files/navigation-1.1/codefolding.js"></script>
+<link href="03_19_19_supplement_Dap_analysis_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="03_19_19_supplement_Dap_analysis_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore"><span class="math inline">\(D_{ap}\)</span> Analysis</h1>
+<h4 class="date"><em>03_19_19</em></h4>
+
+</div>
+
+
+<pre class="r"><code>library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+library(knitr)
+library(kableExtra)
+library(patchwork)
+library(VGAM)
+library(nls.multstart)
+
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60), echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)
+
+source(&quot;../../../IDA/tools/echem_processing_tools.R&quot;)
+source(&quot;../../../IDA/tools/plotting_tools.R&quot;)
+
+theme_set(theme_1())</code></pre>
+<pre class="r"><code>df_blank &lt;- read_csv(&quot;../../../IDA/11_28_18_blank_IDA/Processing/11_28_18_swv_gc_soak_processed.csv&quot;) %&gt;% 
+  select(reactor,electrode_from_swv,signal_from_swv,electrode_from_gc, signal_from_gc,echem_from_swv, minutes_from_swv ) %&gt;% 
+  mutate(run = 1, rep = 0, treatment=&#39;blank&#39;, exp_id = &#39;blank&#39;)
+
+
+df_3 &lt;- read_csv(&quot;../../../IDA/01_23_19_psoralen_nonequil_3/Processing/01_23_19_processed_swv_gc_all.csv&quot;) %&gt;% 
+  select(treatment,run,rep,reactor,electrode_from_swv,signal_from_swv,electrode_from_gc, signal_from_gc, echem_from_swv, minutes_from_swv ) %&gt;% 
+  mutate(exp_id = &#39;3&#39;) %&gt;% 
+  filter(run!=1 | treatment!=&#39;psoralen&#39; | rep&lt;14 ) %&gt;% 
+  filter(run!=4 | treatment!=&#39;control&#39; | rep&gt;1 )
+  
+
+df_2_control &lt;- read_csv(&quot;../../../IDA/01_17_19_psoralen_nonequil_2/Processing/01_17_19_swv_gc_control_dap_processed.csv&quot;)
+df_2_psoralen &lt;- read_csv(&quot;../../../IDA/01_17_19_psoralen_nonequil_2/Processing/01_17_19_swv_gc_psoralen_dap_processed.csv&quot;)
+
+df_2 &lt;- rbind(df_2_control,df_2_psoralen) %&gt;% 
+  select(treatment,run, rep, reactor,electrode_from_swv,signal_from_swv,electrode_from_gc, signal_from_gc, echem_from_swv, minutes_from_swv ) %&gt;% 
+  mutate(exp_id = &#39;2&#39;)
+
+
+df_all &lt;- rbind(df_2,df_3,df_blank) %&gt;% mutate()</code></pre>
+<pre class="r"><code>plot_control_dap &lt;- ggplot(df_all %&gt;% 
+                             filter(electrode_from_swv==&#39;i1&#39; &amp; 
+                                      electrode_from_gc==&#39;i2&#39; &amp; 
+                                      treatment!=&#39;blank&#39; &amp; 
+                                      echem_from_swv==&#39;SWV&#39; &amp; 
+                                      treatment ==&#39;control&#39;), 
+       aes(x = signal_from_swv, y = signal_from_gc)) + 
+  geom_smooth(method=&#39;lm&#39;, linetype = 2, color = &#39;black&#39;)+
+  geom_point(shape = 21) + 
+  facet_wrap(exp_id~run,scales=&#39;free&#39;)+
+  scale_color_viridis(discrete = T)
+
+plot_control_dap_styled &lt;- plot_control_dap + 
+  scale_x_continuous(labels = nA_label) + 
+  scale_y_continuous(labels = nA_label) + 
+  labs(x = expression(I[swv]~(nA)), y = expression(I[gc]~(nA)))
+
+plot_control_dap_styled</code></pre>
+<p><img src="03_19_19_supplement_Dap_analysis_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>swv_gc_all &lt;- df_all %&gt;% 
+  filter(electrode_from_swv==&#39;i1&#39; &amp;
+           electrode_from_gc==&#39;i2&#39; &amp;
+           treatment!=&#39;blank&#39; &amp; 
+           echem_from_swv==&#39;SWV&#39; &amp; 
+           treatment ==&#39;control&#39;) %&gt;% 
+  group_by(exp_id,run) %&gt;% 
+  do(fit = lm(signal_from_gc~signal_from_swv,data = .))
+
+swv_gc_fit_tidy &lt;- tidy(swv_gc_all,fit,conf.int=T)
+
+swv_gc_fit_glance &lt;- glance(swv_gc_all,fit) %&gt;% 
+  select(exp_id,run,r.squared,adj.r.squared)
+
+swv_gc_fit &lt;- left_join(swv_gc_fit_tidy %&gt;% filter(term==&#39;signal_from_swv&#39;), swv_gc_fit_glance, by = c(&#39;exp_id&#39;,&#39;run&#39;))
+
+# Layout
+plot_rsquare &lt;- ggplot(swv_gc_fit, aes(x = exp_id, y = r.squared,color = factor(run)))+
+  geom_hline(yintercept = 1, linetype = 2) +
+  geom_jitter(height = 0, width = 0.1)+
+  scale_color_viridis(discrete = T) + ylim(0, NA)
+
+# Styling
+plot_rsquare_styled &lt;- plot_rsquare +
+  labs(x = &#39;Biofilm #&#39;, y = expression(R^2), color = &#39;Replicate #&#39;)
+
+plot_rsquare_styled</code></pre>
+<p><img src="03_19_19_supplement_Dap_analysis_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

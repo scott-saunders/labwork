@@ -1,0 +1,129 @@
+---
+title: "SI: SWV PCA vs. PYO"
+fontsize: 12pt
+date: "03_25_19"
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
+---
+
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(viridis)
+library(knitr)
+library(kableExtra)
+library(patchwork)
+library(tidyr)
+library(broom)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+source("../../../IDA/tools/echem_processing_tools.R")
+source("../../../IDA/tools/plotting_tools.R")
+
+theme_set(theme_1())
+```
+
+```{r}
+df_pca_soak <- read_csv('../data/SWV_pca_pyo_retention/100uM_PCA_dPHZstar_soak_SWV2_15hz25mV.txt', 
+                        skip = 18, col_names = c('E','i1','i2')) %>% 
+  mutate(phz_mol = 'PCA', reactor = 'soak')
+
+df_pca_transfer <- read_csv('../data/SWV_pca_pyo_retention/100uM_PCA_dPHZstar_transfer_SWV_15hz25mV.txt', 
+                        skip = 18, col_names = c('E','i1','i2')) %>% 
+  mutate(phz_mol = 'PCA', reactor = 'transfer')
+
+df_pyo_soak <- read_csv('../data/SWV_pca_pyo_retention/100uM_PYO_dPHZstar_soak_SWV_15hz25mv.txt', 
+                        skip = 18, col_names = c('E','i1','i2')) %>% 
+  mutate(phz_mol = 'PYO', reactor = 'soak')
+
+df_pyo_transfer <- read_csv('../data/SWV_pca_pyo_retention/100uM_PYO_dPHZstar_transfer_SWV_15hz25mv.txt', 
+                        skip = 18, col_names = c('E','i1','i2')) %>% 
+  mutate(phz_mol = 'PYO', reactor = 'transfer')
+
+df_pca_pyo <- bind_rows(df_pca_soak, df_pca_transfer, df_pyo_soak, df_pyo_transfer)
+
+plot_pca_pyo <- ggplot(df_pca_pyo %>% filter(E<0 & E>-0.6), aes(x = E, y = i1)) + 
+  geom_path() + 
+  facet_wrap(reactor~phz_mol, scales = 'free')
+
+plot_pca_pyo_styled <- plot_pca_pyo+
+  scale_x_reverse(labels = mV_label)+
+  scale_y_continuous(labels = nA_label)+
+  labs(x = 'E (mV vs. Ag/AgCl)', y = expression(I[swv]~(nA)))
+
+plot_pca_pyo_styled
+
+# geom_smooth(span = 0.3, se = F, color = 'black')+
+```
+
+```{r}
+save_plot("../figures/03_25_19_fig_supp_swvPCApyo.pdf", plot_pca_pyo_styled ,base_width = 6, base_height = 4 )
+
+```
+
+```{r}
+ida_phz <- tibble(
+  Day = c(1,2,3),
+  PYO = c(79.86,115.4,88.6),
+  PCA = c(10.4, 18.1,29.3),
+  PCN = c(0.254, 0.51, 0.61)
+) %>% 
+  gather(key = phenazine, value = amount, -Day) %>% 
+  group_by(phenazine) %>% 
+  mutate(mean = ifelse(Day==1,mean(amount),NA))
+
+plot_ida_phz <- ggplot(ida_phz, aes(x = phenazine, y = amount)) + 
+  geom_col(aes(y = mean), fill = 'light gray') + 
+  geom_jitter(width = 0.1, height = 0, shape = 21)
+
+plot_ida_phz_styled <- plot_ida_phz+
+  labs(x='', y = expression(Concentration ~(mu*M)))
+
+plot_ida_phz_styled
+```
+
+
+```{r}
+dphz_3<- read_csv("../data/dPHZ_d3_newMedia_CV_10mVs.txt", skip = 0, col_names = c('E','i1','i2','t')) %>% 
+  mutate(panel = 'WT', condition = 'control')
+wt_3<- read_csv("../data/WT_d3_newMedia_CV_10mVs.txt",skip = 0, col_names = c('E','i1','i2','t')) %>% 
+  mutate(panel = 'WT', condition = 'PYO')
+
+dphz_4<- read_csv("../data/dPHZ_d4_newMedia_CV_10mVs.txt",skip = 20, col_names = c('E','i1','i2','t')) %>% 
+  mutate(panel = 'dphz', condition = 'control')
+
+dphz_pyo_4<- read_csv("../data/dPHZ_d4_100uM_PYO_transfer_CV_10mVs.txt",skip = 20, col_names = c('E','i1','i2','t')) %>% 
+  mutate(panel = 'dphz', condition = 'PYO')
+
+ida_sol_data <- bind_rows(dphz_3, wt_3, dphz_4, dphz_pyo_4) %>% 
+  mutate(panel = factor(panel, levels = c('WT','dphz')))
+
+plot_sol_echem <- ggplot(ida_sol_data, aes(x = E, y = i1)) + 
+  geom_vline(xintercept = -0.25, color = 'light gray')+
+  geom_path(aes(linetype = condition)) +
+  facet_wrap(~panel, scales = 'free') 
+
+plot_sol_echem_styled <- plot_sol_echem +
+  scale_x_reverse(labels = mV_label)+
+  scale_y_continuous(labels = nA_label)+
+  scale_linetype_manual(values = c('dashed','solid'), guide = F) + 
+  labs(x = 'E (mV vs. Ag/AgCl)', y = expression(I[cv]~(nA))) + 
+  theme(strip.background = element_blank(),strip.text.x = element_blank())
+
+plot_sol_echem_styled
+```
+
+```{r}
+fig_supp_ida_sol <- plot_grid(plot_ida_phz_styled, plot_sol_echem_styled, rel_widths = c(1,2), scale = 0.9, labels = c('A','B'))
+
+fig_supp_ida_sol
+
+save_plot("../figures/04_03_19_fig_supp_IDAsol.pdf",fig_supp_ida_sol,base_width = 7, base_height = 3)
+```

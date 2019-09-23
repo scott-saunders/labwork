@@ -58,8 +58,15 @@ df_cal <- df_blank %>%
 
 The data look like this:
 ```{r}
-ggplot(df_cal, aes(x = signal_from_swv, y = signal_from_gc)) + geom_point() + geom_smooth(method='lm')
+plot_swvGC <- ggplot(df_cal, aes(x = signal_from_swv, y = signal_from_gc)) + 
+  geom_smooth(method='lm', linetype = 2, color = 'black') + geom_point(shape = 21)
 
+plot_swvGC_styled <- plot_swvGC+  
+  scale_x_continuous(labels = nA_label) + 
+  scale_y_continuous(labels = nA_label) + 
+  labs(x = expression(I[swv]~(nA)), y = expression(I[gc]~(nA)))
+  
+plot_swvGC_styled
 ```
 
 Recall that for this type of data:
@@ -89,6 +96,9 @@ lm_swvGC <- tidy(lm(signal_from_gc~signal_from_swv, data = df_cal), conf.int = T
   mutate(dap_low = dap_from_swvGC(m = conf.low)) %>% 
   mutate(dataset = 'SWVvsGC')
 
+glance(lm(signal_from_gc~signal_from_swv, data = df_cal))
+
+
 #write_csv(lm_swvGC,"../data/02_07_19_blank_dap_estimates.csv")
 
 lm_swvGC %>% 
@@ -101,7 +111,15 @@ Ok, seems reasonable, let's move forward and we'll compare at the end.
 
 Here's the data:
 ```{r}
-ggplot(df_cal, aes(x = C_mol_cm3, y = signal_from_swv)) + geom_point() + geom_smooth(method='lm')
+plot_SWV <- ggplot(df_cal, aes(x = C_mol_cm3, y = signal_from_swv)) +
+    geom_smooth(method='lm', linetype = 2, color = 'black') + geom_point(shape = 21)
+
+plot_SWV_styled <- plot_SWV+  
+  scale_x_continuous(labels = nA_label) + 
+  scale_y_continuous(labels = nA_label) + 
+  labs(x = expression(PYO~(mu*M)), y = expression(I[swv]~(nA)))
+  
+plot_SWV_styled
 ```
 
 For a plot of $I_{SWV}$ vs. $C$, the slope can be definited in terms of the parameters for $I_{SWV}$ other than concentration. This yields an expression for $D_{ap}$:
@@ -137,6 +155,8 @@ lm_SWV <- tidy(lm(signal_from_swv~C_mol_cm3, data = df_cal), conf.int = T) %>%
   mutate(dap_low = dap_from_SWV(m = conf.low)) %>% 
   mutate(dataset = 'SWV')
 
+glance(lm(signal_from_swv~C_mol_cm3, data = df_cal))
+
 lm_SWV %>% 
   kable() %>% 
   kable_styling()
@@ -147,7 +167,15 @@ Also seems reasonable.
 
 Here's the GC vs. Concentration data:
 ```{r}
-ggplot(df_cal, aes(x = C_mol_cm3, y = signal_from_gc)) + geom_point() + geom_smooth(method='lm')
+plot_GC <- ggplot(df_cal, aes(x = C_mol_cm3, y = signal_from_gc)) +    
+  geom_smooth(method='lm', linetype = 2, color = 'black') + geom_point(shape = 21)
+
+plot_GC_styled <- plot_GC+  
+  scale_x_continuous(labels = nA_label) + 
+  scale_y_continuous(labels = nA_label) + 
+  labs(x = expression(PYO~(mu*M)), y = expression(I[gc]~(nA)))
+  
+plot_GC_styled
 ```
 Again, very linear.
 
@@ -182,6 +210,8 @@ lm_GC <- tidy(lm(signal_from_gc~C_mol_cm3, data = df_cal), conf.int = T) %>%
   mutate(dap_low = dap_from_GC(m = conf.low)) %>% 
   mutate(dataset = 'GC')
 
+glance(lm(signal_from_gc~C_mol_cm3, data = df_cal))
+
 lm_GC %>% 
   kable() %>% 
   kable_styling()
@@ -201,12 +231,25 @@ So, you can see that the estimates actually match very closely!!
 
 Here it is plotted:
 ```{r}
-ggplot(lms, aes(x = dataset, y = dap)) + 
+plot_cal_dap <- ggplot(lms, aes(x = dataset, y = dap)) + 
   geom_pointrange(aes(ymin = dap_low, ymax = dap_high)) + 
   ylim(0, 1e-5)
 
+plot_cal_dap_styled <- plot_cal_dap+
+  labs(x = 'Dataset', y = expression(D[ap]~(cm^2 / sec)))+
+  scale_x_discrete(breaks = c('GC','SWV', 'SWVvsGC'), labels=c('GC vs.\n[PYO]', 'SWV vs.\n[PYO]', 'GC vs.\nSWV'))
+
+plot_cal_dap_styled
 ```
 
+
+```{r}
+cal_dap_grid <- plot_grid(plot_GC_styled, plot_SWV_styled, plot_swvGC_styled, plot_cal_dap_styled, ncol = 2, align = 'hv', axis = 'tblr', scale = 0.9, labels = c("A","B","C","D"))
+
+cal_dap_grid
+
+save_plot("../../supplement/figures/03_22_19_fig_supp_dapCal.pdf",cal_dap_grid, base_width = 6.5, base_height = 5)
+```
 So, you can see that the estimates correspond very nicely when we use these parameters. Realizing that these estimates should match led me to look for a better estimate of $\psi$ based on our scan parameters and I found this [reference](https://link.springer.com/book/10.1007%2F978-3-642-02915-8), which suggested that for $n = 2$ and $E_{swv} = 25mV, \psi = 0.75$ and for $n = 1.8, \psi = 0.7$. I tested both and the second parameter set yielded good results, and corresponds to the peak splitting we see in CVs (n is not quite 2). Therefore the parameters I would like to proceed with are:
 
 * $A = 0.025 \text{cm}^2$ as measured by Fernanda  

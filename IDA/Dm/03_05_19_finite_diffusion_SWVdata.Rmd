@@ -1,0 +1,403 @@
+---
+title: "Finite diffusion with SWV data"
+fontsize: 12pt
+date: "03_05_19"
+output:
+  html_document:
+    self_contained: false
+    toc: true
+    code_folding: hide
+  github_document:
+    pandoc_args: --webtex
+---
+
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(broom) 
+library(modelr) 
+library(viridis)
+library(lubridate)
+library(hms)
+library(knitr)
+library(kableExtra)
+library(patchwork)
+library(VGAM)
+library(nls.multstart)
+
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+source("../tools/echem_processing_tools.R")
+source("../tools/plotting_tools.R")
+
+theme_set(theme_1())
+```
+
+# Math - finite diffusion with SWV data
+
+So from the 03/04/19 notebook we have an expression for the concentration at $x = 0$ over time for a system with finite boundaries at $x = 0$ and $x = L$:
+
+$$ C(x=0,t) = \frac{M}{\sqrt{4 \pi D t}} 
+\sum_{n = -\infty}^{\infty} \left[ 2 \exp{ \left( \frac{-(-2nL)^2}{4 D t} \right) } \right] $$  
+
+We're going to adapt this slightly by normalizing by the cross sectional area to get an actual concentration in mol / cm^3 , and let's go ahead and label M0 and Dm. 
+
+$$ C(t) = \frac{M_0}{A \sqrt{4 \pi D_m t}} 
+\sum_{n = -\infty}^{\infty} \left[ 2 \exp{ \left( \frac{-(-2nL)^2}{4 D_m t} \right) } \right] $$  
+
+Recall that SWV current can be defined. 
+
+$$ I_{swv} = \frac{n F A \sqrt{D_{ap}} C}{\sqrt{\pi t_p}} \psi $$
+and so $C$ can be defined in terms of SWV parameters/data:
+
+$$C = \frac{I_{swv} \sqrt{\pi t_p} }{n F A \sqrt{D_{ap}} \psi}$$
+
+And so can $M_0$:
+
+$$C = \frac{M_0}{V} = \frac{I_0 \sqrt{\pi t_p} }{n F A \sqrt{D_{ap}} \psi}$$
+
+$$ M_0 = \frac{I_0 V \sqrt{\pi t_p} }{n F A \sqrt{D_{ap}} \psi}$$ 
+
+Now we can substitute $C$ and $M_0$ with the equivalent SWV expressions:
+
+$$ \frac{I_{swv} \sqrt{\pi t_p} }{n F A \sqrt{D_{ap}} \psi} = \frac{\frac{I_0 V \sqrt{\pi t_p} }{n F A \sqrt{D_{ap}} \psi}}{A \sqrt{4 \pi D_m t}} 
+\sum_{n = -\infty}^{\infty} \left[ 2 \exp{ \left( \frac{-(-2nL)^2}{4 D_m t} \right) } \right] $$  
+
+$$ I_{swv}(t) = \frac{I_0 V}{A \sqrt{4 \pi D_m t}} 
+\sum_{n = -\infty}^{\infty} \left[ 2 \exp{ \left( \frac{-(-2nL)^2}{4 D_m t} \right) } \right] $$ 
+
+Recall that $\frac{V}{A} = z$, which is the diffusion layer at the electrode.
+
+$$ z = \sqrt{D_{ap} t_s}$$
+
+So our expression is:
+
+$$ I_{swv}(t) = \frac{I_0 \sqrt{D_{ap} t_s}}{ \sqrt{4 \pi D_m t}} 
+\sum_{n = -\infty}^{\infty} \left[ 2 \exp{ \left( \frac{-(-2nL)^2}{4 D_m t} \right) } \right] $$ 
+
+So we will need to provide our function to calculate $I_{swv}(t)$ with $D_{ap}$, $t_s$, and $I_0$. We will be fitting for unknowns $D_m$ and $L$.
+
+# Fit some data
+Before we even think about real data, let's right our function to calculate the decay curve from the electrochemical parameters using the above equation. 
+
+```{r}
+# Function to calculate decay curves from parameters - from eq. above. 
+
+diffusion_point_finite <- function(t, i0, D_ap, t_s,  L, D_phys){
+  sum = 0
+  
+  for (n in seq(-100,100,1)) {
+    sum = sum +  exp((-(-2*n*L)^2)/(4*D_phys*t))
+  }
+  
+  (2*i0 * sqrt(D_ap * t_s) / sqrt(4 * D_phys * t)) * sum
+}
+
+
+diffusion_point_semi <- function(t, i0, D_ap, t_s, D_phys){
+
+  (i0 * sqrt(D_ap * t_s) / sqrt(4  * D_phys * t))
+}
+```
+
+Now let's try to generate some data from reasonable parameters and see what it looks like. 
+
+```{r}
+df <- tibble(t = seq(0, 2500, length = 25)) %>% 
+  mutate(sig1 = diffusion_point_finite(t=t, i0 = 1e-5,D_ap = 6e-6,t_s = 0.005 , L = 1, D_phys = 6e-8)) %>% 
+  mutate(sig2 = diffusion_point_finite(t=t, i0 = 1e-5,D_ap = 6e-6,t_s = 0.005 , L = 0.015, D_phys = 6e-8)) %>% 
+  mutate(sig3 = diffusion_point_semi(t=t, i0 = 1e-5,D_ap = 6e-6,t_s = 0.005 , D_phys = 6e-8))
+
+ggplot(df, aes(x = t)) + 
+  geom_point(aes(y = sig1), color = 'red', size = 3) + 
+  geom_point(aes(y = sig2), color = 'purple', size = 1) + 
+  geom_point(aes(y = sig3), color = 'blue') + 
+  ylim(0,NA)
+```
+
+Finally, we can start with the real data. Let's try to fit one of the blank decay curves first. 
+```{r}
+
+blank_data <- read_csv("../11_28_18_blank_IDA/Processing/11_28_18_swv_decays_Processed.csv") %>% 
+  filter(PHZadded!='10uM')
+
+ggplot(blank_data , aes(x = norm_time, y = signal_from_transfer, color = PHZadded))+
+  geom_point()+geom_line(aes(y = i0), linetype = 2, color = 'black') + 
+  geom_hline(yintercept = 0)+
+  facet_wrap(~PHZadded,ncol = 4) + ylim(0,NA)
+```
+
+Could shifting the curve up and down give different D estimates? Probably should check, because these curves don't reach 0 because of some background...
+
+```{r}
+remaining peak height
+100uM = 2.648e-7
+75uM = 2.199e-7
+50uM = 1.958e-7
+25uM = 1.548e-7
+
+resids <- tibble(
+  PHZadded = c('100uM','75uM','50uM','25uM'),
+  resid = c(2.648e-7,2.199e-7,1.958e-7,1.548e-7))
+
+last signal
+100uM = 8.6817e-7
+
+bg_subtract: -(min - peak)
+- (8.6817 - 2.648)
+
+blank_data %>% filter(PHZadded=='75uM' & rep==50)
+
+
+```
+
+
+```{r}
+blank_data_bg <- left_join(blank_data, resids, by = c('PHZadded')) %>% 
+  group_by(PHZadded) %>% 
+  mutate(signal_bg = signal_from_transfer - (min(signal_from_transfer)-resid)) %>% 
+  mutate(i0_bg = i0-(min(signal_from_transfer)-resid))
+
+
+
+blank_data_nls <- blank_data_bg %>% 
+  filter(norm_time<2) %>% 
+  group_by(PHZadded) %>% 
+  do(
+    tidy(
+      nls_multstart(data=., 
+          formula = signal_bg~diffusion_point_semi(
+            t=norm_time, 
+            i0 = max(i0_bg), 
+            D_ap = 6.88e-6,
+            t_s = 0.02 , 
+            D_phys = D_phys ), 
+          start_lower = c(D_phys = 1e-8),
+          start_upper = c(D_phys = 1e-5),
+          lower = c( D_phys = 0),
+          supp_errors = 'Y',
+          iter = 250,
+          na.action = na.omit),
+      conf.int=T)
+    )
+
+
+blank_data_preds <- left_join(blank_data_bg, blank_data_nls, by = c('PHZadded')) %>% 
+  group_by(PHZadded) %>% 
+  mutate(preds = diffusion_point_semi(
+    t=norm_time, 
+    i0 = max(i0_bg), 
+    D_ap = 6.88e-6,
+    t_s = 0.02 , 
+    D_phys = estimate)) %>% 
+    mutate(pred_high = diffusion_point_semi(
+      t=norm_time, 
+      i0 = max(i0_bg), 
+      D_ap = 6.88e-6,
+      t_s = 0.02 , 
+      D_phys = conf.high))  %>% 
+    mutate(pred_low = diffusion_point_semi(
+      t=norm_time, 
+      i0 = max(i0_bg), 
+      D_ap = 6.88e-6,
+      t_s = 0.02 ,
+      D_phys = conf.low)) 
+
+ggplot(blank_data_preds %>% filter(norm_time<5), aes(x = norm_time, y = signal_bg, color = PHZadded)) + 
+  geom_point()+
+  geom_line(aes(y = preds), linetype = 2, color = 'black') + 
+  geom_line(aes(y = pred_high), linetype = 2, color = 'gray') + 
+  geom_line(aes(y = pred_low), linetype = 2, color = 'gray') + 
+  facet_wrap(~PHZadded, scales = 'free')+
+  ylim(0,NA)
+```
+
+
+```{r}
+blank_data_nls %>% arrange(term)
+```
+
+Let's start by fixing L at a high number, which should essentially be semi-infinite diffusion
+```{r}
+blank_data_bg <- blank_data %>%
+  group_by(PHZadded) %>% 
+  mutate(signal_bg = signal_from_transfer - min(signal_from_transfer)/2) %>% 
+  mutate(i0_bg = i0-min(signal_from_transfer)/2)
+
+
+
+blank_data_nls <- blank_data_bg %>% 
+  filter(norm_time<2) %>% 
+  group_by(PHZadded) %>% 
+  do(
+    tidy(
+      nls_multstart(data=., 
+          formula = signal_bg~diffusion_point_finite(
+            t=norm_time, 
+            i0 = max(i0_bg), 
+            D_ap = 6.88e-6,
+            t_s = 0.02 , 
+            L = 100, 
+            D_phys = D_phys ), 
+          start_lower = c(D_phys = 1e-8),
+          start_upper = c(D_phys = 1e-5),
+          lower = c( D_phys = 0),
+          supp_errors = 'Y',
+          iter = 250,
+          na.action = na.omit),
+      conf.int=T)
+    )
+
+
+blank_data_preds <- left_join(blank_data_bg, blank_data_nls, by = c('PHZadded')) %>% 
+  group_by(PHZadded) %>% 
+  mutate(preds = diffusion_point_finite(
+    t=norm_time, 
+    i0 = max(i0_bg), 
+    D_ap = 6.88e-6,
+    t_s = 0.02 , 
+    D_phys = estimate,
+    L=100)) %>% 
+    mutate(pred_high = diffusion_point_finite(
+      t=norm_time, 
+      i0 = max(i0_bg), 
+      D_ap = 6.88e-6,
+      t_s = 0.02 , 
+      D_phys = conf.high,
+      L=100))  %>% 
+    mutate(pred_low = diffusion_point_finite(
+      t=norm_time, 
+      i0 = max(i0_bg), 
+      D_ap = 6.88e-6,
+      t_s = 0.02 ,
+      D_phys = conf.low,
+      L=100)) 
+
+ggplot(blank_data_preds %>% filter(norm_time<5), aes(x = norm_time, y = signal_bg, color = PHZadded)) + 
+  geom_point()+
+  geom_line(aes(y = preds), linetype = 2, color = 'black') + 
+  geom_line(aes(y = pred_high), linetype = 2, color = 'gray') + 
+  geom_line(aes(y = pred_low), linetype = 2, color = 'gray') + 
+  facet_wrap(~PHZadded, scales = 'free')+
+  ylim(0,NA)
+```
+
+Here I used bg subtracted data with the min / 2, because if you go back and look at the processing of the data for electrode i1, there's both background and signal left. Then I also changed t_s to give reasonable numbers. I think if we are going to use this method we should explicitly set Dap = Dphys and solve for t_s...but idk how to feel about this.
+
+```{r}
+blank_data_nls %>% arrange(term)
+```
+
+Let's see what happens if we let $L$ vary freely:
+
+```{r}
+
+
+blank_data_nls <- blank_data_bg %>% 
+  filter(norm_time<3) %>% 
+  group_by(PHZadded) %>% 
+  do(
+    tidy(
+      nls_multstart(data=., 
+          formula = signal_from_transfer~diffusion_point_finite(
+            t=norm_time, 
+            i0 = max(i0), 
+            D_ap = 6.88e-6,
+            t_s = 0.02 , 
+            L = L, 
+            D_phys = D_phys ), 
+          start_lower = c(L = 0.001, D_phys = 1e-8),
+          start_upper = c(L=1, D_phys = 1e-5),
+          lower = c(L = 0, D_phys = 0),
+          supp_errors = 'Y',
+          iter = 250,
+          na.action = na.omit),
+      )
+    )
+
+
+
+
+blank_data_preds <- left_join(blank_data_bg, blank_data_nls  %>% select(PHZadded,term,estimate) %>% spread(term, estimate,drop=T), by = c('PHZadded')) %>% 
+  group_by(PHZadded) %>% 
+  mutate(preds = diffusion_point_finite(
+    t=norm_time, 
+    i0 = max(i0), 
+    D_ap = 6.88e-6,
+    t_s = 0.02 , 
+    L = L, 
+    D_phys = D_phys)) 
+
+ggplot(blank_data_preds %>% filter(norm_time<5), aes(x = norm_time, y = signal_from_transfer, color = PHZadded)) + 
+  geom_point()+
+  geom_line(aes(y = preds), linetype = 2, color = 'black') + facet_wrap(~PHZadded, scales = 'free')+
+  ylim(0,NA)
+```
+
+```{r}
+blank_data_nls %>% arrange(term)
+```
+Unfortunately this model will not fit the background subtracted data...unclear why.
+
+We can add another term, $b$ to the equation, which can be interpreted as either background or perhaps a contribution from flow. This added complexity allows the model to fit extremely well, but it is unclear how realistic this equation is. 
+```{r}
+blank_data_bg <- blank_data %>%
+  group_by(PHZadded) %>% 
+  mutate(signal_bg = signal_from_transfer - min(signal_from_transfer))
+
+blank_data_nls <- blank_data_bg %>% 
+  filter(norm_time<3) %>% 
+  group_by(PHZadded) %>% 
+  do(
+    tidy(
+      nls_multstart(data=., 
+          formula = signal_from_transfer~diffusion_point_finite(
+            t=norm_time, 
+            i0 = max(i0), 
+            D_ap = 6.88e-6,
+            t_s = 0.0053 , 
+            L = L, 
+            D_phys = D_phys )+b, 
+          start_lower = c(L = 0.001, D_phys = 1e-8, b=-5e-7),
+          start_upper = c(L=1, D_phys = 1e-5, b = 5e-7),
+          lower = c(L = 0, D_phys = 0, b = -1),
+          supp_errors = 'Y',
+          iter = 250,
+          na.action = na.omit),
+      )
+    )
+
+
+
+
+blank_data_preds <- left_join(blank_data_bg, blank_data_nls  %>% select(PHZadded,term,estimate) %>% spread(term, estimate,drop=T), by = c('PHZadded')) %>% 
+  group_by(PHZadded) %>% 
+  mutate(preds = diffusion_point_finite(
+    t=norm_time, 
+    i0 = max(i0), 
+    D_ap = 6.88e-6,
+    t_s = 0.0053 , 
+    L = L, 
+    D_phys = D_phys) + b) 
+
+ggplot(blank_data_preds %>% filter(norm_time<5), aes(x = norm_time, y = signal_from_transfer, color = PHZadded)) + 
+  geom_point()+
+  geom_line(aes(y = preds), linetype = 2) + facet_wrap(~PHZadded, scales = 'free')+
+  ylim(0,NA)
+```
+You can see that the fits are now essentially perfect. 
+
+The parameters we get are:
+```{r}
+blank_data_nls %>% arrange(term)
+```
+So this parameterization gives $D_{phys}$ in the 10^-7 cm^2 / sec range with a small L of ~10um and often a negative b. How unrealistic are these numbers? By allowing b to be negative are we artifically slowing D?
+
+```{r}
+ggplot(blank_data %>% filter(norm_time<3), aes(x = norm_time, y = signal_from_transfer- 8e-7, 
+    color = PHZadded, shape = electrode)) + geom_point() + geom_smooth(method = "nls", 
+    formula = y ~ b * (x)^-0.5 + a, method.args = list(start = c(b = 0.1, 
+        a = 1e-07)), se = F) + facet_wrap(~electrode) + scale_color_viridis(discrete = T) + ylim(0,NA)
+```

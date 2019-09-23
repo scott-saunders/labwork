@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>SI: LC-MS Controls</title>
+
+<script src="03_11_19_supplement_LC-MS_controls_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="03_11_19_supplement_LC-MS_controls_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="03_11_19_supplement_LC-MS_controls_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="03_11_19_supplement_LC-MS_controls_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="03_11_19_supplement_LC-MS_controls_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="03_11_19_supplement_LC-MS_controls_files/navigation-1.1/tabsets.js"></script>
+<script src="03_11_19_supplement_LC-MS_controls_files/navigation-1.1/codefolding.js"></script>
+<link href="03_11_19_supplement_LC-MS_controls_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="03_11_19_supplement_LC-MS_controls_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">SI: LC-MS Controls</h1>
+<h4 class="date"><em>03_11_19</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#ms-standard-curves">MS standard curves</a></li>
+<li><a href="#wt---sonication">WT +/- sonication</a></li>
+<li><a href="#dphzstar-phenazine-retention">dPHZstar phenazine retention</a></li>
+</ul>
+</div>
+
+<pre class="r"><code>library(tidyverse)
+library(cowplot)
+library(viridis)
+library(knitr)
+library(kableExtra)
+library(patchwork)
+library(tidyr)
+library(broom)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)
+
+source(&quot;../../../IDA/tools/echem_processing_tools.R&quot;)
+source(&quot;../../../IDA/tools/plotting_tools.R&quot;)
+
+theme_set(theme_1())</code></pre>
+<p>This notebook contains the plots for figure S1, which includes controls and extra information about the LC-MS colony extractions. Specifically the data are for: * WT +/- sonication control * dPHZ* phenazine retention * WT no membrane control</p>
+<p>For the first two the concentrations were quite low, so leading the PDA to miss some of the quantifications. Therefore I decided to use MS (QDA) channels to quantify these sample peaks.</p>
+<div id="ms-standard-curves" class="section level1">
+<h1>MS standard curves</h1>
+<p>In order to use the MS for quantification, let’s first see how well we can calibrate from peak area to concentration. This works very well for peaks in uv-vis, but anecdotally MS does not work as well.</p>
+<p>I manually quantified the peaks for the standard curve run on 8/29/18 for each of the phenazines in their respective mass channels (PCA = 225, PCN = 224, PYO = 211 approximately). Here’s the data:</p>
+<pre class="r"><code>std_PCA &lt;- c(1438945, 2524756, 6219139, 10130937, 16712822, 30545647, 
+    45106329)
+std_PYO &lt;- c(743240, 1604480, 4839401, 11509642, 26253622, 65574941, 
+    113804512)
+std_PCN &lt;- c(3319415, 6644637, 15856302, 29044060, 52325756, 
+    90144409, 135780468)
+
+phz_stds &lt;- tibble(measured_phenazine = c(rep(&quot;PCA&quot;, 7), rep(&quot;PYO&quot;, 
+    7), rep(&quot;PCN&quot;, 7)), concentration = rep(c(0.1, 0.2, 0.5, 
+    1, 2, 5, 10), 3), area = c(std_PCA, std_PYO, std_PCN), )
+
+head(phz_stds)</code></pre>
+<pre><code>## # A tibble: 6 x 3
+##   measured_phenazine concentration     area
+##   &lt;chr&gt;                      &lt;dbl&gt;    &lt;dbl&gt;
+## 1 PCA                          0.1  1438945
+## 2 PCA                          0.2  2524756
+## 3 PCA                          0.5  6219139
+## 4 PCA                          1   10130937
+## 5 PCA                          2   16712822
+## 6 PCA                          5   30545647</code></pre>
+<p>Let’s see how the curves look.</p>
+<pre class="r"><code>ggplot(phz_stds %&gt;% filter(concentration &lt; 10), aes(x = area, 
+    y = concentration, color = measured_phenazine)) + geom_point() + 
+    geom_smooth(method = &quot;lm&quot;, formula = y ~ x + 0) + facet_wrap(~measured_phenazine, 
+    scales = &quot;free&quot;)</code></pre>
+<p><img src="03_11_19_supplement_LC-MS_controls_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /> Here I already excluded all the standards above 10uM, because I assumed the MS would saturate. You can see that the curves definitely increase, but they are not super nice calibration curves (except PYO is pretty good). Well let’s move forward, but we’ll make sure to look at the raw peak area for each of the plots before we calibrate into concentrations.</p>
+<p>We can simply fit the linear model to this data, and because we force the fit through zero we can use the slopes to calibrate.</p>
+<pre class="r"><code>std_slopes &lt;- phz_stds %&gt;% filter(concentration &lt; 10) %&gt;% group_by(measured_phenazine) %&gt;% 
+    do(tidy(lm(concentration ~ area + 0, data = .)))
+
+std_slopes</code></pre>
+<pre><code>## # A tibble: 3 x 6
+## # Groups:   measured_phenazine [3]
+##   measured_phenazine term      estimate     std.error statistic     p.value
+##   &lt;chr&gt;              &lt;chr&gt;        &lt;dbl&gt;         &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;
+## 1 PCA                area  0.000000147  0.0000000116       12.6     5.53e-5
+## 2 PCN                area  0.0000000494 0.00000000394      12.6     5.68e-5
+## 3 PYO                area  0.0000000767 0.00000000123      62.2     2.04e-8</code></pre>
+<p>So now we can just multiply our peak areas by the estimate for the slope.</p>
+</div>
+<div id="wt---sonication" class="section level1">
+<h1>WT +/- sonication</h1>
+<p>So let’s start with the PDA data for the colonies +/- sonication. Hopefully you can see why I had to move to the MS channels.</p>
+<pre class="r"><code>son_data &lt;- read_csv(&quot;../data/06_24_18_HPLC_pda_WTcolony_sonication.csv&quot;) %&gt;% 
+    mutate(calcConc = Amount * 2 * (800/62))
+
+ggplot(son_data, aes(x = condition, y = calcConc)) + geom_point() + 
+    facet_wrap(~measured_phenazine, scales = &quot;free&quot;) + ylim(0, 
+    NA)</code></pre>
+<p><img src="03_11_19_supplement_LC-MS_controls_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /> It looks reasonable, but we are missing PCA and 1 of the PYO data points.</p>
+<p>These peaks are clearly visible in the MS channels, so I decided to go back and requantify using the MS channels.</p>
+<p>Here are the manually quantified MS peaks:</p>
+<pre class="r"><code>PCA = c(5079971, 4383790, 5226988, 5561765, 5213071, 4652306)
+PYO = c(32954513, 30874145, 29976749, 33291160, 31197443, 30785841)
+PCN = c(175851779, 173966518, 176536668, 173807308, 156877918, 
+    154243451)
+
+son_data_ms &lt;- tibble(measured_phenazine = c(rep(&quot;PCA&quot;, 6), rep(&quot;PYO&quot;, 
+    6), rep(&quot;PCN&quot;, 6)), condition = rep(c(rep(&quot;withSon&quot;, 3), 
+    rep(&quot;noSon&quot;, 3)), 3), rep = rep(c(1, 2, 3), 6), Area = c(PCA, 
+    PYO, PCN)) %&gt;% group_by(condition, measured_phenazine) %&gt;% 
+    mutate(mean = ifelse(rep == 1, mean(Area), NA))
+
+# Plot layout
+plot_ms_son &lt;- ggplot(son_data_ms, aes(x = condition, y = Area)) + 
+    geom_col(aes(y = mean, fill = condition)) + geom_jitter(shape = 21, 
+    size = 2, height = 1, width = 0.1) + facet_wrap(~measured_phenazine, 
+    scales = &quot;free&quot;) + ylim(0, NA)
+
+# Plot styling
+plot_ms_son_styled &lt;- plot_ms_son + labs(x = NULL, y = &quot;MS peak area&quot;) + 
+    theme(axis.title.x = element_text(size = 14)) + scale_fill_manual(guide = F, 
+    values = c(&quot;#66CCFF&quot;, &quot;#FFCC66&quot;)) + scale_x_discrete(breaks = c(&quot;noSon&quot;, 
+    &quot;withSon&quot;), labels = c(&quot;-&quot;, &quot;+&quot;))
+
+plot_ms_son_styled</code></pre>
+<p><img src="03_11_19_supplement_LC-MS_controls_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Ok, so the values look pretty consistent among replicates and there are no obvious differences between sonicated and normal samples!</p>
+<p>Here’s a quick t-test:</p>
+<pre class="r"><code>son_data_ms %&gt;% spread(condition, Area) %&gt;% group_by(measured_phenazine) %&gt;% 
+    summarise(conf_int_low = t.test(noSon, withSon, alternative = &quot;less&quot;)$conf.int[1], 
+        conf_int_high = t.test(noSon, withSon, alternative = &quot;less&quot;)$conf.int[2], 
+        p_value = t.test(noSon, withSon, alternative = &quot;less&quot;)$p.value)</code></pre>
+<pre><code>## # A tibble: 3 x 4
+##   measured_phenazine conf_int_low conf_int_high p_value
+##   &lt;chr&gt;                     &lt;dbl&gt;         &lt;dbl&gt;   &lt;dbl&gt;
+## 1 PCA                        -Inf      1036918.  0.728 
+## 2 PCN                        -Inf      3860322.  0.0755
+## 3 PYO                        -Inf      3005305.  0.651</code></pre>
+<p>The t.test indicates that none of the differences are signficant p&lt;0.05. There might be a small difference for PCN, but it is not clear.</p>
+<p>Just for completeness, let’s calculate the concentrations for these colonies. Look up the dilution for these colonies - was it 1mL or 800uL? did I dilute by 2x?</p>
+<pre class="r"><code>son_data_ms_cal &lt;- son_data_ms %&gt;% 
+  mutate(concentration = case_when(
+    measured_phenazine == &#39;PCA&#39; ~ Area*std_slopes$estimate[1],
+    measured_phenazine == &#39;PYO&#39; ~ Area*std_slopes$estimate[2],
+    measured_phenazine == &#39;PCN&#39; ~ Area*std_slopes$estimate[3]
+  )) %&gt;% 
+  mutate(calcConc = concentration*2*(800 / 62)) %&gt;% #Dilution factor
+  group_by(measured_phenazine, condition) %&gt;% 
+  mutate(mean = ifelse(rep==&#39;1&#39;,mean(calcConc),NA))
+
+# Plot layout
+plot_ms_son_cal &lt;- ggplot(son_data_ms_cal, aes(x = condition, y = calcConc)) +
+  geom_col(aes(y = mean, fill = condition))+
+  geom_jitter(shape = 21, size = 2, height = 1, width = 0.1) + 
+  facet_wrap(~measured_phenazine, scales = &#39;free&#39;) + 
+  ylim(0,NA)
+
+#Plot styling
+plot_ms_son_cal_styled &lt;- plot_ms_son_cal +
+  labs(x = NULL, y = &quot;Biofilm concentration uM&quot;) + 
+  theme(axis.title.x = element_text(size = 14)) + 
+  scale_fill_manual(guide = F, values = c(&quot;#66CCFF&quot;,&quot;#FFCC66&quot;)) + 
+  scale_x_discrete(breaks = c(&#39;noSon&#39;,&#39;withSon&#39;), 
+                   labels=c(&quot;-&quot;,&quot;+&quot;))
+    
+plot_ms_son_cal_styled     </code></pre>
+<p><img src="03_11_19_supplement_LC-MS_controls_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /> Ok, so no matter how we look at it there doesn’t seem to be a real difference.</p>
+<p>Can we see evidence that the sonication actually lysed a bunch of the cells? CFU counts were plated for all these colonies, so that should clarify.</p>
+<pre class="r"><code>cfu_data &lt;- tibble(condition = c(rep(&quot;+&quot;, 3), rep(&quot;-&quot;, 3)), count = c(2, 
+    3, 10, 15, 15, 10))
+
+ggplot(cfu_data, aes(x = condition, y = count)) + geom_jitter(height = 0, 
+    width = 0.1) + ylim(0, NA)</code></pre>
+<p><img src="03_11_19_supplement_LC-MS_controls_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># t.test(c(2,3,10), c(15,15,10), alternative = &#39;less&#39;)</code></pre>
+<p>This difference doesn’t look super convincing, but at the 10^-5 dilution all of the sonicated samples look to have clearly fewer colonies, however the colonies grew together so it is difficult to count. Also, the biofilms could have started with different numbers of cells…</p>
+<p>Anyway, based on the means of 13 and 5, at least 50 percent of the cells were lysed and it was likely more like 80%. With that difference in lysis, I think we would have seen a difference in the extracts if there were truly some large intracellular pool of phenazines (that was still there and not already secreted when we lysed).</p>
+</div>
+<div id="dphzstar-phenazine-retention" class="section level1">
+<h1>dPHZstar phenazine retention</h1>
+<p>Ok, so now let’s quantify the dPHZstar retention in the same way. First, here’s the PDA data:</p>
+<pre class="r"><code>pda_data &lt;- read_csv(&quot;../data/dPHZstar_PDA_PHZretention_08_29_18.csv&quot;) %&gt;% 
+    mutate(calcConc = Amount * 2 * (800/62)) %&gt;% group_by(Name, 
+    Day, Phenazine) %&gt;% mutate(mean = ifelse(Rep == 1, mean(calcConc), 
+    NA))
+
+dphz_ret_pda_plot &lt;- ggplot(pda_data %&gt;% filter(Phenazine == 
+    &quot;PHZ&quot;), aes(x = Day, y = calcConc, )) + geom_col(aes(y = mean, 
+    fill = Day)) + geom_jitter(height = 0, width = 0.1, shape = 21) + 
+    facet_wrap(~Name, scales = &quot;free&quot;) + ylim(0, NA)
+
+# Plot styling
+dphz_ret_pda_plot_styled &lt;- dphz_ret_pda_plot + labs(x = NULL, 
+    y = &quot;Phenazine Concentration&quot;) + theme(axis.title.x = element_text(size = 14)) + 
+    scale_fill_manual(guide = F, values = c(&quot;#66CCFF&quot;, &quot;#FFCC66&quot;)) + 
+    scale_x_discrete(breaks = c(&quot;3&quot;, &quot;4&quot;), labels = c(&quot;Day 3&quot;, 
+        &quot;Day 4&quot;))
+
+dphz_ret_pda_plot_styled</code></pre>
+<p><img src="03_11_19_supplement_LC-MS_controls_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /> So here it’s obvious why we need to go to the MS channel. We really want to get values for both Day 3 and 4, and we only get that for PYO.</p>
+<p>So here’s the manually quantified MS peaks:</p>
+<pre class="r"><code>day3 &lt;- c(2597946, 3508218, 2687107, 90652840, 91660115, 91168200, 
+    66702800, 67639961, 75507519)
+day4 &lt;- c(NA, NA, NA, 15384042, 16353567, 19682638, 5261483, 
+    6216937, 5551978)
+
+dphz_col_data &lt;- tibble(measured_phenazine = rep(c(rep(&quot;PCA&quot;, 
+    3), rep(&quot;PYO&quot;, 3), rep(&quot;PCN&quot;, 3)), 2), rep = rep(c(1, 2, 
+    3), 6), day = c(rep(&quot;D3&quot;, 9), rep(&quot;D4&quot;, 9)), area = c(day3, 
+    day4)) %&gt;% group_by(measured_phenazine, day) %&gt;% mutate(mean = ifelse(rep == 
+    &quot;1&quot;, mean(area), NA))
+
+dphz_ret_area_plot &lt;- ggplot(dphz_col_data, aes(x = day, y = area, 
+    )) + geom_col(aes(y = mean, fill = day)) + geom_jitter(height = 0, 
+    width = 0.1, shape = 21) + facet_wrap(~measured_phenazine, 
+    scales = &quot;free&quot;) + ylim(0, NA)
+
+# Plot styling
+dphz_ret_area_plot_styled &lt;- dphz_ret_area_plot + labs(x = NULL, 
+    y = &quot;MS peak area&quot;) + theme(axis.title.x = element_text(size = 14)) + 
+    scale_fill_manual(guide = F, values = c(&quot;#66CCFF&quot;, &quot;#FFCC66&quot;)) + 
+    scale_x_discrete(breaks = c(&quot;D3&quot;, &quot;D4&quot;), labels = c(&quot;Day 3&quot;, 
+        &quot;Day 4&quot;))
+
+dphz_ret_area_plot_styled</code></pre>
+<p><img src="03_11_19_supplement_LC-MS_controls_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /> Ok, so now this is much more convincing. We can see PCN and PYO peaks on Day 3 and Day 4 and we can see PCA peaks on day 3 (when concentrations are higher). It looks to me like PYO is retained more than PCN and PCA. Let’s look at the percentage of phenazine retained (based on means).</p>
+<pre class="r"><code>dphz_col_data %&gt;% group_by(measured_phenazine, day) %&gt;% summarise(mean = mean(area)) %&gt;% 
+    spread(day, mean) %&gt;% mutate(percent_remaining = D4/D3)</code></pre>
+<pre><code>## # A tibble: 3 x 4
+## # Groups:   measured_phenazine [3]
+##   measured_phenazine        D3        D4 percent_remaining
+##   &lt;chr&gt;                  &lt;dbl&gt;     &lt;dbl&gt;             &lt;dbl&gt;
+## 1 PCA                 2931090.       NA            NA     
+## 2 PCN                69950093.  5676799.            0.0812
+## 3 PYO                91160385  17140082.            0.188</code></pre>
+<p>So about 19% of PYO is retained, about 8% of PCN is retained and an undetectable amount of PCA is retained after 24hrs.</p>
+<p>Let’s try to calibrate for concentration. This is how the measurements fall on the calibration curve:</p>
+<pre class="r"><code>ggplot(phz_stds %&gt;% filter(concentration &lt; 10), aes(x = area, 
+    y = concentration, color = measured_phenazine)) + geom_point() + 
+    geom_smooth(method = &quot;lm&quot;, formula = y ~ x + 0) + geom_point(data = dphz_col_data, 
+    aes(y = 0), shape = 2) + facet_wrap(~measured_phenazine, 
+    scales = &quot;free&quot;)</code></pre>
+<p><img src="03_11_19_supplement_LC-MS_controls_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /> Not perfect, but let’s move forward.</p>
+<pre class="r"><code>dphz_col_cal_data &lt;- dphz_col_data %&gt;% mutate(concentration = case_when(measured_phenazine == 
+    &quot;PCA&quot; ~ area * std_slopes$estimate[1], measured_phenazine == 
+    &quot;PYO&quot; ~ area * std_slopes$estimate[2], measured_phenazine == 
+    &quot;PCN&quot; ~ area * std_slopes$estimate[3])) %&gt;% mutate(calcConc = concentration * 
+    2 * (800/62)) %&gt;% group_by(measured_phenazine, day) %&gt;% mutate(mean = ifelse(rep == 
+    &quot;1&quot;, mean(calcConc), NA))
+
+
+dphz_ret_conc_plot &lt;- ggplot(dphz_col_cal_data, aes(x = day, 
+    y = calcConc, )) + geom_col(aes(y = mean, fill = day)) + 
+    geom_jitter(height = 0, width = 0.1, shape = 21) + facet_wrap(~measured_phenazine, 
+    scales = &quot;free&quot;) + ylim(0, NA)
+
+# Plot styling
+dphz_ret_conc_plot_styled &lt;- dphz_ret_conc_plot + labs(x = NULL, 
+    y = &quot;Phenazine Concentration&quot;) + theme(axis.title.x = element_text(size = 14)) + 
+    scale_fill_manual(guide = F, values = c(&quot;#66CCFF&quot;, &quot;#FFCC66&quot;)) + 
+    scale_x_discrete(breaks = c(&quot;3&quot;, &quot;4&quot;), labels = c(&quot;Day 3&quot;, 
+        &quot;Day 4&quot;))
+
+dphz_ret_conc_plot_styled</code></pre>
+<p><img src="03_11_19_supplement_LC-MS_controls_files/figure-html/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /> If you compare to the PDA quantifications above, PYO looks spot on, PCN looks off and PCA we don’t know how close.</p>
+<p>I’m going to go back and manually integrate the PCN peaks from the PDA. Otherwise I think we should just stick with the MS peak area quantifications.</p>
+<p>For the record here’s the QDA chromatograms for PCA showing that it is indeed undetectable on Day 4 in the colony.</p>
+<p>This is for the samples discussed above that were incubated with all 3 phenazines at once.</p>
+<pre class="r"><code>knitr::include_graphics(&quot;../data/dPHZ_retention_PHZ_QDA_chromatogram.png&quot;)</code></pre>
+<p><img src="../data/dPHZ_retention_PHZ_QDA_chromatogram.png" style="display: block; margin: auto;" /></p>
+<p>This was for colonies that were incubated with just PCA at a higher concentration.</p>
+<pre class="r"><code>knitr::include_graphics(&quot;../data/dPHZ_retention_PCA_QDA_chromatogram.png&quot;)</code></pre>
+<p><img src="../data/dPHZ_retention_PCA_QDA_chromatogram.png" style="display: block; margin: auto;" /></p>
+<p>In both cases the peaks are only visible on day 3. At day 4 both chromatograms show baseline.</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
