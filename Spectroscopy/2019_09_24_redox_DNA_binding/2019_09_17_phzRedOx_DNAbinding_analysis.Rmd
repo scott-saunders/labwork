@@ -1,0 +1,110 @@
+---
+title: "DNA binding of phenazines, oxidized and reduced"
+author: "Scott Saunders"
+fontsize: 12pt
+date: '09_17_19'
+output:
+  html_document:
+    code_folding: hide
+    self_contained: no
+    toc: yes
+  github_document:
+    pandoc_args: --webtex
+---
+
+# Intro
+
+
+
+# Methods
+
+# Results
+
+# Next steps
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(viridis)
+library(knitr)
+library(kableExtra)
+
+
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+source("../../IDA/tools/plotting_tools.R")
+
+theme_set(theme_1())
+```
+
+## ex 480 scans for etbr
+
+```{r}
+df_480_raw <- read_csv("data/2019_09_24_etbr_PYOredox_ex480protocol_ex480.csv", skip = 1) %>% 
+  gather(key = 'id', value = 'intensity', -Wavelength)
+
+df_480_meta <- read_csv("data/2019_09_24_etbr_PYOredox_ex480protocol_metadata.csv")
+
+
+df_480 <- left_join(df_480_raw, df_480_meta, by = 'id')
+```
+
+```{r}
+ggplot(df_480, aes(x = Wavelength, y = intensity, color = scan_num, group = scan_num)) + geom_path() + facet_wrap(~well)
+```
+
+
+```{r}
+
+df_480_375raw <- read_csv("data/2019_09_24_etbr_PYOredox_ex480protocol_ex375.csv", skip = 1) %>% 
+  gather(key = 'id', value = 'intensity', -Wavelength)
+
+df_480_375 <- left_join(df_480_375raw, df_480_meta, by = 'id')
+
+ggplot(df_480_375, aes(x = Wavelength, y = intensity, color = scan_num, group = scan_num)) + geom_path() + facet_wrap(~well)
+
+```
+## ex 510 scans for etbr
+
+```{r}
+df_510_raw <- read_csv("data/2019_09_24_etbr_PYOredox_ex510protocol_ex510.csv", skip = 1) %>% 
+  gather(key = 'id', value = 'intensity', -Wavelength)
+
+df_510_meta <- read_csv("data/2019_09_24_etbr_PYOredox_ex510protocol_metadata.csv")
+
+
+df_510 <- left_join(df_510_raw, df_510_meta, by = 'id')
+```
+
+```{r}
+ggplot(df_510, aes(x = Wavelength, y = intensity, color = scan_num, group = scan_num)) + geom_path() + facet_wrap(~well)
+```
+
+
+```{r}
+
+df_510_375raw <- read_csv("data/2019_09_24_etbr_PYOredox_ex510protocol_ex375.csv", skip = 1) %>% 
+  gather(key = 'id', value = 'intensity', -Wavelength)
+
+df_510_375 <- left_join(df_510_375raw, df_510_meta, by = 'id')
+
+ggplot(df_510_375, aes(x = Wavelength, y = intensity, color = scan_num, group = scan_num)) + geom_path() + facet_wrap(~well)
+
+```
+
+```{r}
+ggplot(df_510 %>% filter(tcep_added == T), aes(x = Wavelength, y = intensity, color = dna_stage, group = scan_num)) + geom_path() + facet_wrap(~well)
+
+ggplot(df_510 %>% filter(tcep_added == T), aes(x = Wavelength, y = intensity, color = well, group = well)) + geom_path() + facet_wrap(~scan_num)
+
+ggplot(df_510_375 %>% filter(tcep_added == T), aes(x = Wavelength, y = intensity, color = dna_stage, group = scan_num)) + geom_path() + facet_wrap(~well)
+```
+
+## Tcep affects EtBr
+
+```{r}
+ggplot(df_510 %>% filter(fluors == 'EtBr'), aes(x = Wavelength, y = intensity, color = dna_stage, group = scan_num)) + geom_path() + facet_wrap(~well)
+```
+
+## Tcep 

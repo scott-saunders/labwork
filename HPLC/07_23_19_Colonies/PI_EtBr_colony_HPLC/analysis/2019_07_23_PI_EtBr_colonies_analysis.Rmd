@@ -10,6 +10,7 @@ output:
     code_folding: hide
     self_contained: no
     toc: yes
+    toc_depth: 2
   pdf_document:
     toc: yes
   github_document:
@@ -118,11 +119,16 @@ Samples were run using the standard Phenazine_basic_MS method on the waters LC-M
   
 # Results
 
+## First pass
+
+Here are the results from the first quantification. Let's read in the data:
 ```{r}
 df_wt <- read_csv("../data/2019_07_23_colony_HPLC_wt_data.csv")
 
 df_dphz <- read_csv("../data/2019_07_23_colony_HPLC_dPHZ_data.csv")
 ```
+
+Here's the raw WT data:
 
 ```{r}
 
@@ -132,38 +138,82 @@ colorblind_palette <- c("#E69F00", "#56B4E9", "#000000","#009E73", "#F0E442", "#
 ggplot(df_wt %>% filter(condition != 'blank'), aes(x = condition, y = Amount, color = condition_conc)) + geom_point() + facet_wrap(material~measured_phz, scales = 'free') + scale_color_manual(values = colorblind_palette, na.value='gray')
 ```
 
+The only thing that caught my eye here is the PYO measured in the 100uM etbr cells. You can see one value is at zero, while the other is at 4. That seems like a mistake to me - may need to requantify.
+
+Here's the raw ∆phz* data:
 
 ```{r}
-
-colorblind_palette <- c("#E69F00", "#56B4E9", "#000000","#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-
-
-ggplot(df_dphz %>% filter(condition != 'blank'), aes(x = condition, y = Amount, color = condition_conc)) + geom_point() + facet_wrap(added_phz~measured_phz, scales = 'free') + scale_color_manual(values = colorblind_palette, na.value='gray')
-
-ggplot(df_dphz %>% filter(condition != 'blank'), aes(x = measured_phz, y = Amount, color = condition_conc)) + geom_point() + facet_wrap(~added_phz, scales = 'free') + scale_color_manual(values = colorblind_palette, na.value='gray')
+ggplot(df_dphz %>% filter(condition != 'blank'), aes(x = measured_phz, y = Amount, color = condition_conc, shape = condition)) + 
+  geom_point() + 
+  facet_wrap(~added_phz, scales = 'free') + 
+  scale_color_manual(values = colorblind_palette, na.value='gray')
 ```
-## requantification
+This looks pretty good to me. Let's go back and look at the WT sample that seemed to be a false negative.
+
+## Second pass
+
+After looking at the run the PYO peaks are closer to 6.1 min retention time instead of 6.0, so the integration algorithm missed that one peak. I figured it might have missed others, but done it in a more consistent way across samples, so I just requantified everything looking for the PYO peak near 6.1min. Here's the second quantification of the data:
 
 ```{r}
 df_wt_2 <- read_csv("../data/2019_07_23_colony_HPLC_wt_data_2.csv")
 
+df_wt_2 <- df_wt_2 %>%
+  mutate(condition_conc = fct_relevel(condition_conc, c('0uM','10uM','100uM','200uM','500uM'))) %>% 
+  mutate(condition = fct_relevel(condition, c('h2o','etbr','dmso','pi')))
+
+
 df_dphz_2 <- read_csv("../data/2019_07_23_colony_HPLC_dPHZ_data_2.csv")
+
+df_dphz_2 <- df_dphz_2 %>% 
+  mutate(condition_conc = fct_relevel(condition_conc, c('0uM','10uM','100uM','200uM','500uM'))) %>% 
+    mutate(condition = fct_relevel(condition, c('PBS','etbr','dmso','pi')))
+
 ```
 
 ```{r}
 
-colorblind_palette <- c("#E69F00", "#56B4E9", "#000000","#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-
-
-ggplot(df_wt_2 %>% filter(condition != 'blank'), aes(x = condition, y = Amount, color = condition_conc)) + geom_point() + facet_wrap(material~measured_phz, scales = 'free') + scale_color_manual(values = colorblind_palette, na.value='gray') + ylim(0, NA)
+ggplot(df_wt_2 %>% filter(condition != 'blank'), aes(x = condition, y = Amount, color = condition_conc)) + geom_point() + facet_wrap(material~measured_phz, scales = 'free') + ylim(0, NA)
 ```
 
 
 ```{r}
 
-ggplot(df_dphz_2 %>% filter(condition != 'blank'), aes(x = condition, y = Amount, color = condition_conc)) + geom_point() + facet_wrap(added_phz~measured_phz, scales = 'free')
+ggplot(df_dphz_2 %>% filter(condition != 'blank'), aes(x = condition, y = Amount, color = condition_conc)) + 
+  geom_point() + 
+  facet_wrap(added_phz~measured_phz, scales = 'free') + ylim(0, NA)
 
-ggplot(df_dphz_2 %>% filter(condition != 'blank'), aes(x = measured_phz, y = Amount, color = condition_conc)) + geom_point() + facet_wrap(~added_phz, scales = 'free') 
+```
+Focus on the PCN - PCN and PYO - PYO panels, since those are the only values that are real. The other panels just show that indeed we don't detect significant amounts of other phenazines when they are not added to ∆phz*.
+
+Ok, looks good, so now I'll go ahead and convert the values into biofilm and agar concentrations and retention ratios.
+
+```{r}
+df_wt_conc <- df_wt_2 %>% 
+  mutate(measured_phz_conc = case_when(
+    material == 'cells' ~ (Amount * 2) * (800 / 60),
+    material == 'agar' ~ (Amount * 2) * (8 / 5)
+  )) %>% 
+  group_by(measured_phz, strain, condition, condition_conc, material) %>% 
+  mutate(mean_phz_conc = mean(measured_phz_conc))
+
+df_wt_retRatio <- left_join(df_wt_conc %>% filter(material == 'cells'), df_wt_conc %>% filter(material == 'agar'), 
+                            by = c('measured_phz', 'strain','condition','condition_conc','rep'), 
+                            suffix = c('_cells','_agar')) %>% 
+  mutate(ret_ratio = measured_phz_conc_cells / measured_phz_conc_agar) %>% 
+  group_by(measured_phz, strain, condition, condition_conc) %>% 
+  mutate(mean_ret_ratio = mean(ret_ratio))
+  
+
+df_dphz_conc <- df_dphz_2 %>% 
+  filter(added_phz == measured_phz) %>% 
+  mutate(measured_phz_conc = case_when(
+    material == 'cells' ~ (Amount * 2) * (800 / 60),
+    material == 'agar' ~ (Amount * 2) * (8 / 5)
+  )) %>% 
+  group_by(measured_phz, strain, condition, condition_conc) %>% 
+  mutate(mean_phz_conc = mean(measured_phz_conc))
+  
+  
 ```
 
 ## EtBr
@@ -171,19 +221,33 @@ ggplot(df_dphz_2 %>% filter(condition != 'blank'), aes(x = measured_phz, y = Amo
 ### WT
 
 ```{r}
-df_wt_2 <- df_wt_2 %>% mutate(condition_conc = fct_relevel(condition_conc, c('0uM','10uM','100uM','200uM','500uM')))
 
-ggplot(df_wt_2 %>% filter(condition %in% c('etbr','h2o')), aes(x = condition_conc, y = Amount)) + geom_point(shape = 21)  + facet_wrap(material~measured_phz, scales = 'free') + ylim(0, NA)
+ggplot(df_wt_conc %>% filter(condition %in% c('etbr','h2o')), aes(x = condition_conc, y = measured_phz_conc)) +
+  geom_col(data = df_wt_conc %>% filter(condition %in% c('etbr','h2o')) %>% filter(rep == 1),
+           aes(x = condition_conc, y = mean_phz_conc), fill = 'light gray') + 
+  geom_point(shape = 21)  + facet_wrap(material~measured_phz, scales = 'free') + ylim(0, NA)
+
+```
+
+```{r}
+
+ggplot(df_wt_retRatio %>% filter(condition %in% c('etbr','h2o')), aes(x = condition_conc, y = ret_ratio)) +
+  geom_col(data = df_wt_retRatio %>% filter(condition %in% c('etbr','h2o')) %>% filter(rep == 1),
+           aes(x = condition_conc, y = mean_ret_ratio), fill = 'light gray') + 
+  geom_point(shape = 21)  + facet_wrap(~measured_phz, scales = 'free') + ylim(0, NA)
 
 ```
 
 ### ∆phz*
 
 ```{r}
-df_dphz_2 <- df_dphz_2 %>% mutate(condition_conc = fct_relevel(condition_conc, c('0uM','10uM','100uM','200uM','500uM')))
 
+ggplot(df_dphz_conc %>% filter(condition %in% c('etbr','PBS')), 
+       aes(x = condition_conc, y = measured_phz_conc)) + 
+  geom_col(data = df_dphz_conc %>% filter(condition %in% c('etbr','PBS') & rep ==1), 
+           aes(x = condition_conc, y  = mean_phz_conc), fill = 'light gray') +
+  geom_point(shape = 21)  + facet_wrap(material~measured_phz, scales = 'free') + ylim(0, NA)
 
-ggplot(df_dphz_2 %>% filter(condition %in% c('etbr','PBS') & measured_phz != 'PCA'), aes(x = condition_conc, y = Amount, shape = added_phz)) + geom_point()  + facet_wrap(material~measured_phz, scales = 'free') + ylim(0, NA) + scale_shape_discrete(solid = F)
 ```
 
 ## PI
@@ -192,7 +256,22 @@ ggplot(df_dphz_2 %>% filter(condition %in% c('etbr','PBS') & measured_phz != 'PC
 
 ```{r}
 
-ggplot(df_wt_2 %>% filter(condition %in% c('pi','h2o','dmso')), aes(x = condition_conc, y = Amount, shape = condition)) + geom_point()  + facet_wrap(material~measured_phz, scales = 'free') + ylim(0, NA) + scale_shape_discrete(solid = F)
+ggplot(df_wt_conc %>% filter(condition %in% c('pi','h2o','dmso')), 
+       aes(x = condition_conc, y = measured_phz_conc,color = condition)) +
+  geom_col(data = df_wt_conc %>% filter(condition %in% c('pi','h2o','dmso') & rep ==1),
+           aes(x = condition_conc, y = mean_phz_conc), fill = 'light gray', position = 'dodge') + 
+  geom_point(shape = 21, position = position_dodge(width = 1))  + facet_wrap(material~measured_phz, scales = 'free') + ylim(0, NA)
+
+```
+
+```{r}
+
+ggplot(df_wt_retRatio %>% filter(condition %in% c('pi','h2o','dmso')), 
+       aes(x = condition_conc, y = ret_ratio, color = condition)) +
+  geom_col(data = . %>% filter(rep == 1),
+           aes(y = mean_ret_ratio), fill = 'light gray', position = 'dodge') + 
+  geom_point(shape = 21, position = position_dodge(width=1))  + 
+  facet_wrap(~measured_phz, scales = 'free') + ylim(0, NA)
 
 ```
 
@@ -204,11 +283,18 @@ ggplot(df_dphz_2 %>% filter(condition %in% c('pi','PBS','dmso') & measured_phz !
   facet_wrap(material~measured_phz, scales = 'free') + 
   ylim(0, NA) + 
   scale_shape_discrete(solid = F)
+
+ggplot(df_dphz_conc %>% filter(condition %in% c('pi','PBS','dmso')), 
+       aes(x = condition_conc, y = measured_phz_conc, color = condition)) + 
+  geom_col(data = . %>% filter(rep ==1), 
+           aes(y  = mean_phz_conc), fill = 'light gray', position = 'dodge') +
+  geom_jitter(shape = 21, position = position_jitterdodge(dodge.width = 1))  + 
+  facet_wrap(material~measured_phz, scales = 'free') + ylim(0, NA)
 ```
 
+# Discussion
 
-
-
+One issue here is colony size. We should look back at this. Another issue seems to be that DMSO strongly affects both WT and dPHZ retention.
 
 ------
   

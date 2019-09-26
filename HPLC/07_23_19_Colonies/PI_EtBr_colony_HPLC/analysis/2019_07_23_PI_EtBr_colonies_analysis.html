@@ -217,13 +217,16 @@ $(document).ready(function () {
 <ul>
 <li><a href="#intro">Intro</a></li>
 <li><a href="#methods">Methods</a><ul>
-<li><a href="#samples">Samples</a><ul>
-<li><a href="#wt">WT</a></li>
-<li><a href="#phz">∆phz*</a></li>
-</ul></li>
+<li><a href="#samples">Samples</a></li>
 <li><a href="#sample-prep">Sample Prep</a></li>
 </ul></li>
-<li><a href="#results">Results</a></li>
+<li><a href="#results">Results</a><ul>
+<li><a href="#first-pass">First pass</a></li>
+<li><a href="#second-pass">Second pass</a></li>
+<li><a href="#etbr">EtBr</a></li>
+<li><a href="#pi">PI</a></li>
+</ul></li>
+<li><a href="#discussion">Discussion</a></li>
 </ul>
 </div>
 
@@ -312,16 +315,154 @@ theme_set(theme_1())</code></pre>
 </div>
 <div id="sample-prep" class="section level2">
 <h2>Sample Prep</h2>
-<p>Samples were extracted as normal. Colonies were resuspended in <strong>800uL of PBS 137(?? - check this)</strong> and agar was extracted for ~3 hours in 3mL of PBS 137.</p>
+<p>Samples were extracted as normal. Colonies were resuspended in <strong>800uL of PBS 137(?? - check this)</strong> and agar was extracted for ~3 hours in 3mL of PBS 137. Note that some of the colonies did not break up entirely, particularly in the PI and EtBr treated colonies. However, they were all incubated in the liquid for the same amount of time, so I would expect that the phenazines were extracted reasonably well. <a href="https://drive.google.com/open?id=19L6UKPxe9BR9Wcf2IP9riKZ4O-mz0Dz_">Photos in the google drive</a> show some of the prep and differences in colony pellets etc.</p>
 <p>Frozen samples were thawed to room temp, then filtered with 0.2um spinX columns. 500uL of samples were then transferred into sample vials containing 500uL of PBS 137 and therefore samples were run at a <strong>0.5 x dilution.</strong></p>
 <p>Samples were run using the standard Phenazine_basic_MS method on the waters LC-MS.</p>
 </div>
 </div>
 <div id="results" class="section level1">
 <h1>Results</h1>
+<div id="first-pass" class="section level2">
+<h2>First pass</h2>
+<p>Here are the results from the first quantification. Let’s read in the data:</p>
+<pre class="r"><code>df_wt &lt;- read_csv(&quot;../data/2019_07_23_colony_HPLC_wt_data.csv&quot;)
+
+df_dphz &lt;- read_csv(&quot;../data/2019_07_23_colony_HPLC_dPHZ_data.csv&quot;)</code></pre>
+<p>Here’s the raw WT data:</p>
+<pre class="r"><code>colorblind_palette &lt;- c(&quot;#E69F00&quot;, &quot;#56B4E9&quot;, &quot;#000000&quot;, &quot;#009E73&quot;, 
+    &quot;#F0E442&quot;, &quot;#0072B2&quot;, &quot;#D55E00&quot;, &quot;#CC79A7&quot;)
+
+
+ggplot(df_wt %&gt;% filter(condition != &quot;blank&quot;), aes(x = condition, 
+    y = Amount, color = condition_conc)) + geom_point() + facet_wrap(material ~ 
+    measured_phz, scales = &quot;free&quot;) + scale_color_manual(values = colorblind_palette, 
+    na.value = &quot;gray&quot;)</code></pre>
+<p><img src="2019_07_23_PI_EtBr_colonies_analysis_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The only thing that caught my eye here is the PYO measured in the 100uM etbr cells. You can see one value is at zero, while the other is at 4. That seems like a mistake to me - may need to requantify.</p>
+<p>Here’s the raw ∆phz* data:</p>
+<pre class="r"><code>ggplot(df_dphz %&gt;% filter(condition != &quot;blank&quot;), aes(x = measured_phz, 
+    y = Amount, color = condition_conc, shape = condition)) + 
+    geom_point() + facet_wrap(~added_phz, scales = &quot;free&quot;) + 
+    scale_color_manual(values = colorblind_palette, na.value = &quot;gray&quot;)</code></pre>
+<p><img src="2019_07_23_PI_EtBr_colonies_analysis_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /> This looks pretty good to me. Let’s go back and look at the WT sample that seemed to be a false negative.</p>
+</div>
+<div id="second-pass" class="section level2">
+<h2>Second pass</h2>
+<p>After looking at the run the PYO peaks are closer to 6.1 min retention time instead of 6.0, so the integration algorithm missed that one peak. I figured it might have missed others, but done it in a more consistent way across samples, so I just requantified everything looking for the PYO peak near 6.1min. Here’s the second quantification of the data:</p>
+<pre class="r"><code>df_wt_2 &lt;- read_csv(&quot;../data/2019_07_23_colony_HPLC_wt_data_2.csv&quot;)
+
+df_wt_2 &lt;- df_wt_2 %&gt;% mutate(condition_conc = fct_relevel(condition_conc, 
+    c(&quot;0uM&quot;, &quot;10uM&quot;, &quot;100uM&quot;, &quot;200uM&quot;, &quot;500uM&quot;))) %&gt;% mutate(condition = fct_relevel(condition, 
+    c(&quot;h2o&quot;, &quot;etbr&quot;, &quot;dmso&quot;, &quot;pi&quot;)))
+
+
+df_dphz_2 &lt;- read_csv(&quot;../data/2019_07_23_colony_HPLC_dPHZ_data_2.csv&quot;)
+
+df_dphz_2 &lt;- df_dphz_2 %&gt;% mutate(condition_conc = fct_relevel(condition_conc, 
+    c(&quot;0uM&quot;, &quot;10uM&quot;, &quot;100uM&quot;, &quot;200uM&quot;, &quot;500uM&quot;))) %&gt;% mutate(condition = fct_relevel(condition, 
+    c(&quot;PBS&quot;, &quot;etbr&quot;, &quot;dmso&quot;, &quot;pi&quot;)))</code></pre>
+<pre class="r"><code>ggplot(df_wt_2 %&gt;% filter(condition != &quot;blank&quot;), aes(x = condition, 
+    y = Amount, color = condition_conc)) + geom_point() + facet_wrap(material ~ 
+    measured_phz, scales = &quot;free&quot;) + ylim(0, NA)</code></pre>
+<p><img src="2019_07_23_PI_EtBr_colonies_analysis_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(df_dphz_2 %&gt;% filter(condition != &quot;blank&quot;), aes(x = condition, 
+    y = Amount, color = condition_conc)) + geom_point() + facet_wrap(added_phz ~ 
+    measured_phz, scales = &quot;free&quot;) + ylim(0, NA)</code></pre>
+<p><img src="2019_07_23_PI_EtBr_colonies_analysis_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /> Focus on the PCN - PCN and PYO - PYO panels, since those are the only values that are real. The other panels just show that indeed we don’t detect significant amounts of other phenazines when they are not added to ∆phz*.</p>
+<p>Ok, looks good, so now I’ll go ahead and convert the values into biofilm and agar concentrations and retention ratios.</p>
+<pre class="r"><code>df_wt_conc &lt;- df_wt_2 %&gt;% mutate(measured_phz_conc = case_when(material == 
+    &quot;cells&quot; ~ (Amount * 2) * (800/60), material == &quot;agar&quot; ~ (Amount * 
+    2) * (8/5))) %&gt;% group_by(measured_phz, strain, condition, 
+    condition_conc, material) %&gt;% mutate(mean_phz_conc = mean(measured_phz_conc))
+
+df_wt_retRatio &lt;- left_join(df_wt_conc %&gt;% filter(material == 
+    &quot;cells&quot;), df_wt_conc %&gt;% filter(material == &quot;agar&quot;), by = c(&quot;measured_phz&quot;, 
+    &quot;strain&quot;, &quot;condition&quot;, &quot;condition_conc&quot;, &quot;rep&quot;), suffix = c(&quot;_cells&quot;, 
+    &quot;_agar&quot;)) %&gt;% mutate(ret_ratio = measured_phz_conc_cells/measured_phz_conc_agar) %&gt;% 
+    group_by(measured_phz, strain, condition, condition_conc) %&gt;% 
+    mutate(mean_ret_ratio = mean(ret_ratio))
+
+
+df_dphz_conc &lt;- df_dphz_2 %&gt;% filter(added_phz == measured_phz) %&gt;% 
+    mutate(measured_phz_conc = case_when(material == &quot;cells&quot; ~ 
+        (Amount * 2) * (800/60), material == &quot;agar&quot; ~ (Amount * 
+        2) * (8/5))) %&gt;% group_by(measured_phz, strain, condition, 
+    condition_conc) %&gt;% mutate(mean_phz_conc = mean(measured_phz_conc))</code></pre>
+</div>
+<div id="etbr" class="section level2">
+<h2>EtBr</h2>
+<div id="wt-1" class="section level3">
+<h3>WT</h3>
+<pre class="r"><code>ggplot(df_wt_conc %&gt;% filter(condition %in% c(&quot;etbr&quot;, &quot;h2o&quot;)), 
+    aes(x = condition_conc, y = measured_phz_conc)) + geom_col(data = df_wt_conc %&gt;% 
+    filter(condition %in% c(&quot;etbr&quot;, &quot;h2o&quot;)) %&gt;% filter(rep == 
+    1), aes(x = condition_conc, y = mean_phz_conc), fill = &quot;light gray&quot;) + 
+    geom_point(shape = 21) + facet_wrap(material ~ measured_phz, 
+    scales = &quot;free&quot;) + ylim(0, NA)</code></pre>
+<p><img src="2019_07_23_PI_EtBr_colonies_analysis_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(df_wt_retRatio %&gt;% filter(condition %in% c(&quot;etbr&quot;, &quot;h2o&quot;)), 
+    aes(x = condition_conc, y = ret_ratio)) + geom_col(data = df_wt_retRatio %&gt;% 
+    filter(condition %in% c(&quot;etbr&quot;, &quot;h2o&quot;)) %&gt;% filter(rep == 
+    1), aes(x = condition_conc, y = mean_ret_ratio), fill = &quot;light gray&quot;) + 
+    geom_point(shape = 21) + facet_wrap(~measured_phz, scales = &quot;free&quot;) + 
+    ylim(0, NA)</code></pre>
+<p><img src="2019_07_23_PI_EtBr_colonies_analysis_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="phz-1" class="section level3">
+<h3>∆phz*</h3>
+<pre class="r"><code>ggplot(df_dphz_conc %&gt;% filter(condition %in% c(&quot;etbr&quot;, &quot;PBS&quot;)), 
+    aes(x = condition_conc, y = measured_phz_conc)) + geom_col(data = df_dphz_conc %&gt;% 
+    filter(condition %in% c(&quot;etbr&quot;, &quot;PBS&quot;) &amp; rep == 1), aes(x = condition_conc, 
+    y = mean_phz_conc), fill = &quot;light gray&quot;) + geom_point(shape = 21) + 
+    facet_wrap(material ~ measured_phz, scales = &quot;free&quot;) + ylim(0, 
+    NA)</code></pre>
+<p><img src="2019_07_23_PI_EtBr_colonies_analysis_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="pi" class="section level2">
+<h2>PI</h2>
+<div id="wt-2" class="section level3">
+<h3>WT</h3>
+<pre class="r"><code>ggplot(df_wt_conc %&gt;% filter(condition %in% c(&quot;pi&quot;, &quot;h2o&quot;, &quot;dmso&quot;)), 
+    aes(x = condition_conc, y = measured_phz_conc, color = condition)) + 
+    geom_col(data = df_wt_conc %&gt;% filter(condition %in% c(&quot;pi&quot;, 
+        &quot;h2o&quot;, &quot;dmso&quot;) &amp; rep == 1), aes(x = condition_conc, y = mean_phz_conc), 
+        fill = &quot;light gray&quot;, position = &quot;dodge&quot;) + geom_point(shape = 21, 
+    position = position_dodge(width = 1)) + facet_wrap(material ~ 
+    measured_phz, scales = &quot;free&quot;) + ylim(0, NA)</code></pre>
+<p><img src="2019_07_23_PI_EtBr_colonies_analysis_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(df_wt_retRatio %&gt;% filter(condition %in% c(&quot;pi&quot;, &quot;h2o&quot;, 
+    &quot;dmso&quot;)), aes(x = condition_conc, y = ret_ratio, color = condition)) + 
+    geom_col(data = . %&gt;% filter(rep == 1), aes(y = mean_ret_ratio), 
+        fill = &quot;light gray&quot;, position = &quot;dodge&quot;) + geom_point(shape = 21, 
+    position = position_dodge(width = 1)) + facet_wrap(~measured_phz, 
+    scales = &quot;free&quot;) + ylim(0, NA)</code></pre>
+<p><img src="2019_07_23_PI_EtBr_colonies_analysis_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="phz-2" class="section level3">
+<h3>∆phz*</h3>
+<pre class="r"><code>ggplot(df_dphz_2 %&gt;% filter(condition %in% c(&quot;pi&quot;, &quot;PBS&quot;, &quot;dmso&quot;) &amp; 
+    measured_phz != &quot;PCA&quot;), aes(x = condition_conc, y = Amount, 
+    shape = added_phz, color = condition)) + geom_point() + facet_wrap(material ~ 
+    measured_phz, scales = &quot;free&quot;) + ylim(0, NA) + scale_shape_discrete(solid = F)</code></pre>
+<p><img src="2019_07_23_PI_EtBr_colonies_analysis_files/figure-html/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(df_dphz_conc %&gt;% filter(condition %in% c(&quot;pi&quot;, &quot;PBS&quot;, 
+    &quot;dmso&quot;)), aes(x = condition_conc, y = measured_phz_conc, 
+    color = condition)) + geom_col(data = . %&gt;% filter(rep == 
+    1), aes(y = mean_phz_conc), fill = &quot;light gray&quot;, position = &quot;dodge&quot;) + 
+    geom_jitter(shape = 21, position = position_jitterdodge(dodge.width = 1)) + 
+    facet_wrap(material ~ measured_phz, scales = &quot;free&quot;) + ylim(0, 
+    NA)</code></pre>
+<p><img src="2019_07_23_PI_EtBr_colonies_analysis_files/figure-html/unnamed-chunk-13-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+<div id="discussion" class="section level1">
+<h1>Discussion</h1>
+<p>One issue here is colony size. We should look back at this. Another issue seems to be that DMSO strongly affects both WT and dPHZ retention.</p>
 <hr />
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.5.2 (2018-12-20)
+<pre><code>## R version 3.5.3 (2019-03-11)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
 ## Running under: macOS Mojave 10.14.6
 ## 
@@ -336,25 +477,25 @@ theme_set(theme_1())</code></pre>
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] kableExtra_1.0.1  knitr_1.23        viridis_0.5.1    
-##  [4] viridisLite_0.3.0 cowplot_0.9.4     forcats_0.3.0    
-##  [7] stringr_1.3.1     dplyr_0.8.1       purrr_0.2.5      
-## [10] readr_1.3.1       tidyr_0.8.2       tibble_2.1.3     
+##  [1] kableExtra_1.1.0  knitr_1.23        viridis_0.5.1    
+##  [4] viridisLite_0.3.0 cowplot_0.9.4     forcats_0.4.0    
+##  [7] stringr_1.4.0     dplyr_0.8.1       purrr_0.3.2      
+## [10] readr_1.3.1       tidyr_0.8.3       tibble_2.1.3     
 ## [13] ggplot2_3.2.0     tidyverse_1.2.1  
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_0.2.5 xfun_0.7         haven_2.0.0      lattice_0.20-38 
-##  [5] colorspace_1.4-0 generics_0.0.2   htmltools_0.3.6  yaml_2.2.0      
-##  [9] rlang_0.3.4      pillar_1.3.1     glue_1.3.1       withr_2.1.2     
-## [13] modelr_0.1.2     readxl_1.2.0     munsell_0.5.0    gtable_0.2.0    
-## [17] cellranger_1.1.0 rvest_0.3.2      evaluate_0.14    broom_0.5.1     
-## [21] Rcpp_1.0.1       scales_1.0.0     backports_1.1.3  formatR_1.5     
-## [25] webshot_0.5.1    jsonlite_1.6     gridExtra_2.3    hms_0.4.2       
-## [29] digest_0.6.18    stringi_1.2.4    grid_3.5.2       cli_1.0.1       
-## [33] tools_3.5.2      magrittr_1.5     lazyeval_0.2.1   crayon_1.3.4    
-## [37] pkgconfig_2.0.2  xml2_1.2.0       lubridate_1.7.4  assertthat_0.2.1
-## [41] rmarkdown_1.13   httr_1.4.0       rstudioapi_0.9.0 R6_2.4.0        
-## [45] nlme_3.1-140     compiler_3.5.2</code></pre>
+##  [1] tidyselect_0.2.5 xfun_0.7         haven_2.1.0      lattice_0.20-38 
+##  [5] colorspace_1.4-1 generics_0.0.2   htmltools_0.3.6  yaml_2.2.0      
+##  [9] rlang_0.3.4      pillar_1.4.1     glue_1.3.1       withr_2.1.2     
+## [13] modelr_0.1.4     readxl_1.3.1     munsell_0.5.0    gtable_0.3.0    
+## [17] cellranger_1.1.0 rvest_0.3.4      evaluate_0.14    labeling_0.3    
+## [21] broom_0.5.2      Rcpp_1.0.1       scales_1.0.0     backports_1.1.4 
+## [25] formatR_1.7      webshot_0.5.1    jsonlite_1.6     gridExtra_2.3   
+## [29] hms_0.4.2        digest_0.6.19    stringi_1.4.3    grid_3.5.3      
+## [33] cli_1.1.0        tools_3.5.3      magrittr_1.5     lazyeval_0.2.2  
+## [37] crayon_1.3.4     pkgconfig_2.0.2  xml2_1.2.0       lubridate_1.7.4 
+## [41] assertthat_0.2.1 rmarkdown_1.13   httr_1.4.0       rstudioapi_0.10 
+## [45] R6_2.4.0         nlme_3.1-137     compiler_3.5.3</code></pre>
 </div>
 
 
