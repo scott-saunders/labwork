@@ -33,9 +33,15 @@ source("../../../../IDA/tools/plotting_tools.R")
 theme_set(theme_1())
 ```
 
+# Intro
+
+adsf
+
 # Methods
 
 ## Samples
+
+Images are available in [my google drive](https://drive.google.com/open?id=14sU_BI-pYdzNY28JaxuKqH0OJQ52PsHQ). 
 
 ### WT
 
@@ -54,17 +60,13 @@ WT controls for PI
 WT exp w/ EtBr
 
 * WT EtBr 10uM  - 3 cells, 3 agar
-
 * WT EtBr 100uM  - 3 cells, 3 agar
-
 * WT EtBr 500uM  - 3 cells, 3 agar
 
 WT exp w/ PI
 
 * WT PI 10uM  - 3 cells, 3 agar
-
 * WT PI 100uM  - 3 cells, 3 agar
-
 * WT PI 200uM  - 3 cells, 3 agar
 
  = 60 samples
@@ -76,33 +78,25 @@ WT exp w/ PI
 ∆phz* + PYO + EtBr 
 
 * ∆phz* + 50uM PYO + 10uM EtBr - 2 cells, 2 agar
-
 * ∆phz* + 50uM PYO + 100uM EtBr - 2 cells, 2 agar
-
 * ∆phz* + 50uM PYO + 500uM EtBr - 2 cells, 2 agar 
 
 ∆phz* + PCN + EtBr 
 
 * ∆phz* + 50uM PCN + 10uM EtBr - 2 cells, 2 agar
-
 * ∆phz* + 50uM PCN + 100uM EtBr - 2 cells, 2 agar
-
 * ∆phz* + 50uM PCN + 500uM EtBr - 2 cells, 2 agar 
 
 ∆phz* + PYO + PI 
 
 * ∆phz* + 50uM PYO + 10uM PI - 2 cells, 2 agar
-
 * ∆phz* + 50uM PYO + 100uM PI - 2 cells, 2 agar
-
 * ∆phz* + 50uM PYO + 200uM PI - 2 cells, 2 agar 
 
 ∆phz* + PCN + PI 
 
 * ∆phz* + 50uM PCN + 10uM PI - 2 cells, 2 agar
-
 * ∆phz* + 50uM PCN + 100uM PI - 2 cells, 2 agar
-
 * ∆phz* + 50uM PCN + 200uM PI - 2 cells, 2 agar 
 
  = 48 samples
@@ -111,14 +105,112 @@ WT exp w/ PI
  
   = 108 samples total
   
-  First run is WT H2O and WT WT EtBr Samples
+First run is WT H2O and WT WT EtBr Samples
+
+## Sample Prep 
+
+Samples were extracted as normal. Colonies were resuspended in **800uL of PBS 137(?? - check this)** and agar was extracted for ~3 hours in 3mL of PBS 137. Note that some of the colonies did not break up entirely, particularly in the PI and EtBr treated colonies. However, they were all incubated in the liquid for the same amount of time, so I would expect that the phenazines were extracted reasonably well. [Photos in the google drive](https://drive.google.com/open?id=19L6UKPxe9BR9Wcf2IP9riKZ4O-mz0Dz_) show some of the prep and differences in colony pellets etc. 
+
   
+Frozen samples were thawed to room temp, then filtered with 0.2um spinX columns. 500uL of samples were then transferred into sample vials containing 500uL of PBS 137 and therefore samples were run at a **0.5 x dilution.**  
   
+Samples were run using the standard Phenazine_basic_MS method on the waters LC-MS.
   
-  
-  
-  
-  ------
+# Results
+
+```{r}
+df_wt <- read_csv("../data/2019_07_23_colony_HPLC_wt_data.csv")
+
+df_dphz <- read_csv("../data/2019_07_23_colony_HPLC_dPHZ_data.csv")
+```
+
+```{r}
+
+colorblind_palette <- c("#E69F00", "#56B4E9", "#000000","#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+
+ggplot(df_wt %>% filter(condition != 'blank'), aes(x = condition, y = Amount, color = condition_conc)) + geom_point() + facet_wrap(material~measured_phz, scales = 'free') + scale_color_manual(values = colorblind_palette, na.value='gray')
+```
+
+
+```{r}
+
+colorblind_palette <- c("#E69F00", "#56B4E9", "#000000","#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+
+ggplot(df_dphz %>% filter(condition != 'blank'), aes(x = condition, y = Amount, color = condition_conc)) + geom_point() + facet_wrap(added_phz~measured_phz, scales = 'free') + scale_color_manual(values = colorblind_palette, na.value='gray')
+
+ggplot(df_dphz %>% filter(condition != 'blank'), aes(x = measured_phz, y = Amount, color = condition_conc)) + geom_point() + facet_wrap(~added_phz, scales = 'free') + scale_color_manual(values = colorblind_palette, na.value='gray')
+```
+## requantification
+
+```{r}
+df_wt_2 <- read_csv("../data/2019_07_23_colony_HPLC_wt_data_2.csv")
+
+df_dphz_2 <- read_csv("../data/2019_07_23_colony_HPLC_dPHZ_data_2.csv")
+```
+
+```{r}
+
+colorblind_palette <- c("#E69F00", "#56B4E9", "#000000","#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+
+ggplot(df_wt_2 %>% filter(condition != 'blank'), aes(x = condition, y = Amount, color = condition_conc)) + geom_point() + facet_wrap(material~measured_phz, scales = 'free') + scale_color_manual(values = colorblind_palette, na.value='gray') + ylim(0, NA)
+```
+
+
+```{r}
+
+ggplot(df_dphz_2 %>% filter(condition != 'blank'), aes(x = condition, y = Amount, color = condition_conc)) + geom_point() + facet_wrap(added_phz~measured_phz, scales = 'free')
+
+ggplot(df_dphz_2 %>% filter(condition != 'blank'), aes(x = measured_phz, y = Amount, color = condition_conc)) + geom_point() + facet_wrap(~added_phz, scales = 'free') 
+```
+
+## EtBr
+
+### WT
+
+```{r}
+df_wt_2 <- df_wt_2 %>% mutate(condition_conc = fct_relevel(condition_conc, c('0uM','10uM','100uM','200uM','500uM')))
+
+ggplot(df_wt_2 %>% filter(condition %in% c('etbr','h2o')), aes(x = condition_conc, y = Amount)) + geom_point(shape = 21)  + facet_wrap(material~measured_phz, scales = 'free') + ylim(0, NA)
+
+```
+
+### ∆phz*
+
+```{r}
+df_dphz_2 <- df_dphz_2 %>% mutate(condition_conc = fct_relevel(condition_conc, c('0uM','10uM','100uM','200uM','500uM')))
+
+
+ggplot(df_dphz_2 %>% filter(condition %in% c('etbr','PBS') & measured_phz != 'PCA'), aes(x = condition_conc, y = Amount, shape = added_phz)) + geom_point()  + facet_wrap(material~measured_phz, scales = 'free') + ylim(0, NA) + scale_shape_discrete(solid = F)
+```
+
+## PI
+
+### WT
+
+```{r}
+
+ggplot(df_wt_2 %>% filter(condition %in% c('pi','h2o','dmso')), aes(x = condition_conc, y = Amount, shape = condition)) + geom_point()  + facet_wrap(material~measured_phz, scales = 'free') + ylim(0, NA) + scale_shape_discrete(solid = F)
+
+```
+
+### ∆phz*
+
+```{r}
+ggplot(df_dphz_2 %>% filter(condition %in% c('pi','PBS','dmso') & measured_phz != 'PCA'), aes(x = condition_conc, y = Amount, shape = added_phz, color = condition)) + 
+  geom_point()  + 
+  facet_wrap(material~measured_phz, scales = 'free') + 
+  ylim(0, NA) + 
+  scale_shape_discrete(solid = F)
+```
+
+
+
+
+
+------
   
 ```{r}
 sessionInfo()  
