@@ -13,7 +13,8 @@ theme_1 <- function () {
       legend.background = element_blank(),
       legend.title=element_text(size=12),
       legend.text=element_text(size=10),
-      legend.text.align=0
+      legend.text.align=0, 
+      plot.title = element_text(hjust = 0.5, size = 12)
     )
 }
 

@@ -187,7 +187,7 @@ ggplot(priorPostSamples, aes(x = b_Intercept, y = dist)) + geom_density_ridges(j
 Not bad! The data definitely informed the estimate, and the estimate seems reasonable based on the data. Let's look at the group vs overall estimates:
 
 ```{r}
- ggplot(wt_preds %>% filter(Condition=='TOTO'), aes(x = factor(Colony_number), y = eDNA_dsDNA_uM)) +
+ plot_eDNA_hier <- ggplot(wt_preds %>% filter(Condition=='TOTO'), aes(x = factor(Colony_number), y = eDNA_dsDNA_uM)) +
   geom_hline(yintercept = as_tibble(fixef(wt_brm_single_level))$Estimate, linetype = 2)+
   geom_hline(yintercept = as_tibble(fixef(wt_brm_single_level))$Q2.5, linetype = 2, color = 'gray')+
   geom_hline(yintercept = as_tibble(fixef(wt_brm_single_level))$Q97.5, linetype = 2, color = 'gray')+
@@ -196,9 +196,12 @@ Not bad! The data definitely informed the estimate, and the estimate seems reaso
                   aes(x = factor(Colony_number), 
                       y = Estimate.Intercept, 
                       ymin = Q2.5.Intercept, 
-                      ymax = Q97.5.Intercept))
+                      ymax = Q97.5.Intercept)) + 
+  ylim(0,NA) + labs(x = 'Colony number', y = expression("eDNA" ~ ( mu*M ~ bp)), title = 'WT eDNA concentration\ndetermined with TOTO-1')
 
+#saveRDS(plot_eDNA_hier, "../../../../Figures/2019_09_27_group_meeting/plot_eDNA_hier")
 
+plot_eDNA_hier
 
 
 

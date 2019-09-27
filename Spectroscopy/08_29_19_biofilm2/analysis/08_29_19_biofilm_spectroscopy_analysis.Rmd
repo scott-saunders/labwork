@@ -238,10 +238,16 @@ This next condition was basically a better version of biofilm 1. Let's look at t
 
 ```{r}
 
-ggplot(df %>% filter(exp_num ==2), aes(x = time, y = intensity, color = quencher_eq)) + 
+plot_colony_raw <- ggplot(df %>% filter(exp_num ==2), aes(x = time, y = intensity, color = quencher_eq)) + 
   geom_path(data = df %>% filter(exp_num ==2 & ruphen_conc==0), color = 'gray', size = 3) + 
-  geom_path() + xlim(NA, 5e-7)
+  geom_path() + xlim(NA, 5e-7)+
+  labs(y = NULL, x= 'Time (s)', title = 'Colony biofilm\nRaw') + 
+  theme(legend.justification=c(1,1), legend.position=c(1,1), legend.title = element_text(size=10)) + scale_color_viridis(name = 'Rh / Ru')+
+  guides(color = guide_colorbar(barwidth = 0.5, barheight = 5))
 
+saveRDS(plot_colony_raw, "../../../Figures/2019_09_27_group_meeting/plot_colony_raw")
+
+plot_colony_raw
 ```
 
 Here I've highlighted the biofilm only control in gray. You can see that it is basically the same as the highest quencher concentrations. Let's see how the background subtraction looks if we subtract from the biofilm only control:
@@ -261,6 +267,17 @@ ggplot(df_bg %>% filter(exp_num ==2), aes(x = time, y = bg_sub, color = quencher
   geom_path(data = df_bg %>% filter(exp_num ==2 & ruphen_conc==0), color = 'gray', size = 3) + 
   geom_path() + 
   xlim(NA, 5e-7)
+
+plot_colony_bgSub <- ggplot(df_bg %>% filter(exp_num ==2), aes(x = time, y = bg_sub, color = quencher_eq)) + 
+  geom_path() + 
+  xlim(NA, 5e-7) + 
+  labs(y = 'Background subtracted emission (620nm)', x= 'Time (s)', title = 'Colony biofilm\nBackground subtracted') + 
+  theme(legend.justification=c(1,1), legend.position=c(1,1), legend.title = element_text(size=10)) + scale_color_viridis(name = 'Rh / Ru')+
+  guides(color = guide_colorbar(barwidth = 0.5, barheight = 5))
+
+saveRDS(plot_colony_bgSub, "../../../Figures/2019_09_27_group_meeting/plot_colony_bgSub")
+
+plot_colony_bgSub
 ```
 
 Again, the biofilm only control is highlighted in gray. Here you can see that unfortunately the biofilm only sample is not the lowest intensity signal, meaning that the quenched signal is actually lower in certain places than the biofilm alone. Background subtracting from the biofilm only control yields weird results, so this is where Nirit's suggestion may come in...maybe we should have background subtracted from a biofilm + $Rh(phi)_2bpy^{3+}$ control or maybe we should just be fine background subracting from the lowest value. Not sure what the best practice would be here.
@@ -289,6 +306,16 @@ Remember, this condition was to assess whether cells (containing genomic DNA) we
 ggplot(df %>% filter(exp_num ==7), aes(x = time, y = intensity, color = factor(run))) + 
   geom_path() + xlim(NA, 5e-7)
 
+plot_liquid_raw <- ggplot(df %>% filter(exp_num ==7), aes(x = time, y = intensity, color = quencher_eq)) + 
+  geom_path(data=df %>% filter(exp_num == 7 & ruphen_conc==0), color = 'gray', size = 3)+
+  geom_path() + xlim(NA, 5e-7)+
+  labs(y = 'Emission (620nm)', x= 'Time (s)', title = 'Liquid-grown cells\nRaw') + 
+  theme(legend.justification=c(1,1), legend.position=c(1,1), legend.title = element_text(size=10)) + scale_color_viridis(name = 'Rh / Ru')+
+  guides(color = guide_colorbar(barwidth = 0.5, barheight = 5))
+
+saveRDS(plot_liquid_raw, "../../../Figures/2019_09_27_group_meeting/plot_liquid_raw")
+
+plot_liquid_raw
 ```
 
 So, all the runs look almost identical. Run 1 is biofilm only, Run 2 is + $Ru(phen)_2dppz^{2+}$ , and Runs 3,4,and 5 add increasing $Rh(phi)_2bpy^{3+}$. This is already pretty clear...there's barely any signal from the $Ru(phen)_2dppz^{2+}$, which only emits when it is bound to DNA. Therefore, this data suggests that the complex is not bound to DNA when incubated with the liquid grown cells...and so the signal probably isn't coming from gDNA. Because there's basically no signal, we don't expect to see much quenching, but here's what the background subtraction looks like:

@@ -566,11 +566,17 @@ ggplot(df_rxn_pct %>% filter(red_ox == 'PYO_PCN') %>% filter(!(wavelength %in% c
 It's hard to concisely represent all of the data, because no single wavelength quantifies all the reactions well. I think the best thing to do is show the 690nm channel tracking the wells that had PYO:
 
 ```{r}
+
 labels = c('PCA[red] + PYO[ox]','PCN[red] + PYO[ox]','PYO[red] + PCA[ox]','PYO[red] + PCN[ox]')
 
-plot_rxn_pct <- ggplot(df_rxn_pct %>% filter(ox == 'PYO' | red == 'PYO') %>% filter(wavelength == 'abs690'), aes(x = red_ox, y = rxn_pct)) + geom_pointrange(aes(ymin = rxn_pct_low, ymax = rxn_pct_high), position = position_jitter(height = 0, width = 0.1)) + 
+plot_rxn_pct <- ggplot(df_rxn_pct %>% filter(ox == 'PYO' | red == 'PYO') %>% filter(wavelength == 'abs690'), aes(x = red_ox, y = rxn_pct)) + 
+  geom_pointrange(aes(ymin = rxn_pct_low, ymax = rxn_pct_high), position = position_jitter(height = 0, width = 0.1)) + 
   scale_y_continuous(labels=scales::percent, limits = c(0,1)) + 
-  labs(y = 'Reaction progress at 690nm', x = NULL) + scale_x_discrete(labels = parse(text = labels )) + theme(axis.text = element_text( size=12))
+  labs(y = 'Reaction progress at 690nm', x = NULL, title = 'Quantified rxn progress') + 
+  scale_x_discrete(labels = parse(text = labels )) + 
+  theme(axis.text.x = element_text( size=10,angle = 45, hjust = 1))
+
+#saveRDS(plot_rxn_pct, "../../Figures/2019_09_27_group_meeting/plot_rxn_pct")
 
 plot_rxn_pct
 ```
@@ -587,7 +593,7 @@ plot_pyo_ox <- ggplot(df_ref_4 %>% filter(rep == 1) %>% filter(ox == 'PYO'), aes
   geom_path(aes(y = intensity), size = 1) + 
   geom_segment(aes(x = 680, xend = 680, y = 0.2, yend = 0.075), arrow = arrow(length = unit(0.05, "inches"), type = 'closed'), color = 'black') + 
   scale_color_manual(labels = parse(text = c('PCA[red] + PYO[ox]', 'PCN[red] + PYO[ox]')), values = colorblind_palette, name = NULL ) +
-  labs(y = "Absorbance")+ theme(legend.position = 'top')
+  labs(y = "Absorbance", title = 'PYO oxidizing PCA / PCN')+ theme(legend.justification=c(0.5,1), legend.position=c(0.5,1))
 
 
 plot_pyo_red <- ggplot(df_ref_4 %>% filter(rep == 1) %>% filter(red == 'PYO'), aes(x = Wavelength, color = red_ox, group = red_ox)) + 
@@ -597,7 +603,10 @@ plot_pyo_red <- ggplot(df_ref_4 %>% filter(rep == 1) %>% filter(red == 'PYO'), a
   geom_path(aes(y = intensity), size = 1)+ 
   geom_segment(aes(x = 680, xend = 680, y = 0.2, yend = 0.075), arrow = arrow(length = unit(0.05, "inches"), type = 'closed', ends = 'first'), color = 'black')+
   scale_color_manual(labels = parse(text = c('PYO[red] + PCA[ox]', 'PYO[red] + PCN[ox]')), values = colorblind_palette, name = NULL)+
-  labs(y = "Absorbance") + theme(legend.position = 'top')
+  labs(y = NULL, title = 'PYO reducing PCA / PCN') + theme(legend.justification=c(0.5,1), legend.position=c(0.5,1))
+
+#saveRDS(plot_pyo_ox, "../../Figures/2019_09_27_group_meeting/plot_pyo_ox")
+#saveRDS(plot_pyo_red, "../../Figures/2019_09_27_group_meeting/plot_pyo_red")
 
 plot_grid(plot_pyo_ox,plot_pyo_red, align = 'hv', axis = 'tlbr')
 ```

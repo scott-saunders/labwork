@@ -231,23 +231,35 @@ ggplot(df_wt_conc %>% filter(condition %in% c('etbr','h2o')), aes(x = condition_
 
 ```{r}
 
-ggplot(df_wt_retRatio %>% filter(condition %in% c('etbr','h2o')), aes(x = condition_conc, y = ret_ratio)) +
+plot_wt_etbr <- ggplot(df_wt_retRatio %>% filter(condition %in% c('etbr','h2o')), aes(x = condition_conc, y = ret_ratio)) +
   geom_col(data = df_wt_retRatio %>% filter(condition %in% c('etbr','h2o')) %>% filter(rep == 1),
            aes(x = condition_conc, y = mean_ret_ratio), fill = 'light gray') + 
-  geom_point(shape = 21)  + facet_wrap(~measured_phz, scales = 'free') + ylim(0, NA)
+  geom_point(shape = 21)  + facet_wrap(~measured_phz, scales = 'free') + ylim(0, NA) + 
+  labs(x = expression('EtBr added to agar'~(mu*M)), y = 'Retention ratio ( [biofilm] / [agar] )', title = 'WT phenazine - competition with EtBr') + 
+  scale_x_discrete(labels = c(0, 10, 100, 500))
 
+#saveRDS(plot_wt_etbr, "../../../../Figures/2019_09_27_group_meeting/plot_wt_etbr")
+
+plot_wt_etbr
 ```
 
 ### ∆phz*
 
 ```{r}
 
-ggplot(df_dphz_conc %>% filter(condition %in% c('etbr','PBS')), 
+
+plot_dphz_etbr <- ggplot(df_dphz_conc %>% filter(condition %in% c('etbr','PBS')), 
        aes(x = condition_conc, y = measured_phz_conc)) + 
   geom_col(data = df_dphz_conc %>% filter(condition %in% c('etbr','PBS') & rep ==1), 
            aes(x = condition_conc, y  = mean_phz_conc), fill = 'light gray') +
-  geom_point(shape = 21)  + facet_wrap(material~measured_phz, scales = 'free') + ylim(0, NA)
+  geom_point(shape = 21)  + facet_wrap(~measured_phz, scales = 'free') + ylim(0, NA) + 
+  labs(x = expression('EtBr added to agar'~(mu*M)), y = expression('Biofilm phz concentration'~(mu*M)), title = 'dPHZ* + 50uM PCN or PYO vs. EtBr')+
+  scale_x_discrete(labels = c(0, 10, 100, 500))
 
+
+#saveRDS(plot_dphz_etbr, "../../../../Figures/2019_09_27_group_meeting/plot_dphz_etbr")
+
+plot_dphz_etbr
 ```
 
 ## PI
@@ -266,12 +278,19 @@ ggplot(df_wt_conc %>% filter(condition %in% c('pi','h2o','dmso')),
 
 ```{r}
 
-ggplot(df_wt_retRatio %>% filter(condition %in% c('pi','h2o','dmso')), 
+plot_wt_pi <- ggplot(df_wt_retRatio %>% filter(condition %in% c('pi','h2o','dmso')), 
        aes(x = condition_conc, y = ret_ratio, color = condition)) +
   geom_col(data = . %>% filter(rep == 1),
            aes(y = mean_ret_ratio), fill = 'light gray', position = 'dodge') + 
   geom_point(shape = 21, position = position_dodge(width=1))  + 
-  facet_wrap(~measured_phz, scales = 'free') + ylim(0, NA)
+  facet_wrap(~measured_phz, scales = 'free') + ylim(0, NA)+
+  labs(x = expression('PI added to agar'~(mu*M)), y = 'Retention ratio ( [biofilm] / [agar] )', title = 'WT phenazine - competition with PI') + 
+  scale_x_discrete(labels = c(0, 10, 100, 200)) + 
+  theme( legend.position='top', legend.title = element_text(size=12))
+
+#saveRDS(plot_wt_pi, "../../../../Figures/2019_09_27_group_meeting/plot_wt_pi")
+
+plot_wt_pi
 
 ```
 
@@ -284,12 +303,19 @@ ggplot(df_dphz_2 %>% filter(condition %in% c('pi','PBS','dmso') & measured_phz !
   ylim(0, NA) + 
   scale_shape_discrete(solid = F)
 
-ggplot(df_dphz_conc %>% filter(condition %in% c('pi','PBS','dmso')), 
+plot_dphz_pi <- ggplot(df_dphz_conc %>% filter(condition %in% c('pi','PBS','dmso')), 
        aes(x = condition_conc, y = measured_phz_conc, color = condition)) + 
   geom_col(data = . %>% filter(rep ==1), 
            aes(y  = mean_phz_conc), fill = 'light gray', position = 'dodge') +
   geom_jitter(shape = 21, position = position_jitterdodge(dodge.width = 1))  + 
-  facet_wrap(material~measured_phz, scales = 'free') + ylim(0, NA)
+  facet_wrap(~measured_phz, scales = 'free') + ylim(0, NA)+
+  labs(x = expression('PI added to agar'~(mu*M)), y = expression('Biofilm phz concentration'~(mu*M)), title = 'dPHZ* + 50uM PCN or PYO vs. PI') + 
+  scale_x_discrete(labels = c(0, 10, 100, 200)) +
+  theme( legend.position='top', legend.title = element_text(size=12))
+
+#saveRDS(plot_dphz_pi, "../../../../Figures/2019_09_27_group_meeting/plot_dphz_pi")
+
+plot_dphz_pi
 ```
 
 # Discussion

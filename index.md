@@ -108,6 +108,8 @@ for (link in files) {
 
 <a href="https://scott-saunders.github.io/labwork/Figures/02_05_19_draft_2/code/02_17_19_derivations.html">Figures/02\_05\_19\_draft\_2/code/02\_17\_19\_derivations.html</a>
 
+<a href="https://scott-saunders.github.io/labwork/Figures/2019_09_27_group_meeting/2019_09_27_group_meeting_figs.html">Figures/2019\_09\_27\_group\_meeting/2019\_09\_27\_group\_meeting\_figs.html</a>
+
 <a href="https://scott-saunders.github.io/labwork/Figures/draft1/2018_11_01_figure1.nb.html">Figures/draft1/2018\_11\_01\_figure1.nb.html</a>
 
 <a href="https://scott-saunders.github.io/labwork/Figures/draft1/2018_11_01_figure2.html">Figures/draft1/2018\_11\_01\_figure2.html</a>
@@ -121,6 +123,16 @@ for (link in files) {
 <a href="https://scott-saunders.github.io/labwork/Figures/README.html">Figures/README.html</a>
 
 <a href="https://scott-saunders.github.io/labwork/Figures/Spectroscopy_first_look.nb.html">Figures/Spectroscopy\_first\_look.nb.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/Figures/supplement/code/03_11_19_supplement_LC-MS_controls.html">Figures/supplement/code/03\_11\_19\_supplement\_LC-MS\_controls.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/Figures/supplement/code/03_19_19_supplement_Dap_analysis.html">Figures/supplement/code/03\_19\_19\_supplement\_Dap\_analysis.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/Figures/supplement/code/03_19_19_supplement_Dm_analysis.html">Figures/supplement/code/03\_19\_19\_supplement\_Dm\_analysis.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/Figures/supplement/code/03_19_19_supplement_Dm_analysis.nb.html">Figures/supplement/code/03\_19\_19\_supplement\_Dm\_analysis.nb.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/Figures/supplement/code/03_19_19_supplement_Dphys_analysis.html">Figures/supplement/code/03\_19\_19\_supplement\_Dphys\_analysis.html</a>
 
 <a href="https://scott-saunders.github.io/labwork/FRAP/05_30_19/05_30_19_PYO_FRAP_analysis_2.html">FRAP/05\_30\_19/05\_30\_19\_PYO\_FRAP\_analysis\_2.html</a>
 
@@ -221,6 +233,10 @@ for (link in files) {
 <a href="https://scott-saunders.github.io/labwork/IDA/diffusion_modeling_11_17_18.nb.html">IDA/diffusion\_modeling\_11\_17\_18.nb.html</a>
 
 <a href="https://scott-saunders.github.io/labwork/IDA/diffusionLayerTheory.html">IDA/diffusionLayerTheory.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/IDA/Dm/03_04_19_finite_psource_diffusion.html">IDA/Dm/03\_04\_19\_finite\_psource\_diffusion.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/IDA/Dm/03_05_19_finite_diffusion_SWVdata.html">IDA/Dm/03\_05\_19\_finite\_diffusion\_SWVdata.html</a>
 
 <a href="https://scott-saunders.github.io/labwork/IDA/README.html">IDA/README.html</a>
 
