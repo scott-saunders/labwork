@@ -1,0 +1,386 @@
+---
+title: "Spectroscopy Curve Fitting"
+author: "Scott Saunders"
+fontsize: 12pt
+date: '09_27_19'
+output:
+  html_document:
+    theme: cosmo
+    code_folding: hide
+    self_contained: no
+    toc: yes
+  github_document:
+    pandoc_args: --webtex
+---
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(viridis)
+library(knitr)
+library(kableExtra)
+library(modelr)
+library(broom)
+
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+source("../../../IDA/tools/plotting_tools.R")
+
+theme_set(theme_1())
+```
+
+# Intro
+
+Ok, so we want to fit biexponential decays to the time resolved spectroscopy data from [this notebook](https://scott-saunders.github.io/labwork/Spectroscopy/08_29_19_biofilm2/analysis/08_29_19_biofilm_spectroscopy_analysis.html). 
+
+Let's read in the data:
+```{r}
+
+df <- read_csv("2019_08_29_spectroscopy_RuRh_dphz.csv")
+
+
+df %>% head() %>%  kable(digits = 10) %>% kable_styling()
+```
+
+So we have time vs. intensity data and I have also performed a background subtraction, that simply subtracts the minimum value at each time point within an experiment (e.g. biofilm background or highest quencher value).
+
+The raw data for unquenched Ru look like this:
+
+```{r}
+
+ggplot(df %>% filter(exp_num ==2 & quencher_eq == 0), aes(x = time, y = intensity)) + 
+  geom_path() + xlim(NA, 5e-7)
+```
+
+And the background subtraction looks like this:
+```{r}
+
+ggplot(df %>% filter(exp_num ==2 & quencher_eq == 0), aes(x = time, y = bg_sub)) + 
+  geom_path() + xlim(NA, 5e-7)
+```
+
+# Using `SSbiexp` for biexponential fitting
+
+Ok, I'm going to use the function `SSbiexp` with `nls` to fit these biexponential models. Read the documentation for [SSbiexp](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/SSbiexp.html), but basically it is just going to return values according to this expression: $A1*exp(-exp(lrc1)*input)+A2*exp(-exp(lrc2)*input)$, where in this case the input will be the time vector. The documentation describes the parameters A1, lrc1, A2 and lrc2 as follows:
+
+* **A1:** a numeric parameter representing the multiplier of the first exponential.
+
+* **lrc1:**a numeric parameter representing the natural logarithm of the rate constant of the first exponential.
+
+* **A2:**a numeric parameter representing the multiplier of the second exponential.
+
+* **lrc2:**a numeric parameter representing the natural logarithm of the rate constant of the second exponential.
+
+Here's the example given in the documentation if you just give the function a guess for those 4 parameters:
+
+```{r}
+Indo.1 <- Indometh[Indometh$Subject == 1, ]
+
+#ggplot(Indo.1, aes(time, conc)) + geom_point()
+
+#SSbiexp( Indo.1$time, 3, 1, 0.6, -1.3 )  # response only
+
+Indo_2 <- bind_cols(Indo.1,biexp=SSbiexp( Indo.1$time, 3, 1, 0.6, -1.3 ))
+
+ggplot(Indo_2, aes(x = time)) + geom_path(aes(y = biexp))+geom_point(aes(y = conc), shape = 21)
+```
+
+When you actually tell the model to fit, it looks pretty good:
+```{r}
+ggplot(Indo_2, aes(x = time, y = conc)) + 
+  geom_point(shape = 21)+
+  geom_smooth(method='nls',
+              formula=y~SSbiexp(x, A1, lrc1, A2, lrc2),
+              method.args=list(start=c(A1 = 3, lrc1 = 1, A2 = 0.6, lrc2 = -1.3)),
+              se=F)
+
+# A1 <- 3; lrc1 <- 1; A2 <- 0.6; lrc2 <- -1.3
+# 
+# SSbiexp( Indo.1$time, A1, lrc1, A2, lrc2 ) # response and gradient
+# 
+# print(getInitial(conc ~ SSbiexp(time, A1, lrc1, A2, lrc2), data = Indo.1),
+#       digits = 5)
+# 
+# ## Initial values are in fact the converged values
+# fm1 <- nls(conc ~ SSbiexp(time, A1, lrc1, A2, lrc2), data = Indo.1)
+# 
+# summary(fm1)
+```
+
+# Background subtracted data
+
+Let's go ahead and give it a try with the first Ru sample from experiment 2, shown at the beginning.
+
+## First pass
+
+So first let's just guess some parameters that give a curve that's close to our dataset. After playing around and re-reading what the parameters mean I started using `A1 = 0.02; lrc1 = 16.5; A2 = 0.02; lrc2 = 15.7`:
+
+```{r}
+df_1 <- df %>% filter(exp_num ==2 & run == 2) %>% filter(time>=8e-9) %>% filter(bg_sub>0)
+
+df_guess <- bind_cols(df_1,biexp=SSbiexp(df_1$time, 0.02, 16.5, 0.02, 15.7 ))
+
+ggplot(df_guess, aes(x = time)) + geom_path(aes(y = biexp))+geom_point(aes(y = bg_sub), shape = 21) + geom_hline(yintercept = 0, linetype = 2, color = 'light gray')
+
+```
+
+I'm glossing over this, but I actually did a lot of guess and check to get to this point! Importantly the lrc parameters are roughly $\log(\frac{1}{half-life})$ (FYI that's a natural log base e..., and half life is in seconds). The A1 and A2 values add up to equal the max height of the data. So A1 = 0.02, A2 = 0.02 gives a height of 0.04.
+
+The other two essential data processing things are that you need to exclude all the data < 0...but just after zero there's also a rise in signal and we need to exclude that too so that we only observe the decay. That's why I excluded data < 8 ns. Also, some samples have values that go below zero, which throws an error, so I filtered those out too.
+
+Ok, now we're ready to fit the model using nonlinear least squares (`nls()`). 
+
+```{r}
+# ggplot(df_1, aes(x = time, y = bg_sub)) + 
+#   geom_point(shape = 21) + 
+#   geom_smooth(method='nls',
+#               formula=y~SSbiexp(x, A1, lrc1, A2, lrc2),
+#               method.args=list(start=c(A1 = 0.02, lrc1 = 16.5, A2 = 0.02, lrc2 = 15.7)),
+#               se=F)
+
+A1 = 0.02; lrc1 = 16.5; A2 = 0.02; lrc2 = 15.7
+
+mod_1 <- nls(bg_sub~SSbiexp(time, A1, lrc1, A2, lrc2), data = df_1)
+
+summary(mod_1)
+```
+
+Seems reasonable...idk. Let's look at the actual fit graphically:
+
+
+```{r}
+df_mod_1 <- df_1 %>% add_predictions(mod_1)
+
+ggplot(df_mod_1, aes(x = time)) + geom_path(aes(y = pred))+ geom_point(aes(y = bg_sub), shape =21)
+```
+
+Looks beautiful! Let's move forward to the whole dataset.
+
+## All datasets
+
+Obviously I iterated back and forth between the previous section and this one before it actually worked for the whole thing...that's how I found out about the negative value issue. Anyway, we're going to select the subset of the data we're interested in, which is experiment 2. Notice that again I filter out negative values, times before 8ns, and we are only looking at runs 1 - 9, because 10 is essentially noise in the background subtraction.
+
+I'm using the same parameters shown above.
+
+```{r}
+df_exp_2 <- df %>% 
+  filter(exp_num == 2 & run %in% 1:9) %>% 
+  filter(time>=8e-9) %>% 
+  filter(bg_sub>0) %>% 
+  group_by(run, quencher_eq) %>% 
+  nest()
+
+fit_biexp_bg_sub <- function(df){
+  
+  A1 = 0.02; lrc1 = 16.5; A2 = 0.02; lrc2 = 15.7
+  
+  mod <- nls(bg_sub~SSbiexp(time, A1, lrc1, A2, lrc2), data = df)
+  
+  mod
+}
+
+df_exp_2_models <- df_exp_2 %>% 
+  mutate(models = map(data, fit_biexp_bg_sub)) 
+
+df_exp_2_preds <- df_exp_2_models %>% 
+  mutate(preds = map2(data, models, add_predictions)) %>% 
+  unnest(preds)
+
+df_exp_2_ests <- df_exp_2_models %>% 
+  mutate(ests = map(models, tidy, conf.int = T)) %>% 
+  unnest(ests)
+
+
+df_exp_2_preds %>% head()
+```
+
+Ok, we fit all the models individually to the different runs in the experiment and added the predictions from the model (e.g. best fit line), and we also have the parameter estimates:
+
+```{r}
+#write_csv(df_exp_2_ests, "2019_09_27_spectroscopy_fits_bg_sub.csv")
+
+df_exp_2_ests %>% kable() %>% kable_styling() %>% scroll_box(height = '400px')
+```
+
+Let's see how the fits look:
+
+```{r}
+
+ggplot(df_exp_2_preds, aes(x = time, group = run, color = quencher_eq)) + geom_path(aes(y = pred), color = 'black') + geom_point(aes(y = bg_sub),alpha = 0.2, shape = 21) +xlim(0,5e-7) + facet_wrap(~quencher_eq)
+
+```
+
+Nice! All of the fits seem totally reasonable. Note that the plot with quencher eq as NA is the biofilm only background. Overlaying them, we can see the same pattern as before:
+
+```{r}
+
+ggplot(df_exp_2_preds, aes(x = time, group = run, color = quencher_eq)) + geom_path(aes(y = pred)) + geom_point(aes(y = bg_sub),alpha = 0.2, shape = 21) +xlim(0,5e-7)
+
+```
+Notice the curves don't overlap at all, except the gray one, which is the biofilm background.
+
+Now, let's look at the actual parameter estimates:
+```{r}
+background_ests <- df_exp_2_ests %>% filter(is.na(quencher_eq))
+
+#background_ests
+
+ggplot(df_exp_2_ests, aes(x = quencher_eq, y = estimate)) + 
+  geom_hline(data = background_ests, aes(yintercept = estimate), linetype = 2, color = 'light gray') + 
+  geom_pointrange(aes(ymin = conf.low, ymax = conf.high)) +
+  facet_wrap(~term, scales = 'free')
+
+```
+
+Note that the dotted lines are the values for the biofilm only control.
+
+Ok, so let's break this down. To me this means that there are two components of different magnitudes - A1 is about 4 times larger than A2. The component described by A1 decays pretty fast with a half life of ~ 20 ns, and the the A2 signal decays much more slowly with a half life of ~ 150ns. You can see that the magnitudes of both A1 and A2 go down significantly as we add more quencher (note bars are 95% CI). Meanwhile, the rate constants do not really change significantly. There seem to be some statistically significant differences, but we're talking about tiny effect sizes. Let's see the stern volmer plot, but I think this supports what we originally thought - quenching seems to occur statically.
+
+Just for fun let's replot the fit data with those estimates of the lifetimes.
+```{r}
+ggplot(df_exp_2_preds, aes(x = time, group = run, color = quencher_eq)) + 
+  geom_vline(xintercept = c(20e-9, 150e-9), color = 'light gray', size = 2) +
+  geom_path(aes(y = pred))  +xlim(0,5e-7)
+
+```
+
+Seems reasonable!
+
+# Raw data
+
+Now let's do it with the raw data, since the background subtraction is a little weird, since it's not from the biofilm only background. 
+
+## First pass
+
+
+let's guess and check first: 
+
+```{r}
+df_raw <- df %>% filter(exp_num ==2 & quencher_eq == 0) %>% filter(time>=8e-9)
+
+df_raw_guess <- bind_cols(df_raw,biexp=SSbiexp(df_raw$time, 0.02, 16.5, 0.02, 15.7 ))
+
+ggplot(df_raw_guess, aes(x = time)) + geom_path(aes(y = biexp))+geom_point(aes(y = intensity), shape = 21)
+```
+
+This is actually the same guess we used above...it looks pretty bad, but right order of magnitude. Let's see what happens when we fit and plot:
+
+```{r}
+# ggplot(df_raw, aes(x = time, y = intensity)) + 
+#   geom_point(shape = 21) + 
+#   geom_smooth(method='nls',
+#               formula=y~SSbiexp(x, A1, lrc1, A2, lrc2),
+#               method.args=list(start=c(A1 = 0.05, lrc1 = 16.5, A2 = 0.05, lrc2 = 15.7)),
+#               se=F)
+
+A1 = 0.02; lrc1 = 16.5; A2 = 0.02; lrc2 = 15.7
+
+mod_raw_1 <- nls(intensity~SSbiexp(time, A1, lrc1, A2, lrc2), data = df_raw)
+
+df_mod_raw_1 <- df_raw %>% add_predictions(mod_raw_1)
+
+ggplot(df_mod_raw_1, aes(x = time)) + geom_path(aes(y = pred))+ geom_point(aes(y = intensity), shape =21)
+```
+
+Looks perfect. This little exercise demonstrates how robust this fitting process is. Even with a bad guess, the model rapidly converges to what looks like a right answer. We really just need to give it starting parameters that are in the right order of magnitude. 
+
+## All datasets
+
+This time we'll be able to fit all the datasets (runs 1 - 10), because they all have a decay dominated by the biofilm background. 
+
+```{r}
+df_exp_2_raw <- df %>% 
+  filter(exp_num == 2 & run %in% 1:10) %>% 
+  filter(time>=8e-9) %>% 
+  filter(intensity>0) %>% 
+  group_by(run, quencher_eq) %>% 
+  nest()
+
+fit_biexp_raw <- function(df){
+  
+  A1 = 0.02; lrc1 = 16.5; A2 = 0.02; lrc2 = 15.7
+  
+  mod <- nls(intensity~SSbiexp(time, A1, lrc1, A2, lrc2), data = df)
+  
+  mod
+}
+
+df_exp_2_raw_models <- df_exp_2_raw %>% 
+  mutate(models = map(data, fit_biexp_raw)) 
+
+df_exp_2_raw_preds <- df_exp_2_raw_models %>% 
+  mutate(preds = map2(data, models, add_predictions)) %>% 
+  unnest(preds)
+
+df_exp_2_raw_ests <- df_exp_2_raw_models %>% 
+  mutate(ests = map(models, tidy, conf.int = T)) %>% 
+  unnest(ests)
+
+
+df_exp_2_raw_preds %>% head()
+```
+
+Again we have predictions for our best fit line. And below we have our parameter estimates:
+
+```{r}
+#write_csv(df_exp_2_raw_ests, "2019_09_27_spectroscopy_fits_raw.csv")
+
+df_exp_2_raw_ests %>% kable() %>% kable_styling() %>% scroll_box(height = '400px')
+```
+
+Let's take a look:
+
+```{r}
+
+ggplot(df_exp_2_raw_preds, aes(x = time, group = run, color = quencher_eq)) + geom_path(aes(y = pred), color = 'black') + geom_point(aes(y = intensity),alpha = 0.2, shape = 21) +xlim(0,5e-7) + facet_wrap(~quencher_eq)
+
+```
+
+Looks perfect! Overlaying gives:
+
+```{r}
+
+ggplot(df_exp_2_raw_preds, aes(x = time, group = run, color = quencher_eq)) + geom_path(aes(y = pred)) + geom_point(aes(y = intensity),alpha = 0.2, shape = 21) +xlim(0,5e-7)
+
+```
+
+Ok, now let's see what the actual parameter estimates are:
+
+```{r}
+
+background_ests <- df_exp_2_raw_ests %>% filter(is.na(quencher_eq))
+
+#background_ests
+
+ggplot(df_exp_2_raw_ests, aes(x = quencher_eq, y = estimate)) + 
+  geom_hline(data = background_ests, aes(yintercept = estimate), linetype = 1, color = 'light gray') + 
+  geom_hline(data = background_ests, aes(yintercept = conf.low), linetype = 2, color = 'light gray') + 
+  geom_hline(data = background_ests, aes(yintercept = conf.high), linetype = 2, color = 'light gray') + 
+  geom_pointrange(aes(ymin = conf.low, ymax = conf.high)) +
+  facet_wrap(~term, scales = 'free')
+
+```
+
+Let's walk through it. Again, there are two components of different magnitude - A1 is about 10x larger than A2. A1 has a half life of about 15ns, and A2 has a half life of ~ 250ns, but there's quite a bit of variation. A1 is probably the biofilm background signal, and interestingly it's amplitude decreases significantly (~30%), while it's lifetime barely changes. The A2 component may be the Ru signal - It's amplitude decreases a lot (~80%), but there's also a significant change in lifetime from about 250ns (lrc2 = 15) to about 100ns (lrc2 = 16). I'm not exactly sure what to make of this. I would say that the amplitude decrease is larger and more confident than the lifetime changes, but it may be consistent with a combination of static and dynammic quenching.
+
+```{r}
+ggplot(df_exp_2_raw_preds, aes(x = time, group = run, color = quencher_eq)) + 
+  geom_vline(xintercept = 15e-9, color = 'light gray', size = 2) +
+  geom_rect(aes(xmin = 100e-9, xmax = 250e-9, ymin = 0, ymax = Inf), fill = 'light gray', color = NA)+
+  geom_path(aes(y = pred))  +xlim(0,5e-7)
+```
+
+Yeah, when we visualize it like this it looks like there's a pretty big range in that second lifetime...
+
+# Conclusions
+
+1. It may be interesting to run this analysis for all of the datasets in the other notebook...it's always nice to have numbers. 
+2. We should convert the lrc's into parameters we actually understand
+3. Let's see if Nirit can use this information to get stern volmer plots. 
+
+-------
+
+```{r}
+sessionInfo()
+```

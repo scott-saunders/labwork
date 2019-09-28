@@ -1,0 +1,3260 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Scott Saunders" />
+
+
+<title>Spectroscopy Curve Fitting</title>
+
+<script src="2019_09_27_spectroscopy_curve_fitting_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="2019_09_27_spectroscopy_curve_fitting_files/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="2019_09_27_spectroscopy_curve_fitting_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="2019_09_27_spectroscopy_curve_fitting_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="2019_09_27_spectroscopy_curve_fitting_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="2019_09_27_spectroscopy_curve_fitting_files/navigation-1.1/tabsets.js"></script>
+<script src="2019_09_27_spectroscopy_curve_fitting_files/navigation-1.1/codefolding.js"></script>
+<link href="2019_09_27_spectroscopy_curve_fitting_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="2019_09_27_spectroscopy_curve_fitting_files/highlightjs-9.12.0/highlight.js"></script>
+<script src="2019_09_27_spectroscopy_curve_fitting_files/kePrint-0.0.1/kePrint.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Spectroscopy Curve Fitting</h1>
+<h4 class="author">Scott Saunders</h4>
+<h4 class="date">09_27_19</h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#intro">Intro</a></li>
+<li><a href="#using-ssbiexp-for-biexponential-fitting">Using <code>SSbiexp</code> for biexponential fitting</a></li>
+<li><a href="#background-subtracted-data">Background subtracted data</a><ul>
+<li><a href="#first-pass">First pass</a></li>
+<li><a href="#all-datasets">All datasets</a></li>
+</ul></li>
+<li><a href="#raw-data">Raw data</a><ul>
+<li><a href="#first-pass-1">First pass</a></li>
+<li><a href="#all-datasets-1">All datasets</a></li>
+</ul></li>
+<li><a href="#conclusions">Conclusions</a></li>
+</ul>
+</div>
+
+<pre class="r"><code>library(tidyverse)
+library(cowplot)
+library(viridis)
+library(knitr)
+library(kableExtra)
+library(modelr)
+library(broom)
+
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)
+
+source(&quot;../../../IDA/tools/plotting_tools.R&quot;)
+
+theme_set(theme_1())</code></pre>
+<div id="intro" class="section level1">
+<h1>Intro</h1>
+<p>Ok, so we want to fit biexponential decays to the time resolved spectroscopy data from <a href="https://scott-saunders.github.io/labwork/Spectroscopy/08_29_19_biofilm2/analysis/08_29_19_biofilm_spectroscopy_analysis.html">this notebook</a>.</p>
+<p>Let’s read in the data:</p>
+<pre class="r"><code>df &lt;- read_csv(&quot;2019_08_29_spectroscopy_RuRh_dphz.csv&quot;)
+
+
+df %&gt;% head() %&gt;% kable(digits = 10) %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+date
+</th>
+<th style="text-align:right;">
+rep
+</th>
+<th style="text-align:left;">
+compressed
+</th>
+<th style="text-align:right;">
+time
+</th>
+<th style="text-align:right;">
+intensity
+</th>
+<th style="text-align:left;">
+material
+</th>
+<th style="text-align:right;">
+material_id
+</th>
+<th style="text-align:right;">
+ruphen_conc
+</th>
+<th style="text-align:right;">
+quencher_conc
+</th>
+<th style="text-align:right;">
+quencher_eq
+</th>
+<th style="text-align:left;">
+quencher_id
+</th>
+<th style="text-align:left;">
+comment
+</th>
+<th style="text-align:right;">
+run
+</th>
+<th style="text-align:right;">
+exp_num
+</th>
+<th style="text-align:right;">
+min
+</th>
+<th style="text-align:right;">
+bg_sub
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+82919
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+compressed.dat
+</td>
+<td style="text-align:right;">
+-9.94e-08
+</td>
+<td style="text-align:right;">
+2.03066e-04
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+-0.000607422
+</td>
+<td style="text-align:right;">
+0.0008104880
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+82919
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+compressed.dat
+</td>
+<td style="text-align:right;">
+-9.78e-08
+</td>
+<td style="text-align:right;">
+-2.25840e-04
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+-0.000726305
+</td>
+<td style="text-align:right;">
+0.0005004650
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+82919
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+compressed.dat
+</td>
+<td style="text-align:right;">
+-9.56e-08
+</td>
+<td style="text-align:right;">
+-1.34819e-05
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+-0.000760570
+</td>
+<td style="text-align:right;">
+0.0007470881
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+82919
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+compressed.dat
+</td>
+<td style="text-align:right;">
+-9.34e-08
+</td>
+<td style="text-align:right;">
+2.57582e-05
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+-0.000511532
+</td>
+<td style="text-align:right;">
+0.0005372902
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+82919
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+compressed.dat
+</td>
+<td style="text-align:right;">
+-9.12e-08
+</td>
+<td style="text-align:right;">
+3.67667e-05
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+-0.000476660
+</td>
+<td style="text-align:right;">
+0.0005134267
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+82919
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+compressed.dat
+</td>
+<td style="text-align:right;">
+-8.91e-08
+</td>
+<td style="text-align:right;">
+-5.19785e-04
+</td>
+<td style="text-align:left;">
+biofilm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Rh
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+-0.001029300
+</td>
+<td style="text-align:right;">
+0.0005095150
+</td>
+</tr>
+</tbody>
+</table>
+<p>So we have time vs. intensity data and I have also performed a background subtraction, that simply subtracts the minimum value at each time point within an experiment (e.g. biofilm background or highest quencher value).</p>
+<p>The raw data for unquenched Ru look like this:</p>
+<pre class="r"><code>ggplot(df %&gt;% filter(exp_num == 2 &amp; quencher_eq == 0), aes(x = time, 
+    y = intensity)) + geom_path() + xlim(NA, 5e-07)</code></pre>
+<p><img src="2019_09_27_spectroscopy_curve_fitting_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>And the background subtraction looks like this:</p>
+<pre class="r"><code>ggplot(df %&gt;% filter(exp_num == 2 &amp; quencher_eq == 0), aes(x = time, 
+    y = bg_sub)) + geom_path() + xlim(NA, 5e-07)</code></pre>
+<p><img src="2019_09_27_spectroscopy_curve_fitting_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="using-ssbiexp-for-biexponential-fitting" class="section level1">
+<h1>Using <code>SSbiexp</code> for biexponential fitting</h1>
+<p>Ok, I’m going to use the function <code>SSbiexp</code> with <code>nls</code> to fit these biexponential models. Read the documentation for <a href="https://stat.ethz.ch/R-manual/R-devel/library/stats/html/SSbiexp.html">SSbiexp</a>, but basically it is just going to return values according to this expression: <span class="math inline">\(A1*exp(-exp(lrc1)*input)+A2*exp(-exp(lrc2)*input)\)</span>, where in this case the input will be the time vector. The documentation describes the parameters A1, lrc1, A2 and lrc2 as follows:</p>
+<ul>
+<li><p><strong>A1:</strong> a numeric parameter representing the multiplier of the first exponential.</p></li>
+<li><p><strong>lrc1:</strong>a numeric parameter representing the natural logarithm of the rate constant of the first exponential.</p></li>
+<li><p><strong>A2:</strong>a numeric parameter representing the multiplier of the second exponential.</p></li>
+<li><p><strong>lrc2:</strong>a numeric parameter representing the natural logarithm of the rate constant of the second exponential.</p></li>
+</ul>
+<p>Here’s the example given in the documentation if you just give the function a guess for those 4 parameters:</p>
+<pre class="r"><code>Indo.1 &lt;- Indometh[Indometh$Subject == 1, ]
+
+# ggplot(Indo.1, aes(time, conc)) + geom_point()
+
+# SSbiexp( Indo.1$time, 3, 1, 0.6, -1.3 ) # response only
+
+Indo_2 &lt;- bind_cols(Indo.1, biexp = SSbiexp(Indo.1$time, 3, 1, 
+    0.6, -1.3))
+
+ggplot(Indo_2, aes(x = time)) + geom_path(aes(y = biexp)) + geom_point(aes(y = conc), 
+    shape = 21)</code></pre>
+<p><img src="2019_09_27_spectroscopy_curve_fitting_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>When you actually tell the model to fit, it looks pretty good:</p>
+<pre class="r"><code>ggplot(Indo_2, aes(x = time, y = conc)) + geom_point(shape = 21) + 
+    geom_smooth(method = &quot;nls&quot;, formula = y ~ SSbiexp(x, A1, 
+        lrc1, A2, lrc2), method.args = list(start = c(A1 = 3, 
+        lrc1 = 1, A2 = 0.6, lrc2 = -1.3)), se = F)</code></pre>
+<p><img src="2019_09_27_spectroscopy_curve_fitting_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># A1 &lt;- 3; lrc1 &lt;- 1; A2 &lt;- 0.6; lrc2 &lt;- -1.3 SSbiexp(
+# Indo.1$time, A1, lrc1, A2, lrc2 ) # response and gradient
+# print(getInitial(conc ~ SSbiexp(time, A1, lrc1, A2, lrc2),
+# data = Indo.1), digits = 5) ## Initial values are in fact
+# the converged values fm1 &lt;- nls(conc ~ SSbiexp(time, A1,
+# lrc1, A2, lrc2), data = Indo.1) summary(fm1)</code></pre>
+</div>
+<div id="background-subtracted-data" class="section level1">
+<h1>Background subtracted data</h1>
+<p>Let’s go ahead and give it a try with the first Ru sample from experiment 2, shown at the beginning.</p>
+<div id="first-pass" class="section level2">
+<h2>First pass</h2>
+<p>So first let’s just guess some parameters that give a curve that’s close to our dataset. After playing around and re-reading what the parameters mean I started using <code>A1 = 0.02; lrc1 = 16.5; A2 = 0.02; lrc2 = 15.7</code>:</p>
+<pre class="r"><code>df_1 &lt;- df %&gt;% filter(exp_num == 2 &amp; run == 2) %&gt;% filter(time &gt;= 
+    8e-09) %&gt;% filter(bg_sub &gt; 0)
+
+df_guess &lt;- bind_cols(df_1, biexp = SSbiexp(df_1$time, 0.02, 
+    16.5, 0.02, 15.7))
+
+ggplot(df_guess, aes(x = time)) + geom_path(aes(y = biexp)) + 
+    geom_point(aes(y = bg_sub), shape = 21) + geom_hline(yintercept = 0, 
+    linetype = 2, color = &quot;light gray&quot;)</code></pre>
+<p><img src="2019_09_27_spectroscopy_curve_fitting_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>I’m glossing over this, but I actually did a lot of guess and check to get to this point! Importantly the lrc parameters are roughly <span class="math inline">\(\log(\frac{1}{half-life})\)</span> (FYI that’s a natural log base e…, and half life is in seconds). The A1 and A2 values add up to equal the max height of the data. So A1 = 0.02, A2 = 0.02 gives a height of 0.04.</p>
+<p>The other two essential data processing things are that you need to exclude all the data &lt; 0…but just after zero there’s also a rise in signal and we need to exclude that too so that we only observe the decay. That’s why I excluded data &lt; 8 ns. Also, some samples have values that go below zero, which throws an error, so I filtered those out too.</p>
+<p>Ok, now we’re ready to fit the model using nonlinear least squares (<code>nls()</code>).</p>
+<pre class="r"><code># ggplot(df_1, aes(x = time, y = bg_sub)) + geom_point(shape
+# = 21) + geom_smooth(method=&#39;nls&#39;, formula=y~SSbiexp(x, A1,
+# lrc1, A2, lrc2), method.args=list(start=c(A1 = 0.02, lrc1 =
+# 16.5, A2 = 0.02, lrc2 = 15.7)), se=F)
+
+A1 = 0.02
+lrc1 = 16.5
+A2 = 0.02
+lrc2 = 15.7
+
+mod_1 &lt;- nls(bg_sub ~ SSbiexp(time, A1, lrc1, A2, lrc2), data = df_1)
+
+summary(mod_1)</code></pre>
+<pre><code>## 
+## Formula: bg_sub ~ SSbiexp(time, A1, lrc1, A2, lrc2)
+## 
+## Parameters:
+##       Estimate Std. Error t value Pr(&gt;|t|)    
+## A1   4.003e-02  4.397e-04   91.03   &lt;2e-16 ***
+## lrc1 1.777e+01  2.110e-02  842.11   &lt;2e-16 ***
+## A2   1.077e-02  2.370e-04   45.47   &lt;2e-16 ***
+## lrc2 1.493e+01  3.608e-02  413.93   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.0006689 on 233 degrees of freedom
+## 
+## Number of iterations to convergence: 0 
+## Achieved convergence tolerance: 6.319e-07</code></pre>
+<p>Seems reasonable…idk. Let’s look at the actual fit graphically:</p>
+<pre class="r"><code>df_mod_1 &lt;- df_1 %&gt;% add_predictions(mod_1)
+
+ggplot(df_mod_1, aes(x = time)) + geom_path(aes(y = pred)) + 
+    geom_point(aes(y = bg_sub), shape = 21)</code></pre>
+<p><img src="2019_09_27_spectroscopy_curve_fitting_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Looks beautiful! Let’s move forward to the whole dataset.</p>
+</div>
+<div id="all-datasets" class="section level2">
+<h2>All datasets</h2>
+<p>Obviously I iterated back and forth between the previous section and this one before it actually worked for the whole thing…that’s how I found out about the negative value issue. Anyway, we’re going to select the subset of the data we’re interested in, which is experiment 2. Notice that again I filter out negative values, times before 8ns, and we are only looking at runs 1 - 9, because 10 is essentially noise in the background subtraction.</p>
+<p>I’m using the same parameters shown above.</p>
+<pre class="r"><code>df_exp_2 &lt;- df %&gt;% filter(exp_num == 2 &amp; run %in% 1:9) %&gt;% filter(time &gt;= 
+    8e-09) %&gt;% filter(bg_sub &gt; 0) %&gt;% group_by(run, quencher_eq) %&gt;% 
+    nest()
+
+fit_biexp_bg_sub &lt;- function(df) {
+    
+    A1 = 0.02
+    lrc1 = 16.5
+    A2 = 0.02
+    lrc2 = 15.7
+    
+    mod &lt;- nls(bg_sub ~ SSbiexp(time, A1, lrc1, A2, lrc2), data = df)
+    
+    mod
+}
+
+df_exp_2_models &lt;- df_exp_2 %&gt;% mutate(models = map(data, fit_biexp_bg_sub))
+
+df_exp_2_preds &lt;- df_exp_2_models %&gt;% mutate(preds = map2(data, 
+    models, add_predictions)) %&gt;% unnest(preds)
+
+df_exp_2_ests &lt;- df_exp_2_models %&gt;% mutate(ests = map(models, 
+    tidy, conf.int = T)) %&gt;% unnest(ests)
+
+
+df_exp_2_preds %&gt;% head()</code></pre>
+<pre><code>## # A tibble: 6 x 17
+##     run quencher_eq  date   rep compressed    time intensity material
+##   &lt;dbl&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;   
+## 1     1          NA 82919    13 compresse… 8.01e-9    0.0862 biofilm 
+## 2     1          NA 82919    13 compresse… 8.21e-9    0.0856 biofilm 
+## 3     1          NA 82919    13 compresse… 8.41e-9    0.0849 biofilm 
+## 4     1          NA 82919    13 compresse… 8.71e-9    0.0835 biofilm 
+## 5     1          NA 82919    13 compresse… 9.01e-9    0.0818 biofilm 
+## 6     1          NA 82919    13 compresse… 9.21e-9    0.0807 biofilm 
+## # … with 9 more variables: material_id &lt;dbl&gt;, ruphen_conc &lt;dbl&gt;,
+## #   quencher_conc &lt;dbl&gt;, quencher_id &lt;chr&gt;, comment &lt;lgl&gt;, exp_num &lt;dbl&gt;,
+## #   min &lt;dbl&gt;, bg_sub &lt;dbl&gt;, pred &lt;dbl&gt;</code></pre>
+<p>Ok, we fit all the models individually to the different runs in the experiment and added the predictions from the model (e.g. best fit line), and we also have the parameter estimates:</p>
+<pre class="r"><code># write_csv(df_exp_2_ests,
+# &#39;2019_09_27_spectroscopy_fits_bg_sub.csv&#39;)
+
+df_exp_2_ests %&gt;% kable() %&gt;% kable_styling() %&gt;% scroll_box(height = &quot;400px&quot;)</code></pre>
+<div style="border: 1px solid #ddd; padding: 5px; overflow-y: scroll; height:400px; ">
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+run
+</th>
+<th style="text-align:right;">
+quencher_eq
+</th>
+<th style="text-align:left;">
+term
+</th>
+<th style="text-align:right;">
+estimate
+</th>
+<th style="text-align:right;">
+std.error
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+<th style="text-align:right;">
+conf.low
+</th>
+<th style="text-align:right;">
+conf.high
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+A1
+</td>
+<td style="text-align:right;">
+0.0529418
+</td>
+<td style="text-align:right;">
+0.0005468
+</td>
+<td style="text-align:right;">
+96.825967
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0518859
+</td>
+<td style="text-align:right;">
+0.0540375
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+lrc1
+</td>
+<td style="text-align:right;">
+18.1044596
+</td>
+<td style="text-align:right;">
+0.0143270
+</td>
+<td style="text-align:right;">
+1263.656235
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+18.0768746
+</td>
+<td style="text-align:right;">
+18.1357263
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+A2
+</td>
+<td style="text-align:right;">
+0.0004268
+</td>
+<td style="text-align:right;">
+0.0001342
+</td>
+<td style="text-align:right;">
+3.181125
+</td>
+<td style="text-align:right;">
+0.0017623
+</td>
+<td style="text-align:right;">
+0.0001945
+</td>
+<td style="text-align:right;">
+0.0009316
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+lrc2
+</td>
+<td style="text-align:right;">
+14.4020610
+</td>
+<td style="text-align:right;">
+0.7560499
+</td>
+<td style="text-align:right;">
+19.049089
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+11.5026645
+</td>
+<td style="text-align:right;">
+16.1371897
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+A1
+</td>
+<td style="text-align:right;">
+0.0400261
+</td>
+<td style="text-align:right;">
+0.0004397
+</td>
+<td style="text-align:right;">
+91.031671
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0391635
+</td>
+<td style="text-align:right;">
+0.0409146
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+lrc1
+</td>
+<td style="text-align:right;">
+17.7714617
+</td>
+<td style="text-align:right;">
+0.0211034
+</td>
+<td style="text-align:right;">
+842.113970
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+17.7272322
+</td>
+<td style="text-align:right;">
+17.8162137
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+A2
+</td>
+<td style="text-align:right;">
+0.0107747
+</td>
+<td style="text-align:right;">
+0.0002370
+</td>
+<td style="text-align:right;">
+45.465811
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0102673
+</td>
+<td style="text-align:right;">
+0.0112978
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+lrc2
+</td>
+<td style="text-align:right;">
+14.9327624
+</td>
+<td style="text-align:right;">
+0.0360758
+</td>
+<td style="text-align:right;">
+413.927896
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+14.8516493
+</td>
+<td style="text-align:right;">
+15.0120733
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+A1
+</td>
+<td style="text-align:right;">
+0.0366979
+</td>
+<td style="text-align:right;">
+0.0004598
+</td>
+<td style="text-align:right;">
+79.810446
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0358031
+</td>
+<td style="text-align:right;">
+0.0376265
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+lrc1
+</td>
+<td style="text-align:right;">
+17.8463798
+</td>
+<td style="text-align:right;">
+0.0226317
+</td>
+<td style="text-align:right;">
+788.555369
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+17.7997039
+</td>
+<td style="text-align:right;">
+17.8936321
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+A2
+</td>
+<td style="text-align:right;">
+0.0084224
+</td>
+<td style="text-align:right;">
+0.0002189
+</td>
+<td style="text-align:right;">
+38.476436
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0079598
+</td>
+<td style="text-align:right;">
+0.0089033
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+lrc2
+</td>
+<td style="text-align:right;">
+14.9581528
+</td>
+<td style="text-align:right;">
+0.0433736
+</td>
+<td style="text-align:right;">
+344.867569
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+14.8608244
+</td>
+<td style="text-align:right;">
+15.0530174
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+A1
+</td>
+<td style="text-align:right;">
+0.0410864
+</td>
+<td style="text-align:right;">
+0.0003527
+</td>
+<td style="text-align:right;">
+116.481637
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0403968
+</td>
+<td style="text-align:right;">
+0.0417944
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+lrc1
+</td>
+<td style="text-align:right;">
+17.8748164
+</td>
+<td style="text-align:right;">
+0.0154534
+</td>
+<td style="text-align:right;">
+1156.688822
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+17.8431677
+</td>
+<td style="text-align:right;">
+17.9068948
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+A2
+</td>
+<td style="text-align:right;">
+0.0071308
+</td>
+<td style="text-align:right;">
+0.0001699
+</td>
+<td style="text-align:right;">
+41.977720
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0067767
+</td>
+<td style="text-align:right;">
+0.0074999
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+lrc2
+</td>
+<td style="text-align:right;">
+15.0412172
+</td>
+<td style="text-align:right;">
+0.0387262
+</td>
+<td style="text-align:right;">
+388.399075
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+14.9560801
+</td>
+<td style="text-align:right;">
+15.1246508
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+A1
+</td>
+<td style="text-align:right;">
+0.0339406
+</td>
+<td style="text-align:right;">
+0.0003577
+</td>
+<td style="text-align:right;">
+94.885042
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0332465
+</td>
+<td style="text-align:right;">
+0.0346556
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+lrc1
+</td>
+<td style="text-align:right;">
+17.8510567
+</td>
+<td style="text-align:right;">
+0.0194164
+</td>
+<td style="text-align:right;">
+919.378960
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+17.8124659
+</td>
+<td style="text-align:right;">
+17.8903795
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+A2
+</td>
+<td style="text-align:right;">
+0.0051298
+</td>
+<td style="text-align:right;">
+0.0001809
+</td>
+<td style="text-align:right;">
+28.361836
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0047693
+</td>
+<td style="text-align:right;">
+0.0055136
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+lrc2
+</td>
+<td style="text-align:right;">
+15.0423467
+</td>
+<td style="text-align:right;">
+0.0567633
+</td>
+<td style="text-align:right;">
+265.001351
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+14.9220182
+</td>
+<td style="text-align:right;">
+15.1595736
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:left;">
+A1
+</td>
+<td style="text-align:right;">
+0.0330234
+</td>
+<td style="text-align:right;">
+0.0004179
+</td>
+<td style="text-align:right;">
+79.015289
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0322094
+</td>
+<td style="text-align:right;">
+0.0338714
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:left;">
+lrc1
+</td>
+<td style="text-align:right;">
+17.9107705
+</td>
+<td style="text-align:right;">
+0.0224171
+</td>
+<td style="text-align:right;">
+798.978564
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+17.8650923
+</td>
+<td style="text-align:right;">
+17.9578791
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:left;">
+A2
+</td>
+<td style="text-align:right;">
+0.0040849
+</td>
+<td style="text-align:right;">
+0.0001975
+</td>
+<td style="text-align:right;">
+20.677824
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0036857
+</td>
+<td style="text-align:right;">
+0.0045254
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:left;">
+lrc2
+</td>
+<td style="text-align:right;">
+15.1057455
+</td>
+<td style="text-align:right;">
+0.0774281
+</td>
+<td style="text-align:right;">
+195.093840
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+14.9358376
+</td>
+<td style="text-align:right;">
+15.2701006
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:left;">
+A1
+</td>
+<td style="text-align:right;">
+0.0229344
+</td>
+<td style="text-align:right;">
+0.0003570
+</td>
+<td style="text-align:right;">
+64.249858
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0222454
+</td>
+<td style="text-align:right;">
+0.0236620
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:left;">
+lrc1
+</td>
+<td style="text-align:right;">
+18.0276467
+</td>
+<td style="text-align:right;">
+0.0242530
+</td>
+<td style="text-align:right;">
+743.314737
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+17.9778001
+</td>
+<td style="text-align:right;">
+18.0785537
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:left;">
+A2
+</td>
+<td style="text-align:right;">
+0.0031578
+</td>
+<td style="text-align:right;">
+0.0001285
+</td>
+<td style="text-align:right;">
+24.579522
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0028880
+</td>
+<td style="text-align:right;">
+0.0034490
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:left;">
+lrc2
+</td>
+<td style="text-align:right;">
+15.0756451
+</td>
+<td style="text-align:right;">
+0.0689669
+</td>
+<td style="text-align:right;">
+218.592528
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+14.9167826
+</td>
+<td style="text-align:right;">
+15.2284849
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:left;">
+A1
+</td>
+<td style="text-align:right;">
+0.0132784
+</td>
+<td style="text-align:right;">
+0.0004573
+</td>
+<td style="text-align:right;">
+29.039073
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0124071
+</td>
+<td style="text-align:right;">
+0.0142693
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:left;">
+lrc1
+</td>
+<td style="text-align:right;">
+18.0608063
+</td>
+<td style="text-align:right;">
+0.0504223
+</td>
+<td style="text-align:right;">
+358.190818
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+17.9565175
+</td>
+<td style="text-align:right;">
+18.1693577
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:left;">
+A2
+</td>
+<td style="text-align:right;">
+0.0018043
+</td>
+<td style="text-align:right;">
+0.0001407
+</td>
+<td style="text-align:right;">
+12.827057
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0015230
+</td>
+<td style="text-align:right;">
+0.0021289
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:left;">
+lrc2
+</td>
+<td style="text-align:right;">
+14.9622327
+</td>
+<td style="text-align:right;">
+0.1402806
+</td>
+<td style="text-align:right;">
+106.659335
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+14.6468657
+</td>
+<td style="text-align:right;">
+15.2594812
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+A1
+</td>
+<td style="text-align:right;">
+0.0126725
+</td>
+<td style="text-align:right;">
+0.0003643
+</td>
+<td style="text-align:right;">
+34.782780
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0119632
+</td>
+<td style="text-align:right;">
+0.0134666
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+lrc1
+</td>
+<td style="text-align:right;">
+18.0495282
+</td>
+<td style="text-align:right;">
+0.0406554
+</td>
+<td style="text-align:right;">
+443.964203
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+17.9631129
+</td>
+<td style="text-align:right;">
+18.1412096
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+A2
+</td>
+<td style="text-align:right;">
+0.0010523
+</td>
+<td style="text-align:right;">
+0.0000991
+</td>
+<td style="text-align:right;">
+10.621978
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0008494
+</td>
+<td style="text-align:right;">
+0.0013024
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+lrc2
+</td>
+<td style="text-align:right;">
+14.7366645
+</td>
+<td style="text-align:right;">
+0.1862022
+</td>
+<td style="text-align:right;">
+79.143362
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+14.2781979
+</td>
+<td style="text-align:right;">
+15.1557167
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Let’s see how the fits look:</p>
+<pre class="r"><code>ggplot(df_exp_2_preds, aes(x = time, group = run, color = quencher_eq)) + 
+    geom_path(aes(y = pred), color = &quot;black&quot;) + geom_point(aes(y = bg_sub), 
+    alpha = 0.2, shape = 21) + xlim(0, 5e-07) + facet_wrap(~quencher_eq)</code></pre>
+<p><img src="2019_09_27_spectroscopy_curve_fitting_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Nice! All of the fits seem totally reasonable. Note that the plot with quencher eq as NA is the biofilm only background. Overlaying them, we can see the same pattern as before:</p>
+<pre class="r"><code>ggplot(df_exp_2_preds, aes(x = time, group = run, color = quencher_eq)) + 
+    geom_path(aes(y = pred)) + geom_point(aes(y = bg_sub), alpha = 0.2, 
+    shape = 21) + xlim(0, 5e-07)</code></pre>
+<p><img src="2019_09_27_spectroscopy_curve_fitting_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /> Notice the curves don’t overlap at all, except the gray one, which is the biofilm background.</p>
+<p>Now, let’s look at the actual parameter estimates:</p>
+<pre class="r"><code>background_ests &lt;- df_exp_2_ests %&gt;% filter(is.na(quencher_eq))
+
+# background_ests
+
+ggplot(df_exp_2_ests, aes(x = quencher_eq, y = estimate)) + geom_hline(data = background_ests, 
+    aes(yintercept = estimate), linetype = 2, color = &quot;light gray&quot;) + 
+    geom_pointrange(aes(ymin = conf.low, ymax = conf.high)) + 
+    facet_wrap(~term, scales = &quot;free&quot;)</code></pre>
+<p><img src="2019_09_27_spectroscopy_curve_fitting_files/figure-html/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Note that the dotted lines are the values for the biofilm only control.</p>
+<p>Ok, so let’s break this down. To me this means that there are two components of different magnitudes - A1 is about 4 times larger than A2. The component described by A1 decays pretty fast with a half life of ~ 20 ns, and the the A2 signal decays much more slowly with a half life of ~ 150ns. You can see that the magnitudes of both A1 and A2 go down significantly as we add more quencher (note bars are 95% CI). Meanwhile, the rate constants do not really change significantly. There seem to be some statistically significant differences, but we’re talking about tiny effect sizes. Let’s see the stern volmer plot, but I think this supports what we originally thought - quenching seems to occur statically.</p>
+<p>Just for fun let’s replot the fit data with those estimates of the lifetimes.</p>
+<pre class="r"><code>ggplot(df_exp_2_preds, aes(x = time, group = run, color = quencher_eq)) + 
+    geom_vline(xintercept = c(2e-08, 1.5e-07), color = &quot;light gray&quot;, 
+        size = 2) + geom_path(aes(y = pred)) + xlim(0, 5e-07)</code></pre>
+<p><img src="2019_09_27_spectroscopy_curve_fitting_files/figure-html/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Seems reasonable!</p>
+</div>
+</div>
+<div id="raw-data" class="section level1">
+<h1>Raw data</h1>
+<p>Now let’s do it with the raw data, since the background subtraction is a little weird, since it’s not from the biofilm only background.</p>
+<div id="first-pass-1" class="section level2">
+<h2>First pass</h2>
+<p>let’s guess and check first:</p>
+<pre class="r"><code>df_raw &lt;- df %&gt;% filter(exp_num == 2 &amp; quencher_eq == 0) %&gt;% 
+    filter(time &gt;= 8e-09)
+
+df_raw_guess &lt;- bind_cols(df_raw, biexp = SSbiexp(df_raw$time, 
+    0.02, 16.5, 0.02, 15.7))
+
+ggplot(df_raw_guess, aes(x = time)) + geom_path(aes(y = biexp)) + 
+    geom_point(aes(y = intensity), shape = 21)</code></pre>
+<p><img src="2019_09_27_spectroscopy_curve_fitting_files/figure-html/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>This is actually the same guess we used above…it looks pretty bad, but right order of magnitude. Let’s see what happens when we fit and plot:</p>
+<pre class="r"><code># ggplot(df_raw, aes(x = time, y = intensity)) +
+# geom_point(shape = 21) + geom_smooth(method=&#39;nls&#39;,
+# formula=y~SSbiexp(x, A1, lrc1, A2, lrc2),
+# method.args=list(start=c(A1 = 0.05, lrc1 = 16.5, A2 = 0.05,
+# lrc2 = 15.7)), se=F)
+
+A1 = 0.02
+lrc1 = 16.5
+A2 = 0.02
+lrc2 = 15.7
+
+mod_raw_1 &lt;- nls(intensity ~ SSbiexp(time, A1, lrc1, A2, lrc2), 
+    data = df_raw)
+
+df_mod_raw_1 &lt;- df_raw %&gt;% add_predictions(mod_raw_1)
+
+ggplot(df_mod_raw_1, aes(x = time)) + geom_path(aes(y = pred)) + 
+    geom_point(aes(y = intensity), shape = 21)</code></pre>
+<p><img src="2019_09_27_spectroscopy_curve_fitting_files/figure-html/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Looks perfect. This little exercise demonstrates how robust this fitting process is. Even with a bad guess, the model rapidly converges to what looks like a right answer. We really just need to give it starting parameters that are in the right order of magnitude.</p>
+</div>
+<div id="all-datasets-1" class="section level2">
+<h2>All datasets</h2>
+<p>This time we’ll be able to fit all the datasets (runs 1 - 10), because they all have a decay dominated by the biofilm background.</p>
+<pre class="r"><code>df_exp_2_raw &lt;- df %&gt;% filter(exp_num == 2 &amp; run %in% 1:10) %&gt;% 
+    filter(time &gt;= 8e-09) %&gt;% filter(intensity &gt; 0) %&gt;% group_by(run, 
+    quencher_eq) %&gt;% nest()
+
+fit_biexp_raw &lt;- function(df) {
+    
+    A1 = 0.02
+    lrc1 = 16.5
+    A2 = 0.02
+    lrc2 = 15.7
+    
+    mod &lt;- nls(intensity ~ SSbiexp(time, A1, lrc1, A2, lrc2), 
+        data = df)
+    
+    mod
+}
+
+df_exp_2_raw_models &lt;- df_exp_2_raw %&gt;% mutate(models = map(data, 
+    fit_biexp_raw))
+
+df_exp_2_raw_preds &lt;- df_exp_2_raw_models %&gt;% mutate(preds = map2(data, 
+    models, add_predictions)) %&gt;% unnest(preds)
+
+df_exp_2_raw_ests &lt;- df_exp_2_raw_models %&gt;% mutate(ests = map(models, 
+    tidy, conf.int = T)) %&gt;% unnest(ests)
+
+
+df_exp_2_raw_preds %&gt;% head()</code></pre>
+<pre><code>## # A tibble: 6 x 17
+##     run quencher_eq  date   rep compressed    time intensity material
+##   &lt;dbl&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;   
+## 1     1          NA 82919    13 compresse… 8.01e-9    0.0862 biofilm 
+## 2     1          NA 82919    13 compresse… 8.21e-9    0.0856 biofilm 
+## 3     1          NA 82919    13 compresse… 8.41e-9    0.0849 biofilm 
+## 4     1          NA 82919    13 compresse… 8.71e-9    0.0835 biofilm 
+## 5     1          NA 82919    13 compresse… 9.01e-9    0.0818 biofilm 
+## 6     1          NA 82919    13 compresse… 9.21e-9    0.0807 biofilm 
+## # … with 9 more variables: material_id &lt;dbl&gt;, ruphen_conc &lt;dbl&gt;,
+## #   quencher_conc &lt;dbl&gt;, quencher_id &lt;chr&gt;, comment &lt;lgl&gt;, exp_num &lt;dbl&gt;,
+## #   min &lt;dbl&gt;, bg_sub &lt;dbl&gt;, pred &lt;dbl&gt;</code></pre>
+<p>Again we have predictions for our best fit line. And below we have our parameter estimates:</p>
+<pre class="r"><code># write_csv(df_exp_2_raw_ests,
+# &#39;2019_09_27_spectroscopy_fits_raw.csv&#39;)
+
+df_exp_2_raw_ests %&gt;% kable() %&gt;% kable_styling() %&gt;% scroll_box(height = &quot;400px&quot;)</code></pre>
+<div style="border: 1px solid #ddd; padding: 5px; overflow-y: scroll; height:400px; ">
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+run
+</th>
+<th style="text-align:right;">
+quencher_eq
+</th>
+<th style="text-align:left;">
+term
+</th>
+<th style="text-align:right;">
+estimate
+</th>
+<th style="text-align:right;">
+std.error
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+<th style="text-align:right;">
+conf.low
+</th>
+<th style="text-align:right;">
+conf.high
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+A1
+</td>
+<td style="text-align:right;">
+0.1468144
+</td>
+<td style="text-align:right;">
+0.0006551
+</td>
+<td style="text-align:right;">
+224.108098
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+0.1449057
+</td>
+<td style="text-align:right;">
+0.1480211
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+lrc1
+</td>
+<td style="text-align:right;">
+18.0810305
+</td>
+<td style="text-align:right;">
+0.0092471
+</td>
+<td style="text-align:right;">
+1955.308954
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+18.0626581
+</td>
+<td style="text-align:right;">
+18.1039585
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+A2
+</td>
+<td style="text-align:right;">
+0.0048439
+</td>
+<td style="text-align:right;">
+0.0008914
+</td>
+<td style="text-align:right;">
+5.434276
+</td>
+<td style="text-align:right;">
+2e-07
+</td>
+<td style="text-align:right;">
+0.0032399
+</td>
+<td style="text-align:right;">
+0.0075171
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+lrc2
+</td>
+<td style="text-align:right;">
+16.5384017
+</td>
+<td style="text-align:right;">
+0.1364982
+</td>
+<td style="text-align:right;">
+121.162028
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+16.2014458
+</td>
+<td style="text-align:right;">
+16.8342847
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+A1
+</td>
+<td style="text-align:right;">
+0.1342800
+</td>
+<td style="text-align:right;">
+0.0006149
+</td>
+<td style="text-align:right;">
+218.379507
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+0.1330682
+</td>
+<td style="text-align:right;">
+0.1355106
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+lrc1
+</td>
+<td style="text-align:right;">
+17.9469522
+</td>
+<td style="text-align:right;">
+0.0077857
+</td>
+<td style="text-align:right;">
+2305.105563
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+17.9307481
+</td>
+<td style="text-align:right;">
+17.9633875
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+A2
+</td>
+<td style="text-align:right;">
+0.0127608
+</td>
+<td style="text-align:right;">
+0.0002661
+</td>
+<td style="text-align:right;">
+47.951782
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+0.0121920
+</td>
+<td style="text-align:right;">
+0.0133575
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+lrc2
+</td>
+<td style="text-align:right;">
+15.0913067
+</td>
+<td style="text-align:right;">
+0.0340724
+</td>
+<td style="text-align:right;">
+442.919429
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+15.0139163
+</td>
+<td style="text-align:right;">
+15.1676206
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+A1
+</td>
+<td style="text-align:right;">
+0.1314190
+</td>
+<td style="text-align:right;">
+0.0005346
+</td>
+<td style="text-align:right;">
+245.845415
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+0.1303672
+</td>
+<td style="text-align:right;">
+0.1324855
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+lrc1
+</td>
+<td style="text-align:right;">
+17.9739756
+</td>
+<td style="text-align:right;">
+0.0068233
+</td>
+<td style="text-align:right;">
+2634.219250
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+17.9598287
+</td>
+<td style="text-align:right;">
+17.9883387
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+A2
+</td>
+<td style="text-align:right;">
+0.0102951
+</td>
+<td style="text-align:right;">
+0.0002275
+</td>
+<td style="text-align:right;">
+45.246272
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+0.0098094
+</td>
+<td style="text-align:right;">
+0.0108070
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+lrc2
+</td>
+<td style="text-align:right;">
+15.1395119
+</td>
+<td style="text-align:right;">
+0.0356979
+</td>
+<td style="text-align:right;">
+424.100976
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+15.0581469
+</td>
+<td style="text-align:right;">
+15.2196930
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+A1
+</td>
+<td style="text-align:right;">
+0.1359159
+</td>
+<td style="text-align:right;">
+0.0004545
+</td>
+<td style="text-align:right;">
+299.026882
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+0.1350203
+</td>
+<td style="text-align:right;">
+0.1368218
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+lrc1
+</td>
+<td style="text-align:right;">
+17.9807048
+</td>
+<td style="text-align:right;">
+0.0057571
+</td>
+<td style="text-align:right;">
+3123.214242
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+17.9687671
+</td>
+<td style="text-align:right;">
+17.9928478
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+A2
+</td>
+<td style="text-align:right;">
+0.0090851
+</td>
+<td style="text-align:right;">
+0.0002093
+</td>
+<td style="text-align:right;">
+43.409062
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+0.0086407
+</td>
+<td style="text-align:right;">
+0.0095556
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+lrc2
+</td>
+<td style="text-align:right;">
+15.2458465
+</td>
+<td style="text-align:right;">
+0.0355123
+</td>
+<td style="text-align:right;">
+429.311457
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+15.1655674
+</td>
+<td style="text-align:right;">
+15.3250299
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+A1
+</td>
+<td style="text-align:right;">
+0.1286256
+</td>
+<td style="text-align:right;">
+0.0004449
+</td>
+<td style="text-align:right;">
+289.081763
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+0.1277509
+</td>
+<td style="text-align:right;">
+0.1295104
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+lrc1
+</td>
+<td style="text-align:right;">
+17.9786699
+</td>
+<td style="text-align:right;">
+0.0060757
+</td>
+<td style="text-align:right;">
+2959.112628
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+17.9662255
+</td>
+<td style="text-align:right;">
+17.9914043
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+A2
+</td>
+<td style="text-align:right;">
+0.0070688
+</td>
+<td style="text-align:right;">
+0.0002163
+</td>
+<td style="text-align:right;">
+32.682992
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+0.0066202
+</td>
+<td style="text-align:right;">
+0.0075535
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+lrc2
+</td>
+<td style="text-align:right;">
+15.3000852
+</td>
+<td style="text-align:right;">
+0.0459199
+</td>
+<td style="text-align:right;">
+333.190723
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+15.1979559
+</td>
+<td style="text-align:right;">
+15.4006523
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:left;">
+A1
+</td>
+<td style="text-align:right;">
+0.1280492
+</td>
+<td style="text-align:right;">
+0.0004823
+</td>
+<td style="text-align:right;">
+265.486385
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+0.1270989
+</td>
+<td style="text-align:right;">
+0.1290115
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:left;">
+lrc1
+</td>
+<td style="text-align:right;">
+18.0013884
+</td>
+<td style="text-align:right;">
+0.0067691
+</td>
+<td style="text-align:right;">
+2659.343721
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+17.9872242
+</td>
+<td style="text-align:right;">
+18.0160902
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:left;">
+A2
+</td>
+<td style="text-align:right;">
+0.0062080
+</td>
+<td style="text-align:right;">
+0.0002539
+</td>
+<td style="text-align:right;">
+24.450288
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+0.0056701
+</td>
+<td style="text-align:right;">
+0.0068115
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:left;">
+lrc2
+</td>
+<td style="text-align:right;">
+15.4357056
+</td>
+<td style="text-align:right;">
+0.0579343
+</td>
+<td style="text-align:right;">
+266.434605
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+15.3010686
+</td>
+<td style="text-align:right;">
+15.5678980
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:left;">
+A1
+</td>
+<td style="text-align:right;">
+0.1181738
+</td>
+<td style="text-align:right;">
+0.0004494
+</td>
+<td style="text-align:right;">
+262.936850
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+0.1172898
+</td>
+<td style="text-align:right;">
+0.1190694
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:left;">
+lrc1
+</td>
+<td style="text-align:right;">
+18.0349255
+</td>
+<td style="text-align:right;">
+0.0067435
+</td>
+<td style="text-align:right;">
+2674.431343
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+18.0206760
+</td>
+<td style="text-align:right;">
+18.0497611
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:left;">
+A2
+</td>
+<td style="text-align:right;">
+0.0053374
+</td>
+<td style="text-align:right;">
+0.0002338
+</td>
+<td style="text-align:right;">
+22.828071
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+0.0048325
+</td>
+<td style="text-align:right;">
+0.0059091
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:left;">
+lrc2
+</td>
+<td style="text-align:right;">
+15.5005976
+</td>
+<td style="text-align:right;">
+0.0608957
+</td>
+<td style="text-align:right;">
+254.543204
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+15.3542450
+</td>
+<td style="text-align:right;">
+15.6430833
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:left;">
+A1
+</td>
+<td style="text-align:right;">
+0.1084866
+</td>
+<td style="text-align:right;">
+0.0004202
+</td>
+<td style="text-align:right;">
+258.203119
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+0.1076584
+</td>
+<td style="text-align:right;">
+0.1093257
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:left;">
+lrc1
+</td>
+<td style="text-align:right;">
+18.0401978
+</td>
+<td style="text-align:right;">
+0.0071271
+</td>
+<td style="text-align:right;">
+2531.205334
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+18.0247775
+</td>
+<td style="text-align:right;">
+18.0567964
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:left;">
+A2
+</td>
+<td style="text-align:right;">
+0.0040293
+</td>
+<td style="text-align:right;">
+0.0002423
+</td>
+<td style="text-align:right;">
+16.626086
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+0.0034981
+</td>
+<td style="text-align:right;">
+0.0046809
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:left;">
+lrc2
+</td>
+<td style="text-align:right;">
+15.6107065
+</td>
+<td style="text-align:right;">
+0.0790806
+</td>
+<td style="text-align:right;">
+197.402501
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+15.4109460
+</td>
+<td style="text-align:right;">
+15.8069294
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+A1
+</td>
+<td style="text-align:right;">
+0.1078571
+</td>
+<td style="text-align:right;">
+0.0005191
+</td>
+<td style="text-align:right;">
+207.789045
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+0.1068281
+</td>
+<td style="text-align:right;">
+0.1088943
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+lrc1
+</td>
+<td style="text-align:right;">
+18.0442591
+</td>
+<td style="text-align:right;">
+0.0095276
+</td>
+<td style="text-align:right;">
+1893.891206
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+18.0232070
+</td>
+<td style="text-align:right;">
+18.0689057
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+A2
+</td>
+<td style="text-align:right;">
+0.0035480
+</td>
+<td style="text-align:right;">
+0.0003648
+</td>
+<td style="text-align:right;">
+9.726519
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+0.0027558
+</td>
+<td style="text-align:right;">
+0.0047194
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+lrc2
+</td>
+<td style="text-align:right;">
+15.7947334
+</td>
+<td style="text-align:right;">
+0.1221910
+</td>
+<td style="text-align:right;">
+129.262618
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+15.4599489
+</td>
+<td style="text-align:right;">
+16.1188731
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:left;">
+A1
+</td>
+<td style="text-align:right;">
+0.0955924
+</td>
+<td style="text-align:right;">
+0.0004248
+</td>
+<td style="text-align:right;">
+225.005663
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+0.0946409
+</td>
+<td style="text-align:right;">
+0.0964409
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:left;">
+lrc1
+</td>
+<td style="text-align:right;">
+18.0499135
+</td>
+<td style="text-align:right;">
+0.0097507
+</td>
+<td style="text-align:right;">
+1851.143065
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+18.0286172
+</td>
+<td style="text-align:right;">
+18.0770972
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:left;">
+A2
+</td>
+<td style="text-align:right;">
+0.0026793
+</td>
+<td style="text-align:right;">
+0.0004040
+</td>
+<td style="text-align:right;">
+6.632287
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+0.0018486
+</td>
+<td style="text-align:right;">
+0.0041495
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:left;">
+lrc2
+</td>
+<td style="text-align:right;">
+16.0580153
+</td>
+<td style="text-align:right;">
+0.1531375
+</td>
+<td style="text-align:right;">
+104.860108
+</td>
+<td style="text-align:right;">
+0e+00
+</td>
+<td style="text-align:right;">
+15.6236545
+</td>
+<td style="text-align:right;">
+16.4630929
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Let’s take a look:</p>
+<pre class="r"><code>ggplot(df_exp_2_raw_preds, aes(x = time, group = run, color = quencher_eq)) + 
+    geom_path(aes(y = pred), color = &quot;black&quot;) + geom_point(aes(y = intensity), 
+    alpha = 0.2, shape = 21) + xlim(0, 5e-07) + facet_wrap(~quencher_eq)</code></pre>
+<p><img src="2019_09_27_spectroscopy_curve_fitting_files/figure-html/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Looks perfect! Overlaying gives:</p>
+<pre class="r"><code>ggplot(df_exp_2_raw_preds, aes(x = time, group = run, color = quencher_eq)) + 
+    geom_path(aes(y = pred)) + geom_point(aes(y = intensity), 
+    alpha = 0.2, shape = 21) + xlim(0, 5e-07)</code></pre>
+<p><img src="2019_09_27_spectroscopy_curve_fitting_files/figure-html/unnamed-chunk-20-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Ok, now let’s see what the actual parameter estimates are:</p>
+<pre class="r"><code>background_ests &lt;- df_exp_2_raw_ests %&gt;% filter(is.na(quencher_eq))
+
+# background_ests
+
+ggplot(df_exp_2_raw_ests, aes(x = quencher_eq, y = estimate)) + 
+    geom_hline(data = background_ests, aes(yintercept = estimate), 
+        linetype = 1, color = &quot;light gray&quot;) + geom_hline(data = background_ests, 
+    aes(yintercept = conf.low), linetype = 2, color = &quot;light gray&quot;) + 
+    geom_hline(data = background_ests, aes(yintercept = conf.high), 
+        linetype = 2, color = &quot;light gray&quot;) + geom_pointrange(aes(ymin = conf.low, 
+    ymax = conf.high)) + facet_wrap(~term, scales = &quot;free&quot;)</code></pre>
+<p><img src="2019_09_27_spectroscopy_curve_fitting_files/figure-html/unnamed-chunk-21-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Let’s walk through it. Again, there are two components of different magnitude - A1 is about 10x larger than A2. A1 has a half life of about 15ns, and A2 has a half life of ~ 250ns, but there’s quite a bit of variation. A1 is probably the biofilm background signal, and interestingly it’s amplitude decreases significantly (~30%), while it’s lifetime barely changes. The A2 component may be the Ru signal - It’s amplitude decreases a lot (~80%), but there’s also a significant change in lifetime from about 250ns (lrc2 = 15) to about 100ns (lrc2 = 16). I’m not exactly sure what to make of this. I would say that the amplitude decrease is larger and more confident than the lifetime changes, but it may be consistent with a combination of static and dynammic quenching.</p>
+<pre class="r"><code>ggplot(df_exp_2_raw_preds, aes(x = time, group = run, color = quencher_eq)) + 
+    geom_vline(xintercept = 1.5e-08, color = &quot;light gray&quot;, size = 2) + 
+    geom_rect(aes(xmin = 1e-07, xmax = 2.5e-07, ymin = 0, ymax = Inf), 
+        fill = &quot;light gray&quot;, color = NA) + geom_path(aes(y = pred)) + 
+    xlim(0, 5e-07)</code></pre>
+<p><img src="2019_09_27_spectroscopy_curve_fitting_files/figure-html/unnamed-chunk-22-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Yeah, when we visualize it like this it looks like there’s a pretty big range in that second lifetime…</p>
+</div>
+</div>
+<div id="conclusions" class="section level1">
+<h1>Conclusions</h1>
+<ol style="list-style-type: decimal">
+<li>It may be interesting to run this analysis for all of the datasets in the other notebook…it’s always nice to have numbers.</li>
+<li>We should convert the lrc’s into parameters we actually understand</li>
+<li>Let’s see if Nirit can use this information to get stern volmer plots.</li>
+</ol>
+<hr />
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 3.5.2 (2018-12-20)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS Mojave 10.14.6
+## 
+## Matrix products: default
+## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] broom_0.5.1       modelr_0.1.2      kableExtra_1.0.1 
+##  [4] knitr_1.23        viridis_0.5.1     viridisLite_0.3.0
+##  [7] cowplot_0.9.4     forcats_0.3.0     stringr_1.3.1    
+## [10] dplyr_0.8.1       purrr_0.2.5       readr_1.3.1      
+## [13] tidyr_0.8.2       tibble_2.1.3      ggplot2_3.2.0    
+## [16] tidyverse_1.2.1  
+## 
+## loaded via a namespace (and not attached):
+##  [1] tidyselect_0.2.5 xfun_0.7         haven_2.0.0      lattice_0.20-38 
+##  [5] colorspace_1.4-0 generics_0.0.2   htmltools_0.3.6  yaml_2.2.0      
+##  [9] utf8_1.1.4       rlang_0.3.4      pillar_1.3.1     glue_1.3.1      
+## [13] withr_2.1.2      readxl_1.2.0     munsell_0.5.0    gtable_0.2.0    
+## [17] cellranger_1.1.0 rvest_0.3.2      evaluate_0.14    labeling_0.3    
+## [21] fansi_0.4.0      highr_0.7        Rcpp_1.0.1       scales_1.0.0    
+## [25] backports_1.1.3  formatR_1.5      webshot_0.5.1    jsonlite_1.6    
+## [29] gridExtra_2.3    hms_0.4.2        digest_0.6.18    stringi_1.2.4   
+## [33] grid_3.5.2       cli_1.0.1        tools_3.5.2      magrittr_1.5    
+## [37] lazyeval_0.2.1   crayon_1.3.4     pkgconfig_2.0.2  MASS_7.3-51.1   
+## [41] xml2_1.2.0       lubridate_1.7.4  assertthat_0.2.1 rmarkdown_1.13  
+## [45] httr_1.4.0       rstudioapi_0.9.0 R6_2.4.0         nlme_3.1-140    
+## [49] compiler_3.5.2</code></pre>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
