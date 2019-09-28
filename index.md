@@ -258,6 +258,8 @@ for (link in files) {
 
 <a href="https://scott-saunders.github.io/labwork/Spectroscopy/08_29_19_biofilm2/analysis/08_29_19_biofilm_spectroscopy_analysis.html">Spectroscopy/08\_29\_19\_biofilm2/analysis/08\_29\_19\_biofilm\_spectroscopy\_analysis.html</a>
 
+<a href="https://scott-saunders.github.io/labwork/Spectroscopy/08_29_19_biofilm2/analysis/2019_09_27_spectroscopy_curve_fitting.html">Spectroscopy/08\_29\_19\_biofilm2/analysis/2019\_09\_27\_spectroscopy\_curve\_fitting.html</a>
+
 <a href="https://scott-saunders.github.io/labwork/Spectroscopy/2019_09_17_solution_ET/2019_09_17_solution_ET_analysis_2.html">Spectroscopy/2019\_09\_17\_solution\_ET/2019\_09\_17\_solution\_ET\_analysis\_2.html</a>
 
 <a href="https://scott-saunders.github.io/labwork/Spectroscopy/2019_09_17_solution_ET/2019_09_17_solution_ET_analysis.html">Spectroscopy/2019\_09\_17\_solution\_ET/2019\_09\_17\_solution\_ET\_analysis.html</a>
