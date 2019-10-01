@@ -1,0 +1,48 @@
+---
+title: "Test Presentation"
+output: 
+  revealjs::revealjs_presentation:
+    theme: white
+    center: false
+    transition: none
+    fig_width: 7
+    fig_height: 5
+    css: styles.css
+---
+
+
+Title of presentation
+
+------
+
+## First slide
+
+with some interesting text
+
+---
+
+## Second slide
+
+With a plot:
+
+```{r echo=FALSE}
+library(ggplot2)
+ggplot(mtcars, aes(x = disp, y = hp))+geom_point()
+```
+
+---
+
+## cucumber
+
+<div class="fragment" data-fragment-index="1">
+- cheese
+     - cake
+     - sandwich
+     - ...
+</div>
+
+<div class="fragment" data-fragment-index="2">
+- **eggs**
+    - tomato
+    - banana
+</div>

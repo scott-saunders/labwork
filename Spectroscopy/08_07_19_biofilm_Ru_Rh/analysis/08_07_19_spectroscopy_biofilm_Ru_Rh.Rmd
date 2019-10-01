@@ -217,6 +217,8 @@ df_dphz_bg <- df_dphz %>%
   group_by(time) %>% 
   mutate(min = min(intensity)) %>% 
   mutate(bg_sub = intensity - min)
+
+#write_csv(df_dphz_bg,'2019_08_07_dphz_1uM_ru_rh.csv')
   
 
 ggplot(df_dphz_bg, aes(x = time, y = bg_sub, color = condition)) + geom_path() + #xlim(NA, 1e-6)+ylim(NA,0.04) +

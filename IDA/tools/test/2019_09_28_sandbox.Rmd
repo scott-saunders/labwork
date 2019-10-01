@@ -1,0 +1,55 @@
+---
+title: "Sandbox"
+date: 09_28_19
+output: 
+  html_document:
+    self_contained: no
+---
+
+```{r}
+source("../readme_generator.R")
+```
+
+```{r}
+  wd = getwd()
+  print(wd)
+  wd = paste(wd, "README.Rmd",sep = '/')
+  print(wd)
+  file.copy(from = "../09_05_19_sandbox.Rmd", to = wd )
+```
+
+```{r}
+knit_readme_all()
+
+knit_readme("../../../IDA/", recursive = F)
+```
+
+```{r}
+
+library(ggplot2)
+library(patchwork)
+library(cowplot)
+```
+
+```{r}
+plot_mpg <- ggplot(mtcars, aes(x = cyl, y = mpg)) + geom_point()
+
+plot_disp <- ggplot(mtcars, aes(x = cyl, y = disp)) + geom_point()
+
+
+
+
+bottom_title <- ggdraw() + draw_label("Time resolved emission w/ DNA CT metal complexes",
+    fontface = 'bold', x = 0.5, hjust = 0.5, size = 12 ) 
+
+(plot_mpg | plot_disp  ) / bottom_title / plot_disp + plot_layout(heights = c(1,0.1,1)) + plot_annotation( tag_level = '1')
+
+plot_grid(plot_mpg, plot_disp, scale = 0.9)  + draw_figure_label(label = "A complicated title for this subplot", position = "top", size = 12, fontface = 'bold',)
+```
+
+
+------
+
+```{r}
+sessionInfo()
+```

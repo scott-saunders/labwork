@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Scott Saunders" />
+
+
+<title>DNA binding of phenazines, oxidized and reduced</title>
+
+<script src="2019_09_17_phzRedOx_DNAbinding_analysis_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="2019_09_17_phzRedOx_DNAbinding_analysis_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="2019_09_17_phzRedOx_DNAbinding_analysis_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="2019_09_17_phzRedOx_DNAbinding_analysis_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="2019_09_17_phzRedOx_DNAbinding_analysis_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="2019_09_17_phzRedOx_DNAbinding_analysis_files/navigation-1.1/tabsets.js"></script>
+<script src="2019_09_17_phzRedOx_DNAbinding_analysis_files/navigation-1.1/codefolding.js"></script>
+<link href="2019_09_17_phzRedOx_DNAbinding_analysis_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="2019_09_17_phzRedOx_DNAbinding_analysis_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">DNA binding of phenazines, oxidized and reduced</h1>
+<h4 class="author">Scott Saunders</h4>
+<h4 class="date">09_17_19</h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#intro">Intro</a></li>
+<li><a href="#methods">Methods</a></li>
+<li><a href="#results">Results</a></li>
+<li><a href="#next-steps">Next steps</a><ul>
+<li><a href="#ex-480-scans-for-etbr">ex 480 scans for etbr</a></li>
+<li><a href="#tcep-affects-etbr">Tcep affects EtBr</a></li>
+<li><a href="#tcep">Tcep</a></li>
+</ul></li>
+</ul>
+</div>
+
+<div id="intro" class="section level1">
+<h1>Intro</h1>
+</div>
+<div id="methods" class="section level1">
+<h1>Methods</h1>
+</div>
+<div id="results" class="section level1">
+<h1>Results</h1>
+</div>
+<div id="next-steps" class="section level1">
+<h1>Next steps</h1>
+<pre class="r"><code>library(tidyverse)
+library(cowplot)
+library(viridis)
+library(knitr)
+library(kableExtra)
+
+
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align=&quot;center&quot;)
+
+source(&quot;../../IDA/tools/plotting_tools.R&quot;)
+
+theme_set(theme_1())</code></pre>
+<div id="ex-480-scans-for-etbr" class="section level2">
+<h2>ex 480 scans for etbr</h2>
+<pre class="r"><code>df_480_raw &lt;- read_csv(&quot;data/2019_09_24_etbr_PYOredox_ex480protocol_ex480.csv&quot;, 
+    skip = 1) %&gt;% gather(key = &quot;id&quot;, value = &quot;intensity&quot;, -Wavelength)
+
+df_480_meta &lt;- read_csv(&quot;data/2019_09_24_etbr_PYOredox_ex480protocol_metadata.csv&quot;)
+
+
+df_480 &lt;- left_join(df_480_raw, df_480_meta, by = &quot;id&quot;)</code></pre>
+<pre class="r"><code>ggplot(df_480, aes(x = Wavelength, y = intensity, color = scan_num, 
+    group = scan_num)) + geom_path() + facet_wrap(~well)</code></pre>
+<p><img src="2019_09_17_phzRedOx_DNAbinding_analysis_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_480_375raw &lt;- read_csv(&quot;data/2019_09_24_etbr_PYOredox_ex480protocol_ex375.csv&quot;, 
+    skip = 1) %&gt;% gather(key = &quot;id&quot;, value = &quot;intensity&quot;, -Wavelength)
+
+df_480_375 &lt;- left_join(df_480_375raw, df_480_meta, by = &quot;id&quot;)
+
+ggplot(df_480_375, aes(x = Wavelength, y = intensity, color = scan_num, 
+    group = scan_num)) + geom_path() + facet_wrap(~well)</code></pre>
+<p><img src="2019_09_17_phzRedOx_DNAbinding_analysis_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /> ## ex 510 scans for etbr</p>
+<pre class="r"><code>df_510_raw &lt;- read_csv(&quot;data/2019_09_24_etbr_PYOredox_ex510protocol_ex510.csv&quot;, 
+    skip = 1) %&gt;% gather(key = &quot;id&quot;, value = &quot;intensity&quot;, -Wavelength)
+
+df_510_meta &lt;- read_csv(&quot;data/2019_09_24_etbr_PYOredox_ex510protocol_metadata.csv&quot;)
+
+
+df_510 &lt;- left_join(df_510_raw, df_510_meta, by = &quot;id&quot;)</code></pre>
+<pre class="r"><code>ggplot(df_510, aes(x = Wavelength, y = intensity, color = dna_stage, 
+    group = scan_num, shape = factor(stage_scan_num))) + geom_point() + 
+    facet_wrap(~well, scales = &quot;free&quot;)</code></pre>
+<p><img src="2019_09_17_phzRedOx_DNAbinding_analysis_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_510_preDNA &lt;- df_510 %&gt;% filter(stage_scan_num == 2 &amp; dna_stage == 
+    F)
+df_510_postDNA &lt;- df_510 %&gt;% filter(stage_scan_num == 3 &amp; dna_stage == 
+    T)
+
+df_510_ratios &lt;- left_join(df_510_preDNA, df_510_postDNA, by = c(&quot;Wavelength&quot;, 
+    &quot;well&quot;, &quot;fluors&quot;, &quot;tcep_added&quot;, &quot;tcep_stage&quot;), suffix = c(&quot;_preDNA&quot;, 
+    &quot;_postDNA&quot;)) %&gt;% mutate(post_pre_ratio = intensity_postDNA/intensity_preDNA)
+
+ggplot(df_510_ratios, aes(x = Wavelength, y = post_pre_ratio, 
+    color = tcep_added)) + geom_hline(yintercept = 1) + geom_point() + 
+    facet_wrap(~fluors)</code></pre>
+<p><img src="2019_09_17_phzRedOx_DNAbinding_analysis_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>facet_labels = c(`FALSE` = &quot;- TCEP&quot;, `TRUE` = &quot;+ TCEP&quot;)
+
+plot_etbr_redox &lt;- ggplot(df_510_ratios %&gt;% filter(Wavelength %in% 
+    c(600, 610, 620, 630, 640, 650) &amp; fluors != &quot;PYO&quot;), aes(x = fluors, 
+    y = post_pre_ratio, color = Wavelength, group = Wavelength)) + 
+    geom_hline(yintercept = 1, linetype = 2, color = &quot;light gray&quot;) + 
+    geom_point() + geom_line() + facet_wrap(~tcep_added, labeller = labeller(tcep_added = facet_labels)) + 
+    ylim(0, NA) + labs(x = NULL, y = &quot;postDNA / preDNA fluorescence&quot;, 
+    title = &quot;Competitive DNA binding - 5uM EtBr vs. PYO&quot;) + scale_x_discrete(labels = c(&quot;EtBr&quot;, 
+    &quot;EtBr\n+500uM PYO&quot;)) + scale_color_viridis(breaks = c(600, 
+    650)) + theme(legend.justification = c(0.5, 1), legend.position = c(0.55, 
+    1), legend.title = element_text(size = 10), legend.text = element_text(size = 8)) + 
+    guides(color = guide_colorbar(barwidth = 0.5, barheight = 2.5))
+
+plot_etbr_redox</code></pre>
+<p><img src="2019_09_17_phzRedOx_DNAbinding_analysis_files/figure-html/unnamed-chunk-6-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>saveRDS(plot_etbr_redox, &quot;../../Figures/2019_09_27_group_meeting/plot_etbr_redox&quot;)
+
+ggplot(df_510_ratios %&gt;% filter(fluors != &quot;PYO&quot;), aes(x = fluors, 
+    y = post_pre_ratio, color = Wavelength, group = Wavelength)) + 
+    geom_hline(yintercept = 1, linetype = 2, color = &quot;light gray&quot;) + 
+    geom_point() + geom_line() + facet_wrap(~tcep_added) + ylim(0, 
+    NA)</code></pre>
+<p><img src="2019_09_17_phzRedOx_DNAbinding_analysis_files/figure-html/unnamed-chunk-6-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(df_510_ratios, aes(x = fluors, y = post_pre_ratio, color = Wavelength, 
+    group = Wavelength)) + geom_hline(yintercept = 1, linetype = 2, 
+    color = &quot;light gray&quot;) + geom_point() + geom_line() + facet_wrap(~tcep_added, 
+    scales = &quot;free&quot;) + ylim(0, NA)</code></pre>
+<p><img src="2019_09_17_phzRedOx_DNAbinding_analysis_files/figure-html/unnamed-chunk-6-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_510_375raw &lt;- read_csv(&quot;data/2019_09_24_etbr_PYOredox_ex510protocol_ex375.csv&quot;, 
+    skip = 1) %&gt;% gather(key = &quot;id&quot;, value = &quot;intensity&quot;, -Wavelength)
+
+df_510_375 &lt;- left_join(df_510_375raw, df_510_meta, by = &quot;id&quot;)
+
+ggplot(df_510_375, aes(x = Wavelength, y = intensity, color = dna_stage, 
+    group = scan_num)) + geom_path() + facet_wrap(~well)</code></pre>
+<p><img src="2019_09_17_phzRedOx_DNAbinding_analysis_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(df_510 %&gt;% filter(tcep_added == T), aes(x = Wavelength, 
+    y = intensity, color = dna_stage, group = scan_num)) + geom_path() + 
+    facet_wrap(~well)</code></pre>
+<p><img src="2019_09_17_phzRedOx_DNAbinding_analysis_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(df_510 %&gt;% filter(tcep_added == T), aes(x = Wavelength, 
+    y = intensity, color = well, group = well)) + geom_path() + 
+    facet_wrap(~scan_num)</code></pre>
+<p><img src="2019_09_17_phzRedOx_DNAbinding_analysis_files/figure-html/unnamed-chunk-8-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(df_510_375 %&gt;% filter(tcep_added == T), aes(x = Wavelength, 
+    y = intensity, color = dna_stage, group = scan_num)) + geom_path() + 
+    facet_wrap(~well)</code></pre>
+<p><img src="2019_09_17_phzRedOx_DNAbinding_analysis_files/figure-html/unnamed-chunk-8-3.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="tcep-affects-etbr" class="section level2">
+<h2>Tcep affects EtBr</h2>
+<pre class="r"><code>ggplot(df_510 %&gt;% filter(fluors == &quot;EtBr&quot;), aes(x = Wavelength, 
+    y = intensity, color = dna_stage, group = scan_num)) + geom_path() + 
+    facet_wrap(~well)</code></pre>
+<p><img src="2019_09_17_phzRedOx_DNAbinding_analysis_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="tcep" class="section level2">
+<h2>Tcep</h2>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
