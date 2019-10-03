@@ -725,6 +725,205 @@ df_exp_2_raw_As <- left_join(df_exp_2_raw_A1, df_exp_2_raw_A2, by = c('run','que
 ggplot(df_exp_2_raw_As, aes(x = quencher_eq, y = percent_A, color = term)) + geom_point() + geom_line()
 ```
 
+# 1uM biofilm sample
+
+```{r}
+df_1 <- read_csv("../../08_07_19_biofilm_Ru_Rh/analysis/2019_08_07_dphz_1uM_ru_rh.csv") %>% 
+  mutate(quencher_eq = case_when(
+    condition == 'dPHZ + 1uM Ru -Rh' ~ 0,
+    condition == 'dPHZ + 1uM Ru 1uM Rh' ~ 1,
+    condition == 'dPHZ + 1uM Ru 2uM Rh' ~ 2,
+    condition == 'dPHZ + 1uM Ru 4uM Rh' ~ 4
+  ))
+
+ggplot(df_1, aes(time, intensity, color = condition)) + geom_point()
+```
+
+```{r}
+df_1_sub <- df_1 %>% filter(time>=30e-9 & condition == 'dPHZ -Ru -Rh')
+
+df_1_guess <- bind_cols(df_1_sub,biexp=SSbiexp(df_1_sub$time, 0.02, 16.5, 0.02, 15.7 ))
+
+ggplot(df_1_guess, aes(x = time)) + geom_path(aes(y = biexp))+geom_point(aes(y = intensity), shape = 21)
+```
+
+
+```{r}
+# ggplot(df_raw, aes(x = time, y = intensity)) + 
+#   geom_point(shape = 21) + 
+#   geom_smooth(method='nls',
+#               formula=y~SSbiexp(x, A1, lrc1, A2, lrc2),
+#               method.args=list(start=c(A1 = 0.05, lrc1 = 16.5, A2 = 0.05, lrc2 = 15.7)),
+#               se=F)
+
+A1 = 0.02; lrc1 = 16.5; A2 = 0.02; lrc2 = 15.7
+
+mod_1 <- nls(intensity~SSbiexp(time, A1, lrc1, A2, lrc2), data = df_1_sub)
+
+df_mod_1 <- df_1_sub %>% add_predictions(mod_1)
+
+ggplot(df_mod_1, aes(x = time)) + geom_path(aes(y = pred))+ geom_point(aes(y = intensity), shape =21)
+```
+## All Raw datasets
+
+This time we'll be able to fit all the datasets (runs 1 - 10), because they all have a decay dominated by the biofilm background. 
+
+```{r}
+df_exp_1 <- df_1 %>% 
+  filter(time>=30e-9) %>% 
+  filter(intensity>0) %>% 
+  group_by(quencher_eq,condition) %>% 
+  nest()
+
+fit_biexp_raw <- function(df){
+  
+  A1 = 0.02; lrc1 = 16.5; A2 = 0.02; lrc2 = 15.7
+  
+  mod <- nls(intensity~SSbiexp(time, A1, lrc1, A2, lrc2), data = df)
+  
+  mod
+}
+
+df_exp_1_models <- df_exp_1 %>% 
+  mutate(models = map(data, fit_biexp_raw)) 
+
+df_exp_1_preds <- df_exp_1_models %>% 
+  mutate(preds = map2(data, models, add_predictions)) %>% 
+  unnest(preds)
+
+df_exp_1_ests <- df_exp_1_models %>% 
+  mutate(ests = map(models, tidy, conf.int = T)) %>% 
+  unnest(ests) 
+
+
+df_exp_1_preds %>% head()
+```
+```{r}
+#write_csv(df_exp_2_raw_ests, "2019_09_27_spectroscopy_fits_raw.csv")
+
+df_exp_1_ests %>% kable() %>% kable_styling() %>% scroll_box(height = '400px')
+```
+
+Let's take a look:
+
+```{r}
+
+ggplot(df_exp_1_preds, aes(x = time, color = quencher_eq)) + geom_path(aes(y = pred), color = 'black') + geom_point(aes(y = intensity),alpha = 0.2, shape = 21) +xlim(0,5e-7) + facet_wrap(~condition)
+
+ggplot(df_exp_1_preds, aes(x = time, color = quencher_eq)) + geom_path(aes(y = pred)) + geom_point(aes(y = intensity),alpha = 0.2, shape = 21) +  
+  scale_x_continuous(labels = ns_label, limits = c(0, 5e-7))+
+  labs(y = 'Intensity')
+
+```
+
+
+```{r}
+
+background_1_ests <- df_exp_1_ests %>% filter(is.na(quencher_eq))
+
+#background_ests
+
+ggplot(df_exp_1_ests, aes(x = quencher_eq, y = estimate)) + 
+  geom_hline(data = background_1_ests, aes(yintercept = estimate), linetype = 1, color = 'light gray') + 
+  geom_hline(data = background_1_ests, aes(yintercept = conf.low), linetype = 2, color = 'light gray') + 
+  geom_hline(data = background_1_ests, aes(yintercept = conf.high), linetype = 2, color = 'light gray') + 
+  geom_pointrange(aes(ymin = conf.low, ymax = conf.high)) +
+  facet_wrap(~term, scales = 'free')
+
+```
+
+
+```{r}
+df_1_tau <- df_exp_1_ests %>% filter(term %in% c('lrc1','lrc2')) %>% mutate(tau = 1/exp(estimate), tau_low = 1/exp(conf.high), tau_high = 1/exp(conf.low))
+
+
+ggplot(df_1_tau, aes(x = quencher_eq, y = tau)) + 
+  geom_pointrange(aes(ymin = tau_low, ymax = tau_high)) +
+  facet_wrap(~term, scales = 'free') + scale_y_continuous(labels = ns_label, limits = c(0,NA))
+```
+
+## All background subtracted datasets
+
+
+This time we'll be able to fit all the datasets (runs 1 - 10), because they all have a decay dominated by the biofilm background. 
+
+```{r}
+df_exp_1 <- df_1 %>% 
+  filter(time>=40e-9) %>% 
+  filter(intensity>0 & quencher_eq>=0) %>% 
+  group_by(quencher_eq,condition) %>% 
+  nest()
+
+#ggplot(df_1 %>% filter(time > 40e-9), aes(x = time, y = bg_sub, color = quencher_eq)) + geom_path()
+
+fit_biexp_bg_sub <- function(df){
+  
+  A1 = 0.02; lrc1 = 16.5; A2 = 0.02; lrc2 = 15.7
+  
+  mod <- nls(bg_sub~SSbiexp(time, A1, lrc1, A2, lrc2), data = df)
+  
+  mod
+}
+
+df_exp_1_models <- df_exp_1 %>% 
+  mutate(models = map(data, fit_biexp_bg_sub)) 
+
+df_exp_1_preds <- df_exp_1_models %>% 
+  mutate(preds = map2(data, models, add_predictions)) %>% 
+  unnest(preds)
+
+df_exp_1_ests <- df_exp_1_models %>% 
+  mutate(ests = map(models, tidy, conf.int = T)) %>% 
+  unnest(ests) 
+
+
+df_exp_1_preds %>% head()
+```
+```{r}
+#write_csv(df_exp_2_raw_ests, "2019_09_27_spectroscopy_fits_raw.csv")
+
+df_exp_1_ests %>% kable() %>% kable_styling() %>% scroll_box(height = '400px')
+```
+
+Let's take a look:
+
+```{r}
+
+ggplot(df_exp_1_preds, aes(x = time, color = quencher_eq)) + geom_path(aes(y = pred), color = 'black') + geom_point(aes(y = bg_sub),alpha = 0.2, shape = 21) +xlim(0,5e-7) + facet_wrap(~condition)
+
+ggplot(df_exp_1_preds, aes(x = time, color = quencher_eq)) + geom_path(aes(y = pred)) + geom_point(aes(y = bg_sub),alpha = 0.2, shape = 21) +  
+  scale_x_continuous(labels = ns_label, limits = c(0, 5e-7))+
+  labs(y = 'Intensity')
+
+```
+
+
+```{r}
+
+background_1_ests <- df_exp_1_ests %>% filter(is.na(quencher_eq))
+
+#background_ests
+
+ggplot(df_exp_1_ests, aes(x = quencher_eq, y = estimate)) + 
+  geom_hline(data = background_1_ests, aes(yintercept = estimate), linetype = 1, color = 'light gray') + 
+  geom_hline(data = background_1_ests, aes(yintercept = conf.low), linetype = 2, color = 'light gray') + 
+  geom_hline(data = background_1_ests, aes(yintercept = conf.high), linetype = 2, color = 'light gray') + 
+  geom_pointrange(aes(ymin = conf.low, ymax = conf.high)) +
+  facet_wrap(~term, scales = 'free')
+
+```
+
+
+```{r}
+df_1_tau <- df_exp_1_ests %>% filter(term %in% c('lrc1','lrc2')) %>% mutate(tau = 1/exp(estimate), tau_low = 1/exp(conf.high), tau_high = 1/exp(conf.low))
+
+
+ggplot(df_1_tau, aes(x = quencher_eq, y = tau)) + 
+  geom_pointrange(aes(ymin = tau_low, ymax = tau_high)) +
+  facet_wrap(~term, scales = 'free') + scale_y_continuous(labels = ns_label, limits = c(0,NA))
+```
+
+
 # Conclusions
 
 1. It may be interesting to run this analysis for all of the datasets in the other notebook...it's always nice to have numbers. 
