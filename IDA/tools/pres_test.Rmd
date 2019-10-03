@@ -9,7 +9,7 @@ output:
     fig_width: 7
     fig_height: 5
     css: styles.css
-    reveal_plugins: ["chalkboard"]
+    reveal_plugins: ["chalkboard",'notes','zoom']
     reveal_options:
       chalkboard:
         theme: whiteboard
