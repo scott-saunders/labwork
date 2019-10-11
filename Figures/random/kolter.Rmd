@@ -1,0 +1,113 @@
+---
+title: "Kolter lab disciples"
+author: "Scott Saunders"
+fontsize: 12pt
+date: '10-10-2019'
+output:
+  html_document:
+    theme: cosmo
+    code_folding: hide
+    self_contained: no
+    toc: yes
+  github_document:
+    pandoc_args: --webtex
+---
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(viridis)
+library(knitr)
+library(kableExtra)
+library(modelr)
+library(broom)
+
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+source("../../IDA/tools/plotting_tools.R")
+
+
+theme_set(theme_1())
+```
+
+```{r}
+df <- tibble(trainees = c(43, 88, 176, 501, 1100, 2350, 4221),
+       avg_date = c(1986, 1992, 1997, 2002, 2007, 2012, 2017)) %>% 
+  mutate(norm_time = avg_date - 1986)
+
+df_mod <- nls(trainees~ N0 * 2^(norm_time / Td), data = df, start = c(N0 = 10, Td = 5))
+
+summary(df_mod)
+
+tidy(df_mod, conf.int = T)
+
+sim_exp <- function(x, N0, Td){
+  N0*2^(x / Td)
+}
+
+# 95%
+
+df_man_pred <- tibble(
+  norm_time = seq(0,31,0.01), 
+  trainees = sim_exp(seq(0,31,0.01), 66.826742, 5.166014), 
+  trainees_high =sim_exp(seq(0,31,0.01), 100.67780, 4.620679 ), 
+  trainees_low = sim_exp(seq(0,31,0.01), 41.784017, 5.76912) 
+)
+
+ggplot(df_man_pred, aes(x = norm_time + 1986, y = trainees)) + 
+  geom_ribbon(aes(ymin = trainees_low, ymax = trainees_high), fill = 'light gray')+
+  geom_path() + 
+  geom_point(data = df) + 
+  coord_cartesian(ylim = c(0,5000)) + 
+  labs(x = 'Time', y = 'Trainees' )
+
+ggplot(df_man_pred, aes(x = norm_time + 1986, y = trainees)) + 
+  geom_path(aes(y = trainees_high), linetype =2, color = 'light gray')+
+  geom_path(aes(y = trainees_low), linetype =2, color = 'light gray')+
+  geom_path() + 
+  geom_point(data = df) + 
+  coord_cartesian(ylim = c(0,5000))+
+  labs(x = 'Time', y = 'Trainees' )
+  
+# SE
+
+df_man_pred <- tibble(
+  norm_time = seq(0,31,0.01), 
+  trainees = sim_exp(seq(0,31,0.01), 66.826742, 5.166014), 
+  trainees_high =sim_exp(seq(0,31,0.01), 66.826742+11.8154950  , 5.166014- 0.2312589  ), 
+  trainees_low = sim_exp(seq(0,31,0.01), 66.826742-11.8154950  , 5.166014+ 0.2312589 ) 
+)
+
+ggplot(df_man_pred, aes(x = norm_time + 1986, y = trainees)) + 
+  geom_ribbon(aes(ymin = trainees_low, ymax = trainees_high), fill = 'light gray')+
+  geom_path() + 
+  geom_point(data = df) + 
+  coord_cartesian(ylim = c(0,5000))+
+  labs(x = 'Time', y = 'Trainees' )
+
+ggplot(df_man_pred, aes(x = norm_time + 1986, y = trainees)) + 
+  geom_path(aes(y = trainees_high), linetype =2, color = 'light gray')+
+  geom_path(aes(y = trainees_low), linetype =2, color = 'light gray')+
+  geom_path() + 
+  geom_point(data = df) + 
+  coord_cartesian(ylim = c(0,5000)) + 
+  annotate(geom = 'text',x = 2000, y = 4500, label = "Doubling time = 5.2 +/- 0.2 years")+
+  annotate(geom = 'text',x = 2000, y = 4000, label = "Time to world domination = 139 years")+
+    labs(x = 'Time', y = 'Trainees' )
+
+###
+
+ggplot(df, aes(x = norm_time, y = trainees)) + 
+  geom_point() + 
+  geom_smooth(method = 'nls', formula=y~N0*2^(x / Td), method.args=list(start=c(N0 = 10, Td = 5)),se=F)
+```
+
+```{r}
+5.2 * log2((7.5e9) / 66.8)
+
+4.9 * log2((7.5e9) / (66.8 + 11.8))
+
+5.43 * log2((7.5e9) / (66.8 - 11.8))
+
+```
