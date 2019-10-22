@@ -1,0 +1,87 @@
+---
+title: "Inter phenazine electron transfer +/- ctDNA"
+author: "Scott Saunders"
+fontsize: 12pt
+date: '10_18_19'
+output:
+  html_document:
+    theme: cosmo
+    code_folding: hide
+    self_contained: no
+    toc: yes
+  github_document:
+    pandoc_args: --webtex
+---
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(viridis)
+library(knitr)
+library(kableExtra)
+
+
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+source("../../IDA/tools/plotting_tools.R")
+
+theme_set(theme_1())
+```
+
+```{r}
+metadata <- read_csv("data/2019_10_18_ET_ctDNA_metadata.csv")
+
+df <- read_csv("data/2019_10_18_ET_ctDNA_abs_spectra_1.csv") %>%
+    gather(key = 'well', value = 'intensity', -Wavelength)
+
+df_meta <- left_join(df, metadata, by = 'well')
+
+ggplot(df_meta, aes(x = Wavelength, y = intensity, color = red_ox)) + geom_smooth(se = T)
+
+ggplot(df_meta, aes(x = Wavelength, y = intensity, color = red_ox)) + geom_point()
+
+ggplot(df_meta, aes(x = Wavelength, y = intensity, color = red_ox)) + geom_jitter(shape=21)+coord_cartesian(xlim = c(600,700), ylim = c(0,0.2))
+
+df_690 <- df_meta %>% group_by(red_ox, Wavelength, DNA) %>% mutate(mean = mean(intensity), sd = sd(intensity))  %>% filter(Wavelength == 690)
+
+ggplot(df_690, aes(x = red_ox, y = intensity, color = DNA )) + geom_jitter(shape = 21, width = 0.1) + geom_pointrange(data = . %>% filter(rep ==1), aes(y = mean,ymin = mean-2*sd,ymax = mean+2*sd), position = position_jitter(width = 0.1))
+```
+
+```{r}
+df_kin <- read_csv("data/2019_10_18_ET_ctDNA_abs_690kinetic_1.csv") %>%
+    gather(key = 'well', value = 'intensity', -min)
+
+df_kin_meta <- left_join(df_kin, metadata, by = 'well')
+
+ggplot(df_kin_meta, aes(x = min, y = intensity, color = DNA)) + geom_point() + facet_wrap(~red_ox)
+```
+
+```{r}
+df_kin_well <- df_kin_meta %>% group_by(red_ox, DNA, rep) %>% summarise(well_mean = mean(intensity), well_sd = sd(intensity))
+
+ggplot(df_kin_well, aes(x = red_ox, y = well_mean, color = DNA)) + geom_pointrange(aes(ymin = well_mean - 2*well_sd, ymax = well_mean + 2*well_sd), position = position_jitter(width = 0.1))
+```
+
+```{r}
+df_kin_exp <- df_kin_well %>% group_by(red_ox, DNA) %>% summarise(exp_mean = mean(well_mean), exp_sd = sd(well_mean))
+
+ggplot(df_kin_exp, aes(x = red_ox, y = exp_mean, color = DNA)) + geom_pointrange(aes(ymin = exp_mean - 2*exp_sd, ymax = exp_mean + 2*exp_sd), position = position_jitter(width = 0.1))
+```
+
+```{r}
+df_fluor <- read_csv("data/2019_10_18_ET_ctDNA_fluor_360ex_460em_1.csv") %>%
+    gather(key = 'well', value = 'intensity', -min)
+
+df_fluor_meta <- left_join(df_fluor, metadata, by = 'well')
+
+ggplot(df_fluor_meta, aes(x = min, y = intensity, color = DNA)) + geom_point() + facet_wrap(~red_ox)
+```
+
+```{r}
+df_fluor_well <- df_fluor_meta %>% group_by(red_ox, rep, DNA) %>% summarise(well_mean = mean(intensity), well_sd = sd(intensity))
+
+ggplot(df_fluor_well, aes(x = red_ox, y = well_mean, color = DNA)) + geom_pointrange(aes(ymin = well_mean - 2*well_sd, ymax = well_mean + 2*well_sd), position = position_jitter(width = 0.1))
+```
+
+

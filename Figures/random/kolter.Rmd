@@ -32,7 +32,7 @@ theme_set(theme_1())
 ```
 
 ```{r}
-df <- tibble(trainees = c(43, 88, 176, 501, 1100, 2350, 4221),
+df <- tibble(trainees = c(43, 88, 176, 501, 1100, 2362, 4241),
        avg_date = c(1986, 1992, 1997, 2002, 2007, 2012, 2017)) %>% 
   mutate(norm_time = avg_date - 1986)
 
@@ -110,4 +110,107 @@ ggplot(df, aes(x = norm_time, y = trainees)) +
 
 5.43 * log2((7.5e9) / (66.8 - 11.8))
 
+```
+
+```{r}
+df_man_pred <- tibble(
+  norm_time = seq(0,31,0.01), 
+  trainees = sim_exp(seq(0,31,0.01), 66.826742, 5.166014), 
+  trainees_high =sim_exp(seq(0,31,0.01), 66.826742+11.8154950  , 5.166014- 0.2312589  ), 
+  trainees_low = sim_exp(seq(0,31,0.01), 66.826742-11.8154950  , 5.166014+ 0.2312589 ) 
+)
+
+
+    theme(
+      axis.ticks = element_line(color = 'black'),
+      axis.text = element_text( size=10),
+      axis.title=element_text(size=12),
+      strip.text = element_text(size = 12),
+      plot.background = element_blank(),
+
+    )
+
+    
+ggplot(df_man_pred, aes(x = norm_time + 1986, y = trainees)) + 
+  geom_ribbon(aes(ymin = trainees_low, ymax = trainees_high), fill = 'light gray')+
+  geom_path(size =2) + 
+  geom_point(data = df, size = 4) + 
+  coord_cartesian(ylim = c(0,5000))+
+  labs(x = '\nTime', y = 'Trainees\n' ) + 
+  theme(
+      axis.line = element_line(size = 1.5),
+      axis.ticks = element_line(color = 'black', size =1.5),
+      axis.ticks.length = unit(0.1 , 'in'),
+      axis.text = element_text( size=24),
+      axis.title=element_text(size=24),
+      plot.background = element_blank(),
+      panel.background = element_blank(),
+      plot.margin = 
+    )
+
+ggsave("plot_kolter_black.pdf",width = 11, height = 8.5, units = 'in')
+
+
+ggplot(df_man_pred, aes(x = norm_time + 1986, y = trainees)) + 
+  geom_ribbon(aes(ymin = trainees_low, ymax = trainees_high), fill = 'light gray')+
+  geom_path(size =2) + 
+  geom_point(data = df, size = 4) + 
+  coord_cartesian(ylim = c(0,5000))+
+  labs(x = 'Time', y = 'Trainees' ) + 
+  theme(
+      axis.line = element_line(size = 1.5),
+      axis.ticks = element_line(color = 'black', size =1.5),
+      axis.ticks.length = unit(0.1 , 'in'),
+      axis.text = element_text( size=24),
+      axis.title=element_text(size=24),
+      plot.background = element_blank(),
+      panel.background = element_blank()
+    )+
+  annotate(geom = 'text', label = expression(Trainees == N[0]*2^{Time / T[D]}), x = 2000, y = 4000, size = 7)
+
+ggsave("plot_kolter_black_eq.pdf",width = 11, height = 8.5, units = 'in')
+```
+
+```{r}
+ggplot(df_man_pred, aes(x = norm_time + 1986, y = trainees)) + 
+  geom_ribbon(aes(ymin = trainees_low, ymax = trainees_high), fill = 'light gray')+
+  geom_path(size =2, color = 'white') + 
+  geom_point(data = df, size = 4, color = 'white') + 
+  coord_cartesian(ylim = c(0,5000))+
+  labs(x = '\nTime', y = 'Trainees\n' ) + 
+  theme(
+      axis.line = element_line(size = 1.5, color = 'white'),
+      axis.ticks = element_line(color = 'white', size =1.5),
+      axis.ticks.length = unit(0.1 , 'in'),
+      axis.text = element_text( size=24, color = 'white'),
+      axis.title=element_text(size=24, color = 'white'),
+      plot.background = element_blank(),
+      panel.background = element_blank()
+    )
+
+ggsave("plot_kolter_white.pdf",width = 11, height = 8.5, units = 'in')
+
+ggplot(df_man_pred, aes(x = norm_time + 1986, y = trainees)) + 
+  geom_ribbon(aes(ymin = trainees_low, ymax = trainees_high), fill = 'light gray')+
+  geom_path(size =2, color = 'white') + 
+  geom_point(data = df, size = 4, color = 'white') + 
+  coord_cartesian(ylim = c(0,5000))+
+  labs(x = 'Time', y = 'Trainees' ) + 
+  theme(
+      axis.line = element_line(size = 1.5, color = 'white'),
+      axis.ticks = element_line(color = 'white', size =1.5),
+      axis.ticks.length = unit(0.1 , 'in'),
+      axis.text = element_text( size=24, color = 'white'),
+      axis.title=element_text(size=24, color = 'white'),
+      plot.background = element_blank(),
+      panel.background = element_blank()
+    )+
+  annotate(geom = 'text', label = expression(Trainees == N[0]*2^{Time / T[D]}), x = 2000, y = 4000, size = 7, color = 'white')
+
+ggsave("plot_kolter_white_eq.pdf",width = 11, height = 8.5, units = 'in')
+```
+
+
+```{r}
+sessionInfo()
 ```
