@@ -74,15 +74,34 @@ Finally all of the biofilm suspensions were centrifuged at 6,000 rcf for 5 min t
 # Results
 
 ```{r}
+df_vol <- read_csv("data/2019_10_22_colony_volumes.csv")
+
+ggplot(df_vol %>% filter(treatment != 'etbr'), aes(x = strain, y = Measured_Volume, color = treatment)) + geom_jitter(shape=21, width = 0.1)
+
+ggplot(df_vol %>% filter(treatment == 'etbr'), aes(x = etbr_added_uM, y = Measured_Volume)) + geom_jitter(shape=21, width = 0.1) + facet_wrap(~phz_added, scales = 'free')
 
 ```
 
-
 ## DNase
+
+```{r}
+df_dnase <- read_csv("data/2019_10_22_colony_dnase_data.csv")
+
+ggplot(df_dnase %>% filter(strain == 'parWT'), aes(x = treatment, y = Amount)) + geom_point() + facet_wrap(material~measured_phenazine, scales = 'free')
+
+ggplot(df_dnase %>% filter(strain == 'dPEL'), aes(x = treatment, y = Amount)) + geom_point() + facet_wrap(material~measured_phenazine, scales = 'free')
+
+ggplot(df_dnase %>% filter(material != 'blank'), aes(x = strain, y = Amount, color = treatment)) + geom_point() + facet_wrap(material~measured_phenazine, scales = 'free')
+```
 
 ## EtBr
 
+```{r}
+df_etbr <- read_csv("data/2019_10_22_colony_etbr_data.csv")
 
+ggplot(df_etbr, aes(x = factor(etbr_added_int), y = Amount)) + geom_jitter(shape = 21, width =0.1) + facet_wrap(~phz_added, scales = 'free')
+
+```
 
 
 
