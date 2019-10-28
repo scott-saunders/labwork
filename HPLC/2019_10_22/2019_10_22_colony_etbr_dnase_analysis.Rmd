@@ -1,0 +1,95 @@
+---
+title: "EtBr and DNase colony biofilm experiments"
+author: "Scott Saunders"
+fontsize: 12pt
+date: '10_22_19'
+output:
+  html_document:
+    theme: cosmo
+    code_folding: hide
+    self_contained: no
+    toc: yes
+  github_document:
+    pandoc_args: --webtex
+---
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(viridis)
+library(knitr)
+library(kableExtra)
+
+
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+source("../../IDA/tools/plotting_tools.R")
+
+theme_set(theme_1())
+```
+
+# Intro
+
+This experiment is a follow up to several other attempted experiments to perturb the DNA bound phenazines in colony biofilms. We tried to treat biofilms with DNase 1 in he underlying agar to chop up the eDNA into smaller pieces. This was somewhat successful when DNase was not incubated in its NEB buffer, which killed the cells. However, the effects were modest, so I tried repeating the experiment with DNase in PBS supplemented with Mg2+, which should further activate the enzyme. Further, I wanted to try the experiment on WT and ∆pelB colonies, since we think that Pel may be binding eDNA and blocking PYO binding sites it may also interfere with the activity of the DNase...?
+
+I have also tried perturbing colony retained phenazines with a competitive intercalator ethidium (also tried propidium). This experiment has worked reasonably well multiple times, although it is complicated to displace WT phenazines, since the cells just seem to make more. Recently I tried exposing ∆phz* to phenazine and an etbr competitor simultaneously and it worked well. However, I only had duplicate measurements and I did not test PCA (only PYO and PCN). Therefore I wanted triplicates this time and also expose to PCA.
+
+# Methods
+
+Colonies were grown as normal in 6 well plates on 0.2um filter membranes atop agar, incubated in the dark at room temperature. Images were taken on the keyence on days 3 and 4.
+
+## EtBr
+
+∆phz* colonies were inoculated on top of plate wells containing different concentrations of ethidium bromide (etbr) and constant concentrations of phenazines (50uM). The concentrations of etbr used were 0, 10, 100, and 500. Each well contained 500uL of liquid (in PBS 50) added to the bottom before agar was poured on top and mixed. 
+
+10mM etbr stock was prepared and filter sterilized. It was diluted 5 fold and then 10 fold to yield 3 different stock solutions of 10mM, 2mM, and 200uM. Each of those stocks was 20x the intended final concentration, so 250uL of each was added to the appropriate well (or PBS only). Then each phenazine (50uM) was added to the wells (~10 - 40uL) and the remaining volume was made up with PBS 50. 
+
+Plates were prepared and dried for 1 hr in the biosafety cabinet. 
+
+Phenazine stocks were 10mM for PCA in NaOH, 20mM for PCN in DMSO, and 6.79mM for PYO in HCl.
+
+## DNase
+
+Six Parsek WT colonies and six ∆pelB colonies were grown as usual for three days. For 24 hours, colonies were transferred to fresh agar plate wells containing 25uL DNase or buffer only. The DNase / buffer solutions were allowed to dry for ~5 min, but were still liquid pools on the surface of the agar.
+
+The Buffer was PBS 137mM NaCl pH 7.2 + 5mM MgSO4.
+
+## Extractions
+
+Colonies were resuspended in 800uL PBS 137 (pH 7.2) in eppendorf tubes. Tubes with filter membranes + colonies were vortexed for 1 min each at max speed. This was sufficient to resuspend most of the colonies into a cloudy haze and small bits of biofilm. However for colonies treated with 100uM or 500uM EtBr, the colonies were very tough and the vortex was not sufficient. Next all the membranes were removed from the tubes, and for the colonies that did not come off the membranes they were moved (biofilm + membrane) to a petri dish and the intact biofilm mass was removed from the membrane with tweezers and placed back in the tube.
+
+*Note the PCA treated colonies were treated in the water bath sonicator on high for 5 min in an attempt to resuspend them  better. This was not successful and was not performed on the PCN and PYO samples.
+
+The volume of liquid in each tube was measured by pipette. The DNase colonies were easy to resuspend and a p200 was used. The etbr were more difficult to resuspend, so a p1000 was used to grind and further break up the biofilm by pipetting up and down and the volume of that slurry was measured (crudely) in the p1000 (starting from 850uL pipette volume).
+
+Finally all of the biofilm suspensions were centrifuged at 6,000 rcf for 5 min to pellet the cells. 650uL of the supernatant was transferred to fresh tubes. The etbr treated samples had obviously red liquids at 100 and 500uM.
+
+## LC-MS
+
+
+
+
+
+# Results
+
+```{r}
+
+```
+
+
+## DNase
+
+## EtBr
+
+
+
+
+
+
+# Conclusions
+
+
+```{r}
+sessionInfo()
+```
