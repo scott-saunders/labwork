@@ -22,7 +22,7 @@ library(kableExtra)
 
 
 
-knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center", fig.retina = 2)
 
 source("../../IDA/tools/plotting_tools.R")
 
@@ -67,40 +67,165 @@ Finally all of the biofilm suspensions were centrifuged at 6,000 rcf for 5 min t
 
 ## LC-MS
 
+Extracts were defrosted and vortexed briefly before being transferred into spin-X filter columns (600uL). Filter columns were spun at max speed (~16k rcf) for 1.5min. Samples were diluted two fold in LC-MS sample vials (500uL sample + 500uL PBS 137).
 
-
+Samples were run and processed using the standard method. MS channels were acquired.
 
 
 # Results
 
+First let's look at the colony volumes to see if there are large differences in colony sizes that may skew our results. Remember these data were acquired simply by pipetting up the entire solution and measuring the volume crudely with a pipette. That means the measurements were extremely susceptible to bubbles that rise to the top of the solution and displace volume that wasn't due to liquid.
+
 ```{r}
 df_vol <- read_csv("data/2019_10_22_colony_volumes.csv")
 
-ggplot(df_vol %>% filter(treatment != 'etbr'), aes(x = strain, y = Measured_Volume, color = treatment)) + geom_jitter(shape=21, width = 0.1)
-
-ggplot(df_vol %>% filter(treatment == 'etbr'), aes(x = etbr_added_uM, y = Measured_Volume)) + geom_jitter(shape=21, width = 0.1) + facet_wrap(~phz_added, scales = 'free')
+df_vol %>% kable() %>% kable_styling() %>% scroll_box(height = '300px')
 
 ```
 
+First let's look at the DNase treated colonies:
+
+```{r}
+
+ggplot(df_vol %>% filter(treatment != 'etbr'), aes(x = strain, y = Measured_Volume, fill = treatment)) +
+  geom_jitter(shape = 21,width = 0.1)
+
+```
+
+You can see that there's a lot of overlap between the treated and untreated colonies, however, the WT colonies may be slightly larger overall. Doesn't seem like volume will be an issue, which makes sense since the colonies look pretty identical.
+
+Now let's look at the ethidium treated colonies:
+
+```{r}
+df_vol$etbr_added_uM = factor(df_vol$etbr_added_uM)
+
+levels(df_vol$etbr_added_uM) = c('0uM','10uM','100uM','500uM')
+
+ggplot(df_vol %>% filter(treatment == 'etbr'), aes(x = etbr_added_uM, y = Measured_Volume, fill = etbr_added_uM)) + 
+  geom_jitter(shape =21, width = 0.1) + facet_wrap(~phz_added, scales = 'free') + scale_fill_viridis_d(guide = F)
+
+```
+
+Here we can see a few things. 
+
+First, the variation in the measurements between groups is pretty high compared to the DNased colonies. One thing to note is that the DNased colonies were measured with a p200, while these colonies were measured with the p1000 and there may just be an accuracy difference involved in the pipette itself or in the process of filling the tip with liquid (e.g. more bubbles?). The reason I used a different pipette was because the etbr treated colonies were relatively hard to resuspend, so I ended up sort of shearing the biofilm material by pipetting with the p1000 and I was able to suck up larger chunks using the larger tips. 
+
+Second, it looks like the 500uM etbr condition had smaller measured volumes for all three of the phenazines, although there's some variability. This sort of makes sense based on morphology, the etbr colonies all had a compact morphology, but they did seem to be quite thick. However, I think there's something else going on.
+
+One other reason these colonies may have had consistently smaller volumes, is that they were so hard to get off the membrane that I ended up removing the biofilm / membrane post vortex and transferring to a petri dish. Then I physically removed the biofilm from the membrane using sterilized tweezers. When removing the biofilm and membrane I think a significant amount of liquid was lost. Now the question is - would that skew the LC-MS measurement? Possibly. 
+
+If most of the phenazine was already extracted upon vortexing and some of that liquid were lost then the measurement would not be affected. If very little of the phenazine was already extracted and most of it was still in the intact colony, then perhaps the loss of volume would actually skew the concentration slightly higher...I think that both of these effects should be pretty small, but importantly I would say it's inconclusive whether or not the 500uM etbr colonies actually contained smaller biofilm volumes than the other colonies. As I thought before, I think we don't really have the resolution to say. These measurements are just not very sensitive...also note that all these volumes are below the initial 800uL, because a significant volume of liquid is lost on all the membranes upon removal (even ones that come out clean). It's unclear if that loss component is even constant...
+
+Let's move forward to the LC-MS measurements with this in the back of our minds, but ultimately few conclusions drawn.
+
 ## DNase
+
+Here's the DNase treated colonies. I treated both the ∆pelB mutant and the parsek WT strain (background for mutant). 
 
 ```{r}
 df_dnase <- read_csv("data/2019_10_22_colony_dnase_data.csv")
 
-ggplot(df_dnase %>% filter(strain == 'parWT'), aes(x = treatment, y = Amount)) + geom_point() + facet_wrap(material~measured_phenazine, scales = 'free')
+df_dnase %>% kable() %>% kable_styling() %>% scroll_box(height = '300px')
 
-ggplot(df_dnase %>% filter(strain == 'dPEL'), aes(x = treatment, y = Amount)) + geom_point() + facet_wrap(material~measured_phenazine, scales = 'free')
-
-ggplot(df_dnase %>% filter(material != 'blank'), aes(x = strain, y = Amount, color = treatment)) + geom_point() + facet_wrap(material~measured_phenazine, scales = 'free')
 ```
+
+Let's convert our measurements into biofilm and agar concentrations and also calculate the retention ratios.
+
+
+```{r}
+#Convert to concentrations
+
+df_dnase_conc <- df_dnase %>%
+  filter( material != 'blank' ) %>% 
+  mutate(phz_conc = case_when(
+    material == 'cells' ~ Amount * 2 * 800 / 60,
+    material == 'agar' ~ Amount * 2 * 8 / 5
+  ))
+
+# formatting levels for plotting
+
+#df_dnase_conc$treatment <- factor(df_dnase_conc$treatment, levels = c('none','dnase')  )
+#df_dnase_conc$strain <- factor(df_dnase_conc$strain, levels = c('parWT','dPEL'))
+
+
+#Calculate retentions ratios
+df_dnase_ratio <- left_join(df_dnase_conc %>% filter(material == 'cells'),
+                           df_dnase_conc %>% filter(material == 'agar'),
+                           by = c('measured_phenazine','strain','treatment','day','rep'),
+                           suffix = c('_cells','_agar')) %>% 
+  mutate(ret_ratio = phz_conc_cells / phz_conc_agar)
+
+```
+
+And now let's compare the treated and untreated WT biofilms:
+
+```{r}
+ggplot(df_dnase %>% filter(strain == 'parWT'), aes(x = treatment, y = Amount, fill = treatment)) + 
+  geom_jitter(shape = 21, width = 0.1) + 
+  facet_wrap(material~measured_phenazine, scales = 'free') + 
+  ylim(0,NA)
+
+ggplot(df_dnase_conc %>% filter(strain == 'parWT'), aes(x = treatment, y = phz_conc, fill = treatment)) + 
+  geom_jitter(shape = 21, width = 0.1) + 
+  facet_wrap(material~measured_phenazine, scales = 'free') + 
+  ylim(0,NA)
+
+```
+
+Interesting, looks like there might be some differences. Let's look at the data in terms of the retention ratios.
+
+```{r}
+ggplot(df_dnase_ratio %>% filter(strain == 'parWT'), aes(x = treatment, y = ret_ratio, fill = treatment)) + 
+  geom_jitter(shape = 21, width = 0.1) + 
+  facet_wrap(~measured_phenazine, scales = 'free') + ylim(0,NA)
+```
+
+```{r}
+ggplot(df_dnase_conc %>% filter(strain == 'dPEL'), aes(x = treatment, y = phz_conc, fill = treatment)) + 
+  geom_jitter(shape = 21, width = 0.1) + 
+  facet_wrap(material~measured_phenazine, scales = 'free') + 
+  ylim(0,NA)
+```
+
+```{r}
+ggplot(df_dnase_ratio %>% filter(strain == 'dPEL'), aes(x = treatment, y = ret_ratio, fill = treatment)) + 
+  geom_jitter(shape = 21, width = 0.1) + 
+  facet_wrap(~measured_phenazine, scales = 'free') + ylim(0,NA)
+```
+
+```{r}
+ggplot(df_dnase_conc, aes(x = strain, y = Amount, fill = treatment)) + geom_jitter(shape =21, width = 0.1) +
+  facet_wrap(material~measured_phenazine, scales = 'free')+ ylim(0,NA)
+```
+
+```{r}
+ggplot(df_dnase_ratio, aes(x = strain, y = ret_ratio, fill = treatment)) + geom_jitter(shape =21, width = 0.1) +
+  facet_wrap(~measured_phenazine, scales = 'free')+ ylim(0,NA)
+```
+
 
 ## EtBr
 
 ```{r}
 df_etbr <- read_csv("data/2019_10_22_colony_etbr_data.csv")
 
-ggplot(df_etbr, aes(x = factor(etbr_added_int), y = Amount)) + geom_jitter(shape = 21, width =0.1) + facet_wrap(~phz_added, scales = 'free')
+ggplot(df_etbr, aes(x = factor(etbr_added_int), y = Amount, fill = factor(etbr_added_int) )) + 
+  geom_jitter(shape = 21, width =0.1) + 
+  facet_wrap(~phz_added, scales = 'free') + 
+  scale_fill_viridis_d()
+```
 
+```{r}
+
+df_etbr_conc <- df_etbr %>%
+  filter( phz_added != 'blank' ) %>% 
+  filter(measured_phenazine == phz_added) %>% 
+  mutate(phz_conc = Amount * 2 * 800 / 60)
+
+ggplot(df_etbr_conc, aes(x = factor(etbr_added_int), y = phz_conc, fill = factor(etbr_added_int) )) + 
+  geom_jitter(shape = 21, width =0.1) + 
+  facet_wrap(~phz_added, scales = 'free') + 
+  scale_fill_viridis_d() + ylim(0,NA)
 ```
 
 
