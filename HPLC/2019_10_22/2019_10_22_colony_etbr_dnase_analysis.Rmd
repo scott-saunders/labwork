@@ -220,9 +220,12 @@ ggplot(df_etbr, aes(x = factor(etbr_added_int), y = Amount, fill = factor(etbr_a
 df_etbr_conc <- df_etbr %>%
   filter( phz_added != 'blank' ) %>% 
   filter(measured_phenazine == phz_added) %>% 
-  mutate(phz_conc = Amount * 2 * 800 / 60)
+  mutate(phz_conc = Amount * 2 * 800 / 60) %>% 
+  group_by(measured_phenazine, phz_added, etbr_added_uM) %>% 
+  mutate(mean = mean(phz_conc))
 
 ggplot(df_etbr_conc, aes(x = factor(etbr_added_int), y = phz_conc, fill = factor(etbr_added_int) )) + 
+  geom_col(data = . %>% filter(rep == 1), aes(y = mean), fill = 'light gray')+
   geom_jitter(shape = 21, width =0.1) + 
   facet_wrap(~phz_added, scales = 'free') + 
   scale_fill_viridis_d() + ylim(0,NA)
@@ -232,6 +235,8 @@ ggplot(df_etbr_conc, aes(x = factor(etbr_added_int), y = phz_conc, fill = factor
 
 
 # Conclusions
+
+Next time pipette and disperse EtBr colonies without removing membrane....?
 
 
 ```{r}
