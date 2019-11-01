@@ -223,7 +223,11 @@ $(document).ready(function () {
 <li><a href="#lc-ms">LC-MS</a></li>
 </ul></li>
 <li><a href="#results">Results</a><ul>
-<li><a href="#dnase-1">DNase</a></li>
+<li><a href="#dnase-1">DNase</a><ul>
+<li><a href="#parsek-wt">Parsek WT</a></li>
+<li><a href="#pelb">∆pelB</a></li>
+<li><a href="#wt-vs.-pel">WT vs. ∆pel</a></li>
+</ul></li>
 <li><a href="#etbr-1">EtBr</a></li>
 </ul></li>
 <li><a href="#conclusions">Conclusions</a></li>
@@ -3821,63 +3825,3985 @@ df_dnase_ratio &lt;- left_join(df_dnase_conc %&gt;% filter(material ==
     &quot;cells&quot;), df_dnase_conc %&gt;% filter(material == &quot;agar&quot;), by = c(&quot;measured_phenazine&quot;, 
     &quot;strain&quot;, &quot;treatment&quot;, &quot;day&quot;, &quot;rep&quot;), suffix = c(&quot;_cells&quot;, 
     &quot;_agar&quot;)) %&gt;% mutate(ret_ratio = phz_conc_cells/phz_conc_agar)</code></pre>
+<div id="parsek-wt" class="section level3">
+<h3>Parsek WT</h3>
 <p>And now let’s compare the treated and untreated WT biofilms:</p>
-<pre class="r"><code>ggplot(df_dnase %&gt;% filter(strain == &quot;parWT&quot;), aes(x = treatment, 
-    y = Amount, fill = treatment)) + geom_jitter(shape = 21, 
-    width = 0.1) + facet_wrap(material ~ measured_phenazine, 
-    scales = &quot;free&quot;) + ylim(0, NA)</code></pre>
-<p><img src="2019_10_22_colony_etbr_dnase_analysis_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>ggplot(df_dnase_conc %&gt;% filter(strain == &quot;parWT&quot;), aes(x = treatment, 
+<pre class="r"><code># ggplot(df_dnase %&gt;% filter(strain == &#39;parWT&#39;), aes(x =
+# treatment, y = Amount, fill = treatment)) +
+# geom_jitter(shape = 21, width = 0.1) +
+# facet_wrap(material~measured_phenazine, scales = &#39;free&#39;) +
+# ylim(0,NA)
+
+ggplot(df_dnase_conc %&gt;% filter(strain == &quot;parWT&quot;), aes(x = treatment, 
     y = phz_conc, fill = treatment)) + geom_jitter(shape = 21, 
     width = 0.1) + facet_wrap(material ~ measured_phenazine, 
     scales = &quot;free&quot;) + ylim(0, NA)</code></pre>
-<p><img src="2019_10_22_colony_etbr_dnase_analysis_files/figure-html/unnamed-chunk-6-2.png" width="672" style="display: block; margin: auto;" /></p>
-<p>Interesting, looks like there might be some differences. Let’s look at the data in terms of the retention ratios.</p>
+<p><img src="2019_10_22_colony_etbr_dnase_analysis_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Interesting, looks like there might be some differences, but not in the direction we expected. Let’s look at the data in terms of the retention ratios.</p>
 <pre class="r"><code>ggplot(df_dnase_ratio %&gt;% filter(strain == &quot;parWT&quot;), aes(x = treatment, 
     y = ret_ratio, fill = treatment)) + geom_jitter(shape = 21, 
     width = 0.1) + facet_wrap(~measured_phenazine, scales = &quot;free&quot;) + 
     ylim(0, NA)</code></pre>
 <p><img src="2019_10_22_colony_etbr_dnase_analysis_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Here the retention ratios all look pretty similar…if anything there was maybe an effect on PCA, which we do not expect with DNase.</p>
+</div>
+<div id="pelb" class="section level3">
+<h3>∆pelB</h3>
+<p>Let’s see if the pel mutant looks any different.</p>
 <pre class="r"><code>ggplot(df_dnase_conc %&gt;% filter(strain == &quot;dPEL&quot;), aes(x = treatment, 
     y = phz_conc, fill = treatment)) + geom_jitter(shape = 21, 
     width = 0.1) + facet_wrap(material ~ measured_phenazine, 
     scales = &quot;free&quot;) + ylim(0, NA)</code></pre>
 <p><img src="2019_10_22_colony_etbr_dnase_analysis_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Seems pretty similar to WT. Here’s the retention ratios:</p>
 <pre class="r"><code>ggplot(df_dnase_ratio %&gt;% filter(strain == &quot;dPEL&quot;), aes(x = treatment, 
     y = ret_ratio, fill = treatment)) + geom_jitter(shape = 21, 
     width = 0.1) + facet_wrap(~measured_phenazine, scales = &quot;free&quot;) + 
     ylim(0, NA)</code></pre>
 <p><img src="2019_10_22_colony_etbr_dnase_analysis_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>ggplot(df_dnase_conc, aes(x = strain, y = Amount, fill = treatment)) + 
-    geom_jitter(shape = 21, width = 0.1) + facet_wrap(material ~ 
-    measured_phenazine, scales = &quot;free&quot;) + ylim(0, NA)</code></pre>
-<p><img src="2019_10_22_colony_etbr_dnase_analysis_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>ggplot(df_dnase_ratio, aes(x = strain, y = ret_ratio, fill = treatment)) + 
-    geom_jitter(shape = 21, width = 0.1) + facet_wrap(~measured_phenazine, 
+<p>Same story as the WT…basically no differences. If anything more PYO was retained in the treated colony.</p>
+<p>This is pretty surprising, but basically the DNase either had no effect or not the same effect as before. I can think of three possible reasons:</p>
+<ol style="list-style-type: decimal">
+<li>This is a different DNase than used previously. I used a different DNase from sigma previously…I also mixed DNase with exonuclease at various points and maybe I forgot that I also added exo, which mediated the real effect?</li>
+<li>I tried to increase activity with MgSO4…perhaps that had a strong effect that confounded the results.</li>
+<li>There’s some difference in trying to DNase the parsek WT and pel strains compared to the DKNlab WT strain.</li>
+</ol>
+<p>I don’t know what the answer is, but it may be worth repeating the DNase experiment exactly as done previously.</p>
+</div>
+<div id="wt-vs.-pel" class="section level3">
+<h3>WT vs. ∆pel</h3>
+<p>Do our results conform to the past measurements of these strains?</p>
+<pre class="r"><code>ggplot(df_dnase_conc %&gt;% filter(treatment == &quot;none&quot;), aes(x = strain, 
+    y = Amount, fill = treatment)) + geom_jitter(shape = 21, 
+    width = 0.1) + facet_wrap(material ~ measured_phenazine, 
     scales = &quot;free&quot;) + ylim(0, NA)</code></pre>
+<p><img src="2019_10_22_colony_etbr_dnase_analysis_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Looks like there are some differences, let’s transform into ratios:</p>
+<pre class="r"><code>ggplot(df_dnase_ratio %&gt;% filter(treatment == &quot;none&quot;), aes(x = strain, 
+    y = ret_ratio, fill = treatment)) + geom_jitter(shape = 21, 
+    width = 0.1) + facet_wrap(~measured_phenazine, scales = &quot;free&quot;) + 
+    ylim(0, NA)</code></pre>
 <p><img src="2019_10_22_colony_etbr_dnase_analysis_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Again, very small differences, not what we saw before when measuring these colonies. It’s unclear if this is normal variation or this is due to the spotting of DNase and the MgSO4? It may be worth repeating these WT vs. ∆pel measurements under normal conditions again.</p>
+</div>
 </div>
 <div id="etbr-1" class="section level2">
 <h2>EtBr</h2>
+<p>Let’s go ahead and take a look at the ethidium bromide data:</p>
 <pre class="r"><code>df_etbr &lt;- read_csv(&quot;data/2019_10_22_colony_etbr_data.csv&quot;)
 
-ggplot(df_etbr, aes(x = factor(etbr_added_int), y = Amount, fill = factor(etbr_added_int))) + 
+df_etbr %&gt;% kable() %&gt;% kable_styling() %&gt;% scroll_box(height = &quot;300px&quot;)</code></pre>
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:300px; ">
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+measured_phenazine
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+strain
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+phz_added_uM
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+phz_added
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+etbr_added_uM
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+etbr_added_int
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+etbr
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+rep
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+RT
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Area
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Channel Name
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Amount
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+6.038
+</td>
+<td style="text-align:right;">
+348084
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+13.149
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2.846
+</td>
+<td style="text-align:right;">
+31
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.002
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+8.706
+</td>
+<td style="text-align:right;">
+517
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.039
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+6.034
+</td>
+<td style="text-align:right;">
+332025
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+12.542
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+3.015
+</td>
+<td style="text-align:right;">
+22
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+8.694
+</td>
+<td style="text-align:right;">
+614
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.047
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+6.039
+</td>
+<td style="text-align:right;">
+382146
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+14.435
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+2.974
+</td>
+<td style="text-align:right;">
+39
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.003
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+8.701
+</td>
+<td style="text-align:right;">
+436
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.033
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+10uM
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+6.042
+</td>
+<td style="text-align:right;">
+450658
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+17.023
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+10uM
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.088
+</td>
+<td style="text-align:right;">
+32
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.002
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+10uM
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+8.776
+</td>
+<td style="text-align:right;">
+319
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.024
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+10uM
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+6.045
+</td>
+<td style="text-align:right;">
+371913
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+14.049
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+10uM
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+3.118
+</td>
+<td style="text-align:right;">
+20
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+10uM
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+8.705
+</td>
+<td style="text-align:right;">
+309
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.024
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+10uM
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+6.048
+</td>
+<td style="text-align:right;">
+452176
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+17.081
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+10uM
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+2.947
+</td>
+<td style="text-align:right;">
+77
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.005
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+10uM
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+8.792
+</td>
+<td style="text-align:right;">
+361
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.028
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+100uM
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+6.046
+</td>
+<td style="text-align:right;">
+356788
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+13.477
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+100uM
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.100
+</td>
+<td style="text-align:right;">
+48
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.003
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+100uM
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+8.793
+</td>
+<td style="text-align:right;">
+493
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.038
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+100uM
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+6.024
+</td>
+<td style="text-align:right;">
+209776
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+7.924
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+100uM
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+3.079
+</td>
+<td style="text-align:right;">
+55
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.004
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+100uM
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+8.781
+</td>
+<td style="text-align:right;">
+610
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.047
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+100uM
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+6.054
+</td>
+<td style="text-align:right;">
+376108
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+14.207
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+100uM
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+2.715
+</td>
+<td style="text-align:right;">
+54
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.003
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+100uM
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+8.802
+</td>
+<td style="text-align:right;">
+582
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.044
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+500uM
+</td>
+<td style="text-align:right;">
+500
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+6.048
+</td>
+<td style="text-align:right;">
+243798
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+9.209
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+500uM
+</td>
+<td style="text-align:right;">
+500
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2.780
+</td>
+<td style="text-align:right;">
+79
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.005
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+500uM
+</td>
+<td style="text-align:right;">
+500
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+8.802
+</td>
+<td style="text-align:right;">
+1009
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.077
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+500uM
+</td>
+<td style="text-align:right;">
+500
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+6.057
+</td>
+<td style="text-align:right;">
+243376
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+9.193
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+500uM
+</td>
+<td style="text-align:right;">
+500
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+2.914
+</td>
+<td style="text-align:right;">
+83
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.005
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+500uM
+</td>
+<td style="text-align:right;">
+500
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+8.812
+</td>
+<td style="text-align:right;">
+590
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.045
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+500uM
+</td>
+<td style="text-align:right;">
+500
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+6.035
+</td>
+<td style="text-align:right;">
+260997
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+9.859
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+500uM
+</td>
+<td style="text-align:right;">
+500
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+2.654
+</td>
+<td style="text-align:right;">
+34
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.002
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+500uM
+</td>
+<td style="text-align:right;">
+500
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+8.795
+</td>
+<td style="text-align:right;">
+1608
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.123
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+6.037
+</td>
+<td style="text-align:right;">
+353
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+0.013
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2.942
+</td>
+<td style="text-align:right;">
+218
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.014
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+8.792
+</td>
+<td style="text-align:right;">
+808
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.062
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+6.045
+</td>
+<td style="text-align:right;">
+45
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+0.002
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.085
+</td>
+<td style="text-align:right;">
+45
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.003
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+8.869
+</td>
+<td style="text-align:right;">
+33920
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+2.588
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+3.091
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.003
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+8.872
+</td>
+<td style="text-align:right;">
+34694
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+2.647
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+3.141
+</td>
+<td style="text-align:right;">
+46
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.003
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+8.862
+</td>
+<td style="text-align:right;">
+36553
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+2.788
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+10uM
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2.784
+</td>
+<td style="text-align:right;">
+34
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.002
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+10uM
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+8.867
+</td>
+<td style="text-align:right;">
+32268
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+2.462
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+10uM
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+2.654
+</td>
+<td style="text-align:right;">
+28
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.002
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+10uM
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+8.872
+</td>
+<td style="text-align:right;">
+33605
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+2.564
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+10uM
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+2.663
+</td>
+<td style="text-align:right;">
+49
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.003
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+10uM
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+8.869
+</td>
+<td style="text-align:right;">
+33102
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+2.525
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+100uM
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+6.010
+</td>
+<td style="text-align:right;">
+21
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+100uM
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2.776
+</td>
+<td style="text-align:right;">
+48
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.003
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+100uM
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+8.859
+</td>
+<td style="text-align:right;">
+24916
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+1.901
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+100uM
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+6.133
+</td>
+<td style="text-align:right;">
+17
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+100uM
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+2.795
+</td>
+<td style="text-align:right;">
+54
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.003
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+100uM
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+8.870
+</td>
+<td style="text-align:right;">
+27055
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+2.064
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+100uM
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+2.917
+</td>
+<td style="text-align:right;">
+39
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.003
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+100uM
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+8.864
+</td>
+<td style="text-align:right;">
+24836
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+1.895
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+500uM
+</td>
+<td style="text-align:right;">
+500
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2.913
+</td>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.002
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+500uM
+</td>
+<td style="text-align:right;">
+500
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+8.874
+</td>
+<td style="text-align:right;">
+35586
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+2.715
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+500uM
+</td>
+<td style="text-align:right;">
+500
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+5.973
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+500uM
+</td>
+<td style="text-align:right;">
+500
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+2.696
+</td>
+<td style="text-align:right;">
+42
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.003
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+500uM
+</td>
+<td style="text-align:right;">
+500
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+8.872
+</td>
+<td style="text-align:right;">
+35579
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+2.714
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+500uM
+</td>
+<td style="text-align:right;">
+500
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+2.984
+</td>
+<td style="text-align:right;">
+43
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.003
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+500uM
+</td>
+<td style="text-align:right;">
+500
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+8.870
+</td>
+<td style="text-align:right;">
+36594
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+2.792
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+6.156
+</td>
+<td style="text-align:right;">
+147
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+0.006
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2.701
+</td>
+<td style="text-align:right;">
+143
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.009
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+8.765
+</td>
+<td style="text-align:right;">
+759
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.058
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5.986
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2.930
+</td>
+<td style="text-align:right;">
+7042
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.454
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+8.698
+</td>
+<td style="text-align:right;">
+996
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.076
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+5.916
+</td>
+<td style="text-align:right;">
+19
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+2.902
+</td>
+<td style="text-align:right;">
+6512
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.420
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+8.707
+</td>
+<td style="text-align:right;">
+1068
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.081
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+2.907
+</td>
+<td style="text-align:right;">
+6579
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.424
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+0uM
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+8.697
+</td>
+<td style="text-align:right;">
+1102
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.084
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+10uM
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2.915
+</td>
+<td style="text-align:right;">
+6397
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.413
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+10uM
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+8.690
+</td>
+<td style="text-align:right;">
+899
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.069
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+10uM
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+2.914
+</td>
+<td style="text-align:right;">
+6321
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.408
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+10uM
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+8.711
+</td>
+<td style="text-align:right;">
+980
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.075
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+10uM
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+2.912
+</td>
+<td style="text-align:right;">
+6623
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.427
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+10uM
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+8.706
+</td>
+<td style="text-align:right;">
+1076
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.082
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+100uM
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+6.090
+</td>
+<td style="text-align:right;">
+26
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+100uM
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2.909
+</td>
+<td style="text-align:right;">
+6223
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.402
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+100uM
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+8.896
+</td>
+<td style="text-align:right;">
+574
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.044
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+100uM
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+6.039
+</td>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+100uM
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+2.910
+</td>
+<td style="text-align:right;">
+6658
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.430
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+100uM
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+8.716
+</td>
+<td style="text-align:right;">
+491
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.037
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+100uM
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+2.911
+</td>
+<td style="text-align:right;">
+6127
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.395
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+100uM
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+8.911
+</td>
+<td style="text-align:right;">
+526
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.040
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+500uM
+</td>
+<td style="text-align:right;">
+500
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2.910
+</td>
+<td style="text-align:right;">
+8754
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.565
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+500uM
+</td>
+<td style="text-align:right;">
+500
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+8.919
+</td>
+<td style="text-align:right;">
+616
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.047
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+500uM
+</td>
+<td style="text-align:right;">
+500
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+2.934
+</td>
+<td style="text-align:right;">
+9064
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.585
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+500uM
+</td>
+<td style="text-align:right;">
+500
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+8.932
+</td>
+<td style="text-align:right;">
+540
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.041
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+500uM
+</td>
+<td style="text-align:right;">
+500
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+2.939
+</td>
+<td style="text-align:right;">
+7969
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.514
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+dPHZstar
+</td>
+<td style="text-align:left;">
+50uM
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+500uM
+</td>
+<td style="text-align:right;">
+500
+</td>
+<td style="text-align:left;">
+etbr
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+8.930
+</td>
+<td style="text-align:right;">
+570
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.043
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYO
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+6.132
+</td>
+<td style="text-align:right;">
+146
+</td>
+<td style="text-align:left;">
+313.0nm
+</td>
+<td style="text-align:right;">
+0.006
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.000
+</td>
+<td style="text-align:right;">
+79
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.005
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+blank
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+8.781
+</td>
+<td style="text-align:right;">
+678
+</td>
+<td style="text-align:left;">
+364.0nm
+</td>
+<td style="text-align:right;">
+0.052
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Here’s a first plot of the data:</p>
+<pre class="r"><code>ggplot(df_etbr, aes(x = factor(etbr_added_int), y = Amount, fill = factor(etbr_added_int))) + 
     geom_jitter(shape = 21, width = 0.1) + facet_wrap(~phz_added, 
     scales = &quot;free&quot;) + scale_fill_viridis_d()</code></pre>
-<p><img src="2019_10_22_colony_etbr_dnase_analysis_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="2019_10_22_colony_etbr_dnase_analysis_files/figure-html/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Everything looks pretty good, there are three points detected for each condition, any other time a phenazine was falsely detected its basically at zero. The values for the blanks are also near zero.</p>
+<p>Now let’s convert into biofilm concentrations and make our final plot:</p>
 <pre class="r"><code>df_etbr_conc &lt;- df_etbr %&gt;% filter(phz_added != &quot;blank&quot;) %&gt;% 
     filter(measured_phenazine == phz_added) %&gt;% mutate(phz_conc = Amount * 
-    2 * 800/60)
+    2 * 800/60) %&gt;% group_by(measured_phenazine, phz_added, etbr_added_uM) %&gt;% 
+    mutate(mean = mean(phz_conc))
 
 ggplot(df_etbr_conc, aes(x = factor(etbr_added_int), y = phz_conc, 
-    fill = factor(etbr_added_int))) + geom_jitter(shape = 21, 
+    fill = factor(etbr_added_int))) + geom_col(data = . %&gt;% filter(rep == 
+    &quot;1&quot;), aes(y = mean), fill = &quot;light gray&quot;) + geom_jitter(shape = 21, 
     width = 0.1) + facet_wrap(~phz_added, scales = &quot;free&quot;) + 
     scale_fill_viridis_d() + ylim(0, NA)</code></pre>
-<p><img src="2019_10_22_colony_etbr_dnase_analysis_files/figure-html/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="2019_10_22_colony_etbr_dnase_analysis_files/figure-html/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>First let’s look at the PCA. The only thing that jumps out is that the 500uM EtBr colony seems to have more PCA than the other conditions. This is not expected, but it may indecate that we are actually biasing that last sample by the way we are extracting, by resuspending the same amount of PCA in a smaller volume. However, a back of the envelope estimate is that the volume changed by ~ 15% and it looks more like a 30% difference here, so I don’t think that explains all of it.</p>
+<p>Anyway, it looks like the PCN colonies lose a little PCN as the etbr reaches 100, but then 500 shows no difference. PYO shows a pattern more similar to past data, but it’s still not perfect.</p>
 </div>
 </div>
 <div id="conclusions" class="section level1">
 <h1>Conclusions</h1>
+<p>Very little about these experimental results conformed to my expectations. It’s unclear whether this was due to changes in experimental setup or true variability in the results. It may be worth repeating these experiments again the way that they were done previously.</p>
+<p>Specific to the EtBr experiment, it may also be worth trying etbr concentrations lower than 500 or even 100. It’s not ideal that the colonies have a dramatically different morphology / texture…could suggest the etbr is doing something unintended.</p>
+<p>If you repeat the etbr experiment, perhaps try to resuspend the tough etbr colonies using the p1000, while the colony is still on the membrane in the tube. This would prevent any difference in processing involved in taking the colony / membrane out of the tube.</p>
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>## R version 3.5.3 (2019-03-11)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
