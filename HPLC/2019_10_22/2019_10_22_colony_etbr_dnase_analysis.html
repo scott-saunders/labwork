@@ -286,26 +286,26 @@ theme_set(theme_1())</code></pre>
 <pre class="r"><code>df_vol &lt;- read_csv(&quot;data/2019_10_22_colony_volumes.csv&quot;)
 
 df_vol %&gt;% kable() %&gt;% kable_styling() %&gt;% scroll_box(height = &quot;300px&quot;)</code></pre>
-<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:300px; ">
+<div style="border: 1px solid #ddd; padding: 5px; overflow-y: scroll; height:300px; ">
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:left;">
 strain
 </th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:left;">
 treatment
 </th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:left;">
 phz_added
 </th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:left;">
 etbr_added_uM
 </th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:right;">
 Replicate
 </th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:right;">
 Measured_Volume
 </th>
 </tr>
@@ -1302,38 +1302,38 @@ ggplot(df_vol %&gt;% filter(treatment == &quot;etbr&quot;), aes(x = etbr_added_u
 <pre class="r"><code>df_dnase &lt;- read_csv(&quot;data/2019_10_22_colony_dnase_data.csv&quot;)
 
 df_dnase %&gt;% kable() %&gt;% kable_styling() %&gt;% scroll_box(height = &quot;300px&quot;)</code></pre>
-<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:300px; ">
+<div style="border: 1px solid #ddd; padding: 5px; overflow-y: scroll; height:300px; ">
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:left;">
 measured_phenazine
 </th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:left;">
 strain
 </th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:left;">
 treatment
 </th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:left;">
 day
 </th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:left;">
 material
 </th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:right;">
 rep
 </th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:right;">
 RT
 </th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:right;">
 Area
 </th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:left;">
 Channel Name
 </th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:right;">
 Amount
 </th>
 </tr>
@@ -3892,6 +3892,7 @@ ggplot(df_dnase_conc %&gt;% filter(strain == &quot;parWT&quot;), aes(x = treatme
 <p>Let’s go ahead and take a look at the ethidium bromide data:</p>
 <pre class="r"><code>df_etbr &lt;- read_csv(&quot;data/2019_10_22_colony_etbr_data.csv&quot;)
 
+<<<<<<< HEAD
 df_etbr %&gt;% kable() %&gt;% kable_styling() %&gt;% scroll_box(height = &quot;300px&quot;)</code></pre>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:300px; ">
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -7784,6 +7785,12 @@ blank
 <p><img src="2019_10_22_colony_etbr_dnase_analysis_files/figure-html/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Everything looks pretty good, there are three points detected for each condition, any other time a phenazine was falsely detected its basically at zero. The values for the blanks are also near zero.</p>
 <p>Now let’s convert into biofilm concentrations and make our final plot:</p>
+=======
+ggplot(df_etbr, aes(x = factor(etbr_added_int), y = Amount, fill = factor(etbr_added_int))) + 
+    geom_jitter(shape = 21, width = 0.1) + facet_wrap(~phz_added, 
+    scales = &quot;free&quot;) + scale_fill_viridis_d()</code></pre>
+<p><img src="2019_10_22_colony_etbr_dnase_analysis_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+>>>>>>> 2dc5af45939f130d8a389a2be60f03ef33d678ce
 <pre class="r"><code>df_etbr_conc &lt;- df_etbr %&gt;% filter(phz_added != &quot;blank&quot;) %&gt;% 
     filter(measured_phenazine == phz_added) %&gt;% mutate(phz_conc = Amount * 
     2 * 800/60) %&gt;% group_by(measured_phenazine, phz_added, etbr_added_uM) %&gt;% 
@@ -7791,12 +7798,19 @@ blank
 
 ggplot(df_etbr_conc, aes(x = factor(etbr_added_int), y = phz_conc, 
     fill = factor(etbr_added_int))) + geom_col(data = . %&gt;% filter(rep == 
+<<<<<<< HEAD
     &quot;1&quot;), aes(y = mean), fill = &quot;light gray&quot;) + geom_jitter(shape = 21, 
     width = 0.1) + facet_wrap(~phz_added, scales = &quot;free&quot;) + 
     scale_fill_viridis_d() + ylim(0, NA)</code></pre>
 <p><img src="2019_10_22_colony_etbr_dnase_analysis_files/figure-html/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>First let’s look at the PCA. The only thing that jumps out is that the 500uM EtBr colony seems to have more PCA than the other conditions. This is not expected, but it may indecate that we are actually biasing that last sample by the way we are extracting, by resuspending the same amount of PCA in a smaller volume. However, a back of the envelope estimate is that the volume changed by ~ 15% and it looks more like a 30% difference here, so I don’t think that explains all of it.</p>
 <p>Anyway, it looks like the PCN colonies lose a little PCN as the etbr reaches 100, but then 500 shows no difference. PYO shows a pattern more similar to past data, but it’s still not perfect.</p>
+=======
+    1), aes(y = mean), fill = &quot;light gray&quot;) + geom_jitter(shape = 21, 
+    width = 0.1) + facet_wrap(~phz_added, scales = &quot;free&quot;) + 
+    scale_fill_viridis_d() + ylim(0, NA)</code></pre>
+<p><img src="2019_10_22_colony_etbr_dnase_analysis_files/figure-html/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+>>>>>>> 2dc5af45939f130d8a389a2be60f03ef33d678ce
 </div>
 </div>
 <div id="conclusions" class="section level1">
@@ -7805,7 +7819,7 @@ ggplot(df_etbr_conc, aes(x = factor(etbr_added_int), y = phz_conc,
 <p>Specific to the EtBr experiment, it may also be worth trying etbr concentrations lower than 500 or even 100. It’s not ideal that the colonies have a dramatically different morphology / texture…could suggest the etbr is doing something unintended.</p>
 <p>If you repeat the etbr experiment, perhaps try to resuspend the tough etbr colonies using the p1000, while the colony is still on the membrane in the tube. This would prevent any difference in processing involved in taking the colony / membrane out of the tube.</p>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.5.3 (2019-03-11)
+<pre><code>## R version 3.5.2 (2018-12-20)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
 ## Running under: macOS Mojave 10.14.6
 ## 
@@ -7820,25 +7834,25 @@ ggplot(df_etbr_conc, aes(x = factor(etbr_added_int), y = phz_conc,
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] kableExtra_1.1.0  knitr_1.23        viridis_0.5.1    
-##  [4] viridisLite_0.3.0 cowplot_0.9.4     forcats_0.4.0    
-##  [7] stringr_1.4.0     dplyr_0.8.1       purrr_0.3.2      
-## [10] readr_1.3.1       tidyr_0.8.3       tibble_2.1.3     
-## [13] ggplot2_3.2.1     tidyverse_1.2.1  
+##  [1] kableExtra_1.0.1  knitr_1.23        viridis_0.5.1    
+##  [4] viridisLite_0.3.0 cowplot_0.9.4     forcats_0.3.0    
+##  [7] stringr_1.3.1     dplyr_0.8.1       purrr_0.2.5      
+## [10] readr_1.3.1       tidyr_0.8.2       tibble_2.1.3     
+## [13] ggplot2_3.2.0     tidyverse_1.2.1  
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_0.2.5 xfun_0.7         haven_2.1.0      lattice_0.20-38 
-##  [5] colorspace_1.4-1 generics_0.0.2   htmltools_0.3.6  yaml_2.2.0      
-##  [9] rlang_0.4.0      pillar_1.4.2     glue_1.3.1       withr_2.1.2     
-## [13] modelr_0.1.4     readxl_1.3.1     munsell_0.5.0    gtable_0.3.0    
-## [17] cellranger_1.1.0 rvest_0.3.4      evaluate_0.14    labeling_0.3    
-## [21] highr_0.8        broom_0.5.2      Rcpp_1.0.2       scales_1.0.0    
-## [25] backports_1.1.4  formatR_1.7      webshot_0.5.1    jsonlite_1.6    
-## [29] gridExtra_2.3    hms_0.4.2        digest_0.6.21    stringi_1.4.3   
-## [33] grid_3.5.3       cli_1.1.0        tools_3.5.3      magrittr_1.5    
-## [37] lazyeval_0.2.2   crayon_1.3.4     pkgconfig_2.0.3  xml2_1.2.0      
+##  [1] tidyselect_0.2.5 xfun_0.7         haven_2.0.0      lattice_0.20-38 
+##  [5] colorspace_1.4-0 generics_0.0.2   htmltools_0.3.6  yaml_2.2.0      
+##  [9] rlang_0.4.0      pillar_1.3.1     glue_1.3.1       withr_2.1.2     
+## [13] modelr_0.1.2     readxl_1.2.0     munsell_0.5.0    gtable_0.2.0    
+## [17] cellranger_1.1.0 rvest_0.3.2      evaluate_0.14    labeling_0.3    
+## [21] highr_0.7        broom_0.5.1      Rcpp_1.0.1       scales_1.0.0    
+## [25] backports_1.1.3  formatR_1.5      webshot_0.5.1    jsonlite_1.6    
+## [29] gridExtra_2.3    hms_0.4.2        digest_0.6.18    stringi_1.2.4   
+## [33] grid_3.5.2       cli_1.1.0        tools_3.5.2      magrittr_1.5    
+## [37] lazyeval_0.2.1   crayon_1.3.4     pkgconfig_2.0.2  xml2_1.2.0      
 ## [41] lubridate_1.7.4  assertthat_0.2.1 rmarkdown_1.13   httr_1.4.0      
-## [45] rstudioapi_0.10  R6_2.4.0         nlme_3.1-137     compiler_3.5.3</code></pre>
+## [45] rstudioapi_0.9.0 R6_2.4.0         nlme_3.1-140     compiler_3.5.2</code></pre>
 </div>
 
 

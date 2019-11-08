@@ -264,11 +264,19 @@ df_etbr_conc <- df_etbr %>%
   filter( phz_added != 'blank' ) %>% 
   filter(measured_phenazine == phz_added) %>% 
   mutate(phz_conc = Amount * 2 * 800 / 60) %>% 
+<<<<<<< HEAD
   group_by(measured_phenazine,phz_added, etbr_added_uM ) %>% 
   mutate(mean = mean(phz_conc))
 
 ggplot(df_etbr_conc, aes(x = factor(etbr_added_int), y = phz_conc, fill = factor(etbr_added_int) )) + 
   geom_col(data = . %>% filter(rep == '1'), aes(y = mean), fill = 'light gray')+
+=======
+  group_by(measured_phenazine, phz_added, etbr_added_uM) %>% 
+  mutate(mean = mean(phz_conc))
+
+ggplot(df_etbr_conc, aes(x = factor(etbr_added_int), y = phz_conc, fill = factor(etbr_added_int) )) + 
+  geom_col(data = . %>% filter(rep == 1), aes(y = mean), fill = 'light gray')+
+>>>>>>> 2dc5af45939f130d8a389a2be60f03ef33d678ce
   geom_jitter(shape = 21, width =0.1) + 
   facet_wrap(~phz_added, scales = 'free') + 
   scale_fill_viridis_d() + ylim(0,NA)
@@ -281,11 +289,15 @@ Anyway, it looks like the PCN colonies lose a little PCN as the etbr reaches 100
 
 # Conclusions
 
+<<<<<<< HEAD
 Very little about these experimental results conformed to my expectations. It's unclear whether this was due to changes in experimental setup or true variability in the results. It may be worth repeating these experiments again the way that they were done previously.
 
 Specific to the EtBr experiment, it may also be worth trying etbr concentrations lower than 500 or even 100. It's not ideal that the colonies have a dramatically different morphology / texture...could suggest the etbr is doing something unintended.
 
 If you repeat the etbr experiment, perhaps try to resuspend the tough etbr colonies using the p1000, while the colony is still on the membrane in the tube. This would prevent any difference in processing involved in taking the colony / membrane out of the tube.
+=======
+Next time pipette and disperse EtBr colonies without removing membrane....?
+>>>>>>> 2dc5af45939f130d8a389a2be60f03ef33d678ce
 
 
 ```{r}

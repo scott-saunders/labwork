@@ -296,6 +296,8 @@ ggplot(df_kin %>% filter(wavelength == 'abs360'), aes(x = minutes, y = intensity
 
 ### abs690
 ```{r}
+df_kin %>% filter(wavelength == 'abs690') %>% group_by(red_ox) %>% summarise(mean_int = mean(intensity, na.rm = T))
+
 ggplot(df_kin %>% filter(wavelength == 'abs690'), aes(x = minutes, y = intensity)) + 
   geom_point() + geom_smooth(method = 'lm', se = F) + 
   facet_grid(red~ox)
