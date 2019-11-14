@@ -25,8 +25,114 @@ library(kableExtra)
 knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center", fig.retina = 2)
 
 source("../../IDA/tools/plotting_tools.R")
+source("../../IDA/tools/echem_processing_tools.R")
 
 theme_set(theme_1())
 ```
 
 # Intro
+
+# Results
+
+## import
+
+```{r}
+
+import <- function(filenames, file_paths, data_cols = c('E', 'i1', 'i2', 't'), skip_rows=18, n_max = 100) {
+  
+  # Imports a set of echem files to a nested data frame to extract metadata from filenames
+  # Provide the filenames and the full file paths, the columns of the text file data and
+  # how many rows to skip before reading the data.
+  
+  files_df <- data_frame(filename = filenames) %>% 
+    mutate(file_contents = map(file_paths, ~ read_csv(.,col_names=data_cols, skip = skip_rows , n_max = n_max))) 
+  
+  files_df
+}
+
+unnest_df <- function(df, filename_cols,rep=F, PHZadded = T) {
+  
+  # Unnests a nested df from echem_import()
+  # provide the df and the metadata from the filename to become columns
+  
+df_unnested <- df %>% 
+  unnest(file_contents)%>% 
+  separate(filename, filename_cols, sep='_')
+
+  if(rep) {
+    df_unnested <- df_unnested %>% 
+      mutate(rep=as.integer(str_extract(rep,"^[0-9]+"))) 
+  }
+
+  if(PHZadded) {
+    df_unnested <- df_unnested %>% 
+      mutate(PHZaddedInt=as.integer(str_extract(PHZadded,"^[0-9]+")))
+  }
+
+df_unnested
+
+}
+
+import_to_df <- function(filenames, 
+  file_paths, 
+  data_cols = c('E', 'i1', 'i2', 't'), 
+  skip_rows=18,
+  n_max = 100,
+  filename_cols,
+  rep=F, PHZadded = T){
+  
+  # Combine echem_import() and echem_unnest_df() into one function.
+  
+  df <- import(filenames,  file_paths, data_cols, skip_rows, n_max)
+  
+  df_unnested <- unnest_df(df, filename_cols, rep, PHZadded)
+  
+  df_unnested
+  
+}
+```
+
+```{r}
+
+
+#divide swv into rep and subrep and then subtract 1 from rep to match with GC
+paths <-  dir(path='data', pattern = ".+[csv]$",recursive = T,full.names = T)
+
+filenames <- basename(paths)
+
+data_cols <-  c('t','blank','abs690')
+
+filename_cols = c('year','month','day','PHZox','ox','PHZred','red','rep')
+
+skip_rows=48 # or 48
+n_max = 61
+  
+
+df <- import_to_df(filenames = filenames, 
+                                       file_paths = paths, 
+                                       data_cols = data_cols, 
+                                       skip_rows = skip_rows, n_max = n_max,
+                                       filename_cols = filename_cols,
+                                       rep = T, PHZadded = F) %>% 
+  mutate(phz_redox = paste(PHZox, ox, ' + ', PHZred, red, sep = ''))
+
+```
+
+```{r}
+ggplot(df, aes(x = t, y = abs690)) + geom_point(shape = 21) + facet_wrap(PHZred~PHZox)
+
+ggplot(df, aes(x = t, y = abs690, color = PHZred)) + geom_point(shape = 21)
+
+ggplot(df %>% filter(abs690>-0.01), aes(x = t, y = abs690, color = PHZred)) + geom_point(shape = 21)
+
+ggplot(df %>% filter(abs690>0.01 & abs690<0.4), aes(x = t, y = abs690, color = PHZred)) + geom_point(shape = 21) + geom_smooth()
+
+```
+
+```{r}
+
+ggplot(df %>% filter(abs690>-0.01), aes(x = t, y = abs690, color = phz_redox)) + 
+  geom_point(shape = 21, alpha = 0.25) + 
+  geom_smooth(data = . %>% filter(abs690>0.01 & abs690<0.4)) + 
+  labs(x = 'Time (sec)',y = 'Absorbance 690nm')
+```
