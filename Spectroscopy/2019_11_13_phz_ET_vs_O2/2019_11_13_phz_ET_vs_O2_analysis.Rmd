@@ -1,0 +1,32 @@
+---
+title: "Interphenazine ET vs. O2 reactions"
+author: "Scott Saunders"
+fontsize: 12pt
+date: '11_13_19'
+output:
+  html_document:
+    theme: cosmo
+    code_folding: hide
+    self_contained: no
+    toc: yes
+  github_document:
+    pandoc_args: --webtex
+---
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(viridis)
+library(knitr)
+library(kableExtra)
+
+
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center", fig.retina = 2)
+
+source("../../IDA/tools/plotting_tools.R")
+
+theme_set(theme_1())
+```
+
+# Intro
