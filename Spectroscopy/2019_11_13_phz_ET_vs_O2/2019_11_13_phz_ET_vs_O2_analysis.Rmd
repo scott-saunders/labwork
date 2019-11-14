@@ -1,16 +1,18 @@
 ---
 title: "Interphenazine ET vs. O2 reactions"
 author: "Scott Saunders"
-fontsize: 12pt
-date: '11_13_19'
+date: "11_13_19"
 output:
   html_document:
-    theme: cosmo
     code_folding: hide
     self_contained: no
+    theme: cosmo
+    toc: yes
+  pdf_document:
     toc: yes
   github_document:
     pandoc_args: --webtex
+fontsize: 12pt
 ---
 
 ```{r setup, echo=T, message=FALSE, warning=FALSE}
@@ -20,80 +22,63 @@ library(viridis)
 library(knitr)
 library(kableExtra)
 
-
-
 knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center", fig.retina = 2)
 
 source("../../IDA/tools/plotting_tools.R")
-source("../../IDA/tools/echem_processing_tools.R")
 
 theme_set(theme_1())
 ```
 
 # Intro
 
+This experiment was designed to test a specific point brought up in the final figure of the paper, where we propose a model for phenazine electron transfer. Specifically the question is: Do reduced PCA and PCN react more quickly with PYOox or oxygen?
+
+If the inter phenazine reactions are faster, then most of the O2 reduction will be completed by PYOred, which actually has the fastest O2 reduction rate of all the phenazines. That seems inherently efficient and is satisfying. Furthermore, because PYOox seems to be retained, it may serve as a very effective barrier to quickly reoxidize PCA and PCN, promoting their back diffusion (to the interior) before they diffuse very far into the oxic region and beyond.
+
+The design of these experiments was to see if reduced PCA/PCN was mixed with PYOox under oxic conditions if PYOred was generated in this reaction. If significant PYOred accumulates, it suggests that there is a separation of time scales where the interphenazine reaction is indeed fast compared to O2 reduction by the phenazines.
+
+The approach was to monitor absorbance at 690nm at fast time intervals, since this wavelength is specific to PYO and varies in the oxidized and reduced states (Oxidized has higher 690 abs). 
+
+# Methods
+
+These reactions were performed in plastic cuvettes in the old aerobic spec that people use for od500 etc. This instrument was capable of recording one cuvette at 1.5sec intervals at 690nm. This setup was also convenient, because a baseline of the oxidized phenazine (or PBS) was acquired for 10 seconds, then the reduced phenazine (or PBS) was injected directly into the cuvette. This instrument simply covers the cuvette with a door that I could open and close rapidly (as opposed to the plate reader). This meant that I could record data before and after the reaction started, which is important because the O2 reaction with PYO does happen fast. 
+
+These experiments used the same reduced phenazines stocks made for the earlier inter phenazine experiments. Therefore these stocks were 100uM reduced (electrochemically) PYO, PCA or PCN (or PBS stored in the same way) and stored anoxically in sealed serum bottles.
+
+The following reactions were performed in triplicate with 90 second acquisitions:
+
+1. PYO_ox + PBS
+2. PBS + PYO_red
+3. PYO_ox + PCA_red
+4. PYO_ox + PCN_red
+
+I also acquired PCA_red and PCN_red by themselves to confirm that they do not absorb at 690. That would be:
+
+* PBS + PCA_red
+* PBS + PCN_red
+
+Whenever PBS was used in place of the oxidized phenazine an aerobic PBS solution was used and whenever PBS was used in place of the reduced phenazine an anoxic PBS solution from a serum bottle was used. 
+
+Note that the reduced phenazine stocks looked reasonably similar to the last time, but I did notice that there are particles in the PYOred stock and it is not perfectly clear. This matches with previous results that some of the PYO may have crashed out of solution and some of it may be oxidized. Regardless this stock contains significant reduced PYO that has worked for other experiments and I think it has been sufficient.
+
+Reduced phenazines were drawn from the serum bottles using a 1mL syringe with a needle. This is not as accurate as pipetting, and occasionally there were bubbles that could not be removed, so I estimated 500uL as best I could.
+
 # Results
+
+First let's import the data.
 
 ## import
 
+There are 12 csv files that comprise the triplicate data, so I figured I would just adapt the echem import scripts. This worked well enough and maybe useful for other things - these functions are in the following script:
+
 ```{r}
 
-import <- function(filenames, file_paths, data_cols = c('E', 'i1', 'i2', 't'), skip_rows=18, n_max = 100) {
-  
-  # Imports a set of echem files to a nested data frame to extract metadata from filenames
-  # Provide the filenames and the full file paths, the columns of the text file data and
-  # how many rows to skip before reading the data.
-  
-  files_df <- data_frame(filename = filenames) %>% 
-    mutate(file_contents = map(file_paths, ~ read_csv(.,col_names=data_cols, skip = skip_rows , n_max = n_max))) 
-  
-  files_df
-}
-
-unnest_df <- function(df, filename_cols,rep=F, PHZadded = T) {
-  
-  # Unnests a nested df from echem_import()
-  # provide the df and the metadata from the filename to become columns
-  
-df_unnested <- df %>% 
-  unnest(file_contents)%>% 
-  separate(filename, filename_cols, sep='_')
-
-  if(rep) {
-    df_unnested <- df_unnested %>% 
-      mutate(rep=as.integer(str_extract(rep,"^[0-9]+"))) 
-  }
-
-  if(PHZadded) {
-    df_unnested <- df_unnested %>% 
-      mutate(PHZaddedInt=as.integer(str_extract(PHZadded,"^[0-9]+")))
-  }
-
-df_unnested
-
-}
-
-import_to_df <- function(filenames, 
-  file_paths, 
-  data_cols = c('E', 'i1', 'i2', 't'), 
-  skip_rows=18,
-  n_max = 100,
-  filename_cols,
-  rep=F, PHZadded = T){
-  
-  # Combine echem_import() and echem_unnest_df() into one function.
-  
-  df <- import(filenames,  file_paths, data_cols, skip_rows, n_max)
-  
-  df_unnested <- unnest_df(df, filename_cols, rep, PHZadded)
-  
-  df_unnested
-  
-}
+source("text_file_import.R")
 ```
 
-```{r}
+Now let's setup the filenames, data columns etc, and we can go ahead and import and view the dataframe:
 
+```{r}
 
 #divide swv into rep and subrep and then subtract 1 from rep to match with GC
 paths <-  dir(path='data', pattern = ".+[csv]$",recursive = T,full.names = T)
@@ -116,18 +101,43 @@ df <- import_to_df(filenames = filenames,
                                        rep = T, PHZadded = F) %>% 
   mutate(phz_redox = paste(PHZox, ox, ' + ', PHZred, red, sep = ''))
 
+df %>% kable() %>% kable_styling() %>% scroll_box(height = '300px')
+
 ```
+
+<br>
+
+Now let's take a first look at all of the data:
 
 ```{r}
-ggplot(df, aes(x = t, y = abs690)) + geom_point(shape = 21) + facet_wrap(PHZred~PHZox)
 
-ggplot(df, aes(x = t, y = abs690, color = PHZred)) + geom_point(shape = 21)
-
-ggplot(df %>% filter(abs690>-0.01), aes(x = t, y = abs690, color = PHZred)) + geom_point(shape = 21)
-
-ggplot(df %>% filter(abs690>0.01 & abs690<0.4), aes(x = t, y = abs690, color = PHZred)) + geom_point(shape = 21) + geom_smooth()
+ggplot(df, aes(x = t, y = abs690)) + geom_point(shape = 21) + facet_wrap(~phz_redox)
 
 ```
+
+
+Overall, the triplicates seem to be pretty consistent. Remember that I manually added the reduced phenazine, so my timing was pretty good!
+
+Note in each plot there are essentially 3 stages:
+
+1. 10 seconds of background (either PYOox or PBS)
+2. Negative values occur for ~4 seconds when I open the lid over the cuvette and inject the reduced PHZ.
+3. The reaction proceeds and we can observe it accurately as soon as I close the lid again.
+
+Notice the slight change following addition of PBS to oxidized PYO. I think this is essentially the disturbance / mixing effect, which is quite small. For all three of the other conditions we can clearly see that something happens.
+
+Already, this makes the point, adding PCA or PCN reduced to PYOox generates significant PYOred that then reacts with the O2.
+
+Now let's compare them directly:
+
+```{r}
+ggplot(df, aes(x = t, y = abs690, color = phz_redox)) + geom_point(shape = 21)
+
+```
+
+Ok, from this view the reactions seem to proceed quite similarly. Perhaps there's some subtle difference, but it's hard to tell. Interestingly, the only clear difference is that the PBS + PYOred seems to reach a lower abs690 than the other conditions. I think this is a result of the PYOred stock, which is probably less than 100uM, because something crashed out. Further the PYOred alone starts at a higher 690 value, which may indicate that not all of it is reduced. Regardless, everything looks pretty much as expected. 
+
+Let's make a prettier plot:
 
 ```{r}
 
@@ -135,4 +145,20 @@ ggplot(df %>% filter(abs690>-0.01), aes(x = t, y = abs690, color = phz_redox)) +
   geom_point(shape = 21, alpha = 0.25) + 
   geom_smooth(data = . %>% filter(abs690>0.01 & abs690<0.4)) + 
   labs(x = 'Time (sec)',y = 'Absorbance 690nm')
+```
+
+It's a good start for now.
+
+**import PCAred and PCNred** to show background here:
+
+# Conclusions
+
+## Next steps
+
+**What is the effect of ctDNA?**
+
+-------
+
+```{r}
+sessionInfo()
 ```
