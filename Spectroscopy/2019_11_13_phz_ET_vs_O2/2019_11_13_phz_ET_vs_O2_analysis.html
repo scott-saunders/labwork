@@ -247,7 +247,7 @@ theme_set(theme_1())</code></pre>
 <div id="methods" class="section level1">
 <h1>Methods</h1>
 <p>These reactions were performed in plastic cuvettes in the old aerobic spec that people use for od500 etc. This instrument was capable of recording one cuvette at 1.5sec intervals at 690nm. This setup was also convenient, because a baseline of the oxidized phenazine (or PBS) was acquired for 10 seconds, then the reduced phenazine (or PBS) was injected directly into the cuvette. This instrument simply covers the cuvette with a door that I could open and close rapidly (as opposed to the plate reader). This meant that I could record data before and after the reaction started, which is important because the O2 reaction with PYO does happen fast.</p>
-<p>These experiments used the same reduced phenazines stocks made for the earlier inter phenazine experiments. Therefore these stocks were 100uM reduced (electrochemically) PYO, PCA or PCN (or PBS stored in the same way) and stored anoxically in sealed serum bottles.</p>
+<p>These experiments used the same reduced phenazines stocks made for the earlier inter phenazine experiments. Therefore these stocks were 100uM reduced (electrochemically) PYO, PCA or PCN (or PBS stored in the same way) and stored anoxically in sealed serum bottles. Oxidized PYO was freshly made 100uM stock. Everything was done in PBS pH 7.0, 50mM NaCl.</p>
 <p>The following reactions were performed in triplicate with 90 second acquisitions:</p>
 <ol style="list-style-type: decimal">
 <li>PYO_ox + PBS</li>
@@ -294,49 +294,4685 @@ df &lt;- import_to_df(filenames = filenames, file_paths = paths,
     mutate(phz_redox = paste(PHZox, ox, &quot; + &quot;, PHZred, red, sep = &quot;&quot;))
 
 df %&gt;% kable() %&gt;% kable_styling() %&gt;% scroll_box(height = &quot;300px&quot;)</code></pre>
-<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:300px; ">
+<div style="border: 1px solid #ddd; padding: 5px; overflow-y: scroll; height:300px; ">
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:left;">
 year
 </th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:left;">
 month
 </th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:left;">
 day
 </th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:left;">
 PHZox
 </th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:left;">
 ox
 </th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:left;">
 PHZred
 </th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:left;">
 red
 </th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:right;">
 rep
 </th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:right;">
 t
 </th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:left;">
 blank
 </th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:right;">
 abs690
 </th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+<th style="text-align:left;">
 phz_redox
 </th>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0006
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0006
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+4.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0006
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+6.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0006
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+9.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+10.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+12.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+-0.3000
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+13.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+-0.3000
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+15.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+-0.3000
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+16.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+-0.0017
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+18.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0003
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+19.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+21.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0003
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+22.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0003
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+24.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0003
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+25.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0006
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+27.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0006
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+28.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0006
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+30.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+31.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+33.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+34.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0003
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+36.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0006
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+37.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+39.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+40.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0006
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+42.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+43.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+45.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+46.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+48.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0003
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+49.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0006
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+51.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0006
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+52.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+54.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+55.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+57.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+58.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+60.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+61.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0012
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+63.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+64.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0006
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+66.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+67.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+69.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0012
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+70.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0012
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+72.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+73.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+75.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+76.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+78.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0012
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+79.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+81.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+82.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0006
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+84.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0006
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+85.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0006
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+87.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+88.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+90.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCAred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0006
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+4.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0006
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+6.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0006
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+9.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+10.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0012
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+12.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+-0.3000
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+13.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+-0.3000
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+15.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+-0.1339
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+16.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0026
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+18.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0035
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+19.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+21.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+22.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0006
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+24.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0006
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+25.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+27.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+28.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0006
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+30.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0006
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+31.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0006
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+33.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0006
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+34.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+36.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+37.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+39.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+40.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+42.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0012
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+43.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+45.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0012
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+46.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0006
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+48.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+49.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0006
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+51.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+52.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+54.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+55.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+57.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+58.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+60.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+61.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0012
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+63.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0012
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+64.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0006
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+66.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+67.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+69.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+70.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+72.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0012
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+73.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0012
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+75.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0012
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+76.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0014
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+78.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+79.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+81.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+82.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+84.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+85.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+87.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+88.5
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+PBS
+</td>
+<td style="text-align:left;">
+ox
+</td>
+<td style="text-align:left;">
+PCN
+</td>
+<td style="text-align:left;">
+red
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+90.0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:left;">
+PBSox + PCNred
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 2019
@@ -28180,18 +32816,20 @@ PYOox + PCNred
     geom_smooth(data = . %&gt;% filter(abs690 &gt; 0.01 &amp; abs690 &lt; 
         0.4)) + labs(x = &quot;Time (sec)&quot;, y = &quot;Absorbance 690nm&quot;)</code></pre>
 <p><img src="2019_11_13_phz_ET_vs_O2_analysis_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>It’s a good start for now.</p>
-<p><strong>import PCAred and PCNred</strong> to show background here:</p>
+<p>Looks pretty clear to me. I’ll have to figure out the clearest way to explain the different stages of the experiment in figure form.</p>
 </div>
 </div>
 <div id="conclusions" class="section level1">
 <h1>Conclusions</h1>
+<p>This experiment gave very clear results: PYOred is generated when PYOox is incubated with PCA/PCNred and O2. Then PYOred reacts with O2. This suggests that the interphenazine ET step is much faster than any of the O2 reduction steps and provides support for the model as I have drawn in the paper.</p>
+<p>It seems that the phenazine ET is essentially intstantaneous on this timescale, if there was some competition I think we would see less PYOred produced and perhaps a perceived slower rate of O2 reduction, as reduced PYO was continuously generated on the same time scale….?</p>
 <div id="next-steps" class="section level2">
 <h2>Next steps</h2>
 <p><strong>What is the effect of ctDNA?</strong></p>
+<p>Another way we could potentially look at this is incubate reduced PCA with oxygen and watch it lose fluorescence as it becomes oxidized. I would assume that the oxidation rate would be much faster when PYOox is added (essentially instantaneous), although then we would get PYOred fluorescence briefly, so make sure they don’t cross talk in the fluorescence channels. I’m not sure this is really necessary, since I’ve already collected data showing that PCAred is oxidized by PYOox…</p>
 <hr />
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.5.3 (2019-03-11)
+<pre><code>## R version 3.5.2 (2018-12-20)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
 ## Running under: macOS Mojave 10.14.6
 ## 
@@ -28206,25 +32844,25 @@ PYOox + PCNred
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] kableExtra_1.1.0  knitr_1.23        viridis_0.5.1    
-##  [4] viridisLite_0.3.0 cowplot_0.9.4     forcats_0.4.0    
-##  [7] stringr_1.4.0     dplyr_0.8.1       purrr_0.3.2      
-## [10] readr_1.3.1       tidyr_0.8.3       tibble_2.1.3     
-## [13] ggplot2_3.2.1     tidyverse_1.2.1  
+##  [1] kableExtra_1.0.1  knitr_1.23        viridis_0.5.1    
+##  [4] viridisLite_0.3.0 cowplot_0.9.4     forcats_0.3.0    
+##  [7] stringr_1.3.1     dplyr_0.8.1       purrr_0.2.5      
+## [10] readr_1.3.1       tidyr_0.8.2       tibble_2.1.3     
+## [13] ggplot2_3.2.0     tidyverse_1.2.1  
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_0.2.5 xfun_0.7         haven_2.1.0      lattice_0.20-38 
-##  [5] colorspace_1.4-1 generics_0.0.2   htmltools_0.3.6  yaml_2.2.0      
-##  [9] rlang_0.4.0      pillar_1.4.2     glue_1.3.1       withr_2.1.2     
-## [13] modelr_0.1.4     readxl_1.3.1     munsell_0.5.0    gtable_0.3.0    
-## [17] cellranger_1.1.0 rvest_0.3.4      evaluate_0.14    labeling_0.3    
-## [21] highr_0.8        broom_0.5.2      Rcpp_1.0.2       scales_1.0.0    
-## [25] backports_1.1.4  formatR_1.7      webshot_0.5.1    jsonlite_1.6    
-## [29] gridExtra_2.3    hms_0.4.2        digest_0.6.21    stringi_1.4.3   
-## [33] grid_3.5.3       cli_1.1.0        tools_3.5.3      magrittr_1.5    
-## [37] lazyeval_0.2.2   crayon_1.3.4     pkgconfig_2.0.3  xml2_1.2.0      
+##  [1] tidyselect_0.2.5 xfun_0.7         haven_2.0.0      lattice_0.20-38 
+##  [5] colorspace_1.4-0 generics_0.0.2   htmltools_0.3.6  yaml_2.2.0      
+##  [9] rlang_0.4.0      pillar_1.3.1     glue_1.3.1       withr_2.1.2     
+## [13] modelr_0.1.2     readxl_1.2.0     munsell_0.5.0    gtable_0.2.0    
+## [17] cellranger_1.1.0 rvest_0.3.2      evaluate_0.14    labeling_0.3    
+## [21] highr_0.7        broom_0.5.1      Rcpp_1.0.1       scales_1.0.0    
+## [25] backports_1.1.3  formatR_1.5      webshot_0.5.1    jsonlite_1.6    
+## [29] gridExtra_2.3    hms_0.4.2        digest_0.6.18    stringi_1.2.4   
+## [33] grid_3.5.2       cli_1.1.0        tools_3.5.2      magrittr_1.5    
+## [37] lazyeval_0.2.1   crayon_1.3.4     pkgconfig_2.0.2  xml2_1.2.0      
 ## [41] lubridate_1.7.4  assertthat_0.2.1 rmarkdown_1.13   httr_1.4.0      
-## [45] rstudioapi_0.10  R6_2.4.0         nlme_3.1-137     compiler_3.5.3</code></pre>
+## [45] rstudioapi_0.9.0 R6_2.4.0         nlme_3.1-140     compiler_3.5.2</code></pre>
 </div>
 </div>
 

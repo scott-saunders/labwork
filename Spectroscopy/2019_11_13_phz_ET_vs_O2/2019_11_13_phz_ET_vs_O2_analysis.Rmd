@@ -43,7 +43,7 @@ The approach was to monitor absorbance at 690nm at fast time intervals, since th
 
 These reactions were performed in plastic cuvettes in the old aerobic spec that people use for od500 etc. This instrument was capable of recording one cuvette at 1.5sec intervals at 690nm. This setup was also convenient, because a baseline of the oxidized phenazine (or PBS) was acquired for 10 seconds, then the reduced phenazine (or PBS) was injected directly into the cuvette. This instrument simply covers the cuvette with a door that I could open and close rapidly (as opposed to the plate reader). This meant that I could record data before and after the reaction started, which is important because the O2 reaction with PYO does happen fast. 
 
-These experiments used the same reduced phenazines stocks made for the earlier inter phenazine experiments. Therefore these stocks were 100uM reduced (electrochemically) PYO, PCA or PCN (or PBS stored in the same way) and stored anoxically in sealed serum bottles.
+These experiments used the same reduced phenazines stocks made for the earlier inter phenazine experiments. Therefore these stocks were 100uM reduced (electrochemically) PYO, PCA or PCN (or PBS stored in the same way) and stored anoxically in sealed serum bottles. Oxidized PYO was freshly made 100uM stock. Everything was done in PBS pH 7.0, 50mM NaCl.
 
 The following reactions were performed in triplicate with 90 second acquisitions:
 
@@ -141,21 +141,27 @@ Let's make a prettier plot:
 
 ```{r}
 
+colorblind_palette <- c("#E69F00", "#56B4E9", "#000000","#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
 ggplot(df %>% filter(abs690>-0.01), aes(x = t, y = abs690, color = phz_redox)) + 
   geom_point(shape = 21, alpha = 0.25) + 
   geom_smooth(data = . %>% filter(abs690>0.01 & abs690<0.4)) + 
-  labs(x = 'Time (sec)',y = 'Absorbance 690nm')
+  labs(x = 'Time (sec)',y = 'Absorbance 690nm') + scale_color_manual(values = c('light gray', 'light gray', 'light gray',"#E69F00", "#56B4E9", "#000000"))
 ```
 
-It's a good start for now.
-
-**import PCAred and PCNred** to show background here:
+Looks pretty clear to me. I'll have to figure out the clearest way to explain the different stages of the experiment in figure form.
 
 # Conclusions
+
+This experiment gave very clear results: PYOred is generated when PYOox is incubated with PCA/PCNred and O2. Then PYOred reacts with O2. This suggests that the interphenazine ET step is much faster than any of the O2 reduction steps and provides support for the model as I have drawn in the paper.
+
+It seems that the phenazine ET is essentially intstantaneous on this timescale, if there was some competition I think we would see less PYOred produced and perhaps a perceived slower rate of O2 reduction, as reduced PYO was continuously generated on the same time scale....?
 
 ## Next steps
 
 **What is the effect of ctDNA?**
+
+Another way we could potentially look at this is incubate reduced PCA with oxygen and watch it lose fluorescence as it becomes oxidized. I would assume that the oxidation rate would be much faster when PYOox is added (essentially instantaneous), although then we would get PYOred fluorescence briefly, so make sure they don't cross talk in the fluorescence channels. I'm not sure this is really necessary, since I've already collected data showing that PCAred is oxidized by PYOox...
 
 -------
 
