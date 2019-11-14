@@ -23,7 +23,7 @@ library(hms)
 library(knitr)
 library(kableExtra)
 library(patchwork)
-library(ggsci)
+#library(ggsci)
 
 
 knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
@@ -73,7 +73,7 @@ plot_ca_2_styled
 Updated - 03/11/19 dPHZ biofilms +/- PYO chronoamperometry
 
 ```{r}
-ca_data <- read_csv("../../data/dPHZ_metabolic_current.csv", comment = "#") %>% 
+ca_data <- read_csv("../../data 2/dPHZ_metabolic_current.csv", comment = "#") %>% 
   mutate(Strain = ifelse(Rep==1 & PYO=="+","WT","dPHZ")) %>% 
   mutate(id = paste(Strain,PYO, Rep, sep = " "))
 

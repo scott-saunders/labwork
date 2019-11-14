@@ -144,9 +144,13 @@ Let's make a prettier plot:
 colorblind_palette <- c("#E69F00", "#56B4E9", "#000000","#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
 ggplot(df %>% filter(abs690>-0.01), aes(x = t, y = abs690, color = phz_redox)) + 
-  geom_point(shape = 21, alpha = 0.25) + 
-  geom_smooth(data = . %>% filter(abs690>0.01 & abs690<0.4)) + 
-  labs(x = 'Time (sec)',y = 'Absorbance 690nm') + scale_color_manual(values = c('light gray', 'light gray', 'light gray',"#E69F00", "#56B4E9", "#000000"))
+  geom_point(shape = 21, alpha = 0.5) + 
+  geom_smooth(data = . %>% filter(abs690>0.01 & abs690<0.4) ) + 
+  labs(x = 'Time (sec)',y = 'Absorbance 690nm')
+
++ scale_color_manual(values = c('light gray', 'light gray', 'light gray',"#E69F00", "#56B4E9", "#000000"))
+
+#%>% filter(phz_redox != 'PBSox + PCAred' | phz_redox != 'PBSox + PCNred')
 ```
 
 Looks pretty clear to me. I'll have to figure out the clearest way to explain the different stages of the experiment in figure form.
