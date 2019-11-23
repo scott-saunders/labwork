@@ -1,0 +1,56 @@
+---
+title: "WT vs ∆PHZ* eDNA, with TOTO"
+author: "Scott Saunders"
+fontsize: 12pt
+date: '11_22_19'
+output:
+  html_document:
+    theme: cosmo
+    highlight: tango
+    code_folding: hide
+    self_contained: no
+    toc: yes
+  github_document:
+    pandoc_args: --webtex
+---
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(viridis)
+library(knitr)
+library(kableExtra)
+library(modelr)
+library(broom)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+source("../../IDA/tools/plotting_tools.R")
+
+theme_set(theme_1())
+```
+
+# Intro
+
+Repeat measurement of eDNA in colonies, but compare WT and ∆phz. 
+
+# Methods
+
+Six ∆phz* and six WT colony biofilms were grown for four days, as usual. They were resuspended and measured for eDNA using the TOTO plate reader assay as described previously. The dPHZ colonies were a little harder to resuspend, so they received additional vortexing and pipetting. 
+
+Basically I acquired 4 plate reader measurements:
+
+1. The standard curve with ctDNA
+2. WT colonies (+ standard curve)
+3. ∆phz* colonies (+ standard curve)
+4. Remeasure with ctDNA added to standard wells and first replicate of WT and dPHZ measurements (Wells A1-12, B1-6, E1-6)
+
+The standard curve was made by taking a stock of ctDNA (2mg/mL) and diluting 1:10. That was then used as the highest concentration and was diluted 2x consecutively to fill 12 wells. 
+
+The ctDNA added at the end was 2uL of a 1:25 dilution of the 2mg/mL ctDNA stock, because I estimated that should be in the right range to see approximately a doubling of fluorescence. 
+
+# Results
+
+```{r}
+read_csv("data/2019_11_22_well_metadata.csv")
+```
