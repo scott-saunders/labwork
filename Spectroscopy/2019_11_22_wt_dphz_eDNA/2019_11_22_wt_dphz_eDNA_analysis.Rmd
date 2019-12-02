@@ -52,5 +52,103 @@ The ctDNA added at the end was 2uL of a 1:25 dilution of the 2mg/mL ctDNA stock,
 # Results
 
 ```{r}
-read_csv("data/2019_11_22_well_metadata.csv")
+df_meta <- read_csv("data/2019_11_22_well_metadata.csv")
+
+df_std <- read_csv("data/2019_11_22_std_preCTdna.csv") %>%
+  gather(key = "Well", value = "FluorInt", -wavelength) %>% 
+  mutate(read = 1)
+
+df_wt <- read_csv("data/2019_11_22_std_WT_preCTdna.csv")%>%
+  gather(key = "Well", value = "FluorInt", -wavelength)%>% 
+  mutate(read = 2)
+
+df_dphz <- read_csv("data/2019_11_22_dphz_preCTdna.csv")%>%
+  gather(key = "Well", value = "FluorInt", -wavelength)%>% 
+  mutate(read = 3)
+
+df_ctDNA <- read_csv("data/2019_11_22_std_wt_dphz_postCTdna.csv")%>%
+  gather(key = "Well", value = "FluorInt", -wavelength)%>% 
+  mutate(read = 4)
+
+df_all <- bind_rows(df_std, df_wt, df_dphz, df_ctDNA)
+
+df_all_meta <- left_join(df_all, df_meta, by = c('Well' = 'well'))
+```
+
+```{r}
+ggplot(df_all_meta %>% filter(strain == 'std' & wavelength == 535), aes(x = well_std_conc, y = FluorInt, color = factor(read))) + 
+  geom_point() +
+  geom_smooth(method='nls',
+              formula=y~max*(x^hill)/((Kd^hill)+(x^hill)),
+              method.args=list(start=c(max=60000,hill=1,Kd=5)),
+              se=F)
+
+
+df_all_meta %>% filter(strain == 'std' & wavelength == 535 & read == 1)
+
+model_toto <-  nls(data = df_all_meta %>% filter(strain == 'std' & wavelength == 535 & read == 1) ,
+      formula = FluorInt~max*(well_std_conc^hill)/((Kd^hill)+(well_std_conc^hill)),start=c(max=60000,hill=1,Kd=5) )
+
+tidy(model_toto, conf.int = T)
+
+confint_toto <- tidy(model_toto, conf.int = T) %>% filter(term=='Kd')
+
+pred_toto <- df_all_meta %>% filter(strain == 'std' & wavelength == 535 & read == 1) %>% 
+  mutate(max = coef(model_toto)[1], hill = coef(model_toto)[2], kd = coef(model_toto)[3]) %>% 
+  mutate(kd_low = confint_toto$conf.low,kd_high = confint_toto$conf.high ) %>% 
+  mutate(pred = max*(well_std_conc^hill)/((kd^hill)+(well_std_conc^hill))) %>% 
+  mutate(pred_low = max*(well_std_conc^hill)/((kd_low^hill)+(well_std_conc^hill))) %>% 
+  mutate(pred_high = max*(well_std_conc^hill)/((kd_high^hill)+(well_std_conc^hill))) 
+
+ggplot(pred_toto, aes(x = well_std_conc, y = FluorInt)) + 
+  geom_ribbon(aes(ymin = pred_low, ymax = pred_high), fill = 'light gray')+
+  geom_line(aes(y = pred), linetype = 2) +
+  geom_point(shape = 21) 
+
+ggplot(pred_toto, aes(x = well_std_conc, y = FluorInt)) + 
+  geom_ribbon(aes(ymin = pred_low, ymax = pred_high), fill = 'light gray')+
+  geom_line(aes(y = pred), linetype = 2) +
+  geom_point(shape = 21) +
+  scale_x_log10()
+
+ggplot(pred_toto %>% filter(FluorInt < 30000), aes(x = well_std_conc, y = FluorInt)) + 
+  geom_ribbon(aes(ymin = pred_low, ymax = pred_high), fill = 'light gray')+
+  geom_line(aes(y = pred), linetype = 2) +
+  geom_point(shape = 21) 
+```
+
+```{r}
+ggplot(df_all_meta %>% filter(strain == 'dPHZ' & wavelength == 535), 
+       aes(x = bio_rep, y = FluorInt, color = factor(read), shape = ctDNA_added)) + 
+  geom_point() + facet_wrap(~tech_rep)
+```
+
+
+```{r}
+ggplot(df_all_meta %>% filter(strain == 'WT' & wavelength == 535), 
+       aes(x = bio_rep, y = FluorInt, color = factor(read), shape = ctDNA_added)) + 
+  geom_point() + facet_wrap(~tech_rep)
+```
+
+```{r}
+df_ctDNA_change <- df_all_meta %>% filter(wavelength == 535) %>% 
+  group_by(strain, tech_rep, bio_rep, ctDNA_added) %>% 
+  summarise(min = min(FluorInt), max = max(FluorInt)) %>% 
+  mutate(range = max - min)
+
+ggplot(df_ctDNA_change %>% filter(strain != 'std' & tech_rep<4), 
+       aes(x = factor(tech_rep), y = range, shape = ctDNA_added)) + 
+  geom_point() + facet_wrap(~strain) + scale_shape_manual(values = c(21,22))
+```
+
+Interestingly, the initial reading for WT was taken more quickly following incubation with the dye than ∆phz, because I had to restart the ∆phz scan because it was taking too long to re-read the WT samples. Perhaps that is the reason all the WT samples increased greatly between the first and last reads. 
+
+I think the safest thing to do (in order to compare WT and ∆phz) would be to take the final reading and ignore the technical replicate that had DNA added. 
+
+That still gives us 6 biological replicates and 2 tech. reps to work with.
+
+```{r}
+ggplot(df_all_meta %>% filter(strain %in% c('WT','dPHZ') & wavelength == 535 & read == 4 & ctDNA_added == FALSE & toto_added == T), 
+       aes(x = strain, y = FluorInt)) + geom_boxplot() +
+  geom_jitter(shape = 21, height = 0, width = 0.1) + ylim(0,NA)
 ```
