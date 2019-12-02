@@ -28,4 +28,14 @@ for(link in files){
 
 <a href="https://scott-saunders.github.io/labwork/Spectroscopy/2019_09_17_solution_ET/2019_09_17_solution_ET_analysis.html">2019\_09\_17\_solution\_ET/2019\_09\_17\_solution\_ET\_analysis.html</a>
 
+<a href="https://scott-saunders.github.io/labwork/Spectroscopy/2019_09_24_redox_DNA_binding/2019_09_17_phzRedOx_DNAbinding_analysis.html">2019\_09\_24\_redox\_DNA\_binding/2019\_09\_17\_phzRedOx\_DNAbinding\_analysis.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/Spectroscopy/2019_10_09_PHZred_ctDNA/2019_10_09_PHZred_ctDNA_analysis.html">2019\_10\_09\_PHZred\_ctDNA/2019\_10\_09\_PHZred\_ctDNA\_analysis.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/Spectroscopy/2019_10_18_solution_ET_ctDNA/2019_10_18_solution_ET_ctDNA_analysis.html">2019\_10\_18\_solution\_ET\_ctDNA/2019\_10\_18\_solution\_ET\_ctDNA\_analysis.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/Spectroscopy/2019_11_13_phz_ET_vs_O2/2019_11_13_phz_ET_vs_O2_analysis.html">2019\_11\_13\_phz\_ET\_vs\_O2/2019\_11\_13\_phz\_ET\_vs\_O2\_analysis.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/Spectroscopy/2019_11_22_wt_dphz_eDNA/2019_11_22_wt_dphz_eDNA_analysis.html">2019\_11\_22\_wt\_dphz\_eDNA/2019\_11\_22\_wt\_dphz\_eDNA\_analysis.html</a>
+
 <a href="https://scott-saunders.github.io/labwork/Spectroscopy/README.html">README.html</a>

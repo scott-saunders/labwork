@@ -120,6 +120,8 @@ for (link in files) {
 
 <a href="https://scott-saunders.github.io/labwork/Figures/draft1/2018_11_01_figure4.nb.html">Figures/draft1/2018\_11\_01\_figure4.nb.html</a>
 
+<a href="https://scott-saunders.github.io/labwork/Figures/random/gganimate_sandbox.html">Figures/random/gganimate\_sandbox.html</a>
+
 <a href="https://scott-saunders.github.io/labwork/Figures/README.html">Figures/README.html</a>
 
 <a href="https://scott-saunders.github.io/labwork/Figures/Spectroscopy_first_look.nb.html">Figures/Spectroscopy\_first\_look.nb.html</a>
@@ -151,6 +153,8 @@ for (link in files) {
 <a href="https://scott-saunders.github.io/labwork/HPLC/07_23_19_Colonies/TOTO1_measurements/analysis/07_23_19_WT_toto1_brms.html">HPLC/07\_23\_19\_Colonies/TOTO1\_measurements/analysis/07\_23\_19\_WT\_toto1\_brms.html</a>
 
 <a href="https://scott-saunders.github.io/labwork/HPLC/07_23_19_Colonies/TOTO1_measurements/analysis/07_23_19_WT_toto1_measurements.html">HPLC/07\_23\_19\_Colonies/TOTO1\_measurements/analysis/07\_23\_19\_WT\_toto1\_measurements.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/HPLC/2019_10_22/2019_10_22_colony_etbr_dnase_analysis.html">HPLC/2019\_10\_22/2019\_10\_22\_colony\_etbr\_dnase\_analysis.html</a>
 
 <a href="https://scott-saunders.github.io/labwork/HPLC/analysis/2018_10_30_Notebook_colonyHPLC.html">HPLC/analysis/2018\_10\_30\_Notebook\_colonyHPLC.html</a>
 
@@ -250,6 +254,30 @@ for (link in files) {
 
 <a href="https://scott-saunders.github.io/labwork/IDA/tools/header.html">IDA/tools/header.html</a>
 
+<a href="https://scott-saunders.github.io/labwork/IDA/tools/pres_test_files/reveal.js-3.3.0.1/demo.html">IDA/tools/pres\_test\_files/reveal.js-3.3.0.1/demo.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/IDA/tools/pres_test_files/reveal.js-3.3.0.1/index.html">IDA/tools/pres\_test\_files/reveal.js-3.3.0.1/index.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/IDA/tools/pres_test_files/reveal.js-3.3.0.1/plugin/markdown/example.html">IDA/tools/pres\_test\_files/reveal.js-3.3.0.1/plugin/markdown/example.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/IDA/tools/pres_test_files/reveal.js-3.3.0.1/plugin/notes-server/notes.html">IDA/tools/pres\_test\_files/reveal.js-3.3.0.1/plugin/notes-server/notes.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/IDA/tools/pres_test_files/reveal.js-3.3.0.1/plugin/notes/notes.html">IDA/tools/pres\_test\_files/reveal.js-3.3.0.1/plugin/notes/notes.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/IDA/tools/pres_test_files/reveal.js-3.3.0.1/test/test-markdown-element-attributes.html">IDA/tools/pres\_test\_files/reveal.js-3.3.0.1/test/test-markdown-element-attributes.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/IDA/tools/pres_test_files/reveal.js-3.3.0.1/test/test-markdown-slide-attributes.html">IDA/tools/pres\_test\_files/reveal.js-3.3.0.1/test/test-markdown-slide-attributes.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/IDA/tools/pres_test_files/reveal.js-3.3.0.1/test/test-markdown.html">IDA/tools/pres\_test\_files/reveal.js-3.3.0.1/test/test-markdown.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/IDA/tools/pres_test_files/reveal.js-3.3.0.1/test/test-pdf.html">IDA/tools/pres\_test\_files/reveal.js-3.3.0.1/test/test-pdf.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/IDA/tools/pres_test_files/reveal.js-3.3.0.1/test/test.html">IDA/tools/pres\_test\_files/reveal.js-3.3.0.1/test/test.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/IDA/tools/pres_test.html">IDA/tools/pres\_test.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/IDA/tools/test/2019_09_28_sandbox.html">IDA/tools/test/2019\_09\_28\_sandbox.html</a>
+
 <a href="https://scott-saunders.github.io/labwork/index.html">index.html</a>
 
 <a href="https://scott-saunders.github.io/labwork/potentialStep_Dap_09_16_18.html">potentialStep\_Dap\_09\_16\_18.html</a>
@@ -263,5 +291,15 @@ for (link in files) {
 <a href="https://scott-saunders.github.io/labwork/Spectroscopy/2019_09_17_solution_ET/2019_09_17_solution_ET_analysis_2.html">Spectroscopy/2019\_09\_17\_solution\_ET/2019\_09\_17\_solution\_ET\_analysis\_2.html</a>
 
 <a href="https://scott-saunders.github.io/labwork/Spectroscopy/2019_09_17_solution_ET/2019_09_17_solution_ET_analysis.html">Spectroscopy/2019\_09\_17\_solution\_ET/2019\_09\_17\_solution\_ET\_analysis.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/Spectroscopy/2019_09_24_redox_DNA_binding/2019_09_17_phzRedOx_DNAbinding_analysis.html">Spectroscopy/2019\_09\_24\_redox\_DNA\_binding/2019\_09\_17\_phzRedOx\_DNAbinding\_analysis.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/Spectroscopy/2019_10_09_PHZred_ctDNA/2019_10_09_PHZred_ctDNA_analysis.html">Spectroscopy/2019\_10\_09\_PHZred\_ctDNA/2019\_10\_09\_PHZred\_ctDNA\_analysis.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/Spectroscopy/2019_10_18_solution_ET_ctDNA/2019_10_18_solution_ET_ctDNA_analysis.html">Spectroscopy/2019\_10\_18\_solution\_ET\_ctDNA/2019\_10\_18\_solution\_ET\_ctDNA\_analysis.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/Spectroscopy/2019_11_13_phz_ET_vs_O2/2019_11_13_phz_ET_vs_O2_analysis.html">Spectroscopy/2019\_11\_13\_phz\_ET\_vs\_O2/2019\_11\_13\_phz\_ET\_vs\_O2\_analysis.html</a>
+
+<a href="https://scott-saunders.github.io/labwork/Spectroscopy/2019_11_22_wt_dphz_eDNA/2019_11_22_wt_dphz_eDNA_analysis.html">Spectroscopy/2019\_11\_22\_wt\_dphz\_eDNA/2019\_11\_22\_wt\_dphz\_eDNA\_analysis.html</a>
 
 <a href="https://scott-saunders.github.io/labwork/Spectroscopy/README.html">Spectroscopy/README.html</a>

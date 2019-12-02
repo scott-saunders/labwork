@@ -24,6 +24,8 @@ for(link in files){
 
 <a href="https://scott-saunders.github.io/labwork/HPLC/07_23_19_Colonies/TOTO1_measurements/analysis/07_23_19_WT_toto1_measurements.html">07\_23\_19\_Colonies/TOTO1\_measurements/analysis/07\_23\_19\_WT\_toto1\_measurements.html</a>
 
+<a href="https://scott-saunders.github.io/labwork/HPLC/2019_10_22/2019_10_22_colony_etbr_dnase_analysis.html">2019\_10\_22/2019\_10\_22\_colony\_etbr\_dnase\_analysis.html</a>
+
 <a href="https://scott-saunders.github.io/labwork/HPLC/analysis/2018_10_30_Notebook_colonyHPLC.html">analysis/2018\_10\_30\_Notebook\_colonyHPLC.html</a>
 
 <a href="https://scott-saunders.github.io/labwork/HPLC/analysis/2018_10_30_Notebook_colonyHPLC.nb.html">analysis/2018\_10\_30\_Notebook\_colonyHPLC.nb.html</a>
