@@ -7,7 +7,7 @@ output:
   html_document:
     theme: cosmo
     highlight: tango
-    code_folding: hide
+    code_folding: show
     self_contained: no
     toc: yes
   github_document:
@@ -75,6 +75,8 @@ df_all <- bind_rows(df_std, df_wt, df_dphz, df_ctDNA)
 df_all_meta <- left_join(df_all, df_meta, by = c('Well' = 'well'))
 ```
 
+## Calibration curve
+
 ```{r}
 ggplot(df_all_meta %>% filter(strain == 'std' & wavelength == 535), aes(x = well_std_conc, y = FluorInt, color = factor(read))) + 
   geom_point() +
@@ -117,18 +119,23 @@ ggplot(pred_toto %>% filter(FluorInt < 30000), aes(x = well_std_conc, y = FluorI
   geom_point(shape = 21) 
 ```
 
+## ∆phz*
+
 ```{r}
 ggplot(df_all_meta %>% filter(strain == 'dPHZ' & wavelength == 535), 
        aes(x = bio_rep, y = FluorInt, color = factor(read), shape = ctDNA_added)) + 
   geom_point() + facet_wrap(~tech_rep)
 ```
 
+## WT 
 
 ```{r}
 ggplot(df_all_meta %>% filter(strain == 'WT' & wavelength == 535), 
        aes(x = bio_rep, y = FluorInt, color = factor(read), shape = ctDNA_added)) + 
   geom_point() + facet_wrap(~tech_rep)
 ```
+
+## Comparison
 
 ```{r}
 df_ctDNA_change <- df_all_meta %>% filter(wavelength == 535) %>% 
@@ -151,4 +158,12 @@ That still gives us 6 biological replicates and 2 tech. reps to work with.
 ggplot(df_all_meta %>% filter(strain %in% c('WT','dPHZ') & wavelength == 535 & read == 4 & ctDNA_added == FALSE & toto_added == T), 
        aes(x = strain, y = FluorInt)) + geom_boxplot() +
   geom_jitter(shape = 21, height = 0, width = 0.1) + ylim(0,NA)
+```
+
+However, adding ctDNA to WT samples did not increase the signal, whereas for ∆phz* samples it did. This suggests that there may be a further complication where the WT biofilms either inhibit the binding of the dye, or degrade the free ctDNA...
+
+-------
+
+```{r}
+sessionInfo()
 ```
