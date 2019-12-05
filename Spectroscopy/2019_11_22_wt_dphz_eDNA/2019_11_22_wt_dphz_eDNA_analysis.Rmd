@@ -72,7 +72,7 @@ df_ctDNA <- read_csv("data/2019_11_22_std_wt_dphz_postCTdna.csv")%>%
 
 df_all <- bind_rows(df_std, df_wt, df_dphz, df_ctDNA)
 
-df_all_meta <- left_join(df_all, df_meta, by = c('Well' = 'well'))
+df_all_meta <- left_join(df_all, df_meta, by = c('Well' = 'well')) 
 ```
 
 ## Calibration curve
@@ -155,9 +155,36 @@ I think the safest thing to do (in order to compare WT and ∆phz) would be to t
 That still gives us 6 biological replicates and 2 tech. reps to work with.
 
 ```{r}
+bg_means <- df_all_meta %>% filter(strain != 'std' & wavelength == 535 & read == 4 & tech_rep == 4) %>% group_by(strain) %>% summarise(mean = mean(FluorInt))
+
+ggplot(df_all_meta %>% filter(strain != 'std' & wavelength == 535 & read == 4), 
+       aes(x = factor(tech_rep), y = FluorInt)) + 
+  geom_line(data = . %>% filter(tech_rep<4), aes(group = bio_rep), color = 'light gray')+
+  geom_hline(data = bg_means, aes(yintercept = mean), linetype = 2, color = 'light gray') +
+  geom_point(data = . %>% filter(tech_rep<4), aes(fill = factor(ctDNA_added)), shape = 21) + 
+  geom_jitter(data = . %>% filter(tech_rep==4), aes(x = 2), width = 1, shape = 21, color = 'light gray')+
+  facet_wrap(~strain, scales = 'free') + ylim(0, 30000)
+```
+
+```{r}
+toto_levels <- df_all_meta %>% filter(strain == 'std' & wavelength == 535 & read == 1) %>% filter(FluorInt <30000 & FluorInt >5000) %>% 
+  mutate(eDNA_ug_mL = well_std_conc * 4 * 800 / 60) %>% 
+  mutate(eDNA_dsDNA_uM = eDNA_ug_mL * 150 / 50)
+
+bio_reps <- df_all_meta %>% filter(strain %in% c('WT','dPHZ') & wavelength == 535 & read == 4 & ctDNA_added == FALSE & toto_added == T) %>% 
+  group_by(strain, bio_rep) %>% 
+  summarise(mean = mean(FluorInt), sd = sd(FluorInt))
+
 ggplot(df_all_meta %>% filter(strain %in% c('WT','dPHZ') & wavelength == 535 & read == 4 & ctDNA_added == FALSE & toto_added == T), 
-       aes(x = strain, y = FluorInt)) + geom_boxplot() +
+       aes(x = strain, y = FluorInt)) +
+  geom_hline(yintercept = toto_levels$FluorInt, linetype = 2, color = 'light gray')+
+  geom_boxplot() +
   geom_jitter(shape = 21, height = 0, width = 0.1) + ylim(0,NA)
+
+ggplot(bio_reps, 
+       aes(x = strain, y = mean)) +
+  geom_hline(yintercept = toto_levels$FluorInt, linetype = 2, color = 'light gray', label)+
+  geom_pointrange(shape = 21, height = 0, width = 0.1, aes(ymin = mean - sd, ymax = mean + sd), position = position_jitter(width = 0.15, height = 0)) + ylim(0,NA)
 ```
 
 However, adding ctDNA to WT samples did not increase the signal, whereas for ∆phz* samples it did. This suggests that there may be a further complication where the WT biofilms either inhibit the binding of the dye, or degrade the free ctDNA...
