@@ -5,8 +5,8 @@ account: scott-h-saunders
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 1702774
-bundleId: 2752380
+bundleId: 2752395
 url: https://scott-h-saunders.shinyapps.io/Growth_curve_fitting/
-when: 1579921740.91105
+when: 1579923436.66443
 asMultiple: FALSE
 asStatic: FALSE

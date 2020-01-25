@@ -8,13 +8,18 @@ library(DT)
 ui <- fluidPage(
     
     # App title ----
-    titlePanel("Uploading Files"),
+    titlePanel("Fit a growth curve with a Gompertz curve"),
     
     # Sidebar layout with input and output definitions ----
     sidebarLayout(
         
         # Sidebar panel for inputs ----
         sidebarPanel(
+            
+            helpText("From Zwietering et. al. AES 1990: The three phases of the growth curve can be described by three parameters: the maximum specific growth rate, Mu is defined as the tangent in the inflection point; the lag time, Lag, is defined as the x-axis intercept of this tangent; and the asymptote A is the maximal value reached."),
+            tags$div(a(href="https://aem.asm.org/content/56/6/1875", "Source")),
+            
+            tags$hr(),
             
             # Input: Select a file ----
             fileInput("file1", "Choose your data File (CSV)",
@@ -33,8 +38,8 @@ ui <- fluidPage(
             # Horizontal line ----
             tags$hr(),
             
-            helpText("Note: This .csv file should be data from a plate reader that includes a column 'well', followed by columns of data for each well A1, A2,...H12 etc."),
-            helpText(a('Simple example file (WT vs. dPHZ)',target = '_blank'), href = '')
+            helpText("Note: This .csv file should be data from a plate reader that includes a column 'well', followed by columns of data for each well A1, A2,...H12 etc. See example files for details."),
+            tags$div(a(href="https://github.com/scott-saunders/labwork/blob/master/Growth_curve_fitting/data.zip", "Example files"))
             
             
         ),
@@ -45,8 +50,8 @@ ui <- fluidPage(
             # Output: Tabset w/ plot, summary, and table ----
             tabsetPanel(type = "tabs",
                         tabPanel("Input Data", dataTableOutput("contents")),
-                        tabPanel("Plots w/ Fits", plotOutput("plot",height = '1000px')),
-                        tabPanel("Parameter Estimates", plotOutput("plot_estimates"), tags$hr(), downloadButton("downloadData", "Download"), tags$hr(), dataTableOutput("estimates") )
+                        tabPanel("Plots w/ Fits",tags$hr(), downloadButton("downloadPreds", "Download fit predictions"),tags$hr(), plotOutput("plot",height = '1000px')),
+                        tabPanel("Parameter Estimates", plotOutput("plot_estimates"), tags$hr(), downloadButton("downloadData", "Download parameter estimates"), tags$hr(), dataTableOutput("estimates") )
             )
             
         )
@@ -191,6 +196,14 @@ server <- function(input, output) {
         filename = 'growth_curve_parameter_estimates.csv',
         content = function(file) {
             write_csv(df_ests(), file)
+        }
+    )
+    
+    # Downloadable csv of selected dataset ----
+    output$downloadPreds <- downloadHandler(
+        filename = 'growth_curve_fit_predictions.csv',
+        content = function(file) {
+            write_csv(df_preds(), file)
         }
     )
     
