@@ -1,0 +1,235 @@
+---
+title: "Growth Curve Fitting"
+author: "Scott Saunders"
+date: "01_24_20"
+output:
+  html_document:
+    code_folding: hide
+    self_contained: no
+    theme: cosmo
+    toc: yes
+fontsize: 12pt
+---
+
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(viridis)
+library(knitr)
+library(kableExtra)
+library(modelr)
+library(broom)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+source("../../IDA/tools/plotting_tools.R")
+
+theme_set(theme_1())
+
+```
+
+Read in some sample data to get a nice and messy dataset. 
+
+```{r}
+meta <- read_csv("data/plateReader_Conditions.csv")
+df <- read_csv("data/plateReaderToxicity.csv") %>% gather(key = 'well',value = 'abs',-time) %>% mutate(time = time*24)
+
+df_meta <- left_join(df, meta, by = 'well')
+
+ggplot(df_meta, aes(x = time, y = abs, color = amount)) + geom_point()+facet_wrap(~molecule)
+```
+
+From [this paper](https://aem.asm.org/content/56/6/1875), it suggests that the modified Gompertz equation is the way to go. They desribe the three parameters as follows: 
+
+>The three phases of the growth curve can be described by three parameters: the maximum specific growth rate, $\mu_m$ is defined as the tangent in the inflection point; the lag time, $\lambda$, is defined as the x-axis intercept of this tangent; and the asymptote $A$ is the maximal value reached.
+
+$$ y = A*exp \left(-exp \left(\frac{\mu_m}{A}(\lambda - t) + 1 \right)\right)$$
+
+Let's try our first model fit. Let's start with a nice classic growth curve from the untreated sample:
+
+```{r}
+curve_1 <- df_meta %>% filter(molecule == 'none' & replicate == 1 & strain == 'WT')
+
+ggplot(curve_1, aes(x = time, y = abs)) + geom_point()
+```
+
+Even this nice growth curve has some messiness to it, but let's see how we can do.
+
+```{r}
+ggplot(curve_1, aes(x = time, y = abs)) + geom_point() + 
+    geom_smooth(method='nls',
+              formula=y~A*exp(-exp((mu/A)*(lam - x) + 1)),
+              method.args=list(start=c(A = 1, mu = 0.1, lam = 2)),
+              se=F)
+
+ggplot(curve_1 %>% filter(time<10), aes(x = time, y = abs)) + geom_point() + 
+    geom_smooth(method='nls',
+              formula=y~A*exp(-exp((mu/A)*(lam - x) + 1)),
+              method.args=list(start=c(A = 1, mu = 0.1, lam = 2)),
+              se=F)
+```
+
+```{r}
+nls(formula=abs~A*exp(-exp((mu/A)*(lam - time) + 1)), data = curve_1, start = c(A = 1, mu = 0.1, lam = 2))
+
+nls(formula=abs~A*exp(-exp((mu/A)*(lam - time) + 1)), data = curve_1 %>% filter(time<10), start = c(A = 1, mu = 0.1, lam = 2))
+```
+
+
+```{r}
+
+df_nest <- df_meta %>% 
+  filter(molecule == 'none' & strain == 'WT') %>% 
+  group_by(replicate) %>% 
+  nest()
+
+fit_gompertz_mod <- function(df){
+  
+  #A = 1; mu = 0.1; lam = 2
+  
+  mod <- nls(formula=abs~A*exp(-exp((mu/A)*(lam - time) + 1))+c, start = c(A = 1, mu = 0.2, lam = 3, c = 0.1), data = df)
+  
+  mod
+}
+
+df_models <- df_nest %>% 
+  mutate(models = map(data, fit_gompertz_mod)) 
+
+df_preds <- df_models %>% 
+  mutate(preds = map2(data, models, add_predictions)) %>% 
+  unnest(preds)
+
+df_model_ests <- df_models %>% 
+  mutate(ests = map(models, tidy, conf.int = T)) %>% 
+  unnest(ests)
+
+ggplot(df_preds, aes(x = time)) + geom_point(aes(y = abs), shape =21) + geom_path(aes(y = pred), color = 'blue') + facet_wrap(~replicate)
+
+ggplot(df_model_ests, aes(x = replicate, y = estimate)) + geom_pointrange(aes(ymin = conf.low, ymax = conf.high)) + facet_wrap(~term,scales = 'free')
+```
+Adding a 'c' parameter here helped the model be able to fit curves that don't start at zero.
+
+
+Now let's scale up to the whole thing and see how it does!
+
+```{r}
+df_all_nest <- df_meta %>%
+  filter(amount <10000) %>% #AQDS and RB work too, etbr <= 500 works and MB <=500 and spermidine <=1000
+  group_by(strain, molecule, amount, replicate) %>% 
+  nest()
+
+ggplot(df_meta %>% filter(molecule == 'SpmDn'), aes(x = time, y = abs, color = factor(amount))) + geom_point()
+
+df_models_all <- df_all_nest %>% 
+  mutate(models = map(data, fit_gompertz_mod))
+
+df_models_all <- df_all_nest %>% 
+  mutate(models = safely(map(data,fit_gompertz_mod))$result)
+
+
+
+df_models_all[[1]]
+
+df_preds_all <- df_models_all %>% 
+  mutate(preds = map2(data, models, add_predictions)) %>% 
+  unnest(preds)
+
+df_model_ests_all <- df_models_all %>% 
+  filter(molecule == 'none') %>% 
+  mutate(ests = map(models, tidy, conf.int = T)) %>% 
+  unnest(ests)
+
+ggplot(df_preds_all %>% filter(molecule == 'none'), aes(x = time)) + geom_point(aes(y = absorbance), shape =21) + geom_path(aes(y = pred), color = 'blue') + facet_wrap(strain~replicate)
+
+ggplot(df_model_ests_all %>% filter(molecule == 'none'), aes(x = replicate, y = estimate, color = strain)) + geom_pointrange(aes(ymin = conf.low, ymax = conf.high)) + facet_wrap(~term,scales = 'free')
+```
+Moving toward handling models that cannot be fit:
+
+```{r}
+  
+df_models_all_2 <- df_all_nest %>% 
+  mutate(fit_result = map(data, safely(fit_gompertz_mod))) %>%
+  ungroup() %>% 
+  mutate(fit_errors = map(fit_result, 'error')) %>% 
+  mutate(models = map(fit_result,'result')) %>% 
+  mutate(fit_error_occured = map(.x = models, .f = is.null), fit_error_occured = unlist(fit_error_occured))
+
+
+df_preds_all_2 <- df_models_all_2 %>% 
+  filter(fit_error_occured == FALSE) %>% 
+  mutate(preds = map2(data, models, add_predictions)) %>% 
+  unnest(preds)
+
+
+df_model_ests_all_2 <- df_models_all_2 %>% 
+  filter(fit_error_occured == FALSE) %>% 
+  mutate(est_result = map(models, safely(tidy), conf.int = T)) %>% 
+  mutate(est_errors = map(est_result, 'error')) %>% 
+  mutate(ests = map(est_result,'result')) %>% 
+  mutate(est_error_occured = map(.x = ests, .f = is.null), est_error_occured = unlist(est_error_occured)) %>% 
+  mutate(ests = ifelse(est_error_occured == T, map(models, tidy, conf.int = F), ests)) %>% 
+  unnest(ests)
+
+
+df_models_all_2 %>% 
+  filter(fit_error_occured == FALSE) %>% 
+  mutate(gla = map(models, glance)) %>% 
+  unnest(gla)
+
+```
+
+# Starting fresh here to try and work out shiny code
+
+```{r}
+df_1 <- read_csv("data/plateReaderToxicity_hr.csv")
+df_2 <- read_csv("data/plateReader_Conditions.csv")
+
+df <- df_1 %>% gather(key = 'well',value = 'absorbance',-time)
+        
+df_meta <- left_join(df, df_2, by = 'well') %>% filter(molecule == 'none')
+
+# group and nest the data
+df_nest <- df_meta %>%
+  group_by(strain, replicate) %>% 
+  nest()
+        
+        
+# The nls function used to fit the data
+fit_gompertz_mod <- function(df){
+  
+  mod <- nls(formula=absorbance~A*exp(-exp((mu/A)*(lam - time) + 1))+c, start = c(A = 1, mu = 0.2, lam = 3, c = 0.1), data = df)
+  
+  mod
+        }
+        
+# fit data using the above function ...do this safely in case of errors
+df_models <- df_nest %>% 
+            mutate(fit_result = map(data, safely(fit_gompertz_mod))) %>%
+            ungroup() %>% 
+            mutate(fit_errors = map(fit_result, 'error')) %>% 
+            mutate(models = map(fit_result,'result')) %>% 
+            mutate(fit_error_occured = map(.x = models, .f = is.null), fit_error_occured = unlist(fit_error_occured))
+
+df_models$fit_errors[[1]]
+        
+df_preds <- df_models %>% 
+            filter(fit_error_occured == FALSE) %>% 
+            mutate(preds = map2(data, models, add_predictions)) %>% 
+            unnest(preds)
+
+p <- ggplot(data = df_preds, aes_string(x=df_preds$time, y = df_preds$absorbance)) + 
+  geom_point() + geom_path(aes(y = df_preds$pred), color = 'blue')+ facet_wrap(~strain)
+        
+        print(p)
+
+```
+
+
+
+
+-------
+
+```{r}
+sessionInfo()
+```
