@@ -1,0 +1,361 @@
+---
+title: "Growth Curve Fitting"
+author: "Scott Saunders"
+date: "01_26_20"
+output: flexdashboard::flex_dashboard
+fontsize: 12pt
+runtime: shiny
+---
+
+```{r setup}
+library(tidyverse)
+library(cowplot)
+library(viridis)
+library(knitr)
+library(kableExtra)
+library(modelr)
+library(broom)
+library(ggforce)
+```
+
+Column {.sidebar}
+=====================
+
+Input goes here: 
+
+markdown test $A = r^2$
+
+```{r}
+fileInput("file1", "Choose your data File (CSV)",
+                      multiple = FALSE,
+                      accept = c("text/csv",
+                                 "text/comma-separated-values,text/plain",
+                                 ".csv"))
+
+
+
+df <- reactive({
+  
+  req(input$file1)
+  
+  df <- read_csv(input$file1$datapath) %>% 
+    gather(key = 'well',value = 'absorbance',-time)
+  
+  return(df)
+  
+})
+
+
+```
+
+-----
+### Parameters
+
+```{r}
+
+numericInput("A", "Approximate the final absorbance value", 0.5)
+
+numericInput("Lag", "Approximate the lag time", 4)
+
+numericInput("Mu", "Approximate the growth rate", 0.2)
+
+numericInput("C", "Approximate starting absorbance value", 0.05)
+
+param_A <- reactive({
+  #A <- 1
+
+  if(!is.null(input$A)){ A <- input$A}
+
+  A
+})
+
+param_Lag <- reactive({
+  #Lag <- 1
+
+  if(!is.null(input$Lag)){ Lag <- input$Lag}
+
+  Lag
+})
+
+param_Mu <- reactive({
+  #Mu <- 1
+
+  if(!is.null(input$Mu)){ Mu <- input$Mu}
+
+  Mu
+})
+
+param_C<- reactive({
+  #C <- 1
+
+  if(!is.null(input$C)){ C <- input$C}
+
+  C
+})
+
+```
+
+
+```{r}
+
+checkboxInput('biGomp',label = 'Fit two simultaneous growth curves (e.g. bi - Gompertz)', value = FALSE)
+
+renderUI({  if(input$biGomp){numericInput("A_2", "Approximate the second A", 0.2)} })
+
+renderUI({  if(input$biGomp){numericInput("Lag_2", "Approximate the second lag", 5)} })
+
+renderUI({  if(input$biGomp){numericInput("Mu_2", "Approximate the second Mu", 0.3)} })
+
+param_A_2 <- reactive({
+  #A_2 <- 0.2
+
+  if(!is.null(input$A_2)){ A_2 <- input$A_2}
+
+  A_2
+})
+
+param_Lag_2 <- reactive({
+  #Lag_2 <- 5
+
+  if(!is.null(input$Lag_2)){ Lag_2 <- input$Lag_2}
+
+  Lag_2
+})
+
+param_Mu_2 <- reactive({
+  #Mu_2 <- 1
+
+  if(!is.null(input$Mu_2)){ Mu_2 <- input$Mu_2}
+
+  Mu_2
+})
+    
+  
+
+
+```
+
+Page 1
+=====================
+
+This should say 'Page 1'
+
+
+```{r global, include=FALSE}
+# load data in 'global' chunk so it can be shared by all users of the dashboard
+library(datasets)
+mtcars2 <- mtcars[, c("mpg", "cyl", "wt")]
+```
+
+
+```{r}
+# Reactive that returns the whole dataset if there is no brush
+selectedData <- reactive({
+  data <- brushedPoints(df(), input$plot1_brush)
+  if (nrow(data) == 0)
+    data <- df()
+  data
+})
+
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Miles Per Gallon vs. Weight {data-width=600}
+
+```{r}
+
+plotOutput("plot1", brush = brushOpts(id = "plot1_brush"))
+
+output$plot1 <- renderPlot({
+  
+  ggplot(df(), aes(time, absorbance, group = well)) + geom_path()
+  
+})
+
+```
+
+### Miles Per Gallon and Cylinders
+
+```{r}
+
+renderPlot({
+  
+  ggplot(selectedData(), aes(time, absorbance)) + geom_point()
+  
+})
+
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Car Details {data-width=400}
+
+```{r}
+renderTable({
+  selectedData()
+})
+```
+
+
+Page 2
+=====================
+
+```{r}
+df_models <- reactive({
+        
+  
+        # group and nest the data
+        df_nest <- selectedData() %>%
+            group_by(well) %>% 
+            nest()
+        
+        
+        # The nls function used to fit the data
+
+        
+        fit_gompertz_mod <- function(df){
+            
+            #A = 1; mu = 0.1; lam = 2
+            
+            mod <- nls(formula=absorbance~A*exp(-exp((Mu/A)*(Lag - time) + 1))+C, 
+                       start = c(A = param_A(), Mu = param_Mu(), Lag = param_Lag(), C = param_C()), 
+                       data = df)
+            
+            mod
+        }
+        
+        
+        if(input$biGomp == T){
+          
+          fit_gompertz_mod <- function(df){
+            
+            mod <- nls( formula=absorbance~( A_1*exp(-exp((Mu_1/A_1)*(Lag_1 - time) + 1)) ) + 
+                                           ( A_2*exp(-exp((Mu_2/A_2)*(Lag_2 - time) + 1)) ) + C,
+                        
+#                        start = c(A_1 = 0.5, Mu_1 = 0.2, Lag_1 = 4, C= 0.05, 
+#                                  A_2 = 0.2, Mu_2 = 0.3, Lag_2 = 5),
+                        start = c(A_1 = param_A(), Mu_1 = param_Mu(), Lag_1 = param_Lag(), C= param_C(), 
+                                  A_2 = param_A_2(), Mu_2 = param_Mu_2(), Lag_2 = param_Lag_2()),
+                        
+                        data = df)
+            
+            mod
+          
+          }
+          
+        }
+          
+        
+        
+        # fit data using the above function ...do this safely in case of errors
+        df_models <- df_nest %>% 
+            mutate(fit_result = map(data, safely(fit_gompertz_mod))) %>%
+            ungroup() %>% 
+            mutate(fit_errors = map(fit_result, 'error')) %>% 
+            mutate(models = map(fit_result,'result')) %>% 
+            mutate(fit_error_occured = map(.x = models, .f = is.null), fit_error_occured = unlist(fit_error_occured))
+        
+        #return(df_models)
+        return(df_models)
+        
+    })
+```
+
+```{r}
+    ##### generate the predictions from the models
+    df_preds <- reactive({
+        
+        df_preds <- df_models() %>% 
+            filter(fit_error_occured == FALSE) %>% 
+            mutate(preds = map2(data, models, add_predictions)) %>% 
+            unnest(preds)
+            
+        return(df_preds)
+    })
+```
+
+```{r}
+
+    ###### generate the parameter estimates from the models
+    df_ests <- reactive({
+        
+        df_ests <- df_models() %>% 
+            filter(fit_error_occured == FALSE) %>% 
+            mutate(est_result = map(models, safely(tidy), conf.int = T)) %>% 
+            mutate(est_errors = map(est_result, 'error')) %>% 
+            mutate(ests = map(est_result,'result')) %>% 
+            mutate(est_error_occured = map(.x = ests, .f = is.null), est_error_occured = unlist(est_error_occured)) %>% 
+            mutate(ests = ifelse(est_error_occured == T, map(models, tidy, conf.int = F), ests)) %>% 
+            unnest(ests)
+        
+        return(df_ests)
+        
+    })
+
+```
+
+```{r}
+df_pred_ests <- reactive({
+
+  df_pred_ests <- df_preds()
+
+  if(input$biGomp){
+
+    gen_gompertz <- function(a, mu, lag, c, time){
+
+      a*exp(-exp((mu/a)*(lag - time) + 1 )) + c
+
+      }
+
+    df_pred_ests <- left_join(df_preds(),
+                              df_ests() %>%
+                                pivot_wider(id_cols = 'well',
+                                            names_from = 'term',
+                                            values_from = 'estimate' ),
+                              by = 'well') %>%
+      mutate(pred_1 = gen_gompertz(a = A_1, mu = Mu_1, lag = Lag_1, c = C, time = time)) %>%
+      mutate(pred_2 = gen_gompertz(a = A_2, mu = Mu_2, lag = Lag_2, c = C, time = time))
+
+  }
+
+    return(df_pred_ests)
+})
+
+renderDataTable(df_pred_ests() %>% select(well, fit_error_occured, A_2))
+
+```
+
+Page 3
+=====================
+
+```{r}
+
+plotOutput("plot",height = '1000px')
+
+output$plot <- renderPlot({
+  
+  p <- ggplot(data = df_preds(), aes_string(x=df_preds()$time, y = df_preds()$absorbance)) + 
+    geom_point(shape = 21) + 
+    geom_path(aes(y = df_preds()$pred), size = 1, color = 'blue')+ 
+    facet_wrap(~well, scales = 'free') +
+    labs(x = 'Time (Hrs)', y = 'Absorbance') + theme_bw()
+  
+  if(input$biGomp){
+
+    p <- ggplot(df_pred_ests(), aes(x = df_pred_ests()$time)) +
+      geom_point(aes(y = df_pred_ests()$absorbance), shape = 21)+
+      geom_path(aes(y = df_pred_ests()$pred), color = 'blue', size = 1) +
+      geom_path(aes(y = df_pred_ests()$pred_1), color = 'red', size = 1) +
+      geom_path(aes(y = df_pred_ests()$pred_2), color = 'red', linetype = 2, size = 1) +
+      facet_wrap(~well, scales = 'free')
+
+  }
+  
+  print(p)
+        
+    })
+
+```

@@ -20,6 +20,7 @@ library(knitr)
 library(kableExtra)
 library(modelr)
 library(broom)
+library(ggforce)
 
 knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
 
@@ -182,7 +183,7 @@ df_models_all_2 %>%
 # Starting fresh here to try and work out shiny code
 
 ```{r}
-df_1 <- read_csv("data/plateReaderToxicity_hr.csv")
+df_1 <- read_csv("../../Growth_curve_fitting/data/plate_reader_complex_data.csv")
 df_2 <- read_csv("data/plateReader_Conditions.csv")
 
 df <- df_1 %>% gather(key = 'well',value = 'absorbance',-time)
@@ -193,12 +194,16 @@ df_meta <- left_join(df, df_2, by = 'well') %>% filter(molecule == 'none')
 df_nest <- df_meta %>%
   group_by(strain, replicate) %>% 
   nest()
-        
+    
+df_nest <- df %>%
+  group_by(well) %>% 
+  nest()    
         
 # The nls function used to fit the data
 fit_gompertz_mod <- function(df){
   
-  mod <- nls(formula=absorbance~A*exp(-exp((mu/A)*(lam - time) + 1))+c, start = c(A = 1, mu = 0.2, lam = 3, c = 0.1), data = df)
+  mod <- nls(formula=absorbance~A*exp(-exp((mu/A)*(lam - time) + 1))+c, 
+             start = c(A = 1, mu = 0.2, lam = 3, c = 0.1), data = df)
   
   mod
         }
@@ -219,13 +224,143 @@ df_preds <- df_models %>%
             unnest(preds)
 
 p <- ggplot(data = df_preds, aes_string(x=df_preds$time, y = df_preds$absorbance)) + 
-  geom_point() + geom_path(aes(y = df_preds$pred), color = 'blue')+ facet_wrap(~strain)
+  geom_point() + geom_path(aes(y = df_preds$pred), color = 'blue')+ facet_wrap(~well)
         
         print(p)
 
 ```
 
+# Bi-Gompertz fitting??
 
+```{r}
+df_simple <- read_csv("../../Growth_curve_fitting/data/plate_reader_simple_data.csv") %>% 
+  gather(key = 'well',value = 'absorbance',-time)
+
+df_simple <- read_csv("../../Growth_curve_fitting/data/plate_reader_complex_data.csv") %>% 
+  gather(key = 'well',value = 'absorbance',-time)
+
+ggplot(df_simple, aes(x = time, y = absorbance)) + geom_point()
+
+fit_bi_gompertz_mod <- function(df){
+  
+  #A = 1; mu = 0.1; lam = 2
+  
+  mod <- nls(
+    
+    formula=absorbance~( A_1*exp(-exp((mu_1/A_1)*(lam_1 - time) + 1)) ) + 
+                       ( A_2*exp(-exp((mu_2/A_2)*(lam_2 - time) + 1)) ) + c,
+    start = c(A_1 = 0.5, mu_1 = 0.2, lam_1 = 4, c= 0.05, 
+              A_2 = 0.2, mu_2 = 0.3, lam_2 = 5),
+    
+    data = df)
+  
+  mod
+}
+                       
+                       
+
+fit_gompertz_mod <- function(df){
+  
+  mod <- nls(formula=absorbance~ B*(A*exp(-exp((mu/A)*(lam - time) + 1))+c), 
+             start = c(B =1, A = 1, mu = 0.2, lam = 3, c = 0.1), data = df)
+  
+  mod
+        }
+
+df_nest <- df_simple %>%
+  group_by(well) %>% 
+  nest()    
+
+df_models <- df_nest %>% 
+            mutate(fit_result = map(data, safely(fit_bi_gompertz_mod))) %>%
+            ungroup() %>% 
+            mutate(fit_errors = map(fit_result, 'error')) %>% 
+            mutate(models = map(fit_result,'result')) %>% 
+            mutate(fit_error_occured = map(.x = models, .f = is.null), fit_error_occured = unlist(fit_error_occured))
+
+
+df_preds <- df_models %>% 
+            filter(fit_error_occured == FALSE) %>% 
+            mutate(preds = map2(data, models, add_predictions)) %>% 
+            unnest(preds)
+
+ggplot(data = df_preds, aes_string(x=df_preds$time, y = df_preds$absorbance)) + 
+  geom_point() + geom_path(aes(y = df_preds$pred), color = 'blue')+ facet_wrap(~well)
+
+df_model_ests <- df_models %>% 
+  filter(fit_error_occured == FALSE) %>% 
+  mutate(est_result = map(models, safely(tidy), conf.int = T)) %>% 
+  mutate(est_errors = map(est_result, 'error')) %>% 
+  mutate(ests = map(est_result,'result')) %>% 
+  mutate(est_error_occured = map(.x = ests, .f = is.null), est_error_occured = unlist(est_error_occured)) %>% 
+  mutate(ests = ifelse(est_error_occured == T, map(models, tidy, conf.int = F), ests)) %>% 
+  unnest(ests)
+
+ggplot(df_model_ests, aes(x = well, y = estimate)) + 
+  geom_pointrange(aes(ymin = conf.low, ymax = conf.high)) + facet_wrap(~term, scales = 'free')
+
+```
+
+
+```{r}
+
+fit_bi_gompertz_mod <- function(df){
+  
+  #A = 1; mu = 0.1; lam = 2
+  
+  mod <- nls(
+    
+    formula=absorbance~( A_1*exp(-exp((mu_1/A_1)*(lam_1 - time) + 1)) ) + 
+                       ( A_2*exp(-exp((mu_2/A_2)*(lam_2 - time) + 1)) ) + c,
+    start = c(A_1 = 0.5, mu_1 = 0.2, lam_1 = 3, c= 0.1, 
+              A_2 = 0.2, mu_2 = 0.1, lam_2 = 6),
+    
+    data = df)
+  
+  mod
+}
+
+gen_gompertz <- function(a, mu, lam, c, time){
+  
+  a*exp(-exp((mu/a)*(lam - time) + 1 )) + c
+  
+}
+
+df_pred_ests <- left_join(df_preds,
+          df_model_ests %>% pivot_wider(id_cols = 'well', names_from = 'term', values_from = 'estimate' ), 
+          by = 'well') %>% 
+  mutate(pred_1 = gen_gompertz(a = A_1, mu = mu_1, lam = lam_1, c = c, time = time)) %>% 
+  mutate(pred_2 = gen_gompertz(a = A_2, mu = mu_2, lam = lam_2, c = c, time = time)) 
+
+
+p <- ggplot(df_pred_ests, aes(x = time)) + 
+    geom_point(aes(y = absorbance), shape = 21)+
+  geom_path(aes(y = pred), color = 'blue', size = 1) + 
+  geom_path(aes(y = pred_1), color = 'red', size = 1) + 
+  geom_path(aes(y = pred_2), color = 'red', linetype = 2, size = 1) + 
+  facet_wrap_paginate(~well, nrow = 2, ncol = 2, scales = 'free')
+
+ggplot(df_pred_ests, aes(x = time)) + 
+    geom_point(aes(y = absorbance), shape = 21)+
+  geom_path(aes(y = pred), color = 'blue', size = 1) + 
+  geom_path(aes(y = pred_1), color = 'red', size = 1) + 
+  geom_path(aes(y = pred_2), color = 'red', linetype = 2, size = 1) + 
+  facet_wrap_paginate(~well, nrow = 2, ncol = 2, scales = 'free', page = 12)
+
+pages <- n_pages(p)
+
+for(i in pages){
+  p <- ggplot(df_pred_ests, aes(x = time)) + 
+    geom_point(aes(y = absorbance), shape = 21)+
+  geom_path(aes(y = pred), color = 'blue', size = 1) + 
+  geom_path(aes(y = pred_1), color = 'red', size = 1) + 
+  geom_path(aes(y = pred_2), color = 'red', linetype = 2, size = 1) + 
+  facet_wrap_paginate(~well, nrow = 2, ncol = 2, scales = 'free', page = i)
+  
+  print(p)
+}
+
+```
 
 
 -------

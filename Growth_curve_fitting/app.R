@@ -3,6 +3,7 @@ library(tidyverse)
 library(modelr)
 library(broom)
 library(DT)
+library(ggforce)
 
 # Define UI for data upload app ----
 ui <- fluidPage(
@@ -16,9 +17,12 @@ ui <- fluidPage(
         # Sidebar panel for inputs ----
         sidebarPanel(
             
-            helpText("From Zwietering et. al. AES 1990: The three phases of the growth curve can be described by three parameters: the maximum specific growth rate, Mu is defined as the tangent in the inflection point; the lag time, Lag, is defined as the x-axis intercept of this tangent; and the asymptote A is the maximal value reached."),
+            helpText("From Zwietering et. al. AES 1990: 
+                     The three phases of the growth curve can be described by three parameters: 
+                     the maximum specific growth rate, Mu is defined as the tangent in the inflection point; 
+                     the lag time, Lag, is defined as the x-axis intercept of this tangent; 
+                     and the asymptote A is the maximal value reached."),
             tags$div(a(href="https://aem.asm.org/content/56/6/1875", "Source")),
-            
             tags$hr(),
             
             # Input: Select a file ----
@@ -38,7 +42,8 @@ ui <- fluidPage(
             # Horizontal line ----
             tags$hr(),
             
-            helpText("Note: This .csv file should be data from a plate reader that includes a column 'well', followed by columns of data for each well A1, A2,...H12 etc. See example files for details."),
+            helpText("Note: This .csv file should be data from a plate reader that includes a column 'time' in hours, 
+                     followed by columns of data for each well A1, A2,...H12 etc. See example files for details."),
             tags$div(a(href="https://github.com/scott-saunders/labwork/blob/master/Growth_curve_fitting/data.zip", "Example files"))
             
             
@@ -49,15 +54,43 @@ ui <- fluidPage(
             
             # Output: Tabset w/ plot, summary, and table ----
             tabsetPanel(type = "tabs",
-                        tabPanel("Input Data", dataTableOutput("contents")),
-                        tabPanel("Plots w/ Fits",tags$hr(), downloadButton("downloadPreds", "Download fit predictions"),tags$hr(), plotOutput("plot",height = '1000px')),
-                        tabPanel("Parameter Estimates", plotOutput("plot_estimates"), tags$hr(), downloadButton("downloadData", "Download parameter estimates"), tags$hr(), dataTableOutput("estimates") )
+                        
+                        tabPanel("Input Data", 
+                                 dataTableOutput("contents")
+                                 ),
+                        
+                        tabPanel("Plots w/ Fits",
+                                 tags$hr(), 
+                                 downloadButton("downloadPreds", "Download fit predictions"),
+                                 tags$hr(), 
+                                 plotOutput("plot",height = '1000px'), 
+                                 tags$hr(), 
+                                 dataTableOutput("models")),
+                        
+                        tabPanel("Parameter Estimates", 
+                                 tags$hr(), 
+                                 downloadButton("downloadData", "Download parameter estimates"), 
+                                 tags$hr(), 
+                                 plotOutput("plot_estimates"), 
+                                 tags$hr(), 
+                                 dataTableOutput("estimates") ),
+                        
+                        tabPanel("Plot list",
+                                 textOutput("num_pages"),
+                                 uiOutput("plots"))
             )
             
         )
         
     )
 )
+
+###### iter max global
+
+iter_max <- 25
+
+
+
 
 # Define server logic to read selected file ----
 server <- function(input, output) {
@@ -185,9 +218,15 @@ server <- function(input, output) {
         
     })
     
+    output$models <- renderDataTable({
+      
+      df_models() %>% select(-c(data, fit_result, fit_errors, models))
+      
+    })
+    
     output$estimates <- renderDataTable({
         
-        df_ests()
+        df_ests() %>% select(-c(data, fit_result, fit_errors, models, est_result, est_errors))
         
     })
     
@@ -226,6 +265,67 @@ server <- function(input, output) {
         print(p2)
         
     })
+    
+    ############### Generate list of 2x2 facet plots
+    
+    # First calculate the number of pages required to plot all
+    num_pages <- reactive({
+
+      plot_1 <- ggplot(data = df_preds(), aes_string(x=df_preds()$time, y = df_preds()$absorbance)) +
+        geom_point(shape = 21) +
+        facet_wrap_paginate(~well, nrow = 2, ncol = 2, scales = 'free')
+
+
+      return(n_pages(plot_1))
+    })
+    
+    #for debugging the num_pages function...note: 
+    #it cannot be called same as conflicting function n_pages() from ggforce
+    
+    #output$num_pages <- renderText({ num_pages()})    
+    
+    
+    # Insert the right number of plot output objects into the web page
+    output$plots <- renderUI({
+      plot_output_list <- lapply(1:num_pages(), function(i) {
+        plotname <- paste("plot", i, sep="")
+        plotOutput(plotname)
+      })
+      
+      # Convert the list to a tagList - this is necessary for the list of items
+      # to display properly.
+      do.call(tagList, plot_output_list)
+    })
+    
+    # Call renderPlot for each one. Plots are only actually generated when they
+    # are visible on the web page.
+    
+    
+    observeEvent( num_pages(),{
+      
+      for (i in 1:num_pages()) {
+        # Need local so that each item gets its own number. Without it, the value
+        # of i in the renderPlot() will be the same across all instances, because
+        # of when the expression is evaluated.
+        local({
+          #iter_max <- n_pages()
+          my_i <- i
+          plotname <- paste("plot", my_i, sep="")
+          
+          output[[plotname]] <- renderPlot({
+            
+            ggplot(data = df_preds(), aes_string(x=df_preds()$time, y = df_preds()$absorbance)) +
+              geom_point(shape = 21) + geom_path(aes(y = df_preds()$pred), size = 1, color = 'blue')+
+              labs(x = 'Time (Hrs)', y = 'Absorbance') + theme_bw() +
+              facet_wrap_paginate(~well, nrow = 2, ncol = 2, scales = 'free', page = my_i)
+            
+          })
+        })
+      }
+    })
+    
+    
+
     
 }
 
