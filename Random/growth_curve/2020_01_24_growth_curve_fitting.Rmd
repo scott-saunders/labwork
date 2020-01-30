@@ -13,6 +13,7 @@ fontsize: 12pt
 
 
 ```{r setup, echo=T, message=FALSE, warning=FALSE}
+#library(dplyr)
 library(tidyverse)
 library(cowplot)
 library(viridis)
@@ -299,6 +300,10 @@ df_model_ests <- df_models %>%
 ggplot(df_model_ests, aes(x = well, y = estimate)) + 
   geom_pointrange(aes(ymin = conf.low, ymax = conf.high)) + facet_wrap(~term, scales = 'free')
 
+factor(df_simple$well)
+
+
+levels(factor(df_simple$well))
 ```
 
 
@@ -361,9 +366,318 @@ for(i in pages){
 }
 
 ```
+# Test out GroFit
+
+```{r}
+
+library(grofit)
+
+df_simple <- read_csv("../../Growth_curve_fitting/data/plate_reader_simple_data.csv") %>% 
+  gather(key = 'well',value = 'absorbance',-time)
+
+dataset <- ran.data(d=30, t=50, mu=1, lambda = 5, A = 15)
+
+data <- dataset$data
+
+time <- dataset$time
+
+test_run <- grofit(time, data, FALSE, control = grofit.control(interactive = F))
+
+plot(test_run$gcFit)
+
+plot(test_run$drBootSpline, xlim = c(0, 50), ylim = c(0,15))
+
+test_spline <- gcFitSpline(1:50, time[1,], control = grofit.control(interactive = F))
+
+df <- tibble(time = test_spline$raw.time, preds = test_spline$fit.data, rawY = test_spline$raw.data)
+
+ggplot(data = df, aes(x = time, y = preds)) + geom_point() + geom_point(aes(y = rawY), color = 'red')
+
+test_Bootspline <- gcBootSpline(1:50, time[1,], control = grofit.control(interactive = F, nboot.gc = 100))
+
+df <- tibble(time = test_Bootspline$boot.time, preds = test_spline$fit.data, rawY = test_spline$raw.data)
+
+ggplot(data = df, aes(x = time, y = preds)) + geom_point() + geom_point(aes(y = rawY), color = 'red')
+
+plot(test_Bootspline)
+
+x <- 1:200
+y <- 1/(1+exp(0.5*(15-x)))+rnorm(30)/20
+TestRun <- gcBootSpline(x,y,"ID",grofit.control(nboot.gc=50))
+print(summary(TestRun))
+plot(TestRun)
+
+TestRun$raw.time
+
+TestRun$raw.data
+
+TestRun$boot.data[1,]
+
+df_boot <- as.tibble(t(as.matrix(TestRun$boot.data))) %>% mutate(time = 1:25) %>% pivot_longer(cols = -time, names_to = 'boot_num', values_to = 'preds')
+
+ggplot(mapping = aes(x = x, y = y)) + geom_point()
+
+df <- tibble(time = TestRun$raw.time, data = TestRun$raw.data, boot1 = TestRun$boot.data[1,])
+
+ggplot(df, aes(x = time, y = data)) + geom_point() + geom_path(aes(y = boot1))
+
+df_boot <- as.tibble(t(as.matrix(TestRun$boot.data))) %>% mutate(time = 1:25, data = TestRun$raw.data) %>% pivot_longer(cols = -c(time, data), names_to = 'boot_num', values_to = 'preds')
+
+ggplot(df_boot, aes(x = time, y = preds, group = boot_num)) + geom_path(alpha = 0.5) + geom_point(aes(y = data), color = 'red')
+
+df <- gcFitSpline(time = x, data = y, 'test', grofit.control(interactive = F))
 
 
--------
+df_plot <- tibble(time = df$raw.time, data = df$raw.data, pred = df$fit.data )
+
+ggplot(df_plot, aes(x = time, y = pred)) + geom_path() + geom_point(aes(y = data), color = 'red')
+
+
+```
+
+A working example with spline bootstrapping
+
+```{r}
+library(grofit)
+library(tidybayes)
+library(ggridges)
+
+x <- 1:200
+y <- 1/(1+exp(0.5*(15-x)))+rnorm(30)/20
+
+df_boot <- gcBootSpline(time = x, data = y, 'test_boot', grofit.control(interactive = F, nboot.gc = 100))
+
+df_boot_times <- as.tibble(t(df_boot$boot.time)) %>% mutate(index = row_number()) %>% pivot_longer(cols = -index, names_to = 'boot_num',values_to= 'time')
+
+df_boot_preds <- as.tibble(t(df_boot$boot.data)) %>% mutate(index = row_number()) %>% pivot_longer(cols = -index, names_to = 'boot_num',values_to= 'pred')
+
+df_boot_plot <- left_join(df_boot_times, df_boot_preds, by = c('index','boot_num'))
+
+#full_join(as_tibble(df_boot$boot.time), as_tibble(df_boot$boot.data))
+
+#as.tibble(t(df_boot$boot.data))
+
+#df_boot_plot <- tibble(time = df_boot$raw.time, data = df_boot$raw.data) %>%  
+ # bind_cols(., as.tibble(t(df_boot$boot.data))) %>% 
+ # pivot_longer(cols = -c(time, data), names_to = 'boot_num', values_to = 'pred')
+
+ggplot(df_boot_plot, aes(x = time, y = pred, group = boot_num)) + geom_path(alpha = 0.01)+ geom_point(data = tibble(x=x, y = y), aes(x,y, group = NULL), color = 'red')
+
+
+
+ggplot(df_boot_plot, aes(x = time, y = pred)) + stat_lineribbon()
+
+```
+
+and now for the parameter estimation
+
+```{r}
+df_boot_params <- bind_cols(lambda = df_boot$lambda, mu = df_boot$mu, A = df_boot$A) %>% 
+  pivot_longer(cols = c(lambda, mu, A),names_to = 'term',values_to = 'estimate') %>% 
+  filter(!is.na(estimate))
+
+ggplot(df_boot_params, aes(x = estimate, y = term)) +  geom_point()
+
+ggplot(df_boot_params, aes(x = estimate, y = term)) + geom_halfeyeh() 
+
+
+df = tribble(
+  ~group, ~subgroup, ~value,
+  "a",          "h", rnorm(500, mean = 5),
+  "b",          "h", rnorm(500, mean = 7, sd = 1.5),
+  "c",          "h", rnorm(500, mean = 8),
+  "c",          "i", rnorm(500, mean = 9),
+  "c",          "j", rnorm(500, mean = 7)
+) %>%
+  unnest(value)
+
+# here are vertical eyes:
+df %>%
+  ggplot(aes(x = group, y = value)) +
+  stat_eye()
+
+df_boot_params %>% 
+  ggplot(aes(x = term, y = estimate)) + stat_density() + geom_point(alpha = 0.1)+ geom_boxplot() + facet_wrap(~term, scales = 'free')
+
+ggplot(df_boot_params, aes(x = estimate, y = term)) + stat_halfeyeh() + facet_wrap(~term, scales = 'free')
+
+tibble(a = c(seq(1:9), NA), group = c('A','A','A','B','B','B','C','C','C','C')) %>% 
+  ggplot() + stat_halfeyeh(aes(x = a, y = group))
+
+ests <- df_boot_params %>% 
+  group_by(term) %>% 
+  summarise(median = median(estimate))
+
+ggplot(df_boot_plot, aes(x = time, y = pred, group = boot_num)) + geom_path(alpha = 0.01)+ geom_point(data = tibble(x=x, y = y), aes(x,y, group = NULL), color = 'red') + 
+  geom_abline(slope = ests$median[3], intercept = -ests$median[2] * ests$median[3]) + 
+  geom_hline(yintercept = ests$median[1])
+
+```
+
+Try on one real growth curve.
+
+```{r}
+df_simple <- read_csv("../../Growth_curve_fitting/data/plate_reader_simple_data.csv") %>% 
+  gather(key = 'well',value = 'absorbance',-time)
+
+df_g1 <- df_simple %>% filter(well == 'G1-WT')
+
+df_g1_boot <- gcBootSpline(time = df_g1$time, data = df_g1$absorbance, 'test_boot', grofit.control(interactive = F, nboot.gc = 100))
+
+
+df_g1_boot_times <- as.tibble(t(df_g1_boot$boot.time)) %>% mutate(index = row_number()) %>% pivot_longer(cols = -index, names_to = 'boot_num',values_to= 'time')
+
+df_g1_boot_preds <- as.tibble(t(df_g1_boot$boot.data)) %>% mutate(index = row_number()) %>% pivot_longer(cols = -index, names_to = 'boot_num',values_to= 'pred')
+
+df_g1_boot_plot <- left_join(df_g1_boot_times, df_g1_boot_preds, by = c('index','boot_num'))
+
+ggplot(df_g1_boot_plot, aes(x = time, y = pred, group = boot_num))  + geom_point(data = df_g1, aes(x = time,y = absorbance, group = NULL), color = 'red', shape = 21)+ geom_path(alpha = 0.01)
+
+
+```
+and the parameter estimates:
+
+```{r}
+
+df_g1_boot_params <- bind_cols(lambda = df_g1_boot$lambda, mu = df_g1_boot$mu, A = df_g1_boot$A) %>% 
+  pivot_longer(cols = c(lambda, mu, A),names_to = 'term',values_to = 'estimate') %>% 
+  filter(!is.na(estimate))
+
+ggplot(df_g1_boot_params, aes(x = estimate, y = term)) + stat_halfeyeh() + facet_wrap(~term, scales = 'free')
+
+
+ests <- df_g1_boot_params %>% 
+  group_by(term) %>% 
+  summarise(median = median(estimate), mean = mean(estimate))
+
+ggplot(df_g1_boot_plot, aes(x = time, y = pred, group = boot_num)) + geom_path(alpha = 0.01)+ 
+  geom_point(data = df_g1, aes(x = time,y = absorbance, group = NULL), color = 'red', shape = 21)+
+  geom_abline(slope = ests$mean[3], intercept = -ests$mean[2] * ests$mean[3]) + 
+  geom_hline(yintercept = ests$median[1])
+```
+
+
+Try on many real growth curves
+```{r}
+#df_boot <- gcBootSpline(time = x, data = y, 'test_boot', grofit.control(interactive = F, nboot.gc = 100))
+
+df_nest <- df_simple %>%
+  group_by(well) %>% 
+  nest()    
+
+#df_g1_boot <- gcBootSpline(time = df_g1$time, data = df_g1$absorbance, 'test_boot', grofit.control(interactive = F, nboot.gc = 100))
+
+#df_g1_boot <- gcFitSpline(time = df_g1$time, data = df_g1$absorbance, 'test best', grofit.control(interactive = F))
+
+
+
+fit_best_spline <- function(df){
+  
+  mod <- gcFitSpline(time = df$time, data = df$absorbance, gcID = 'best spline', control = grofit.control(interactive = F))
+  
+  mod
+}
+
+fit_boot_splines <- function(df){
+  
+  mod <- gcBootSpline(time = df$time, data = df$absorbance, gcID = 'bootstrapped splines', control = grofit.control(interactive = F, nboot.gc = 500))
+  
+  mod
+}
+
+df_models <- df_nest %>% 
+  mutate(bestSpline = map(data, fit_best_spline)) %>% 
+  mutate(bootSpline = map(data, fit_boot_splines))
+
+tidy_best_spline_preds <- function(df){
+  tibble(time = df$fit.time,
+         pred = df$fit.data,
+         absorbance = df$raw.data)
+}
+
+tidy_boot_spline_preds <- function(df){
+  
+  df_boot_times <- as.tibble(t(df$boot.time)) %>% mutate(index = row_number()) %>% pivot_longer(cols = -index, names_to = 'boot_num',values_to= 'time')
+  df_boot_preds <- as.tibble(t(df$boot.data)) %>% mutate(index = row_number()) %>% pivot_longer(cols = -index, names_to = 'boot_num',values_to= 'pred')
+  
+  df_boot_plot <- left_join(df_boot_times, df_boot_preds, by = c('index','boot_num') )
+
+  df_boot_plot
+}
+
+#df_g1_boot_times <- as.tibble(t(df_g1_boot$boot.time)) %>% mutate(index = row_number()) %>% pivot_longer(cols = -index, names_to = 'boot_num',values_to= 'time')
+
+#df_g1_boot_preds <- as.tibble(t(df_g1_boot$boot.data)) %>% mutate(index = row_number()) %>% pivot_longer(cols = -index, names_to = 'boot_num',values_to= 'pred')
+
+#df_g1_boot_plot <- left_join(df_g1_boot_times, df_g1_boot_preds, by = c('index','boot_num'))
+
+# this step takes forever, for 6 growth curves and only 100 bootstraps the data frame is >100,000 observations 
+# plot the spline model from the single gcFitSpline(), but get the parameter estimates from the bootstraps!
+df_preds <- df_models %>% 
+            mutate(preds = map(bestSpline, tidy_best_spline_preds)) %>% 
+            unnest(preds)
+
+head(df_preds)
+
+# Lineribbon is not very informative because splines are very certain...
+ggplot(data = df_preds, aes(x=time, y = pred)) + 
+  geom_path() + facet_wrap(~well, scales = 'free') + 
+  geom_point(aes(y = absorbance), shape = 21, color = 'red', alpha =0.1)
+
+### Move on to extracting parameter estimates
+
+tidy_boot_spline_ests <- function(df){
+  
+  tibble(Lag = df$lambda, Mu = df$mu, A = df$A) %>% 
+  pivot_longer(cols = c(Lag, Mu, A),names_to = 'term',values_to = 'estimate') %>% 
+  filter(!is.na(estimate))
+  
+}
+
+tidy_best_spline_ests <- function(df){
+  
+  tibble(Lag = df$parameters$lambda, Mu = df$parameters$mu, A = df$parameters$A) %>% 
+  pivot_longer(cols = c(Lag, Mu, A),names_to = 'term',values_to = 'estimate') %>% 
+  filter(!is.na(estimate))
+  
+}
+
+#df_g1_boot_params <- bind_cols(lambda = df_g1_boot$lambda, mu = df_g1_boot$mu, A = df_g1_boot$A) %>% 
+#  pivot_longer(cols = c(lambda, mu, A),names_to = 'term',values_to = 'estimate') %>% 
+#  filter(!is.na(estimate))
+
+df_model_ests <- df_models %>% 
+ # mutate(ests = map(bootSpline, tidy_boot_spline_ests )) %>% 
+  mutate(ests = map(bestSpline, tidy_best_spline_ests )) %>% 
+  unnest(ests)
+
+
+head(df_model_ests)
+
+# Plot parameter estimates - G3 is weird
+ggplot(df_model_ests %>% filter(well != 'G3-WT'), aes(x = estimate, y = well)) + stat_halfeyeh() + facet_wrap(~term, scales = 'free')
+
+
+df_model_ests_summary <- df_model_ests %>% 
+  group_by(well,term) %>% 
+  summarise(median = median(estimate)) %>% 
+  pivot_wider(id_cols = well, names_from = term, values_from = median)
+
+ggplot(data = df_preds, aes(x=time, y = pred)) + 
+  geom_path() + facet_wrap(~well, scales = 'free') + 
+  geom_point(aes(y = absorbance), shape = 21, color = 'red', alpha =0.1) + 
+  geom_abline(data = df_model_ests_summary, aes(slope = Mu, intercept = -Lag * Mu)) + 
+  geom_hline(data = df_model_ests_summary, aes(yintercept = A))
+```
+
+
+
+
+
+
+
+
+
 
 ```{r}
 sessionInfo()

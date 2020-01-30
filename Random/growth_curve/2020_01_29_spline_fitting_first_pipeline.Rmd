@@ -1,0 +1,100 @@
+---
+title: "Fitting Growth Curve with Splines and Grofit"
+author: "Scott Saunders"
+date: "01_29_20"
+output:
+  html_document:
+    code_folding: hide
+    self_contained: no
+    theme: cosmo
+    toc: yes
+fontsize: 12pt
+---
+
+
+```{r setup, echo=T, message=FALSE, warning=FALSE}
+#library(dplyr)
+library(tidyverse)
+library(cowplot)
+library(viridis)
+library(knitr)
+library(kableExtra)
+library(modelr)
+library(broom)
+library(ggforce)
+library(grofit)
+library(tidybayes)
+
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = TRUE, message=FALSE, warning=FALSE, fig.align="center")
+
+source("../../IDA/tools/plotting_tools.R")
+
+theme_set(theme_1())
+
+```
+
+# Cleaned up spline pipeline
+Ok, let's try to put it all together using just the best splines functions.
+
+## Functions
+
+```{r}
+fit_best_spline <- function(df){
+  
+  mod <- gcFitSpline(time = df$time, data = df$absorbance, gcID = 'best spline', control = grofit.control(interactive = F))
+  
+  mod
+}
+
+tidy_best_spline_preds <- function(df){
+  tibble(time = df$fit.time,
+         pred = df$fit.data,
+         absorbance = df$raw.data)
+}
+
+tidy_best_spline_ests <- function(df){
+  
+  tibble(Lag = df$parameters$lambda, Mu = df$parameters$mu, A = df$parameters$A) %>% 
+  pivot_longer(cols = c(Lag, Mu, A),names_to = 'term',values_to = 'estimate') %>% 
+  filter(!is.na(estimate))
+  
+}
+```
+
+## Fitting, Preds, and Ests
+
+```{r}
+df_simple <- read_csv("../../Growth_curve_fitting/data/plate_reader_simple_data.csv") %>% 
+  gather(key = 'well',value = 'absorbance',-time)
+
+df_nest <- df_simple %>%
+  group_by(well) %>% 
+  nest()   
+
+df_models <- df_nest %>% 
+  mutate(bestSpline = map(data, fit_best_spline))
+
+df_preds <- df_models %>% 
+            mutate(preds = map(bestSpline, tidy_best_spline_preds)) %>% 
+            unnest(preds)
+
+df_model_ests <- df_models %>% 
+  mutate(ests = map(bestSpline, tidy_best_spline_ests )) %>% 
+  unnest(ests) %>% 
+  pivot_wider(id_cols = well, names_from = term, values_from = estimate)
+
+```
+
+## Plotting
+
+```{r}
+ggplot(data = df_preds, aes(x=time, y = pred)) + 
+  geom_path() + facet_wrap(~well, scales = 'free') + 
+  geom_point(aes(y = absorbance), shape = 21, color = 'red', alpha =0.1) + 
+  geom_abline(data = df_model_ests, aes(slope = Mu, intercept = -Lag * Mu)) + 
+  geom_hline(data = df_model_ests, aes(yintercept = A))
+
+ggplot(df_model_ests %>% pivot_longer(c(Lag, Mu,A), names_to = 'term', values_to = 'estimate'), aes(x = well, y = estimate)) + geom_point() + facet_wrap(~term, scales = 'free')
+
+```
+

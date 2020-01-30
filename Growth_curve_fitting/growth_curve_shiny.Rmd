@@ -1,8 +1,8 @@
 ---
-title: "Growth Curve Fitting"
-author: "Scott Saunders"
-date: "01_26_20"
-output: flexdashboard::flex_dashboard
+title: 'Version 0.2'
+output: 
+  flexdashboard::flex_dashboard:
+    source_code: https://github.com/scott-saunders/labwork/blob/master/Growth_curve_fitting/growth_curve_shiny.Rmd
 fontsize: 12pt
 runtime: shiny
 ---
@@ -18,21 +18,28 @@ library(broom)
 library(ggforce)
 ```
 
-Column {.sidebar}
-=====================
+# Column {.sidebar}
 
-Input goes here: 
+## Gompertz Curve Fitting
 
-markdown test $A = r^2$
+-----
+
+Use this app to fit growth curves, whether it is one experiment or hundreds (e.g. from a plate reader).
+
+Start by uploading a .csv file of your data, where the first column is "time" (in hrs) followed by data columns for each well/experiment. 
+
+Start with some [examples](https://github.com/scott-saunders/labwork/blob/master/Growth_curve_fitting/data.zip).
+
+Enjoy! [-Scott Saunders](https://scott-saunders.github.io/website/)
+
+
+-------
+
+### Upload your data
 
 ```{r}
-fileInput("file1", "Choose your data File (CSV)",
-                      multiple = FALSE,
-                      accept = c("text/csv",
-                                 "text/comma-separated-values,text/plain",
-                                 ".csv"))
-
-
+fileInput("file1", "(.csv file)", multiple = FALSE, 
+          accept = c("text/csv", "text/comma-separated-values,text/plain",".csv"))
 
 df <- reactive({
   
@@ -45,11 +52,158 @@ df <- reactive({
   
 })
 
+```
+
+-------
+
+### Download outputs
+
+----
+
+```{r}
+ downloadHandler(
+         filename = 'growth_curve_parameter_estimates.csv',
+         outputArgs = list(label = 'Parameter estimates'),
+         content = function(file) {
+             write_csv(df_ests() %>% select(-c(data, fit_result, fit_errors, models, est_result, est_errors)), file)
+         }
+     )
 
 ```
 
------
-### Parameters
+--------
+
+```{r}
+
+pred_file <- reactive({  
+  
+  pred_file <- df_preds()
+
+  if(input$biGomp){
+
+    pred_file <- df_pred_ests()
+    
+    }
+  
+  })
+
+
+downloadHandler(
+  filename = 'growth_curve_model_fits.csv',
+  outputArgs = list(label = 'Best fit curves'),
+  content = function(file) { write_csv(pred_file() %>% select(-c(data, fit_result, fit_errors, models)), file)}
+    )
+
+
+
+```
+
+
+# Select Data{ data-orientation=rows}
+
+## Plots {data-height='300%' .tabset}
+
+### Plot All
+
+
+```{r}
+
+output$overview_plot <- renderPlot({
+  
+  ggplot(df(), aes(time, absorbance, group = well)) + geom_path() + labs(title = 'Drag the box to select the data you would like to fit.')
+  
+})
+
+plotOutput("overview_plot", brush = brushOpts(id = "overview_plot_brush"))
+
+# Reactive that returns the whole dataset if there is no brush
+
+selectedData <- reactive({
+  data <- brushedPoints(df(), input$overview_plot_brush) 
+  if (nrow(data) == 0)
+    data <- df()
+  data %>% filter(well %in% input$selected_wells)
+})
+
+```
+
+### Plot Selected
+
+```{r, results='asis'}
+
+#output$select_plot <- 
+  
+  renderPlot({
+  
+  ggplot(selectedData(), aes(time, absorbance, group = well)) + geom_path()
+  
+})
+
+#plotOutput("select_plot", height = '300px')
+
+#renderUI(list(tags$hr(),plotOutput("overview_plot", brush = brushOpts(id = "overview_plot_brush"), height = '50px'), tags$hr(), plotOutput("select_plot", height = '100px')))
+
+```
+
+## Select Wells{data-height='100%'}
+
+### Select Wells / Experiments
+
+```{r}
+renderUI(
+  
+  checkboxGroupInput(inputId = 'selected_wells', label = 'Choose your curves', choices = levels(factor(df()$well)), selected = levels(factor(df()$well)), width = '100%', inline = T)
+  
+)
+
+```
+
+## Tables {data-height='100%' .tabset}
+
+### Table All
+
+
+```{r}
+renderTable({
+  
+  df() %>% pivot_wider(id_cols = 'time', names_from = 'well', values_from = 'absorbance' )
+  
+})
+```
+
+### Table Selected
+
+
+```{r}
+renderTable({
+  selectedData() %>% pivot_wider(id_cols = 'time', names_from = 'well', values_from = 'absorbance' )
+})
+```
+
+
+# Set Model Parameters{data-orientation=rows}
+
+## Background 
+
+### Background on Gompertz model parameters
+
+[This paper](https://aem.asm.org/content/56/6/1875), it suggests that the modified Gompertz equation is an ideal way to parameterize a growth curve. They desribe the three parameters as follows: 
+
+>The three phases of the growth curve can be described by three parameters: the maximum specific growth rate, $\mu_m$ is defined as the tangent in the inflection point; the lag time, $Lag$, is defined as the x-axis intercept of this tangent; and the asymptote $A$ is the maximal value reached.
+
+The equation used here is the following:
+
+$$ y = A*exp \left(-exp \left(\frac{\mu_m}{A}(Lag - t) + 1 \right)\right) + C$$
+
+Where $C$ is a starting absorbance value. 
+
+The models are actually fit with a nonlinear least squares method, specifically the [nls function](https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/nls) from R. This method is extremely fast, but it requires pretty good guesses for parameter values. Therefore you can provide custom parameter values below. If many of your experiments cannot be fit, try playing with these starting parameters.
+
+## Gompertz model parameters {.tabset}
+
+### Single Gompertz
+
+For a single growth phase. 
 
 ```{r}
 
@@ -95,10 +249,15 @@ param_C<- reactive({
 
 ```
 
+### Bi-Gompertz Model 
+
+#### Do you want to fit two simultaneous growth phases?! 
+
+***Warning:*** model fitting may be trickier. Good guesses for parameters are usually required. It is probably worth fitting with a single Gompertz first to find reasonable starting values. 
 
 ```{r}
 
-checkboxInput('biGomp',label = 'Fit two simultaneous growth curves (e.g. bi - Gompertz)', value = FALSE)
+checkboxInput('biGomp',label = 'Enable Bi - Gompertz', value = FALSE)
 
 renderUI({  if(input$biGomp){numericInput("A_2", "Approximate the second A", 0.2)} })
 
@@ -135,75 +294,57 @@ param_Mu_2 <- reactive({
 
 ```
 
-Page 1
-=====================
+### Parameter Bounds
 
-This should say 'Page 1'
-
-
-```{r global, include=FALSE}
-# load data in 'global' chunk so it can be shared by all users of the dashboard
-library(datasets)
-mtcars2 <- mtcars[, c("mpg", "cyl", "wt")]
-```
-
-
+#### Single Model Parameters
 ```{r}
-# Reactive that returns the whole dataset if there is no brush
-selectedData <- reactive({
-  data <- brushedPoints(df(), input$plot1_brush)
-  if (nrow(data) == 0)
-    data <- df()
-  data
-})
+
+numericInput("A_low", "A_1 Lower bound", 0)
+numericInput("A_up", "A_1 Upper bound", 100)
+
+numericInput("Lag_low", "Lag_1 Lower bound", 0)
+numericInput("Lag_up", "Lag_1 Upper bound", 100)
+
+numericInput("Mu_low", "Mu_1 Lower bound", 0)
+numericInput("Mu_up", "Mu_1 Upper bound", 10)
+
+numericInput("C", "C Lower bound", -10)
+numericInput("C", "C Upper bound", 10)
+
 
 ```
 
-Column {data-width=650}
------------------------------------------------------------------------
+-----
 
-### Miles Per Gallon vs. Weight {data-width=600}
+#### Second Model Parameters
 
 ```{r}
 
-plotOutput("plot1", brush = brushOpts(id = "plot1_brush"))
+renderUI({  if(input$biGomp){numericInput("A_2_low", "A_2 Lower Bound", 0)} })
+renderUI({  if(input$biGomp){numericInput("A_2_up", "A_2 Upper Bound", 100)} })
 
-output$plot1 <- renderPlot({
-  
-  ggplot(df(), aes(time, absorbance, group = well)) + geom_path()
-  
-})
+renderUI({  if(input$biGomp){numericInput("Lag_2_low", "Lag_2 Lower Bound", 0)} })
+renderUI({  if(input$biGomp){numericInput("Lag_2_up", "Lag_2 Upper Bound", 100)} })
+
+renderUI({  if(input$biGomp){numericInput("Mu_2_low", "Mu_2 Lower Bound", 0)} })
+renderUI({  if(input$biGomp){numericInput("Mu_2_up", "Mu_2 Upper Bound", 10)} })
 
 ```
 
-### Miles Per Gallon and Cylinders
+### Model-free fit (Splines)
 
 ```{r}
-
-renderPlot({
-  
-  ggplot(selectedData(), aes(time, absorbance)) + geom_point()
-  
-})
+# need to implement 3 choice drop down menu and restructure if statements to give another choice!
 
 ```
 
-Column {data-width=350}
------------------------------------------------------------------------
-
-### Car Details {data-width=400}
-
-```{r}
-renderTable({
-  selectedData()
-})
-```
+# Model Fits{data-orientation=rows}
 
 
-Page 2
-=====================
 
 ```{r}
+# This is where the models are actually fit
+
 df_models <- reactive({
         
   
@@ -221,7 +362,10 @@ df_models <- reactive({
             #A = 1; mu = 0.1; lam = 2
             
             mod <- nls(formula=absorbance~A*exp(-exp((Mu/A)*(Lag - time) + 1))+C, 
-                       start = c(A = param_A(), Mu = param_Mu(), Lag = param_Lag(), C = param_C()), 
+                       start = c(A = input$A, Mu = input$Mu, Lag = input$Lag, C = input$C), 
+                       algorithm = 'port',
+                       lower = c(A = input$A_low, Mu = input$Mu_low, Lag = input$Lag_low, C = input$C_low),
+                       upper = c(A = input$A_up, Mu = input$Mu_up, Lag = input$Lag_up, C = input$C_up),
                        data = df)
             
             mod
@@ -237,10 +381,13 @@ df_models <- reactive({
                         
 #                        start = c(A_1 = 0.5, Mu_1 = 0.2, Lag_1 = 4, C= 0.05, 
 #                                  A_2 = 0.2, Mu_2 = 0.3, Lag_2 = 5),
-                        start = c(A_1 = param_A(), Mu_1 = param_Mu(), Lag_1 = param_Lag(), C= param_C(), 
-                                  A_2 = param_A_2(), Mu_2 = param_Mu_2(), Lag_2 = param_Lag_2()),
+                        start = c(A_1 = input$A, Mu_1 = input$Mu, Lag_1 = input$Lag, C = input$C, 
+                                  A_2 = input$A_2, Mu_2 = input$Mu_2, Lag_2 = input$Lag_2),
+                        lower = c(A_1 = input$A_low, A_2 = input$A_2_low, Mu_1 = input$Mu_low, Mu_2 = input$Mu_2_low, Lag_1 = input$Lag_low, Lag_2 = input$Lag_2_low),
+                        upper = c(A_1 = input$A_up, A_2 = input$A_2_up, Mu_1 = input$Mu_up, Mu_2 = input$Mu_2_up, Lag_1 = input$Lag_up, Lag_2 = input$Lag_2_up),
+                        data = df, 
                         
-                        data = df)
+                        algorithm = 'port')
             
             mod
           
@@ -324,16 +471,18 @@ df_pred_ests <- reactive({
     return(df_pred_ests)
 })
 
-renderDataTable(df_pred_ests() %>% select(well, fit_error_occured, A_2))
+#renderDataTable(df_pred_ests() %>% select(well, fit_error_occured, A_2))
 
 ```
 
-Page 3
-=====================
 
+
+## Plot overviews{.tabset}
+
+### Fit Plots
 ```{r}
 
-plotOutput("plot",height = '1000px')
+plotOutput("plot")
 
 output$plot <- renderPlot({
   
@@ -358,4 +507,59 @@ output$plot <- renderPlot({
         
     })
 
+```
+
+### Error Plots
+
+```{r}
+
+renderPlot({
+  
+  df_errors <- df_models() %>% filter(fit_error_occured == T)
+  
+  df_error_plot <- left_join(df_errors, selectedData(), by = 'well')
+  
+  p <- ggplot(data = df_error_plot, aes_string(x=df_error_plot$time, y = df_error_plot$absorbance)) + 
+    geom_point(shape = 21) + 
+    facet_wrap(~well, scales = 'free') +
+    labs(x = 'Time (Hrs)', y = 'Absorbance') + theme_bw()
+  
+  print(p)
+})
+
+```
+
+
+## Table{data-height='75%'}
+
+### Error Table
+
+```{r}
+renderTable({df_models() %>% select(well, fit_error_occured)})
+```
+
+# Parameter Estimates
+
+### Plot estimates{data-height='100%'}
+```{r}
+renderPlot({
+        
+        p2 <- ggplot(data = df_ests(), aes(x=df_ests()$well, y = df_ests()$estimate)) + geom_point(color = 'red')+
+            facet_wrap(~term, scales = 'free') +
+            labs(x = 'Well', y = 'Parameter Estimate') + theme_bw()
+        
+        if(df_ests()$est_error_occured == F){
+          p2 = p2 + geom_pointrange(aes(ymin = df_ests()$conf.low, ymax = df_ests()$conf.high )) 
+        }
+        
+        print(p2)
+        
+    })
+
+```
+
+### Table estimates{data-height='25%'}
+
+```{r}
+renderTable({df_ests() %>% select(well, term, estimate, est_error_occured)})
 ```

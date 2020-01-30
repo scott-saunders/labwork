@@ -233,6 +233,7 @@ server <- function(input, output) {
     # Downloadable csv of selected dataset ----
     output$downloadData <- downloadHandler(
         filename = 'growth_curve_parameter_estimates.csv',
+        
         content = function(file) {
             write_csv(df_ests(), file)
         }
